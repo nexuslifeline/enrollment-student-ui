@@ -21,12 +21,14 @@
                     <CInput 
                       label="Firstname" 
                       placeholder="Firstname"
+                      v-model="forms.student.fields.first_name"
                     />
                   </CCol>
                   <CCol md=6>
                     <CInput 
                       label="Middlename" 
                       placeholder="Middlename"
+                      v-model="forms.student.fields.middle_name"
                     />
                   </CCol>
                 </CRow>
@@ -35,12 +37,14 @@
                     <CInput 
                       label="Lastname" 
                       placeholder="Lastname"
+                      v-model="forms.student.fields.last_name"
                     />
                   </CCol>
                   <CCol md=6>
                     <CInput 
                       label="Mobile No." 
                       placeholder="Mobile No."
+                      v-model="forms.student.fields.mobile_no"
                     />
                   </CCol>
                 </CRow>
@@ -80,7 +84,7 @@
                 </CRow>
                 <CRow align-h="end">
                   <CCol md=3>
-                    <CButton block color="outline-primary">Create Account</CButton>
+                    <CButton @click="CreateAccount()" block color="outline-primary">Create Account</CButton>
                   </CCol>
                 </CRow>
               </CForm>
@@ -94,6 +98,31 @@
 
 <script>
 export default {
-  name: 'Register'
+  name: 'Register',
+  data() {
+    return {
+      forms: {
+        student: {
+          fields: {
+            first_name: null,
+            middle_name: null,
+            last_name: null,
+            mobile_no: null
+          }
+        }
+      }
+    }
+  },
+  methods: {
+    CreateAccount(){
+      this.$http.post('api/v1/register', this.forms.student.fields)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(response => {
+          console.log(response)
+        })
+    }
+  }
 }
 </script>
