@@ -3,54 +3,88 @@
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="6">
-          <CCard class="mx-4 mb-0">
-            <CCardBody class="p-4">
+          <CCard>
+            <CCardBody>
               <CForm>
-                <h1>Register</h1>
-                <p class="text-muted">Create your account</p>
-                <CInput
-                  placeholder="Username"
-                  autocomplete="username"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
-                </CInput>
-                <CInput
-                  placeholder="Email"
-                  autocomplete="email"
-                  prepend="@"
-                />
-                <CInput
-                  placeholder="Password"
-                  type="password"
-                  autocomplete="new-password"
-                >
-                  <template #prepend-content><CIcon name="cil-lock-locked"/></template>
-                </CInput>
-                <CInput
-                  placeholder="Repeat password"
-                  type="password"
-                  autocomplete="new-password"
-                  class="mb-4"
-                >
-                  <template #prepend-content><CIcon name="cil-lock-locked"/></template>
-                </CInput>
-                <CButton color="success" block>Create Account</CButton>
+                <CRow>
+                  <CCol>
+                    <label>ABOUT YOU</label>
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol>
+                    <small>A bit of personal details about you.</small>
+                  </CCol>
+                </CRow>
+                <CRow class="mt-4">
+                  <CCol md=6 >
+                    <CInput 
+                      label="Firstname" 
+                      placeholder="Firstname"
+                    />
+                  </CCol>
+                  <CCol md=6>
+                    <CInput 
+                      label="Middlename" 
+                      placeholder="Middlename"
+                    />
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol md=6 >
+                    <CInput 
+                      label="Lastname" 
+                      placeholder="Lastname"
+                    />
+                  </CCol>
+                  <CCol md=6>
+                    <CInput 
+                      label="Mobile No." 
+                      placeholder="Mobile No."
+                    />
+                  </CCol>
+                </CRow>
+                <CRow class="mt-3">
+                  <CCol>
+                    <label>ACCOUNT</label>
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol>
+                    <small>Enter your preferred username and password.</small>
+                  </CCol>
+                </CRow>
+                <CRow class="mt-4">
+                  <CCol md=6 >
+                    <CInput 
+                      label="Email Address" 
+                      placeholder="Email Address"
+                    />
+                  </CCol>
+                  <CCol md=6>
+                    <CInput 
+                      label="Password" 
+                      placeholder="Password"
+                      type="password"
+                    />
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol md=6 >
+                    <CInput 
+                      label="Confirm Password" 
+                      placeholder="Confirm Password"
+                      type="password"
+                    />
+                  </CCol>
+                </CRow>
+                <CRow align-h="end">
+                  <CCol md=3>
+                    <CButton block color="outline-primary">Create Account</CButton>
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
-            <CCardFooter class="p-4">
-              <CRow>
-                <CCol col="6">
-                  <CButton block color="facebook">
-                    Facebook
-                  </CButton>
-                </CCol>
-                <CCol col="6">
-                  <CButton block color="twitter">
-                    Twitter
-                  </CButton>
-                </CCol>
-              </CRow>
-            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
