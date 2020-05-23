@@ -4,7 +4,9 @@ Vue.use(Vuex)
 
 const state = {
   sidebarShow: 'responsive',
-  sidebarMinimize: false
+  sidebarMinimize: false,
+  isLoggedIn: !!localStorage.getItem('access_token') ?? false,
+  user: [],
 }
 
 const mutations = {
@@ -18,7 +20,16 @@ const mutations = {
   },
   set (state, [variable, value]) {
     state[variable] = value
-  }
+  },
+  loginUser (state) {
+    state.isLoggedIn = true
+  },
+  logoutUser (state) {
+    state.isLoggedIn = false
+  },
+  user (state, user_data) {
+    state.user = user_data
+  },
 }
 
 export default new Vuex.Store({

@@ -63,6 +63,7 @@
                     <CInput 
                       label="Email Address" 
                       placeholder="Email Address"
+                      v-model="forms.student.fields.username"
                     />
                   </CCol>
                   <CCol md=6>
@@ -70,6 +71,7 @@
                       label="Password" 
                       placeholder="Password"
                       type="password"
+                      v-model="forms.student.fields.password"
                     />
                   </CCol>
                 </CRow>
@@ -79,6 +81,7 @@
                       label="Confirm Password" 
                       placeholder="Confirm Password"
                       type="password"
+                      v-model="forms.student.fields.password_confirmation"
                     />
                   </CCol>
                 </CRow>
@@ -107,7 +110,10 @@ export default {
             first_name: null,
             middle_name: null,
             last_name: null,
-            mobile_no: null
+            mobile_no: null,
+            username: null,
+            password: null,
+            password_confirmation: null
           }
         }
       }
@@ -117,7 +123,9 @@ export default {
     CreateAccount(){
       this.$http.post('api/v1/register', this.forms.student.fields)
         .then(response => {
-          console.log(response)
+          this.$store.commit('loginUser')
+          localStorage.setItem('access_token', response.data.access_token)
+          this.$router.push({ name: 'Student Info'})
         })
         .catch(response => {
           console.log(response)

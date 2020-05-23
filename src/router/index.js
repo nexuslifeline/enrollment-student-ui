@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -19,11 +20,29 @@ const Register = () => import('@/views/pages/Register')
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'active',
   scrollBehavior: () => ({ y: 0 }),
   routes: configRoutes()
+})
+export default router
+router.beforeEach((to, from, next) => {
+
+  // check if the route requires authentication and user is not logged in
+  if (to.matched.some(route => route.meta.requiresAuth) && !store.state.isLoggedIn) {
+    // redirect to login page
+    next({ name: 'Login' })
+    return
+  }
+
+// if logged in redirect to dashboard
+  if(to.path === '/login' && store.state.isLoggedIn) {
+      next({name: from.name})
+      return
+  }
+  
+next()
 })
 
 function configRoutes () {
@@ -37,12 +56,14 @@ function configRoutes () {
         {
           path: 'dashboard',
           name: 'Dashboard',
-          component: Dashboard
+          component: Dashboard,
+          meta: {requiresAuth: true}
         },
         {
           path: 'studentinfo',
           name: 'Student Info',
-          component: StudentInfo
+          component: StudentInfo,
+          meta: {requiresAuth: true}
         },
       ]
     },
@@ -53,7 +74,7 @@ function configRoutes () {
     },
     {
       path: '/login',
-      name: '/Login',
+      name: 'Login',
       component: Login
     },
     {

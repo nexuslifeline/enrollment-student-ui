@@ -9,10 +9,10 @@
                 <h5>REGISTER AS STUDENT</h5>
                 <CRow class="mb-4">
                   <CCol  md=6 class="mb-2">
-                    <CButton color="outline-primary" block> Signup New Student</CButton>
+                    <CButton color="outline-primary" block @click="register()"> Signup New Student</CButton>
                   </CCol>
                    <CCol md=6>
-                    <CButton color="outline-primary" block> Signup Old Student</CButton>
+                    <CButton color="outline-primary" block @click="register()"> Signup Old Student</CButton>
                   </CCol>
                 </CRow>
                 
@@ -23,22 +23,22 @@
                 </CRow>
               
                 <CInput
-                          label="Username"
-                          placeholder="Username"
+                  v-model="username"
+                  placeholder="Username"
                 >
                   <template #prepend-content><CIcon name="cil-user"/></template>
                 </CInput>
                 <CInput
-                          type="Password"
-                          label="Password"
-                          placeholder="Password"
+                  v-model="password"
+                  type="Password"
+                  placeholder="Password"
                 >
                   <template #prepend-content><CIcon name="cil-lock-locked"/></template>
                 </CInput>
 
                 <CRow alignHorizontal="end">
                    <CCol md=4>
-                    <CButton @click="AuthLogin()" color="outline-primary" block>Login</CButton>
+                    <CButton @click="authLogin()" color="outline-primary" block>Login</CButton>
                   </CCol>
                 </CRow>
               </CForm>
@@ -63,12 +63,31 @@ export default {
   name: 'Login',
   data() {
     return {
-
+      username: null,
+      password: null
     }
   },
   methods: {
-    AuthLogin(){
-      this.$http.post('api/v1/personnel/login', {username: "admin@nexuslifeline.com", password: "password"})
+    authLogin(){
+      this.$http.post('api/v1/login', {username: this.username, password: this.password})
+        .then(response => {
+          const res = response.data
+          this.$store.commit('loginUser')
+          localStorage.setItem('access_token', res.token.access_token)
+          var student = res.student
+          if(student.address == null || student.education == null){
+            this.$router.push({name : 'Student Info'})
+          }
+          else{
+            this.$router.push({ name: 'Dashboard'})
+          }
+        })
+        .catch(response => {
+          console.log(response)
+        })
+    },
+    register(){
+      this.$router.push({name: 'Register'})
     }
   }
 }

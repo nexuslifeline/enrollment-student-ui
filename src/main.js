@@ -8,6 +8,7 @@ import store from './store'
 import axios from 'axios'
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+
 const axiosConfig = {
   baseURL: 'http://enrollment.test',
   timeout: 30000
