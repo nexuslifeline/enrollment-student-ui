@@ -194,12 +194,14 @@
                                     <CInput 
                                         label="Last School Attended"
                                         placeholder="Last School Attended"
+                                        v-model="forms.education.fields.last_school_attended"
                                     />
                                 </CCol>
                                 <CCol lg=6>
                                     <CInput 
                                         label="Level"
                                         placeholder="Level"
+                                        v-model="forms.education.fields.year"
                                     />
                                 </CCol>
                             </CRow>
@@ -208,6 +210,7 @@
                                     <CInput 
                                         label="Address"
                                         placeholder="Address"
+                                        v-model="forms.education.fields.last_school_address"
                                     />
                                 </CCol>
                             </CRow>
@@ -299,6 +302,13 @@ export default {
                         mother_mobile_no: null,
                         mother_email: null
                     }
+                },
+                education: {
+                    fields: {
+                        last_school_attended: null,
+                        last_school_address: null,
+                        year: null,
+                    }
                 }
             },
             subjects: {
@@ -360,6 +370,13 @@ export default {
                     this.forms.family.fields[key] = res.family[key]
                 }
             }
+
+            if(res.education){
+                this.step++
+                for (var key in this.forms.education.fields) {
+                    this.forms.education.fields[key] = res.education[key]
+                }
+            }
             this.isLoaded = true
         })
     },
@@ -383,6 +400,9 @@ export default {
                 }
                 else if (this.step == 3) {
                     child = "family"
+                }
+                else if (this.step == 4) {
+                    child = "education"
                 }
                 this.$http.put('api/v1/studentinfo/' + child + '/' + this.forms.student.fields.id, this.forms[child].fields, {
                     headers: {

@@ -123,8 +123,9 @@ export default {
     CreateAccount(){
       this.$http.post('api/v1/register', this.forms.student.fields)
         .then(response => {
+          const res = response.data
           this.$store.commit('loginUser')
-          localStorage.setItem('access_token', response.data.access_token)
+          localStorage.setItem('access_token', res.token.access_token)
           this.$router.push({ name: 'Student Info'})
         })
         .catch(response => {
