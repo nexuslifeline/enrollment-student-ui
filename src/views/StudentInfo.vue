@@ -293,6 +293,7 @@ export default {
                  },
                 family: {
                     fields: {
+                        id: null,
                         father_name: null,
                         father_occupation: null,
                         father_mobile_no: null,
@@ -305,6 +306,7 @@ export default {
                 },
                 education: {
                     fields: {
+                        id: null,
                         last_school_attended: null,
                         last_school_address: null,
                         year: null,
@@ -409,7 +411,11 @@ export default {
                         Authorization: 'Bearer ' + localStorage.getItem('access_token')
                     }
                 }).then(response => {
-                    console.log(response)
+                    const res = response.data
+                    console.log(res)
+                    for (var key in this.forms[child].fields) {
+                        this.forms[child].fields[key] = res[child][key]
+                    }
                     if(this.step != 5)
                         this.step++
                 })
