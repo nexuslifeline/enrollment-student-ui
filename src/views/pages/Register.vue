@@ -21,14 +21,14 @@
                     <CInput 
                       label="Firstname" 
                       placeholder="Firstname"
-                      v-model="forms.student.fields.first_name"
+                      v-model="forms.student.fields.firstName"
                     />
                   </CCol>
                   <CCol md=6>
                     <CInput 
                       label="Middlename" 
                       placeholder="Middlename"
-                      v-model="forms.student.fields.middle_name"
+                      v-model="forms.student.fields.middleName"
                     />
                   </CCol>
                 </CRow>
@@ -37,14 +37,14 @@
                     <CInput 
                       label="Lastname" 
                       placeholder="Lastname"
-                      v-model="forms.student.fields.last_name"
+                      v-model="forms.student.fields.lastName"
                     />
                   </CCol>
                   <CCol md=6>
                     <CInput 
                       label="Mobile No." 
                       placeholder="Mobile No."
-                      v-model="forms.student.fields.mobile_no"
+                      v-model="forms.student.fields.mobileNo"
                     />
                   </CCol>
                 </CRow>
@@ -81,13 +81,13 @@
                       label="Confirm Password" 
                       placeholder="Confirm Password"
                       type="password"
-                      v-model="forms.student.fields.password_confirmation"
+                      v-model="forms.student.fields.passwordConfirmation"
                     />
                   </CCol>
                 </CRow>
                 <CRow align-h="end">
                   <CCol md=3>
-                    <CButton @click="CreateAccount()" block color="outline-primary">Create Account</CButton>
+                    <CButton @click="createAccount()" block color="outline-primary">Create Account</CButton>
                   </CCol>
                 </CRow>
               </CForm>
@@ -100,37 +100,48 @@
 </template>
 
 <script>
+import { StudentApi } from '../../mixins/api'
 export default {
   name: 'Register',
+  mixins: [StudentApi],
   data() {
     return {
       forms: {
         student: {
           fields: {
-            first_name: null,
-            middle_name: null,
-            last_name: null,
-            mobile_no: null,
+            firstName: null,
+            middleName: null,
+            lastName: null,
+            mobileNo: null,
             username: null,
             password: null,
-            password_confirmation: null
+            passwordConfirmation: null
           }
         }
       }
     }
   },
   methods: {
-    CreateAccount(){
-      this.$http.post('api/v1/register', this.forms.student.fields)
-        .then(response => {
-          const res = response.data
-          this.$store.commit('loginUser')
-          localStorage.setItem('access_token', res.token.access_token)
-          this.$router.push({ name: 'Student Info'})
-        })
-        .catch(response => {
-          console.log(response)
-        })
+    createAccount(){
+      this.registerStudent(this.forms.student.fields).then(response => {
+          // const res = response.data
+          // this.$store.commit('loginUser')
+          // localStorage.setItem('access_token', res.token.access_token)
+          // this.$router.push({ name: 'Student Info' })
+      })
+      .catch(response => {
+        console.log(response);
+      })
+      // this.$http.post('api/v1/register', this.forms.student.fields)
+      //   .then(response => {
+      //     const res = response.data
+      //     this.$store.commit('loginUser')
+      //     localStorage.setItem('access_token', res.token.access_token)
+      //     this.$router.push({ name: 'Student Info'})
+      //   })
+      //   .catch(response => {
+      //     console.log(response)
+      //   })
     }
   }
 }

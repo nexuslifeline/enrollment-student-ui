@@ -15,13 +15,11 @@
                     <CButton color="outline-primary" block @click="register()"> Signup Old Student</CButton>
                   </CCol>
                 </CRow>
-                
                 <CRow class="mb-4">
                   <CCol md=12>
                     <label align="center" class="float-center" style="width:100%">-OR-</label>
                   </CCol>
                 </CRow>
-              
                 <CInput
                   v-model="username"
                   placeholder="Username"
