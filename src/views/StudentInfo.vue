@@ -38,14 +38,14 @@
                                     <CInput 
                                         label="Firstname" 
                                         placeholder="Firstname"
-                                        v-model="forms.student.fields.first_name"
+                                        v-model="forms.student.fields.firstName"
                                     />
                                 </CCol>
                                 <CCol md=6>
                                     <CInput 
                                         label="Middlename" 
                                         placeholder="Middlename"
-                                        v-model="forms.student.fields.middle_name"
+                                        v-model="forms.student.fields.middleName"
                                     />
                                 </CCol>
                             </CRow>
@@ -54,14 +54,14 @@
                                     <CInput 
                                         label="Lastname" 
                                         placeholder="Lastname"
-                                        v-model="forms.student.fields.last_name"
+                                        v-model="forms.student.fields.lastName"
                                     />
                                 </CCol>
                                 <CCol md=6>
                                     <CInput 
                                         label="Mobile No." 
                                         placeholder="Mobile No."
-                                        v-model="forms.student.fields.mobile_no"
+                                        v-model="forms.student.fields.mobileNo"
                                     />
                                 </CCol>
                             </CRow>
@@ -99,7 +99,7 @@
                                     <CInput
                                         label="Postal Code"
                                         placeholder="Postal Code"
-                                        v-model="forms.address.fields.postal_code"
+                                        v-model="forms.address.fields.postalCode"
                                     />
                                 </CCol>
                             </CRow>
@@ -124,14 +124,14 @@
                                     <CInput 
                                         label="Father"
                                         placeholder="Father"
-                                        v-model="forms.family.fields.father_name"
+                                        v-model="forms.family.fields.fatherName"
                                     />
                                 </CCol>
                                 <CCol lg=6>
                                     <CInput 
                                         label="Contact Number"
                                         placeholder="Contact Number"
-                                        v-model="forms.family.fields.father_mobile_no"
+                                        v-model="forms.family.fields.fatherMobileNo"
                                     />
                                 </CCol>
                             </CRow>
@@ -140,14 +140,14 @@
                                     <CInput 
                                         label="Occupation"
                                         placeholder="Occupation"
-                                        v-model="forms.family.fields.father_occupation"
+                                        v-model="forms.family.fields.fatherOccupation"
                                     />
                                 </CCol>
                                 <CCol lg=6>
                                     <CInput 
                                         label="Email Address"
                                         placeholder="Email Address"
-                                        v-model="forms.family.fields.father_email"
+                                        v-model="forms.family.fields.fatherEmail"
                                     />
                                 </CCol>
                             </CRow>
@@ -156,14 +156,14 @@
                                     <CInput 
                                         label="Mother"
                                         placeholder="Mother"
-                                        v-model="forms.family.fields.mother_name"
+                                        v-model="forms.family.fields.motherName"
                                     />
                                 </CCol>
                                 <CCol lg=6>
                                     <CInput 
                                         label="Contact Number"
                                         placeholder="Contact Number"
-                                        v-model="forms.family.fields.mother_mobile_no"
+                                        v-model="forms.family.fields.motherMobileNo"
                                     />
                                 </CCol>
                             </CRow>
@@ -172,14 +172,14 @@
                                     <CInput 
                                         label="Occupation"
                                         placeholder="Occupation"
-                                        v-model="forms.family.fields.mother_occupation"
+                                        v-model="forms.family.fields.motherOccupation"
                                     />
                                 </CCol>
                                 <CCol lg=6>
                                     <CInput 
                                         label="Email Address"
                                         placeholder="Email Address"
-                                        v-model="forms.family.fields.mother_email"
+                                        v-model="forms.family.fields.motherEmail"
                                     />
                                 </CCol>
                             </CRow>
@@ -194,7 +194,7 @@
                                     <CInput 
                                         label="Last School Attended"
                                         placeholder="Last School Attended"
-                                        v-model="forms.education.fields.last_school_attended"
+                                        v-model="forms.education.fields.lastSchoolAttended"
                                     />
                                 </CCol>
                                 <CCol lg=6>
@@ -210,7 +210,7 @@
                                     <CInput 
                                         label="Address"
                                         placeholder="Address"
-                                        v-model="forms.education.fields.last_school_address"
+                                        v-model="forms.education.fields.lastSchoolAddress"
                                     />
                                 </CCol>
                             </CRow>
@@ -275,10 +275,10 @@ export default {
                 student: {
                     fields: {
                         id: null,
-                        first_name: null,
-                        middle_name: null,
-                        last_name: null,
-                        mobile_no: null,
+                        firstName: null,
+                        middleName: null,
+                        lastName: null,
+                        mobileNo: null,
                     }
                 },
                 address: {
@@ -287,28 +287,28 @@ export default {
                         city: null,
                         province: null,
                         country: null,
-                        postal_code: null,
+                        postalCode: null,
                         address: null
                     },
                  },
                 family: {
                     fields: {
                         id: null,
-                        father_name: null,
-                        father_occupation: null,
-                        father_mobile_no: null,
-                        father_email: null,
-                        mother_name: null,
-                        mother_occupation: null,
-                        mother_mobile_no: null,
-                        mother_email: null
+                        fatherName: null,
+                        fatherOccupation: null,
+                        fatherMobileNo: null,
+                        fatherEmail: null,
+                        motherName: null,
+                        motherOccupation: null,
+                        motherMobileNo: null,
+                        motherEmail: null
                     }
                 },
                 education: {
                     fields: {
                         id: null,
-                        last_school_attended: null,
-                        last_school_address: null,
+                        lastSchoolAttended: null,
+                        lastSchoolAddress: null,
                         year: null,
                     }
                 }
