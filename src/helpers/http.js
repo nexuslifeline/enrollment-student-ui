@@ -15,7 +15,7 @@ export const httpRequest = applyConverters(
 
 export const httpAuthRequest = applyConverters(
   axios.create({
-    baseURL: process.env.API_ENDPOINT,
+    baseURL: process.env.VUE_APP_SERVER_URL,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',

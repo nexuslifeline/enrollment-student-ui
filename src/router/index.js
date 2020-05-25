@@ -9,7 +9,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Dashboard = () => import('@/views/Dashboard')
 
 
-const StudentInfo = () => import('@/views/StudentInfo')
+const StudentInfo = () => import('@/views/pages/StudentInfo')
 
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')

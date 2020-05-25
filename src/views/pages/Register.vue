@@ -124,10 +124,10 @@ export default {
   methods: {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
-          // const res = response.data
-          // this.$store.commit('loginUser')
-          // localStorage.setItem('access_token', res.token.access_token)
-          // this.$router.push({ name: 'Student Info' })
+        const res = response.data
+        this.$store.commit('loginUser')
+        localStorage.setItem('access_token', res.token.accessToken)
+        this.$router.push({ name: 'Student Info' })
       })
       .catch(response => {
         console.log(response);
