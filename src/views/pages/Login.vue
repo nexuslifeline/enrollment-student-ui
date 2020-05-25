@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     authLogin(){
-      this.$http.post('api/v1/login', {username: this.username, password: this.password})
+      this.$http.post('api/v1/login', { username: this.username, password: this.password })
         .then(response => {
           const res = response.data
           this.$store.commit('loginUser')
