@@ -100,10 +100,10 @@
 </template>
 
 <script>
-import { StudentApi } from '../../mixins/api'
+import { StudentApi, AuthApi } from '../../mixins/api'
 export default {
   name: 'Register',
-  mixins: [StudentApi],
+  mixins: [StudentApi, AuthApi],
   data() {
     return {
       forms: {
@@ -124,10 +124,15 @@ export default {
   methods: {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
-        const res = response.data
-        this.$store.commit('loginUser')
-        localStorage.setItem('access_token', res.token.accessToken)
-        this.$router.push({ name: 'Student Info' })
+        this.login({ username: this.forms.student.fields.username, password: this.forms.student.fields.password }).then(response => {
+          const res = response.data
+          console.log(res)
+          localStorage.setItem('access_token', res.accessToken)
+          this.$store.commit('loginUser')
+          this.$router.push({name : 'Student Info'})
+        }).catch(response =>{
+          console.log(response)
+        })
       })
       .catch(response => {
         console.log(response);

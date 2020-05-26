@@ -101,15 +101,9 @@ export default {
 
       this.login({ username: this.username, password: this.password }).then(response => {
         const res = response.data
-          this.$store.commit('loginUser')
-          localStorage.setItem('access_token', res.token.access_token)
-          var student = res.student
-          if(student.address == null || student.education == null){
-            this.$router.push({name : 'Student Info'})
-          }
-          else{
-            this.$router.push({ name: 'Dashboard'})
-          }
+        localStorage.setItem('access_token', res.accessToken)
+        this.$store.commit('loginUser')
+        this.$router.push({name : 'Student Info'})
       }).catch(response =>{
         console.log(response)
       })
