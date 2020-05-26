@@ -220,10 +220,22 @@
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
               <CRow>
                 <CCol lg="6">
-                  <CSelect label="Level" placeholder="Level" />
+                  <CSelect 
+                    label="Level"
+                    placeholder="Level" 
+                    :value.sync="forms.application.fields.levelId"
+                    :options="options.levels.items"
+                    @change="loadCourses"
+                    />
                 </CCol>
                 <CCol lg="6">
-                  <CSelect label="Course" placeholder="Course" />
+                  <CSelect 
+                    label="Course" 
+                    placeholder="Course"
+                    :value.sync="forms.application.fields.courseId"
+                    :options="options.courses.items"
+                    @change="loadSubjects"
+                     />
                 </CCol>
               </CRow>
               <CRow>
@@ -232,8 +244,9 @@
                     class="my-table"
                     style="border-top: none"
                     responsive
-                    :fields="subjects.fields"
-                    :items.sync="subjects.items"
+                    :fields="tables.subjects.fields"
+                    :items.sync="tables.subjects.items"
+                    :loading="tables.subjects.isLoading"
                   >
                     <template #subject_name="{item}">
                       <td>
@@ -250,7 +263,7 @@
           </CCardBody>
           <CCardFooter>
             <CButton @click="step--" :disabled="step==1" class="float-left">Back</CButton>
-            <CButton @click="updateStudent()" color="outline-primary" class="float-right">Next</CButton>
+            <CButton @click="onUpdateStudent()" color="outline-primary" class="float-right">Next</CButton>
           </CCardFooter>
         </CCard>
       </CCol>
@@ -259,10 +272,10 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi } from "../../mixins/api";
+import { StudentApi, LevelApi, AuthApi } from "../../mixins/api";
 export default {
   name: "StudentInfo",
-  mixins: [StudentApi],
+  mixins: [StudentApi, LevelApi, AuthApi],
   data() {
     return {
       isLoaded: false,
@@ -307,107 +320,227 @@ export default {
             lastSchoolAddress: null,
             year: null
           }
+        },
+        application : {
+          fields: {
+            id:null,
+            semesterId: null,
+            levelId: null,
+            courseId: null
+          }
         }
       },
-      subjects: {
-        fields: [
-          {
-            key: "subject_name",
-            label: "SUBJECTS",
-            _classes: "align-middle",
-            _style: "width: 80%"
-          },
-          {
-            key: "units",
-            label: "UNITS",
-            _classes: "align-middle text-center"
-          }
-        ],
-        items: [
-          {
-            subject_name: "Fundamentals of Programming",
-            description:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
-            units: "3"
-          },
-          {
-            subject_name: "Data Structure",
-            description:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
-            units: "3"
-          },
-          {
-            subject_name: "Introduction to Networking",
-            description:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
-            units: "3"
-          }
-        ]
+      tables :{
+        subjects: {
+          isLoading: false,
+          fields: [
+            {
+              key: "name",
+              label: "SUBJECTS",
+              _classes: "align-middle",
+              _style: "width: 80%"
+            },
+            {
+              key: "units",
+              label: "UNITS",
+              _classes: "align-middle text-center"
+            }
+          ],
+          items: []
+        }
+      },
+      options: {
+        levels:{
+          items:[]
+        },
+        courses :{
+          items:[]
+        }
       }
+      
     };
   },
   created() {
-    this.getStudentInfo().then(response => {
-      const res = response.data;
+    this.getUser().then(response => {
+      const res = response.data.userable
+        this.getStudent(res.id).then(response => {
+          const resStud = response.data
+          for (var key in this.forms.student.fields) {
+            this.forms.student.fields[key] = resStud[key];
+          }
 
-      for (var key in this.forms.student.fields) {
-        this.forms.student.fields[key] = res[key];
-      }
+          if (resStud.address) {
+            this.step++;
+            for (var key in this.forms.address.fields) {
+              this.forms.address.fields[key] = resStud.address[key];
+            }
+          }
 
-      if (res.address) {
-        this.step++;
-        for (var key in this.forms.address.fields) {
-          this.forms.address.fields[key] = res.address[key];
-        }
-      }
+          if (resStud.family) {
+            this.step++;
+            for (var key in this.forms.family.fields) {
+              this.forms.family.fields[key] = resStud.family[key];
+            }
+          }
 
-      if (res.family) {
-        this.step++;
-        for (var key in this.forms.family.fields) {
-          this.forms.family.fields[key] = res.family[key];
-        }
-      }
+          if (resStud.education) {
+            this.step++;
+            for (var key in this.forms.education.fields) {
+              this.forms.education.fields[key] = resStud.education[key];
+            }
+          }
+          this.isLoaded = true;
+        })
+    })
 
-      if (res.education) {
-        this.step++;
-        for (var key in this.forms.education.fields) {
-          this.forms.education.fields[key] = res.education[key];
-        }
-      }
-      this.isLoaded = true;
-    });
+    
+
+    // this.getStudentInfo().then(response => {
+    //   const res = response.data;
+
+    //   for (var key in this.forms.student.fields) {
+    //     this.forms.student.fields[key] = res[key];
+    //   }
+
+    //   if (res.address) {
+    //     this.step++;
+    //     for (var key in this.forms.address.fields) {
+    //       this.forms.address.fields[key] = res.address[key];
+    //     }
+    //   }
+
+    //   if (res.family) {
+    //     this.step++;
+    //     for (var key in this.forms.family.fields) {
+    //       this.forms.family.fields[key] = res.family[key];
+    //     }
+    //   }
+
+    //   if (res.education) {
+    //     this.step++;
+    //     for (var key in this.forms.education.fields) {
+    //       this.forms.education.fields[key] = res.education[key];
+    //     }
+    //   }
+    //   this.isLoaded = true;
+    // });
+
+    // this.getLevelList(false,10).then(response => {
+    //   const res = response.data
+    //   res.forEach(r => {
+    //     this.options.levels.items.push({ value: r.id, label: r.name})
+    //   })
+    // });
   },
   methods: {
-    updateStudent() {
-      var child = "";
-      if (this.step == 1) {
-        this.updateStudent(
-          this.forms.student.fields,
-          this.forms.student.fields.id
-        ).then(response => {
-          if (this.step != 5) this.step++;
-        });
-      } else {
-        if (this.step == 2) {
-          child = "address";
-        } else if (this.step == 3) {
-          child = "family";
-        } else if (this.step == 4) {
-          child = "education";
+    onUpdateStudent() {
+      var steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'application' }]
+      var data = this.forms.student.fields
+      console.log(data)
+      steps.forEach(element => {
+        // push step forms[element.form] to data
+        //console.log("step : " + this.step)
+        //console.log("element : " + element.step)
+        if(element.step == this.step){
+          this.$set(data, element.form, this.forms[element.form].fields)
         }
-        this.updateStudentInfo(
-          child,
-          this.forms[child].fields,
-          this.forms.student.fields.id
-        ).then(response => {
-          const res = response.data;
+      });
+      this.step++
 
-          for (var key in this.forms[child].fields) {
-            this.forms[child].fields[key] = res[child][key];
-          }
-          if (this.step != 5) this.step++;
-        });
-      }
+      // switch (this.step) {
+      //   case 2:
+      //     this.$set(data, 'address', this.forms.address.fields)
+      //     break;
+      //   case 3:
+      //     this.$set(data, 'family', this.forms.family.fields)
+      //     break;
+      //   case 4:
+      //     this.$set(data, 'education', this.forms.education.fields)
+      //     break;
+      //   case 5:
+      //     this.$set(data, 'application', this.forms.application.fields)
+      //     break;
+      //   default:
+      //     break;
+      // }
+      // console.log(data)
+      
+      this.updateStudent(data, this.forms.student.fields.id).then(response =>{
+        const res = response.data
+        console.log(res)
+      })
+
+      
+      //this.step++
+
+      // var child = "";
+      // if (this.step == 1) {
+      //   this.updateStudent(
+      //     this.forms.student.fields,
+      //     this.forms.student.fields.id
+      //   ).then(response => {
+      //     if (this.step != 5) this.step++;
+      //   });
+      // } else {
+      //   if (this.step == 2) {
+      //     child = "address";
+      //   } else if (this.step == 3) {
+      //     child = "family";
+      //   } else if (this.step == 4) {
+      //     child = "education";
+      //   }
+      //   this.updateStudentInfo(
+      //     child,
+      //     this.forms[child].fields,
+      //     this.forms.student.fields.id
+      //   ).then(response => {
+      //     const res = response.data;
+
+      //     for (var key in this.forms[child].fields) {
+      //       this.forms[child].fields[key] = res[child][key];
+      //     }
+      //     if (this.step != 5) this.step++;
+      //   });
+      // }
+    },
+    loadCourses(){
+      
+      this.options.courses.items = [];
+      this.tables.subjects.items = [];
+      this.forms.application.fields.courseId = null;
+      var params = { paginate: false } 
+      this.getCoursesOfLevelList(this.forms.application.fields.levelId, { params: params }).then(response => {
+        const res = response.data
+        console.log(response)
+        console.log(res.length)
+        
+        if(res.length == 0){
+          
+          this.loadSubjects();
+        }
+        res.forEach(r => {
+          this.options.courses.items.push({ value: r.id, label: r.name})
+        })
+      });
+
+      
+    },
+    loadSubjects(){
+      this.tables.subjects.isLoading = true
+      this.tables.subjects.items = [];
+      var params = { courseId : this.forms.application.fields.courseId, semesterId : this.forms.application.fields.semesterId , paginate : false} 
+      console.log(this.forms.application.fields.semesterId)
+      console.log(params)
+
+      this.getSubjectsOfLevelList(this.forms.application.fields.levelId, { params: params })
+        .then(response => {
+          console.log(response)
+          const res = response.data
+          this.tables.subjects.items = res
+          this.tables.subjects.isLoading = false
+      });
+
+      
     }
   }
 };
