@@ -1,307 +1,285 @@
+<style scoped>
+.my-table {
+  display: flex;
+  flex-flow: column;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  padding: 6px 0px;
+  border-radius: 25px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+</style>
 <template>
   <div>
     <!-- main container -->
-    <b-row>
-      <b-col md="12">
-        <b-card>
-          <b-row>
-            <b-col md=4>
-              <div class="left-pane">
-                <StageIndicator :stages="stages" :activeIndex="selectedIndex" @selectedItem="onSelectStage"/>
-              </div>
-            </b-col>
-            <b-col md=8>
-              <b-card style="min-height: 600px">
-                <b-card-body v-show="isLoaded">
-                  <!-- About You -->
-                  <div v-show="selectedIndex == 0">
-                    <h4>About You</h4>
-                    <p>A bit of personal details about you.</p>
-                    <b-row class="mt-4">
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Firstname</label>
-                          <b-form-input
-                            placeholder="Firstname"
-                            v-model="forms.student.fields.firstName" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Middlename</label>
-                          <b-form-input
-                            placeholder="Middlename"
-                            v-model="forms.student.fields.middleName" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Lastname</label>
-                          <b-form-input
-                            placeholder="Lastname"
-                            v-model="forms.student.fields.lastName" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Mobile No.</label>
-                          <b-form-input
-                            placeholder="Mobile No."
-                            v-model="forms.student.fields.mobileNo" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </div>
-                  <!-- About You -->
-                  <!-- Complete Address -->
-                  <div v-show="selectedIndex == 1">
-                    <h4>Complete Address</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>City Town</label>
-                          <b-form-input
-                            placeholder="City Town"
-                            v-model="forms.address.fields.city" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Province</label>
-                          <b-form-input
-                            placeholder="Province"
-                            v-model="forms.address.fields.province" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Country</label>
-                          <b-form-input
-                            placeholder="Country"
-                            v-model="forms.address.fields.country" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Postal Code</label>
-                          <b-form-input
-                            placeholder="Postal Code"
-                            v-model="forms.address.fields.postalCode" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="12">
-                        <b-form-group>
-                          <label>Address</label>
-                          <b-form-textarea
-                            placeholder="Address"
-                            rows="3"
-                            v-model="forms.address.fields.address" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </div>
-                  <!-- Complete Address -->
-                  <!-- Family Background -->
-                  <div v-show="selectedIndex == 2">
-                    <h4>Family Background</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Father</label>
-                          <b-form-input
-                            placeholder="Father"
-                            v-model="forms.family.fields.fatherName" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Contact No.</label>
-                          <b-form-input
-                            placeholder="Contact No"
-                            v-model="forms.family.fields.fatherMobileNo" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Occupation</label>
-                          <b-form-input
-                            placeholder="Occupation"
-                            v-model="forms.family.fields.fatherOccupation" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Email Address</label>
-                          <b-form-input
-                            placeholder="Email Address"
-                            v-model="forms.family.fields.fatherEmail" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row class="mt-3">
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Mother</label>
-                          <b-form-input
-                            placeholder="Mother"
-                            v-model="forms.family.fields.motherName" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Contact No.</label>
-                          <b-form-input
-                            placeholder="Contact No"
-                            v-model="forms.family.fields.motherMobileNo" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Occupation</label>
-                          <b-form-input
-                            placeholder="Occupation"
-                            v-model="forms.family.fields.motherOccupation" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Email Address</label>
-                          <b-form-input
-                            placeholder="Email Address"
-                            v-model="forms.family.fields.motherEmail" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </div>
-                  <!-- Family Background -->
-                  <!-- Previous Education -->
-                  <div v-show="selectedIndex == 3">
-                    <h4>Previous Education</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Last School Attended</label>
-                          <b-form-input
-                            placeholder="Last School Attended"
-                            v-model="forms.education.fields.lastSchoolAttended" />
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Level</label>
-                          <b-form-input
-                            placeholder="Level"
-                            v-model="forms.education.fields.year" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="12">
-                        <b-form-group>
-                          <label>Last School Address</label>
-                          <b-form-input
-                            placeholder="Last School Address"
-                            v-model="forms.education.fields.lastSchoolAddress" />
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </div>
-                  <!-- Previous Education -->
-                  <!-- Application -->
-                  <div v-show="selectedIndex == 4">
-                    <h4>Application</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Level</label>
-                          <b-form-select @input="loadCourses()" v-model='forms.application.fields.levelId' :disabled='options.levels.items.length == 0'>
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                              {{level.name}}
-                            </b-form-select-option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-                      <b-col md="6">
-                        <b-form-group>
-                          <label>Course</label>
-                          <b-form-select @input="loadSubjects()" v-model='forms.application.fields.courseId' :disabled='options.courses.items.length == 0'>
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                              {{course.name}}
-                            </b-form-select-option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md="12">
-                        <b-table
-                          sticky-header="300px"
-                          head-variant="light"
-                          responsive small hover outlined show-empty
-                          :fields="tables.subjects.fields"
-                          :items.sync="tables.subjects.items"
-                          :busy="tables.subjects.isBusy"
-                        >
-                          <template v-slot:cell(name)="data">
-                              <span>{{data.item.name}}</span><br>
-                              <small>{{data.item.description}}</small>
-                          </template>
-                        </b-table>
-                      </b-col>
-                    </b-row>
-                  </div>
-                  <!-- Previous Education -->
-                </b-card-body>
-                <template v-slot:footer>
-                  <b-button @click="selectedIndex--" :disabled="selectedIndex==0" class="float-left">Back</b-button>
-                  <b-button 
-                    @click="onUpdateStudent()" 
-                    variant="outline-primary" 
-                    class="float-right">
-                      {{ selectedIndex != 4 ? 'Next' : 'Submit Application'}}
-                    </b-button>
-                </template>  
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-    </b-row>
+    <CRow>
+			<CCol lg="4">
+        <CButton class="btn-circle" color="primary">1</CButton>
+        <span style="font-size: 20px; font-weight:bold;">Personal Info</span>
+      </CCol>
+      <CCol lg="8">
+        <CCard style="min-height: 600px">
+          <CCardBody v-if="!isLoaded" class="d-flex content-center">
+            <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </CCardBody>
+          <CCardBody v-show="isLoaded">
+            <!-- About You -->
+            <div v-show="step==1">
+              <h4>About You</h4>
+              <p>A bit of personal details about you.</p>
+              <CRow class="mt-4">
+                <CCol md="6">
+                  <CInput
+                    label="Firstname"
+                    placeholder="Firstname"
+                    v-model="forms.student.fields.firstName"
+                  />
+                </CCol>
+                <CCol md="6">
+                  <CInput
+                    label="Middlename"
+                    placeholder="Middlename"
+                    v-model="forms.student.fields.middleName"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol md="6">
+                  <CInput
+                    label="Lastname"
+                    placeholder="Lastname"
+                    v-model="forms.student.fields.lastName"
+                  />
+                </CCol>
+                <CCol md="6">
+                  <CInput
+                    label="Mobile No."
+                    placeholder="Mobile No."
+                    v-model="forms.student.fields.mobileNo"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+            <!-- About You -->
+            <!-- Complete Address -->
+            <div v-show="step == 2">
+              <h4>Complete Address</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="City Town"
+                    placeholder="City Town"
+                    v-model="forms.address.fields.city"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Province"
+                    placeholder="Province"
+                    v-model="forms.address.fields.province"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="Country"
+                    placeholder="Country"
+                    v-model="forms.address.fields.country"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Postal Code"
+                    placeholder="Postal Code"
+                    v-model="forms.address.fields.postalCode"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="12">
+                  <CTextarea
+                    label="Address"
+                    placeholder="Address"
+                    rows="3"
+                    v-model="forms.address.fields.address"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+            <!-- Complete Address -->
+            <!-- Family Background -->
+            <div v-show="step == 3">
+              <h4>Family Background</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="Father"
+                    placeholder="Father"
+                    v-model="forms.family.fields.fatherName"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Contact Number"
+                    placeholder="Contact Number"
+                    v-model="forms.family.fields.fatherMobileNo"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="Occupation"
+                    placeholder="Occupation"
+                    v-model="forms.family.fields.fatherOccupation"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Email Address"
+                    placeholder="Email Address"
+                    v-model="forms.family.fields.fatherEmail"
+                  />
+                </CCol>
+              </CRow>
+              <CRow class="mt-3">
+                <CCol lg="6">
+                  <CInput
+                    label="Mother"
+                    placeholder="Mother"
+                    v-model="forms.family.fields.motherName"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Contact Number"
+                    placeholder="Contact Number"
+                    v-model="forms.family.fields.motherMobileNo"
+                  />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="Occupation"
+                    placeholder="Occupation"
+                    v-model="forms.family.fields.motherOccupation"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput
+                    label="Email Address"
+                    placeholder="Email Address"
+                    v-model="forms.family.fields.motherEmail"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+            <!-- Family Background -->
+            <!-- Previous Education -->
+            <div v-show="step == 4">
+              <h4>Previous Education</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+              <CRow>
+                <CCol lg="6">
+                  <CInput
+                    label="Last School Attended"
+                    placeholder="Last School Attended"
+                    v-model="forms.education.fields.lastSchoolAttended"
+                  />
+                </CCol>
+                <CCol lg="6">
+                  <CInput label="Level" placeholder="Level" v-model="forms.education.fields.year" />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="12">
+                  <CInput
+                    label="Address"
+                    placeholder="Address"
+                    v-model="forms.education.fields.lastSchoolAddress"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+            <!-- Previous Education -->
+            <!-- Application -->
+            <div v-show="step == 5">
+              <h4>Application</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+              <CRow>
+                <CCol lg="6">
+                  <CSelect 
+                    label="Level"
+                    placeholder="Level" 
+                    :value.sync="forms.application.fields.levelId"
+                    :options="options.levels.items"
+                    @change="loadCourses"
+                    />
+                </CCol>
+                <CCol lg="6">
+                  <CSelect 
+                    label="Course" 
+                    placeholder="Course"
+                    :value.sync="forms.application.fields.courseId"
+                    :options="options.courses.items"
+                    @change="loadSubjects"
+                     />
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="12">
+                  <CDataTable
+                    class="my-table"
+                    style="border-top: none"
+                    responsive
+                    :fields="tables.subjects.fields"
+                    :items.sync="tables.subjects.items"
+                    :loading="tables.subjects.isLoading"
+                  >
+                    <template #subject_name="{item}">
+                      <td>
+                        <span>{{item.subject_name}}</span>
+                        <br />
+                        <small>{{item.description}}</small>
+                      </td>
+                    </template>
+                  </CDataTable>
+                </CCol>
+              </CRow>
+            </div>
+            <!-- Previous Education -->
+          </CCardBody>
+          <CCardFooter>
+            <CButton @click="step--" :disabled="step==1" class="float-left">Back</CButton>
+            <CButton @click="onUpdateStudent()" color="outline-primary" class="float-right">Next</CButton>
+          </CCardFooter>
+        </CCard>
+      </CCol>
+    </CRow>
   </div>
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi } from "../../mixins/api"
-import StageIndicator from '../components/StageIndicator'
+import { StudentApi, LevelApi, AuthApi } from "../../mixins/api";
 export default {
   name: "StudentInfo",
   mixins: [StudentApi, LevelApi, AuthApi],
-  components: {
-    StageIndicator
-  },
   data() {
     return {
       isLoaded: false,
+      step: 2,
       forms: {
         student: {
           fields: {
@@ -354,18 +332,18 @@ export default {
       },
       tables :{
         subjects: {
-          isBusy: false,
+          isLoading: false,
           fields: [
             {
               key: "name",
               label: "SUBJECTS",
-              tdClass: "align-middle",
-              thStyle: { width: "80%" }
+              _classes: "align-middle",
+              _style: "width: 80%"
             },
             {
               key: "units",
               label: "UNITS",
-              tdClass: "align-middle text-center"
+              _classes: "align-middle text-center"
             }
           ],
           items: []
@@ -378,34 +356,7 @@ export default {
         courses :{
           items:[]
         }
-      },
-      selectedIndex: 0,
-      stages: [
-        {
-          header: "Personal Info",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit psum dolor sit amet psum dolor sit amet"
-        },
-        {
-          header: "Complete Address",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit psum dolor sit amet psum dolor sit amet"
-        },
-        {
-          header: "Family Background",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Previous Education",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Application",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Billing",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        }
-      ]
+      }
       
     };
   },
@@ -419,21 +370,21 @@ export default {
           }
 
           if (resStud.address) {
-            this.selectedIndex++
+            this.step++;
             for (var key in this.forms.address.fields) {
               this.forms.address.fields[key] = resStud.address[key];
             }
           }
 
           if (resStud.family) {
-            this.selectedIndex++
+            this.step++;
             for (var key in this.forms.family.fields) {
               this.forms.family.fields[key] = resStud.family[key];
             }
           }
 
           if (resStud.education) {
-            this.selectedIndex++
+            this.step++;
             for (var key in this.forms.education.fields) {
               this.forms.education.fields[key] = resStud.education[key];
             }
@@ -442,61 +393,154 @@ export default {
         })
     })
 
-    var params = { paginate: false }
-    this.getLevelList(params).then(response => {
-      const res = response.data
-      this.options.levels.items = res
-    });
+    
+
+    // this.getStudentInfo().then(response => {
+    //   const res = response.data;
+
+    //   for (var key in this.forms.student.fields) {
+    //     this.forms.student.fields[key] = res[key];
+    //   }
+
+    //   if (res.address) {
+    //     this.step++;
+    //     for (var key in this.forms.address.fields) {
+    //       this.forms.address.fields[key] = res.address[key];
+    //     }
+    //   }
+
+    //   if (res.family) {
+    //     this.step++;
+    //     for (var key in this.forms.family.fields) {
+    //       this.forms.family.fields[key] = res.family[key];
+    //     }
+    //   }
+
+    //   if (res.education) {
+    //     this.step++;
+    //     for (var key in this.forms.education.fields) {
+    //       this.forms.education.fields[key] = res.education[key];
+    //     }
+    //   }
+    //   this.isLoaded = true;
+    // });
+
+    // this.getLevelList(false,10).then(response => {
+    //   const res = response.data
+    //   res.forEach(r => {
+    //     this.options.levels.items.push({ value: r.id, label: r.name})
+    //   })
+    // });
   },
   methods: {
     onUpdateStudent() {
-      var steps = [{ step : 1, form: 'address' }, { step : 2, form: 'family' }, { step : 3, form: 'education' }, { step : 4, form: 'application' }]
-      var data = {}
-      for (var key in this.forms.student.fields) {
-        data[key] = this.forms.student.fields[key]
-      }
-
+      var steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'application' }]
+      var data = this.forms.student.fields
+      console.log(data)
       steps.forEach(element => {
-        if(element.step == this.selectedIndex){
+        // push step forms[element.form] to data
+        //console.log("step : " + this.step)
+        //console.log("element : " + element.step)
+        if(element.step == this.step){
           this.$set(data, element.form, this.forms[element.form].fields)
         }
       });
+      this.step++
 
-      if(this.selectedIndex < 5){
-        this.selectedIndex++
-      }
+      // switch (this.step) {
+      //   case 2:
+      //     this.$set(data, 'address', this.forms.address.fields)
+      //     break;
+      //   case 3:
+      //     this.$set(data, 'family', this.forms.family.fields)
+      //     break;
+      //   case 4:
+      //     this.$set(data, 'education', this.forms.education.fields)
+      //     break;
+      //   case 5:
+      //     this.$set(data, 'application', this.forms.application.fields)
+      //     break;
+      //   default:
+      //     break;
+      // }
+      // console.log(data)
       
       this.updateStudent(data, this.forms.student.fields.id).then(response =>{
         const res = response.data
-        console.log(data)
+        console.log(res)
       })
+
+      
+      //this.step++
+
+      // var child = "";
+      // if (this.step == 1) {
+      //   this.updateStudent(
+      //     this.forms.student.fields,
+      //     this.forms.student.fields.id
+      //   ).then(response => {
+      //     if (this.step != 5) this.step++;
+      //   });
+      // } else {
+      //   if (this.step == 2) {
+      //     child = "address";
+      //   } else if (this.step == 3) {
+      //     child = "family";
+      //   } else if (this.step == 4) {
+      //     child = "education";
+      //   }
+      //   this.updateStudentInfo(
+      //     child,
+      //     this.forms[child].fields,
+      //     this.forms.student.fields.id
+      //   ).then(response => {
+      //     const res = response.data;
+
+      //     for (var key in this.forms[child].fields) {
+      //       this.forms[child].fields[key] = res[child][key];
+      //     }
+      //     if (this.step != 5) this.step++;
+      //   });
+      // }
     },
-    loadCourses(){ 
-      this.forms.application.fields.courseId = null
+    loadCourses(){
+      
+      this.options.courses.items = [];
+      this.tables.subjects.items = [];
+      this.forms.application.fields.courseId = null;
       var params = { paginate: false } 
-      this.getCoursesOfLevelList(this.forms.application.fields.levelId, params).then(response => {
+      this.getCoursesOfLevelList(this.forms.application.fields.levelId, { params: params }).then(response => {
         const res = response.data
-        this.options.courses.items = res
-        if(res.length == 0){
-          this.loadSubjects()
-          return
-        }
-        this.tables.subjects.items = []
+        console.log(response)
+        console.log(res.length)
         
+        if(res.length == 0){
+          
+          this.loadSubjects();
+        }
+        res.forEach(r => {
+          this.options.courses.items.push({ value: r.id, label: r.name})
+        })
       });
+
+      
     },
     loadSubjects(){
-      this.tables.subjects.isBusy = true
+      this.tables.subjects.isLoading = true
+      this.tables.subjects.items = [];
       var params = { courseId : this.forms.application.fields.courseId, semesterId : this.forms.application.fields.semesterId , paginate : false} 
-      this.getSubjectsOfLevelList(this.forms.application.fields.levelId, params)
+      console.log(this.forms.application.fields.semesterId)
+      console.log(params)
+
+      this.getSubjectsOfLevelList(this.forms.application.fields.levelId, { params: params })
         .then(response => {
+          console.log(response)
           const res = response.data
           this.tables.subjects.items = res
-          this.tables.subjects.isBusy = false
+          this.tables.subjects.isLoading = false
       });
-    },
-    onSelectStage(idx) {
-      this.selectedIndex = idx;
+
+      
     }
   }
 };

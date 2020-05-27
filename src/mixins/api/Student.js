@@ -17,5 +17,11 @@ export default {
     updateStudent(data, id) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/students/${id}`, data)
     },
+    getStudentInfo(){
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/studentinfo`)
+    },
+    updateStudentInfo(child, data, id){
+      return this.$authHttp.put(`${apiPrefix}/${apiVersion}/studentinfo/` + child + `/` + id, data)
+    }
   }
 }

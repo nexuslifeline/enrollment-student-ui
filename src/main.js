@@ -6,8 +6,6 @@ import CoreuiVue from '@coreui/vue'
 import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
 import { httpRequest, httpAuthRequest } from './helpers/http'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
 //import axios from 'axios'
 
 //axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
@@ -18,8 +16,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.config.performance = true
 Vue.use(CoreuiVue)
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
 Vue.prototype.$log = console.log.bind(console)
 
 Vue.prototype.$http = httpRequest
