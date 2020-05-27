@@ -9,13 +9,15 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Dashboard = () => import('@/views/Dashboard')
 
 
-const StudentInfo = () => import('@/views/StudentInfo')
+const StudentInfo = () => import('@/views/pages/StudentInfo')
 
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
+
+const DemoComponents = () => import('@/views/pages/DemoComponents')
 
 
 Vue.use(Router)
@@ -41,7 +43,7 @@ router.beforeEach((to, from, next) => {
       next({name: from.name})
       return
   }
-  
+
 next()
 })
 
@@ -81,6 +83,11 @@ function configRoutes () {
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/demo',
+      name: 'Demo',
+      component: DemoComponents
     },
     {
       path: '*',
