@@ -11,11 +11,14 @@ const Dashboard = () => import('@/views/Dashboard')
 
 const StudentInfo = () => import('@/views/pages/StudentInfo')
 
+
+
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
+const NewStudentInfo = () => import('@/views/pages/NewStudentInfo')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -65,6 +68,12 @@ function configRoutes () {
           path: 'studentinfo',
           name: 'Student Info',
           component: StudentInfo,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'newstudentinfo',
+          name: 'New Student Info',
+          component: NewStudentInfo,
           meta: {requiresAuth: true}
         },
       ]

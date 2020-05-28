@@ -13,6 +13,12 @@ export default [
         name: 'Student Information',
         to: '/studentinfo',
         icon: 'cil-user'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'New Student Information',
+        to: '/newstudentinfo',
+        icon: 'cil-user'
       }
     ]
   }
