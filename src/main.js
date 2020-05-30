@@ -7,6 +7,7 @@ import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
 import { httpRequest, httpAuthRequest } from './helpers/http'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+window.moment = require('moment')
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 

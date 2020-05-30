@@ -11,7 +11,7 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Student Information',
-        to: '/studentinfo',
+        to: '/student-info',
         icon: 'cil-user'
       },
       {

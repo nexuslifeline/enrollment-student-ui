@@ -6,7 +6,6 @@ export default {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/levels`, { params: params });
     },
     getCoursesOfLevelList(levelId, params){
-      console.log(params)
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/levels/${levelId}/courses`, { params: params });
     },
     getSubjectsOfLevelList(levelId, params){

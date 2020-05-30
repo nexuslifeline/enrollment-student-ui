@@ -65,7 +65,7 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'studentinfo',
+          path: 'student-info',
           name: 'Student Info',
           component: StudentInfo,
           meta: {requiresAuth: true}
