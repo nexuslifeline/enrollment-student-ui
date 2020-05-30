@@ -228,7 +228,10 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Level</label>
-                          <b-form-select @input="loadCourses()" v-model='forms.application.fields.levelId' :disabled='options.levels.items.length == 0'>
+                          <b-form-select 
+                            @input="loadCourses()" 
+                            v-model='forms.application.fields.levelId' 
+                            :disabled='options.levels.items.length === 0'>
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                             </template>
@@ -241,7 +244,10 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Course</label>
-                          <b-form-select @input="loadSubjects()" v-model='forms.application.fields.courseId' :disabled='options.courses.items.length == 0'>
+                          <b-form-select
+                            @input="loadSubjects()"
+                            v-model='forms.application.fields.courseId'
+                            :disabled='options.courses.items.length == 0'>
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                             </template>
@@ -274,13 +280,13 @@
                 </b-card-body>
                 <template v-slot:footer>
                   <b-button @click="selectedIndex--" :disabled="selectedIndex==0" class="float-left">Back</b-button>
-                  <b-button 
-                    @click="onUpdateStudent()" 
-                    variant="outline-primary" 
+                  <b-button
+                    @click="onUpdateStudent()"
+                    variant="outline-primary"
                     class="float-right">
                       {{ selectedIndex != 4 ? 'Next' : 'Submit Application'}}
                     </b-button>
-                </template>  
+                </template>
               </b-card>
             </b-col>
           </b-row>
@@ -406,7 +412,7 @@ export default {
           description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         }
       ]
-      
+
     };
   },
   created() {
@@ -414,27 +420,27 @@ export default {
       const res = response.data.userable
         this.getStudent(res.id).then(response => {
           const resStud = response.data
-          for (var key in this.forms.student.fields) {
+          for (let key in this.forms.student.fields) {
             this.forms.student.fields[key] = resStud[key];
           }
 
           if (resStud.address) {
             this.selectedIndex++
-            for (var key in this.forms.address.fields) {
+            for (let key in this.forms.address.fields) {
               this.forms.address.fields[key] = resStud.address[key];
             }
           }
 
           if (resStud.family) {
             this.selectedIndex++
-            for (var key in this.forms.family.fields) {
+            for (let key in this.forms.family.fields) {
               this.forms.family.fields[key] = resStud.family[key];
             }
           }
 
           if (resStud.education) {
             this.selectedIndex++
-            for (var key in this.forms.education.fields) {
+            for (let key in this.forms.education.fields) {
               this.forms.education.fields[key] = resStud.education[key];
             }
           }
@@ -450,14 +456,14 @@ export default {
   },
   methods: {
     onUpdateStudent() {
-      var steps = [{ step : 1, form: 'address' }, { step : 2, form: 'family' }, { step : 3, form: 'education' }, { step : 4, form: 'application' }]
-      var data = {}
+      let steps = [{ step : 1, form: 'address' }, { step : 2, form: 'family' }, { step : 3, form: 'education' }, { step : 4, form: 'application' }]
+      let data = {}
       for (var key in this.forms.student.fields) {
         data[key] = this.forms.student.fields[key]
       }
 
       steps.forEach(element => {
-        if(element.step == this.selectedIndex){
+        if(element.step === this.selectedIndex){
           this.$set(data, element.form, this.forms[element.form].fields)
         }
       });
@@ -465,34 +471,38 @@ export default {
       if(this.selectedIndex < 5){
         this.selectedIndex++
       }
-      
-      this.updateStudent(data, this.forms.student.fields.id).then(response =>{
+
+      this.updateStudent(data, this.forms.student.fields.id).then(response => {
         const res = response.data
         console.log(data)
       })
     },
-    loadCourses(){ 
-      this.forms.application.fields.courseId = null
-      var params = { paginate: false } 
-      this.getCoursesOfLevelList(this.forms.application.fields.levelId, params).then(response => {
-        const res = response.data
-        this.options.courses.items = res
-        if(res.length == 0){
+    loadCourses() {
+      const { fields } = this.forms.application;
+      fields.courseId = null
+      const params = { paginate: false }
+      this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
+        this.options.courses.items = data
+        if (data.length === 0) {
           this.loadSubjects()
           return
         }
         this.tables.subjects.items = []
-        
       });
     },
-    loadSubjects(){
-      this.tables.subjects.isBusy = true
-      var params = { courseId : this.forms.application.fields.courseId, semesterId : this.forms.application.fields.semesterId , paginate : false} 
-      this.getSubjectsOfLevelList(this.forms.application.fields.levelId, params)
-        .then(response => {
-          const res = response.data
-          this.tables.subjects.items = res
-          this.tables.subjects.isBusy = false
+    loadSubjects() {
+      const { courseId, semesterId, levelId } = this.forms.application.fields;
+      const { subjects } = this.tables;
+      subjects.isBusy = true
+      const params = {
+        courseId,
+        semesterId,
+        paginate: false
+      }
+      this.getSubjectsOfLevelList(levelId, params)
+        .then(({ data }) => {
+          subjects.items = data
+          subjects.isBusy = false
       });
     },
     onSelectStage(idx) {

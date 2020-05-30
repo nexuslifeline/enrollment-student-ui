@@ -8,23 +8,25 @@
               <h5>REGISTER AS STUDENT</h5>
               <b-row class="mb-4">
                 <b-col  md=6 class="mb-2">
-                  <b-button 
-                    variant="outline-primary" 
-                    block @click="register()"> Signup New Student
+                  <b-button
+                    variant="outline-primary"
+                    block
+                    @click="register()"> Signup New Student
                   </b-button>
                 </b-col>
                   <b-col md=6>
-                  <b-button 
-                    variant="outline-primary" 
-                    block @click="register()"> Signup Old Student
+                  <b-button
+                    variant="outline-primary"
+                    block
+                    @click="register()"> Signup Old Student
                   </b-button>
                 </b-col>
               </b-row>
               <b-row class="mb-4">
                 <b-col md=12>
-                  <label 
-                    align="center" 
-                    class="float-center" 
+                  <label
+                    align="center"
+                    class="float-center"
                     style="width:100%">-OR-
                   </label>
                 </b-col>
@@ -42,9 +44,9 @@
                   </b-form-group>
               <b-row align-h="end">
                 <b-col md=4>
-                  <b-button 
-                    @click="authLogin()" 
-                    variant="outline-primary" 
+                  <b-button
+                    @click="authLogin()"
+                    variant="outline-primary"
                     block>Login
                   </b-button>
                 </b-col>
@@ -77,23 +79,6 @@ export default {
   },
   methods: {
     authLogin(){
-      // this.$http.post('api/v1/login', { username: this.username, password: this.password })
-      //   .then(response => {
-      //     const res = response.data
-      //     this.$store.commit('loginUser')
-      //     localStorage.setItem('access_token', res.token.access_token)
-      //     var student = res.student
-      //     if(student.address == null || student.education == null){
-      //       this.$router.push({name : 'Student Info'})
-      //     }
-      //     else{
-      //       this.$router.push({ name: 'Dashboard'})
-      //     }
-      //   })
-      //   .catch(response => {
-      //     console.log(response)
-      //   })
-
       this.login({ username: this.username, password: this.password }).then(response => {
         const res = response.data
         localStorage.setItem('access_token', res.accessToken)
