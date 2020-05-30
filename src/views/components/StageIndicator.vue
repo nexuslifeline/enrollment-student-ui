@@ -1,10 +1,13 @@
 <template>
   <ul class="indicator">
-    <li v-for="(stage, index) in stages" class="indicator__item" @click="$emit('selectedItem', index)">
+    <li
+      v-for="(stage, index) in stages"
+      :class="{'indicator__item': true, 'active': [activeIndex].includes(index) }"
+      @click="$emit('selectedItem', index)">
       <span class="indicator__number">{{index + 1}}</span>
       <div class="indicator__text-container">
         <span class="indicator__headline">{{stage.header}}</span>
-        <p v-if="[activeIndex].includes(index)" class="indicator__description">
+        <p v-if="[activeIndex].includes(index)" class="indicator__description fade-in">
           {{stage.description}}
         </p>
       </div>
@@ -26,6 +29,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  @import "../../assets/scss/shared.scss";
+
   .indicator {
     list-style: none;
     display: flex;
@@ -44,6 +49,15 @@ export default {
     &:hover {
       cursor: pointer;
     }
+
+    &.active {
+      .indicator__number {
+        background-color: $blue;
+      }
+      .indicator__headline {
+        color: $blue;
+      }
+    }
   }
 
   .indicator__text-container {
@@ -56,17 +70,25 @@ export default {
   .indicator__headline {
     font-size: 16px;
     font-weight: 500;
-    color: #0080FF;
+    color:  $light-blue;
   }
 
   .indicator__description {
-    color: #b8b8b8;
+    color: $gray;
     margin: 0;
+    opacity: 0;
+    -webkit-transition: all 2s;
+    -moz-transition: all 2s;
+    transition: all 2s;
+
+    &.fade-in {
+      opacity: 1;
+    }
   }
 
   .indicator__number {
-    background-color: #0080FF;
-    color: #FFFFFF;
+    background-color: $light-blue;
+    color: $white;
     height: 33px;
     width: 33px;
     display: flex;
