@@ -7,15 +7,11 @@ import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
 import { httpRequest, httpAuthRequest } from './helpers/http'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-//import axios from 'axios'
-
-//axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-// const axiosConfig = {
-//   baseURL: 'http://enrollment.test',
-//   timeout: 30000
-// }
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
 
 Vue.config.performance = true
+Vue.component('v-icon', Icon)
 Vue.use(CoreuiVue)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
