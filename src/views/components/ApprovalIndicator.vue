@@ -17,7 +17,7 @@
           ></v-icon>
           <span
             v-else
-            class="wizard__number">
+            class="wizard__number bounce-in">
             {{index + 1}}
           </span>
         </span>
