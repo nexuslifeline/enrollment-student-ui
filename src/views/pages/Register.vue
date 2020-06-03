@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center min-vh-100">
     <CContainer fluid>
       <CRow class="justify-content-center">
-        <CCol md="6">
+        <CCol xs="12" md="8" lg="6">
           <CCard>
             <CCardBody>
               <CForm>
@@ -86,7 +86,12 @@
                   </CCol>
                 </CRow>
                 <CRow align-h="end">
-                  <CCol md=3>
+                  <CCol 
+                    :xs="{ size: '12' }"
+                    :sm="{ size: '12', offset: '3' }" 
+                    :md="{ size: '6', offset: '3' }"
+                    :lg="{ size: '4', offset: '4' }"
+                  >
                     <CButton @click="createAccount()" block color="outline-primary">Create Account</CButton>
                   </CCol>
                 </CRow>
@@ -124,9 +129,13 @@ export default {
   methods: {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
-        this.login({ username: this.forms.student.fields.username, password: this.forms.student.fields.password }).then(response => {
-          const res = response.data
-          console.log(res)
+        const { username, password } = this.forms.student.fields;
+
+        this.login({ 
+          username, 
+          password 
+        }).then(response => {
+          const res = response.data;
           localStorage.setItem('access_token', res.accessToken)
           this.$store.commit('loginUser')
           this.$router.push({name : 'Student Info'})
