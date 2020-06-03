@@ -2,7 +2,13 @@
   <div class="d-flex align-items-center min-vh-100">
     <b-container fluid>
       <b-row class="justify-content-center">
-        <b-col md="6">
+        <b-col
+          xs=12
+          sm=12 
+          md=10
+          lg=8
+          xl=6
+          >
           <b-card>
             <b-card-body>
               <b-form>
@@ -92,8 +98,13 @@
                     </b-form-group>
                   </b-col>
                 </b-row>
-                <b-row align-h="end">
-                  <b-col md=3>
+                <b-row>
+                  <b-col
+                    xs=12
+                    sm=12
+                    offset-md=4
+                    md=4
+                  >
                     <b-button @click="createAccount()" block variant="outline-primary">Create Account</b-button>
                   </b-col>
                 </b-row>
@@ -131,7 +142,9 @@ export default {
   methods: {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
-        this.login({ username: this.forms.student.fields.username, password: this.forms.student.fields.password }).then(response => {
+        const { username, password } = this.forms.student.fields;
+
+        this.login({ username, password }).then(response => {
           const res = response.data
           localStorage.setItem('access_token', res.accessToken)
           this.$store.commit('loginUser')
