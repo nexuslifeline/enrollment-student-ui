@@ -4,3 +4,4 @@ export { default as AuthApi } from './Auth';
 export { default as LevelApi } from './Level';
 export { default as SchoolYearApi } from './SchoolYear';
 export { default as SemesterApi } from './Semester';
+export { default as ApplicationStepApi } from './ApplicationStep';
