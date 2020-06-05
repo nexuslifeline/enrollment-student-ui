@@ -31,16 +31,29 @@
                   </label>
                 </b-col>
               </b-row>
-              <b-form-group>
+              <b-form-group
+                id="username"
+                label-for="input-1"
+              >
                 <b-form-input
                   v-model="username"
-                  placeholder="Username" />
+                  placeholder="Username"
+                  :state="validations.username.text !== '' && usernameFeedbackState"
+                />
+                <b-form-invalid-feedback>
+                  {{validations.username.text}}
+                </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group>
                 <b-form-input
                   v-model="password"
                   type="password"
-                  placeholder="Password" />
+                  placeholder="Password"
+                    :state="validations.password.text !== '' && passwordFeedBackState"
+                />
+                <b-form-invalid-feedback>
+                  {{validations.password.text}}
+                </b-form-invalid-feedback>
                   </b-form-group>
               <b-row align-h="end">
                 <b-col md=4>
@@ -74,19 +87,50 @@ export default {
   data() {
     return {
       username: null,
-      password: null
+      password: null,
+      validations: {
+        username: {
+          isErrorShown: false,
+          text: ''
+        },
+        password: {
+          isErrorShown: false,
+          text: ''
+        }
+      }
+    }
+  },
+  computed: {
+    usernameFeedbackState() {
+      return !this.validations.username.isErrorShown ? true : false
+    },
+    passwordFeedBackState() {
+      return !this.validations.password.isErrorShown ? true : false
     }
   },
   methods: {
     authLogin(){
-      this.login({ username: this.username, password: this.password }).then(response => {
-        const res = response.data
-        localStorage.setItem('access_token', res.accessToken)
-        this.$store.commit('loginUser')
-        this.$router.push({name : 'Student Info'})
-      }).catch(response =>{
-        console.log(response)
-      })
+      this.login({ username: this.username, password: this.password })
+        .then(response => {
+          const res = response.data
+          localStorage.setItem('access_token', res.accessToken)
+          this.$store.commit('loginUser')
+          this.$router.push({name : 'Student Info'})
+        }).catch(err => {
+          const errorResponseData = err.response.data
+          const { username, password } = errorResponseData.errors
+
+          if ('username' in errorResponseData.errors) {
+            this.validations.username.isErrorShown = true;
+            this.validations.username.text = username[0];
+          }
+
+          if ('password' in errorResponseData.errors) {
+            this.validations.password.isErrorShown = true;
+            this.validations.password.text = password[0];
+          }
+
+        })
     },
     register(){
       this.$router.push({name: 'Register'})
