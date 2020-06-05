@@ -38,11 +38,11 @@
         <p>console.log output:</p>
         <p class="code-section"><code>{{SchoolCategories.getEnum(1).name}}</code></p>
         <h4 class="mt-4">Accessing id</h4>
-        <p class="code-section"><code>SchoolCategories.PRE_SCHOOL_.id</code></p>
+        <p class="code-section"><code>SchoolCategories.PRE_SCHOOL.id</code></p>
         <p>console.log output:</p>
         <p class="code-section"><code>{{SchoolCategories.PRE_SCHOOL.id}}</code></p>
         <h4 class="mt-4">Accessing name</h4>
-        <p class="code-section"><code>SchoolCategories.PRE_SCHOOL_.name</code></p>
+        <p class="code-section"><code>SchoolCategories.PRE_SCHOOL.name</code></p>
         <p>console.log output:</p>
         <p class="code-section"><code>{{SchoolCategories.PRE_SCHOOL.name}}</code></p>
         <h4 class="mt-4">Getting object from a value</h4>
