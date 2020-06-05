@@ -8,16 +8,18 @@
             <b-row>
               <b-col md="4">
                 <div class="left-pane">
-                  <StageIndicator :stages="stages" :activeIndex="forms.applications.fields.applicationStepId" />
+                  <StageIndicator 
+                    :stages="stages.values" 
+                    :activeIndex="forms.activeApplication.fields.applicationStepId" />
                 </div>
               </b-col>
               <b-col md="8">
                 <b-card style="min-height: 600px">
                   <b-card-body>
+                    <h4>{{stages.getEnum(forms.activeApplication.fields.applicationStepId).name}}</h4>
+                    <p>{{stages.getEnum(forms.activeApplication.fields.applicationStepId).description}}</p>
                     <!-- About You -->
-                    <div v-show="forms.applications.fields.applicationStepId === 1">
-                      <h4>About You</h4>
-                      <p>A bit of personal details about you.</p>
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 1">
                       <b-row class="mt-4">
                         <b-col md="6">
                           <b-form-group>
@@ -57,9 +59,7 @@
                     </div>
                     <!-- About You -->
                     <!-- Complete Address -->
-                    <div v-show="forms.applications.fields.applicationStepId === 2">
-                      <h4>Complete Address</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 2">
                       <b-row>
                         <b-col md="6">
                           <b-form-group>
@@ -110,9 +110,7 @@
                     </div>
                     <!-- Complete Address -->
                     <!-- Family Background -->
-                    <div v-show="forms.applications.fields.applicationStepId === 3">
-                      <h4>Family Background</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 3">
                       <b-row>
                         <b-col md="6">
                           <b-form-group>
@@ -188,9 +186,7 @@
                     </div>
                     <!-- Family Background -->
                     <!-- Previous Education -->
-                    <div v-show="forms.applications.fields.applicationStepId === 4">
-                      <h4>Previous Education</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 4">
                       <b-row>
                         <b-col md="6">
                           <b-form-group>
@@ -222,146 +218,144 @@
                     </div>
                     <!-- Previous Education -->
                     <!-- Application -->
-                    <div v-show="forms.applications.fields.applicationStepId === 5 && !isApplied">
-                      <h4>Application</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Level</label>
-                            <b-form-select @input="loadCourses()" v-model='forms.transcripts.fields.levelId'>
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                    <div >
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && isApplied">
+                        <b-row>
+                          <b-col md="12">
+                            <b-alert variant="success" show>
+                              <h5>APPLICATION SUBMITTED!</h5>
+                              <p>Thank you for submitting your application for this school year. 
+                              <br> We will review your application and once approved, you will
+                              <br>be able to proceed to payment.
+                              <br>
+                              <br>We will try to get back to you as soon as we can!</p>
+                            </b-alert>
+                            <b-row class="pb-2">
+                              <b-col md="12">
+                                <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                              </b-col>
+                            </b-row>
+                            <b-row class="pb-5">
+                              <b-col md="2">
+                                <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                            </b-row>
+                            <div class="approval-container">
+                              <ApprovalIndicator
+                                :stages="approvalStages"
+                                :currentStage="selectedApprovalStage"
+                              />
+                            </div>
+                          </b-col>
+                        </b-row>
+                      </div>
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && !isApplied">
+                        <b-row>
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Level</label>
+                              <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                                  {{level.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Course</label>
+                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                                  {{course.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <!-- <b-col md="6">
+                            <b-form-group>
+                              <label>School Year</label>
+                              <b-form-select v-model='forms.transcript.fields.schoolYearId'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='year in options.schoolYears.items' :key='year.id' :value='year.id'>
+                                  {{year.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col> -->
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Semester</label>
+                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                                  {{semester.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md="12">
+                            <b-table
+                              sticky-header="300px"
+                              head-variant="light"
+                              responsive small hover outlined show-empty
+                              :fields="tables.subjects.fields"
+                              :items.sync="tables.subjects.items"
+                              :busy="tables.subjects.isBusy">
+                              <template v-slot:cell(name)="data">
+                                <span>{{data.item.code}} {{data.item.name}}</span><br>
+                                <small>{{data.item.description}}</small>
                               </template>
-                              <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                                {{level.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Course</label>
-                            <b-form-select @input="loadSubjects()" v-model='forms.transcripts.fields.courseId' :disabled='options.courses.items.length === 0'>
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                                {{course.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>School Year</label>
-                            <b-form-select v-model='forms.transcripts.fields.schoolYearId'>
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='year in options.schoolYears.items' :key='year.id' :value='year.id'>
-                                {{year.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Semester</label>
-                            <b-form-select @input="loadSubjects()" v-model='forms.transcripts.fields.semesterId' :disabled='options.courses.items.length === 0'>
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='semester in options.semesters.items' :key='semester.id' :value='semester.id'>
-                                {{semester.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-table
-                            sticky-header="300px"
-                            head-variant="light"
-                            responsive small hover outlined show-empty
-                            :fields="tables.subjects.fields"
-                            :items.sync="tables.subjects.items"
-                            :busy="tables.subjects.isBusy">
-                            <template v-slot:cell(name)="data">
-                              <span>{{data.item.code}} {{data.item.name}}</span><br>
-                              <small>{{data.item.description}}</small>
-                            </template>
-                          </b-table>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col sm="9">
-                          <h5 class="float-right">TOTAL</h5>
-                        </b-col>
-                        <b-col sm="3">
-                          <h5 class='text-center pl-3'>{{totalUnits}}</h5>
-                        </b-col>
-                      </b-row>
-                    </div>
-                    <div v-show="forms.applications.fields.applicationStepId === 5 && isApplied">
-                      <h4>Application</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
-                      <b-row>
-                        <b-col md="12">
-                          <b-alert variant="success" show>
-                            <h5>APPLICATION SUBMITTED!</h5>
-                            <p>Thank you for submitting your application for this school year. 
-                            <br> We will review your application and once approved, you will
-                            <br>be able to proceed to payment.
-                            <br>
-                            <br>We will try to get back to you as soon as we can!</p>
-                          </b-alert>
-                          <b-row class="pb-2">
-                            <b-col md="12">
-                              <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                            </b-col>
-                          </b-row>
-                          <b-row class="pb-5">
-                            <b-col md="2">
-                              <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                            <b-col md="2">
-                              <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                            <b-col md="2">
-                              <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                            <b-col md="2">
-                              <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                            <b-col md="2">
-                              <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                            <b-col md="2">
-                              <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                            </b-col>
-                          </b-row>
-                          <div class="approval-container">
-                            <ApprovalIndicator
-                              :stages="approvalStages"
-                              :currentStage="selectedApprovalStage"
-                            />
-                          </div>
-                        </b-col>
-                      </b-row>
+                            </b-table>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col sm="9">
+                            <h5 class="float-right">TOTAL</h5>
+                          </b-col>
+                          <b-col sm="3">
+                            <h5 class='text-center pl-3'>{{totalUnits}}</h5>
+                          </b-col>
+                        </b-row>
+                      </div>
                     </div>
                     <!-- Application -->
                   </b-card-body>
                   <template v-if="!isApplied" v-slot:footer>
-                    <b-button @click="forms.applications.fields.applicationStepId--" :disabled="forms.applications.fields.applicationStepId===1" class="float-left">Back</b-button>
+                    <b-button @click="forms.activeApplication.fields.applicationStepId--" :disabled="forms.activeApplication.fields.applicationStepId===1" class="float-left">Back</b-button>
                     <b-button
                       @click="onUpdateStudent()" 
                       variant="outline-primary" 
                       class="float-right">
-                        {{ forms.applications.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
+                        {{ forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
                     </b-button>
                   </template>  
                 </b-card>
@@ -378,9 +372,10 @@
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi, ApplicationStepApi } from "../../mixins/api"
 import StageIndicator from '../components/StageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
+import { Semesters, ApplicationSteps } from '../../helpers/enum'
 export default {
   name: "StudentInfo",
-  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi, ApplicationStepApi],
+  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi],
   components: {
     StageIndicator,
     ApprovalIndicator
@@ -431,15 +426,14 @@ export default {
             year: null
           }
         },
-        applications : {
+        activeApplication : {
           fields: {
             id:null,
             appliedDate: null,
-            applicationStatusId: null,
             applicationStepId: null
           }
         },
-        transcripts: {
+        transcript: {
           fields: {
             studentId: null,
             semesterId: null,
@@ -479,14 +473,14 @@ export default {
           items:[]
         },
         semesters: {
-          items: []
+          items: Semesters
         },
         schoolYears: {
           items: []
         }
       },
       selectedApprovalStage: 1,
-      stages: [],
+      stages: ApplicationSteps,
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
@@ -501,45 +495,44 @@ export default {
     this.getUser().then(response => {
       const res = response.data.userable
         this.getStudent(res.id).then(response => {
-          const resStud = response.data
-          let counter = 1;
+          const res = response.data
           for (let key in this.forms.student.fields) {
-            this.forms.student.fields[key] = resStud[key];
+            this.forms.student.fields[key] = res[key];
           }
 
-          if (resStud.address) {
-            counter++
+          if (res.address) {
             for (let key in this.forms.address.fields) {
-              this.forms.address.fields[key] = resStud.address[key];
+              this.forms.address.fields[key] = res.address[key];
             }
           }
 
-          if (resStud.family) {
-            counter++
+          if (res.family) {
             for (let key in this.forms.family.fields) {
-              this.forms.family.fields[key] = resStud.family[key];
+              this.forms.family.fields[key] = res.family[key];
             }
           }
 
-          if (resStud.education) {
-            counter++
+          if (res.education) {
             for (let key in this.forms.education.fields) {
-              this.forms.education.fields[key] = resStud.education[key];
+              this.forms.education.fields[key] = res.education[key];
             }
           }
 
-          if (resStud.transcripts.length > 0) {
-            const transcripts = resStud.transcripts[0]
+          if (res.activeApplication) {
             // this.isApplied=true
-            for (let key in this.forms.transcripts.fields) {
-              this.forms.transcripts.fields[key] = transcripts[key];
+            for (let key in this.forms.transcript.fields) {
+              this.forms.transcript.fields[key] = res.activeApplication.transcript[key];
             }
-            for (let key in this.forms.applications.fields) {
-              this.forms.applications.fields[key] = transcripts.application[key];
+            for (let key in this.forms.activeApplication.fields) {
+              this.forms.activeApplication.fields[key] = res.activeApplication[key];
+              const { fields } = this.forms.activeApplication
+              if (fields.appliedDate) {
+                this.isApplied = true
+              }
             }
             
           }
-          // this.forms.applications.fields.applicationStepId = counter
+          // this.forms.activeApplication.fields.applicationStepId = counter
           this.isLoaded = false
         })
     })
@@ -549,36 +542,36 @@ export default {
       const res = response.data
       this.options.levels.items = res
     });
-    this.getSemesterList(params).then(response => {
-      const res = response.data
-      this.options.semesters.items = res
-    });
+    // this.getSemesterList(params).then(response => {
+    //   const res = response.data
+    //   this.options.semesters.items = res
+    // });
     this.getSchoolYearList(params).then(response => {
       const res = response.data
       this.options.schoolYears.items = res
     });
-    this.getApplicationStepList(params).then(response => {
-      const res = response.data
-      this.stages = res
-    })
+    // this.getApplicationStepList(params).then(response => {
+    //   const res = response.data
+    //   this.stages = res
+    // })
   },
   methods: {
     onUpdateStudent() {
-      let steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'transcripts' }]
+      let steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'transcript' }]
       let data = {}
       for (let key in this.forms.student.fields) {
         data[key] = this.forms.student.fields[key]
       }
 
-      const { fields } = this.forms.applications
+      const { fields } = this.forms.activeApplication
 
       //form according to step
       steps.forEach(element => {
         if (element.step === fields.applicationStepId) {
           if (element.step === 5) {
-            this.forms.applications.fields.appliedDate = moment(new Date).format('YYYY-MM-DD hh:mm:ss')
-            this.forms.applications.fields.applicationStatusId = 2
-            const { fields } = this.forms.transcripts
+            this.forms.activeApplication.fields.appliedDate = moment(new Date).format('YYYY-MM-DD hh:mm:ss')
+            this.forms.activeApplication.fields.applicationStatusId = 2
+            const { fields } = this.forms.transcript
             fields.studentId = this.forms.student.fields.id
             fields.schoolCategoryId = this.options.levels.items.find(l => l.id = fields.levelId).schoolCategoryId
 
@@ -600,19 +593,19 @@ export default {
         fields.applicationStepId++
       }
       
-      this.$set(data, 'applications', fields)
+      this.$set(data, 'activeApplication', fields)
 
       //update
       this.updateStudent(data, this.forms.student.fields.id).then(response => {
         const res = response.data
-        const { appliedDate } = res.transcripts[0].application
+        const { appliedDate } = res.activeApplication
         if (appliedDate) {
           this.isApplied = true
         } 
       })
     },
     loadCourses() {
-      const { fields } = this.forms.transcripts;
+      const { fields } = this.forms.transcript;
       fields.courseId = null
       const params = { paginate: false }
       this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
@@ -625,7 +618,7 @@ export default {
       });
     },
     loadSubjects() {
-      const { courseId, semesterId, levelId } = this.forms.transcripts.fields;
+      const { courseId, semesterId, levelId } = this.forms.transcript.fields;
       const { subjects } = this.tables;
       
       if (this.options.courses.items.length > 0) {
