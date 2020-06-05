@@ -119,11 +119,13 @@
 
 <script>
 import { StudentApi, AuthApi } from '../../mixins/api'
+import { StudentCategories } from '../../helpers/enum'
 export default {
   name: 'Register',
   mixins: [StudentApi, AuthApi],
   data() {
     return {
+      StudentCategories: StudentCategories,
       forms: {
         student: {
           fields: {
@@ -133,22 +135,38 @@ export default {
             mobileNo: null,
             username: null,
             password: null,
-            passwordConfirmation: null
+            passwordConfirmation: null,
+            studentCategoryId: null
           }
         }
       }
     }
   },
+  created(){
+    const studentCategory = this.StudentCategories[this.$route.params.type.toUpperCase()]
+
+    if(studentCategory) {
+      this.forms.student.fields.studentCategoryId = studentCategory.id
+    } else {
+      this.$router.go(-1)
+    }
+    
+  },
   methods: {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
         const { username, password } = this.forms.student.fields;
-
         this.login({ username, password }).then(response => {
           const res = response.data
           localStorage.setItem('access_token', res.accessToken)
           this.$store.commit('loginUser')
-          this.$router.push({name : 'Student Info'})
+
+          if (this.forms.student.fields.studentCategoryId === 1) {
+            this.$router.push({ name : 'New Student Info' })
+          } else {
+            this.$router.push({ name : 'Student Info' })
+          }
+          
         }).catch(response =>{
           console.log(response)
         })

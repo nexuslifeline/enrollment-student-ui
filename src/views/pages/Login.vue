@@ -11,14 +11,14 @@
                   <b-button
                     variant="outline-primary"
                     block
-                    @click="register()"> Signup New Student
+                    @click="register('NEW')"> Signup New Student
                   </b-button>
                 </b-col>
                   <b-col md=6>
                   <b-button
                     variant="outline-primary"
                     block
-                    @click="register()"> Signup Old Student
+                    @click="register('OLD')"> Signup Old Student
                   </b-button>
                 </b-col>
               </b-row>
@@ -132,9 +132,9 @@ export default {
 
         })
     },
-    register(){
-      this.$router.push({name: 'Register'})
+    register(studentCategory){
+      this.$router.push({ path: `/register/${studentCategory}` })
     }
-  }
+  },
 }
 </script>
