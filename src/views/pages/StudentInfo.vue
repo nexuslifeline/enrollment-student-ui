@@ -8,14 +8,14 @@
             <b-row>
               <b-col md="4">
                 <div class="left-pane">
-                  <StageIndicator :stages="stages" :activeIndex="selectedIndex" />
+                  <StageIndicator :stages="stages" :activeIndex="forms.applications.fields.applicationStepId" />
                 </div>
               </b-col>
               <b-col md="8">
                 <b-card style="min-height: 600px">
                   <b-card-body>
                     <!-- About You -->
-                    <div v-show="selectedIndex === 0">
+                    <div v-show="forms.applications.fields.applicationStepId === 1">
                       <h4>About You</h4>
                       <p>A bit of personal details about you.</p>
                       <b-row class="mt-4">
@@ -57,7 +57,7 @@
                     </div>
                     <!-- About You -->
                     <!-- Complete Address -->
-                    <div v-show="selectedIndex === 1">
+                    <div v-show="forms.applications.fields.applicationStepId === 2">
                       <h4>Complete Address</h4>
                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                       <b-row>
@@ -110,7 +110,7 @@
                     </div>
                     <!-- Complete Address -->
                     <!-- Family Background -->
-                    <div v-show="selectedIndex === 2">
+                    <div v-show="forms.applications.fields.applicationStepId === 3">
                       <h4>Family Background</h4>
                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                       <b-row>
@@ -188,7 +188,7 @@
                     </div>
                     <!-- Family Background -->
                     <!-- Previous Education -->
-                    <div v-show="selectedIndex === 3">
+                    <div v-show="forms.applications.fields.applicationStepId === 4">
                       <h4>Previous Education</h4>
                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                       <b-row>
@@ -222,14 +222,14 @@
                     </div>
                     <!-- Previous Education -->
                     <!-- Application -->
-                    <div v-show="selectedIndex === 4 && !isApplied">
+                    <div v-show="forms.applications.fields.applicationStepId === 5 && !isApplied">
                       <h4>Application</h4>
                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                       <b-row>
                         <b-col md="6">
                           <b-form-group>
                             <label>Level</label>
-                            <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'>
+                            <b-form-select @input="loadCourses()" v-model='forms.transcripts.fields.levelId'>
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                               </template>
@@ -242,7 +242,7 @@
                         <b-col md="6">
                           <b-form-group>
                             <label>Course</label>
-                            <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                            <b-form-select @input="loadSubjects()" v-model='forms.transcripts.fields.courseId' :disabled='options.courses.items.length === 0'>
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                               </template>
@@ -257,7 +257,7 @@
                         <b-col md="6">
                           <b-form-group>
                             <label>School Year</label>
-                            <b-form-select v-model='forms.transcript.fields.schoolYearId'>
+                            <b-form-select v-model='forms.transcripts.fields.schoolYearId'>
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
                               </template>
@@ -270,7 +270,7 @@
                         <b-col md="6">
                           <b-form-group>
                             <label>Semester</label>
-                            <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                            <b-form-select @input="loadSubjects()" v-model='forms.transcripts.fields.semesterId' :disabled='options.courses.items.length === 0'>
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                               </template>
@@ -306,7 +306,7 @@
                         </b-col>
                       </b-row>
                     </div>
-                    <div v-show="selectedIndex === 4 && isApplied">
+                    <div v-show="forms.applications.fields.applicationStepId === 5 && isApplied">
                       <h4>Application</h4>
                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                       <b-row>
@@ -356,12 +356,12 @@
                     <!-- Application -->
                   </b-card-body>
                   <template v-if="!isApplied" v-slot:footer>
-                    <b-button @click="selectedIndex--" :disabled="selectedIndex===0" class="float-left">Back</b-button>
+                    <b-button @click="forms.applications.fields.applicationStepId--" :disabled="forms.applications.fields.applicationStepId===1" class="float-left">Back</b-button>
                     <b-button
                       @click="onUpdateStudent()" 
                       variant="outline-primary" 
                       class="float-right">
-                        {{ selectedIndex != 4 ? 'Next' : 'Submit Application'}}
+                        {{ forms.applications.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
                     </b-button>
                   </template>  
                 </b-card>
@@ -375,12 +375,12 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi } from "../../mixins/api"
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi, ApplicationStepApi } from "../../mixins/api"
 import StageIndicator from '../components/StageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 export default {
   name: "StudentInfo",
-  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi],
+  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi, ApplicationStepApi],
   components: {
     StageIndicator,
     ApprovalIndicator
@@ -435,10 +435,11 @@ export default {
           fields: {
             id:null,
             appliedDate: null,
-            applicationStatusId: 2
+            applicationStatusId: null,
+            applicationStepId: null
           }
         },
-        transcript: {
+        transcripts: {
           fields: {
             studentId: null,
             semesterId: null,
@@ -484,34 +485,8 @@ export default {
           items: []
         }
       },
-      selectedIndex: null,
       selectedApprovalStage: 1,
-      stages: [
-        {
-          header: "Personal Info",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit psum dolor sit amet psum dolor sit amet"
-        },
-        {
-          header: "Complete Address",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit psum dolor sit amet psum dolor sit amet"
-        },
-        {
-          header: "Family Background",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Previous Education",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Application",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        },
-        {
-          header: "Billing",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        }
-      ],
+      stages: [],
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
@@ -554,17 +529,17 @@ export default {
           }
 
           if (resStud.transcripts.length > 0) {
-            const transcript = resStud.transcripts[0]
-            this.isApplied=true
-            // for (let key in this.forms.transcript.fields) {
-            //   this.forms.transcript.fields[key] = transcript[key];
-            // }
-            // for (let key in this.forms.applications.fields) {
-            //   this.forms.applications.fields[key] = transcript.application[key];
-            // }
+            const transcripts = resStud.transcripts[0]
+            // this.isApplied=true
+            for (let key in this.forms.transcripts.fields) {
+              this.forms.transcripts.fields[key] = transcripts[key];
+            }
+            for (let key in this.forms.applications.fields) {
+              this.forms.applications.fields[key] = transcripts.application[key];
+            }
             
           }
-          this.selectedIndex = counter
+          // this.forms.applications.fields.applicationStepId = counter
           this.isLoaded = false
         })
     })
@@ -582,23 +557,30 @@ export default {
       const res = response.data
       this.options.schoolYears.items = res
     });
+    this.getApplicationStepList(params).then(response => {
+      const res = response.data
+      this.stages = res
+    })
   },
   methods: {
     onUpdateStudent() {
-      let steps = [{ step : 1, form: 'address' }, { step : 2, form: 'family' }, { step : 3, form: 'education' }, { step : 4, form: 'applications' }]
+      let steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'transcripts' }]
       let data = {}
       for (let key in this.forms.student.fields) {
         data[key] = this.forms.student.fields[key]
       }
-      
+
+      const { fields } = this.forms.applications
+
+      //form according to step
       steps.forEach(element => {
-        if (element.step === this.selectedIndex) {
-          if (element.step === 4) {
-            this.forms[element.form].fields.appliedDate = moment(new Date).format('YYYY-MM-DD hh:mm:ss')
-            const { fields } = this.forms.transcript
+        if (element.step === fields.applicationStepId) {
+          if (element.step === 5) {
+            this.forms.applications.fields.appliedDate = moment(new Date).format('YYYY-MM-DD hh:mm:ss')
+            this.forms.applications.fields.applicationStatusId = 2
+            const { fields } = this.forms.transcripts
             fields.studentId = this.forms.student.fields.id
             fields.schoolCategoryId = this.options.levels.items.find(l => l.id = fields.levelId).schoolCategoryId
-            this.$set(data, 'transcript', fields)
 
             let subjects = []
             this.tables.subjects.items.forEach(s => {
@@ -613,17 +595,24 @@ export default {
         }
       });
 
+      //application form
+      if (fields.applicationStepId < 5) {
+        fields.applicationStepId++
+      }
+      
+      this.$set(data, 'applications', fields)
+
+      //update
       this.updateStudent(data, this.forms.student.fields.id).then(response => {
         const res = response.data
-        if (this.selectedIndex < 4) {
-          this.selectedIndex++
-        } else { 
+        const { appliedDate } = res.transcripts[0].application
+        if (appliedDate) {
           this.isApplied = true
-        }
+        } 
       })
     },
     loadCourses() {
-      const { fields } = this.forms.transcript;
+      const { fields } = this.forms.transcripts;
       fields.courseId = null
       const params = { paginate: false }
       this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
@@ -636,7 +625,7 @@ export default {
       });
     },
     loadSubjects() {
-      const { courseId, semesterId, levelId } = this.forms.transcript.fields;
+      const { courseId, semesterId, levelId } = this.forms.transcripts.fields;
       const { subjects } = this.tables;
       
       if (this.options.courses.items.length > 0) {

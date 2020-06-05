@@ -2,12 +2,12 @@
   <ul class="indicator">
     <li
       v-for="(stage, index) in stages"
-      :class="{'indicator__item': true, 'active': [activeIndex].includes(index) }"
+      :class="{'indicator__item': true, 'active': [activeIndex - 1].includes(index) }"
       @click="$emit('selectedItem', index)">
       <span class="indicator__number">{{index + 1}}</span>
       <div class="indicator__text-container">
-        <span class="indicator__headline">{{stage.header}}</span>
-        <p v-if="[activeIndex].includes(index)" class="indicator__description fade-in">
+        <span class="indicator__headline">{{stage.name}}</span>
+        <p v-if="[activeIndex - 1].includes(index)" class="indicator__description fade-in">
           {{stage.description}}
         </p>
       </div>
