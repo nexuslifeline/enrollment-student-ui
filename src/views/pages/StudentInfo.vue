@@ -16,8 +16,8 @@
               <b-col md="8">
                 <b-card style="min-height: 600px">
                   <b-card-body>
-                    <h4>{{stages.getEnum(forms.activeApplication.fields.applicationStepId).name}}</h4>
-                    <p>{{stages.getEnum(forms.activeApplication.fields.applicationStepId).description}}</p>
+                    <h4>{{heading.name}}</h4>
+                    <p>{{heading.description}}</p>
                     <!-- About You -->
                     <div v-show="forms.activeApplication.fields.applicationStepId === 1">
                       <b-row class="mt-4">
@@ -369,13 +369,13 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi, ApplicationStepApi } from "../../mixins/api"
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from "../../mixins/api"
 import StageIndicator from '../components/StageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import { Semesters, ApplicationSteps } from '../../helpers/enum'
 export default {
   name: "StudentInfo",
-  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, SemesterApi],
+  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi ],
   components: {
     StageIndicator,
     ApprovalIndicator
@@ -397,7 +397,6 @@ export default {
         },
         address: {
           fields: {
-            id: null,
             city: null,
             province: null,
             country: null,
@@ -407,7 +406,6 @@ export default {
         },
         family: {
           fields: {
-            id: null,
             fatherName: null,
             fatherOccupation: null,
             fatherMobileNo: null,
@@ -420,7 +418,6 @@ export default {
         },
         education: {
           fields: {
-            id: null,
             lastSchoolAttended: null,
             lastSchoolAddress: null,
             year: null
@@ -428,9 +425,10 @@ export default {
         },
         activeApplication : {
           fields: {
-            id:null,
             appliedDate: null,
-            applicationStepId: null
+            schoolYearId: null,
+            applicationStatusId : null,
+            admisssionStepId: null
           }
         },
         transcript: {
@@ -487,7 +485,6 @@ export default {
         { approvedLabel: 'Approved by Staff', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
       ]
-
     };
   },
   created() {
@@ -607,6 +604,7 @@ export default {
     loadCourses() {
       const { fields } = this.forms.transcript;
       fields.courseId = null
+      fields.semesterId = null
       const params = { paginate: false }
       this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
         this.options.courses.items = data
@@ -649,6 +647,13 @@ export default {
       })
       return totalUnits
     }
-  }
+  },
+  heading(){
+      const { fields } = this.forms.activeAdmission
+      if (fields.admissionStepId) {
+        return this.stages.getEnum(fields.admissionStepId)
+      }
+      return { name: '', description: ''}
+    }
 };
 </script>
