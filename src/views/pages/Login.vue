@@ -115,7 +115,7 @@ export default {
           const res = response.data
           localStorage.setItem('access_token', res.accessToken)
           this.$store.commit('loginUser')
-          this.$router.push({name : 'Student Info'})
+          this.$router.push({name : 'Application'})
         }).catch(err => {
           const errorResponseData = err.response.data
           const { username, password } = errorResponseData.errors

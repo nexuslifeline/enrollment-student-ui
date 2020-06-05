@@ -162,9 +162,9 @@ export default {
           this.$store.commit('loginUser')
 
           if (this.forms.student.fields.studentCategoryId === 1) {
-            this.$router.push({ name : 'New Student Info' })
+            this.$router.push({ name : 'Admission' })
           } else {
-            this.$router.push({ name : 'Student Info' })
+            this.$router.push({ name : 'Application' })
           }
           
         }).catch(response =>{
