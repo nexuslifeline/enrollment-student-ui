@@ -428,7 +428,7 @@ export default {
             appliedDate: null,
             schoolYearId: null,
             applicationStatusId : null,
-            admisssionStepId: null
+            applicationStepId: null
           }
         },
         transcript: {
@@ -646,14 +646,14 @@ export default {
         totalUnits += i.units
       })
       return totalUnits
-    }
-  },
-  heading(){
-      const { fields } = this.forms.activeAdmission
-      if (fields.admissionStepId) {
-        return this.stages.getEnum(fields.admissionStepId)
+    },
+    heading(){
+      const { fields } = this.forms.activeApplication
+      if (fields.applicationStepId) {
+        return this.stages.getEnum(fields.applicationStepId)
       }
       return { name: '', description: ''}
     }
+  },
 };
 </script>
