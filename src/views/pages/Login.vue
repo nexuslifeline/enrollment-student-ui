@@ -1,5 +1,5 @@
 <template>
-  <b-container class="d-flex content-center min-vh-100">
+  <b-container class="d-flex align-items-center min-vh-100">
     <b-row>
       <b-col>
         <b-card-group>
@@ -33,34 +33,39 @@
               </b-row>
               <b-form-group
                 id="username"
-                label-for="input-1"
               >
                 <b-form-input
-                  v-model="username"
+                  v-model="forms.auth.fields.username"
                   placeholder="Username"
-                  :state="validations.username.text !== '' && usernameFeedbackState"
+                  :state="forms.auth.states.username"
                 />
                 <b-form-invalid-feedback>
-                  {{validations.username.text}}
+                  {{forms.auth.errors.username}}
                 </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group>
                 <b-form-input
-                  v-model="password"
+                  v-model="forms.auth.fields.password"
                   type="password"
                   placeholder="Password"
-                    :state="validations.password.text !== '' && passwordFeedBackState"
+                  :state="forms.auth.states.password"
                 />
                 <b-form-invalid-feedback>
-                  {{validations.password.text}}
+                  {{forms.auth.errors.password}}
                 </b-form-invalid-feedback>
                   </b-form-group>
               <b-row align-h="end">
                 <b-col md=4>
                   <b-button
-                    @click="authLogin()"
+                    @click="login()"
                     variant="outline-primary"
-                    block>Login
+                    block>
+                    <v-icon
+                      v-if="forms.auth.isProcessing"
+                      name="sync"
+                      class="mr-2"
+                      spin
+                    />Login
                   </b-button>
                 </b-col>
               </b-row>
@@ -70,8 +75,7 @@
             bg-variant="primary"
             body-text-variant="white"
             class="text-center py-5 d-sm-down-none"
-            body-wrapper
-          >
+            body-wrapper>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
           </b-card>
         </b-card-group>
@@ -80,59 +84,45 @@
   </b-container>
 </template>
 <script>
-import { AuthApi } from '../../mixins/api'
+import { AuthApi } from '../../mixins/api';
+import { validate, reset } from '../../helpers/forms';
+const fields = {
+  username: null,
+  password: null
+}
 export default {
   name: 'Login',
   mixins: [AuthApi],
   data() {
     return {
-      username: null,
-      password: null,
-      validations: {
-        username: {
-          isErrorShown: false,
-          text: ''
-        },
-        password: {
-          isErrorShown: false,
-          text: ''
+      forms: {
+        auth: {
+          isProcessing: false,
+          fields: { ...fields },
+          states: { ...fields },
+          errors: { ...fields }
         }
       }
     }
   },
-  computed: {
-    usernameFeedbackState() {
-      return !this.validations.username.isErrorShown ? true : false
-    },
-    passwordFeedBackState() {
-      return !this.validations.password.isErrorShown ? true : false
-    }
-  },
   methods: {
-    authLogin(){
-      this.login({ username: this.username, password: this.password })
-        .then(response => {
-          const res = response.data
-          localStorage.setItem('access_token', res.accessToken)
-          this.$store.commit('loginUser')
-          this.$router.push({name : 'Student Info'})
-        }).catch(err => {
-          const errorResponseData = err.response.data
-          const { username, password } = errorResponseData.errors
-
-          if ('username' in errorResponseData.errors) {
-            this.validations.username.isErrorShown = true;
-            this.validations.username.text = username[0];
-          }
-
-          if ('password' in errorResponseData.errors) {
-            this.validations.password.isErrorShown = true;
-            this.validations.password.text = password[0];
-          }
-
+    login() {
+      const { auth, auth: { fields: { username, password } } } = this.forms;
+      auth.isProcessing = true;
+      reset(auth);
+      this.authenticate({ username, password })
+        .then(({ data }) => {
+          auth.isProcessing = false;
+          localStorage.setItem('access_token', data.accessToken);
+          this.$store.commit('loginUser');
+          this.$router.push({ name : 'Student Info' });
+        }).catch((error) => {
+          auth.isProcessing = false;
+          const { errors } = error.response.data;
+          validate(auth, errors);
         })
     },
-    register(studentCategory){
+    register(studentCategory) {
       this.$router.push({ path: `/register/${studentCategory}` })
     }
   },

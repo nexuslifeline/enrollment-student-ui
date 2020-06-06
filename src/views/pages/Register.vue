@@ -156,7 +156,7 @@ export default {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
         const { username, password } = this.forms.student.fields;
-        this.login({ username, password }).then(response => {
+        this.authenticate({ username, password }).then(response => {
           const res = response.data
           localStorage.setItem('access_token', res.accessToken)
           this.$store.commit('loginUser')
