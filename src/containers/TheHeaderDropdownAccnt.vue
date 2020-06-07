@@ -66,27 +66,25 @@
 </template>
 
 <script>
+import { AuthApi } from '../mixins/api';
 export default {
   name: 'TheHeaderDropdownAccnt',
+  mixins: [AuthApi],
   data () {
-    return { 
+    return {
       itemsCount: 42
     }
   },
   methods: {
     logout(){
-      if(localStorage.access_token) {
-        this.$http.post('api/v1/logout', [], {
-            headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token')
-            }
-          }).then(response => {
-            localStorage.removeItem('access_token')
-            this.$store.commit('logoutUser')
-            this.$router.push({ name: 'Login' })
-          }).catch(err => {
-              console.log(err)
-          });
+      if(localStorage.accessToken) {
+        this.revokeAuthentication().then(response => {
+          localStorage.removeItem('accessToken')
+          this.$store.commit('logoutUser')
+          this.$router.push({ name: 'Login' })
+        }).catch(err => {
+          console.log(err)
+        });
       }
     }
   }

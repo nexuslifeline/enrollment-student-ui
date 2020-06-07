@@ -2,13 +2,13 @@
   <ul class="indicator">
     <li
       v-for="(stage, index) in stages"
-      :class="{'indicator__item': true, 'active': [activeIndex - 1].includes(index) }"
+      :class="{'indicator__item': true, 'active': [activeIndex].includes(index) }"
       @click="$emit('selectedItem', index)">
       <span class="indicator__number">{{index + 1}}</span>
       <div class="indicator__text-container">
-        <span class="indicator__headline">{{stage.name}}</span>
-        <p v-if="[activeIndex - 1].includes(index)" class="indicator__description fade-in">
-          {{stage.description}}
+        <span class="indicator__headline">{{stage[headerKey]}}</span>
+        <p v-if="[activeIndex].includes(index)" class="indicator__description fade-in">
+          {{stage[descriptionKey]}}
         </p>
       </div>
     </li>
@@ -17,14 +17,22 @@
 
 <script>
 export default {
-  props: ['stages', 'activeIndex'],
-  data() {
-    return {
-
+  props: {
+    stages: {
+      type: [Array]
+    },
+    activeIndex: {
+      type: [Number],
+      default: 0
+    },
+    headerKey: {
+      type: [String],
+      default: 'header'
+    },
+    descriptionKey: {
+      type: [String],
+      default: 'description'
     }
-  },
-  methods: {
-
   }
 }
 </script>

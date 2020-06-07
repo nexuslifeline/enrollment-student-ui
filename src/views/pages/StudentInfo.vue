@@ -1,23 +1,24 @@
 <template>
   <div>
     <!-- main container -->
-    <b-overlay :show='isLoaded' rounded="sm">
+    <b-overlay :show='isLoading' rounded="sm">
       <b-row>
         <b-col md="12">
           <b-card>
             <b-row>
               <b-col md="4">
                 <div class="left-pane">
-                  <StageIndicator 
-                    :stages="stages.values" 
-                    :activeIndex="forms.activeApplication.fields.applicationStepId" />
+                  <StageIndicator
+                    :stages="stages"
+                    :activeIndex="forms.activeApplication.fields.applicationStepId - 1"
+                    headerKey="name"
+                    descriptionKey="description" />
                 </div>
               </b-col>
               <b-col md="8">
                 <b-card style="min-height: 600px">
                   <b-card-body>
-                    <h4>{{heading.name}}</h4>
-                    <p>{{heading.description}}</p>
+                    <h1>{{forms.activeApplication.fields.applicationStepId}}</h1>
                     <!-- About You -->
                     <div v-show="forms.activeApplication.fields.applicationStepId === 1">
                       <b-row class="mt-4">
@@ -349,15 +350,27 @@
                     </div>
                     <!-- Application -->
                   </b-card-body>
-                  <template v-if="!isApplied" v-slot:footer>
-                    <b-button @click="forms.activeApplication.fields.applicationStepId--" :disabled="forms.activeApplication.fields.applicationStepId===1" class="float-left">Back</b-button>
+                  <template v-slot:footer>
                     <b-button
-                      @click="onUpdateStudent()" 
-                      variant="outline-primary" 
-                      class="float-right">
-                        {{ forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
+                      @click="forms.activeApplication.fields.applicationStepId--"
+                      :disabled="forms.activeApplication.fields.applicationStepId === 1"
+                      class="float-left">
+                      Back
                     </b-button>
-                  </template>  
+                    <b-button
+                      @click="onUpdateStudent()"
+                      variant="outline-primary"
+                      class="float-right"
+                      :disabled="isProcessing">
+                      <v-icon
+                        v-if="isProcessing"
+                        name="sync"
+                        class="mr-2"
+                        spin
+                      />
+                      {{forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
+                    </b-button>
+                  </template>
                 </b-card>
               </b-col>
             </b-row>
@@ -369,10 +382,62 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from "../../mixins/api"
-import StageIndicator from '../components/StageIndicator'
-import ApprovalIndicator from '../components/ApprovalIndicator'
-import { Semesters, ApplicationSteps } from '../../helpers/enum'
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from '../../mixins/api';
+import StageIndicator from '../components/StageIndicator';
+import ApprovalIndicator from '../components/ApprovalIndicator';
+import { Semesters, ApplicationSteps } from '../../helpers/enum';
+import { copyValue } from '../../helpers/extractor';
+
+const studentFields = {
+  id: null,
+  firstName: null,
+  middleName: null,
+  lastName: null,
+  mobileNo: null
+}
+
+const addressFields = {
+  city: null,
+  province: null,
+  country: null,
+  postalCode: null,
+  address: null
+}
+
+const familyFields = {
+  fatherName: null,
+  fatherOccupation: null,
+  fatherMobileNo: null,
+  fatherEmail: null,
+  motherName: null,
+  motherOccupation: null,
+  motherMobileNo: null,
+  motherEmail: null
+}
+
+const educationFields = {
+  lastSchoolAttended: null,
+  lastSchoolAddress: null,
+  year: null
+}
+
+const activeApplicationFields = {
+  id: null,
+  appliedDate: null,
+  schoolYearId: null,
+  applicationStatusId : null,
+  applicationStepId: null
+}
+
+const transcriptFields = {
+  studentId: null,
+  semesterId: null,
+  levelId: null,
+  courseId: null,
+  schoolYearId: null,
+  schoolCategoryId: null
+}
+
 export default {
   name: "StudentInfo",
   mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi ],
@@ -382,64 +447,28 @@ export default {
   },
   data() {
     return {
-      isLoaded: false,
+      isLoading: false,
       isApplied: false,
       percentage: 30,
+      isProcessing: false,
       forms: {
         student: {
-          fields: {
-            id: null,
-            firstName: null,
-            middleName: null,
-            lastName: null,
-            mobileNo: null
-          }
+          fields: { ...studentFields }
         },
         address: {
-          fields: {
-            city: null,
-            province: null,
-            country: null,
-            postalCode: null,
-            address: null
-          }
+          fields: { ...addressFields }
         },
         family: {
-          fields: {
-            fatherName: null,
-            fatherOccupation: null,
-            fatherMobileNo: null,
-            fatherEmail: null,
-            motherName: null,
-            motherOccupation: null,
-            motherMobileNo: null,
-            motherEmail: null
-          }
+          fields: { ...familyFields }
         },
         education: {
-          fields: {
-            lastSchoolAttended: null,
-            lastSchoolAddress: null,
-            year: null
-          }
+          fields: { ...educationFields }
         },
         activeApplication : {
-          fields: {
-            appliedDate: null,
-            schoolYearId: null,
-            applicationStatusId : null,
-            admisssionStepId: null
-          }
+          fields: { ...activeApplicationFields }
         },
         transcript: {
-          fields: {
-            studentId: null,
-            semesterId: null,
-            levelId: null,
-            courseId: null,
-            schoolYearId: null,
-            schoolCategoryId: null
-          }
+          fields: { ...transcriptFields }
         }
       },
       tables :{
@@ -478,7 +507,16 @@ export default {
         }
       },
       selectedApprovalStage: 1,
-      stages: ApplicationSteps,
+      stages: [
+        'Lorem ipsum dolor amet',
+        'Lorem ipsum dolor amet',
+        'Lorem ipsum dolor amet',
+        'Lorem ipsum dolor amet',
+        'Lorem ipsum dolor amet'
+      ].map((description, idx) => {
+        const { name } = ApplicationSteps.values[idx];
+        return { name, description }
+      }) || [],
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
@@ -488,118 +526,69 @@ export default {
     };
   },
   created() {
-    this.isLoaded = true;
-    this.getUser().then(response => {
-      const res = response.data.userable
-        this.getStudent(res.id).then(response => {
-          const res = response.data
-          for (let key in this.forms.student.fields) {
-            this.forms.student.fields[key] = res[key];
-          }
-
-          if (res.address) {
-            for (let key in this.forms.address.fields) {
-              this.forms.address.fields[key] = res.address[key];
-            }
-          }
-
-          if (res.family) {
-            for (let key in this.forms.family.fields) {
-              this.forms.family.fields[key] = res.family[key];
-            }
-          }
-
-          if (res.education) {
-            for (let key in this.forms.education.fields) {
-              this.forms.education.fields[key] = res.education[key];
-            }
-          }
-
-          if (res.activeApplication) {
-            // this.isApplied=true
-            for (let key in this.forms.transcript.fields) {
-              this.forms.transcript.fields[key] = res.activeApplication.transcript[key];
-            }
-            for (let key in this.forms.activeApplication.fields) {
-              this.forms.activeApplication.fields[key] = res.activeApplication[key];
-              const { fields } = this.forms.activeApplication
-              if (fields.appliedDate) {
-                this.isApplied = true
-              }
-            }
-            
-          }
-          // this.forms.activeApplication.fields.applicationStepId = counter
-          this.isLoaded = false
-        })
+    this.isLoading = true;
+    const studentId = localStorage.getItem('studentId');
+    this.getStudent(studentId).then(({ data: student }) => {
+      Object.keys(this.forms).forEach((key) => {
+        const source = student[key] || student;
+        if (source) {
+          copyValue(source, this.forms[key].fields);
+        }
+      })
     })
+    this.isLoading = false;
 
     let params = { paginate: false }
     this.getLevelList(params).then(response => {
       const res = response.data
       this.options.levels.items = res
     });
-    // this.getSemesterList(params).then(response => {
-    //   const res = response.data
-    //   this.options.semesters.items = res
-    // });
     this.getSchoolYearList(params).then(response => {
       const res = response.data
       this.options.schoolYears.items = res
     });
-    // this.getApplicationStepList(params).then(response => {
-    //   const res = response.data
-    //   this.stages = res
-    // })
   },
   methods: {
     onUpdateStudent() {
-      let steps = [{ step : 2, form: 'address' }, { step : 3, form: 'family' }, { step : 4, form: 'education' }, { step : 5, form: 'transcript' }]
-      let data = {}
-      for (let key in this.forms.student.fields) {
-        data[key] = this.forms.student.fields[key]
-      }
+      const {
+        student: { fields: { id: studentId } },
+        student: { fields: student },
+        address: { fields: address },
+        family: { fields: family },
+        education: { fields: education },
+        activeApplication: { fields: activeApplication }
+      } = this.forms;
 
-      const { fields } = this.forms.activeApplication
+      const currentStepIndex = activeApplication.applicationStepId - 1;
+      const payloads = [
+        student,
+        { address },
+        { family },
+        { education }
+      ];
+      const applicationStepId =
+        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+          ? ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id
+          : activeApplication.applicationStepId + 1;
 
-      //form according to step
-      steps.forEach(element => {
-        if (element.step === fields.applicationStepId) {
-          if (element.step === 5) {
-            this.forms.activeApplication.fields.appliedDate = moment(new Date).format('YYYY-MM-DD hh:mm:ss')
-            this.forms.activeApplication.fields.applicationStatusId = 2
-            const { fields } = this.forms.transcript
-            fields.studentId = this.forms.student.fields.id
-            fields.schoolCategoryId = this.options.levels.items.find(l => l.id = fields.levelId).schoolCategoryId
-
-            let subjects = []
-            this.tables.subjects.items.forEach(s => {
-              subjects.push({
-                subject_id: s.id
-              })
-            })
-
-            this.$set(data, 'subjects', subjects)
-          }
-          this.$set(data, element.form, this.forms[element.form].fields)
+      const data = {
+        ...payloads[currentStepIndex],
+        activeApplication: {
+          ...activeApplication,
+          id: activeApplication.id,
+          applicationStepId
         }
-      });
-
-      //application form
-      if (fields.applicationStepId < 5) {
-        fields.applicationStepId++
       }
-      
-      this.$set(data, 'activeApplication', fields)
 
-      //update
-      this.updateStudent(data, this.forms.student.fields.id).then(response => {
-        const res = response.data
-        const { appliedDate } = res.activeApplication
-        if (appliedDate) {
-          this.isApplied = true
-        } 
-      })
+      this.isProcessing = true;
+      this.updateStudent(data, studentId).then(({ data }) => {
+        copyValue(data.activeApplication, activeApplication);
+        this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
+        this.isProcessing = false;
+      }).catch((error) => {
+        console.log(error)
+        this.isProcessing = false;
+      });
     },
     loadCourses() {
       const { fields } = this.forms.transcript;
@@ -618,14 +607,14 @@ export default {
     loadSubjects() {
       const { courseId, semesterId, levelId } = this.forms.transcript.fields;
       const { subjects } = this.tables;
-      
+
       if (this.options.courses.items.length > 0) {
         if (courseId === null || semesterId === null) {
           this.tables.subjects.items = []
           return
         }
       }
-      
+
       subjects.isBusy = true
       const params = {
         courseId,
@@ -640,7 +629,7 @@ export default {
     }
   },
   computed: {
-    totalUnits(){
+    totalUnits() {
       let totalUnits = 0
       this.tables.subjects.items.forEach(i => {
         totalUnits += i.units
@@ -648,7 +637,7 @@ export default {
       return totalUnits
     }
   },
-  heading(){
+  heading() {
       const { fields } = this.forms.activeAdmission
       if (fields.admissionStepId) {
         return this.stages.getEnum(fields.admissionStepId)
