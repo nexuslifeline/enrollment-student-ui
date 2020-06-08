@@ -485,7 +485,7 @@ export default {
     },
     created(){
       this.isLoaded = true;
-      this.getUser().then(response => {
+      this.getAuthenticatedUser().then(response => {
         const res = response.data.userable
           this.getStudent(res.id).then(response => {
             const res = response.data

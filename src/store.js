@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const state = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
-  isLoggedIn: !!localStorage.getItem('access_token') ?? false,
+  isLoggedIn: !!localStorage.getItem('accessToken') ?? false,
   user: [],
 }
 

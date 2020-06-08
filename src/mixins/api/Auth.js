@@ -5,8 +5,11 @@ export default {
     authenticate(data) {
       return this.$http.post(`${apiPrefix}/${apiVersion}/login`, data);
     },
-    getUser(){
+    getAuthenticatedUser(){
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/me`);
+    },
+    revokeAuthentication(){
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/logout`);
     }
   }
 }

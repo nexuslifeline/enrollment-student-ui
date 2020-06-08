@@ -75,10 +75,10 @@ const fields = {
 
 export default {
   name: 'Login',
-  mixins: [AuthApi],
   components: {
     CarouselProcedure
   },
+  mixins: [AuthApi],
   data() {
     return {
       forms: {
@@ -95,14 +95,18 @@ export default {
     login() {
       const { auth, auth: { fields: { username, password } } } = this.forms;
       auth.isProcessing = true;
-      reset(auth);
       this.authenticate({ username, password })
         .then(({ data }) => {
-          auth.isProcessing = false;
-          localStorage.setItem('access_token', data.accessToken);
+          localStorage.setItem('accessToken', data.accessToken);
           this.$store.commit('loginUser');
-          this.$router.push({ name : 'Student Info' });
+
+          this.getAuthenticatedUser().then(({ data }) => {
+            auth.isProcessing = false;
+            localStorage.setItem('studentId', data.userable.id);
+            this.$router.push({ name : 'Student Info' });
+          })
         }).catch((error) => {
+          console.log(error)
           auth.isProcessing = false;
           const { errors } = error.response.data;
           validate(auth, errors);
