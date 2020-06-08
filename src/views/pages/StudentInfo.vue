@@ -18,7 +18,8 @@
               <b-col md="8">
                 <b-card style="min-height: 600px">
                   <b-card-body>
-                    <h1>{{forms.activeApplication.fields.applicationStepId}}</h1>
+                    <h4>{{heading.name}}</h4>
+                    <!-- <p>{{heading.description}}</p> -->
                     <!-- About You -->
                     <div v-show="forms.activeApplication.fields.applicationStepId === 1">
                       <b-row class="mt-4">
@@ -430,7 +431,7 @@ const activeApplicationFields = {
 }
 
 const transcriptFields = {
-  studentId: null,
+  id: null,
   semesterId: null,
   levelId: null,
   courseId: null,
@@ -469,7 +470,7 @@ export default {
         },
         transcript: {
           fields: { ...transcriptFields }
-        }
+        },
       },
       tables :{
         subjects: {
@@ -556,15 +557,17 @@ export default {
         address: { fields: address },
         family: { fields: family },
         education: { fields: education },
+        transcript: { fields: transcript },
         activeApplication: { fields: activeApplication }
       } = this.forms;
-
+      const { subjects : { items: subjects } } = this.tables
       const currentStepIndex = activeApplication.applicationStepId - 1;
       const payloads = [
         student,
         { address },
         { family },
-        { education }
+        { education },
+        { transcript, subjects }
       ];
       const applicationStepId =
         ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
@@ -635,14 +638,14 @@ export default {
         totalUnits += i.units
       })
       return totalUnits
-    }
-  },
-  heading() {
-      const { fields } = this.forms.activeAdmission
-      if (fields.admissionStepId) {
-        return this.stages.getEnum(fields.admissionStepId)
+    },
+    heading() {
+      const { fields } = this.forms.activeApplication
+      if (fields.applicationStepId) {
+        return ApplicationSteps.getEnum(fields.applicationStepId)
       }
       return { name: '', description: ''}
     }
+  },
 };
 </script>
