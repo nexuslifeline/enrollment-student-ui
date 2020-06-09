@@ -16,6 +16,6 @@ export default {
     },
     updateStudent(data, id) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/students/${id}`, data)
-    },
+    }
   }
 }
