@@ -9,16 +9,13 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Dashboard = () => import('@/views/Dashboard')
 
 
-const StudentInfo = () => import('@/views/pages/StudentInfo')
-
-
-
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
-const NewStudentInfo = () => import('@/views/pages/NewStudentInfo')
+const Application = () => import('@/views/pages/Application')
+const Admission = () => import('@/views/pages/Admission')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -65,15 +62,15 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'student-info',
-          name: 'Student Info',
-          component: StudentInfo,
+          path: 'application',
+          name: 'Application',
+          component: Application,
           meta: {requiresAuth: true}
         },
         {
-          path: 'newstudentinfo',
-          name: 'New Student Info',
-          component: NewStudentInfo,
+          path: 'admission',
+          name: 'Admission',
+          component: Admission,
           meta: {requiresAuth: true}
         },
       ]
