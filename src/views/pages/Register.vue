@@ -156,9 +156,9 @@ export default {
     createAccount(){
       this.registerStudent(this.forms.student.fields).then(response => {
         const { username, password } = this.forms.student.fields;
-        this.login({ username, password }).then(response => {
+        this.authenticate({ username, password }).then(response => {
           const res = response.data
-          localStorage.setItem('access_token', res.accessToken)
+          localStorage.setItem('accessToken', res.accessToken)
           this.$store.commit('loginUser')
 
           if (this.forms.student.fields.studentCategoryId === 1) {
@@ -178,7 +178,7 @@ export default {
       //   .then(response => {
       //     const res = response.data
       //     this.$store.commit('loginUser')
-      //     localStorage.setItem('access_token', res.token.access_token)
+      //     localStorage.setItem('accessToken', res.token.accessToken)
       //     this.$router.push({ name: 'Student Info'})
       //   })
       //   .catch(response => {
