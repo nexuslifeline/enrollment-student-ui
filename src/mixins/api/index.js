@@ -5,3 +5,4 @@ export { default as LevelApi } from './Level';
 export { default as SchoolYearApi } from './SchoolYear';
 export { default as SemesterApi } from './Semester';
 export { default as ApplicationStepApi } from './ApplicationStep';
+export { default as AdmissionFileApi } from './AdmissionFile';
