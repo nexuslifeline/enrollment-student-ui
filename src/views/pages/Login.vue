@@ -32,7 +32,8 @@
         <b-button
           @click="login()"
           variant="outline-primary"
-          class="login__btn">
+          class="login__btn"
+          :disabled="forms.auth.isProcessing">
           <v-icon
             v-if="forms.auth.isProcessing"
             name="sync"
@@ -49,11 +50,11 @@
         <div class="login__register-actions">
           <b-button
             variant="outline-primary"
-            @click="register('new')"> Signup New Student
+            @click="register(studentCategories.NEW.id)"> Signup New Student
           </b-button>
           <b-button
             variant="outline-primary"
-            @click="register('old')"> Signup Old Student
+            @click="register(studentCategories.OLD.id)"> Signup Old Student
           </b-button>
         </div>
       </div>
@@ -67,6 +68,7 @@
 import { AuthApi } from '../../mixins/api';
 import { validate, reset } from '../../helpers/forms';
 import CarouselProcedure from '../components/CarouselProcedure';
+import { StudentCategories } from '../../helpers/enum';
 
 const fields = {
   username: null,
@@ -81,6 +83,7 @@ export default {
   mixins: [AuthApi],
   data() {
     return {
+      studentCategories: StudentCategories,
       forms: {
         auth: {
           isProcessing: false,
@@ -103,7 +106,11 @@ export default {
           this.getAuthenticatedUser().then(({ data }) => {
             auth.isProcessing = false;
             localStorage.setItem('studentId', data.userable.id);
-            this.$router.push({ name : 'Student Info' });
+            const routeName =
+              StudentCategories.NEW.id === data.userable.transcript.studentCategoryId 
+                ? 'New Student Info' 
+                : 'Student Info';
+            this.$router.push({ name : routeName });
           })
         }).catch((error) => {
           console.log(error)
@@ -112,8 +119,9 @@ export default {
           validate(auth, errors);
         })
     },
-    register(studentCategory) {
-      this.$router.push({ path: `/register/${studentCategory}` })
+    register(studentCategoryId) {
+      localStorage.setItem('studentCategoryId', studentCategoryId);
+      this.$router.push({ name: 'Register' })
     }
   },
 }

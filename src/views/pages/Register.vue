@@ -28,7 +28,11 @@
                       <label>Firstname</label>
                       <b-form-input 
                         placeholder="Firstname"
-                        v-model="forms.student.fields.firstName" />
+                        v-model="forms.register.fields.firstName"
+                        :state="forms.register.states.firstName" />
+                        <b-form-invalid-feedback>
+                          {{forms.register.errors.firstName}}
+                        </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                   <b-col md=6>
@@ -36,7 +40,7 @@
                       <label>Middlename</label>
                       <b-form-input 
                         placeholder="Middlename"
-                        v-model="forms.student.fields.middleName" />
+                        v-model="forms.register.fields.middleName" />
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -46,7 +50,11 @@
                       <label>Lastname</label>
                       <b-form-input 
                         placeholder="Lastname"
-                        v-model="forms.student.fields.lastName" />
+                        v-model="forms.register.fields.lastName" 
+                        :state="forms.register.states.lastName" />
+                        <b-form-invalid-feedback>
+                          {{forms.register.errors.lastName}}
+                        </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                   <b-col md=6>
@@ -54,7 +62,7 @@
                       <label>Mobile No.</label>
                       <b-form-input 
                         placeholder="Mobile No."
-                        v-model="forms.student.fields.mobileNo" />
+                        v-model="forms.register.fields.mobileNo" />
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -74,7 +82,11 @@
                       <label>Email Address</label>
                       <b-form-input 
                         placeholder="Email Address"
-                        v-model="forms.student.fields.username" />
+                        v-model="forms.register.fields.username" 
+                        :state="forms.register.states.username" />
+                        <b-form-invalid-feedback>
+                          {{forms.register.errors.username}}
+                        </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                   <b-col md=6>
@@ -83,7 +95,11 @@
                       <b-form-input 
                         type="password"
                         placeholder="Password"
-                        v-model="forms.student.fields.password" />
+                        v-model="forms.register.fields.password" 
+                        :state="forms.register.states.password" />
+                        <b-form-invalid-feedback>
+                          {{forms.register.errors.password}}
+                        </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -94,7 +110,7 @@
                       <b-form-input 
                         type='password'
                         placeholder="Confirm Password"
-                        v-model="forms.student.fields.passwordConfirmation" />
+                        v-model="forms.register.fields.passwordConfirmation" />
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -105,7 +121,17 @@
                     offset-md=4
                     md=4
                   >
-                    <b-button @click="createAccount()" block variant="outline-primary">Create Account</b-button>
+                    <b-button 
+                      @click="createAccount()" 
+                      block variant="outline-primary"
+                      :disabled="forms.register.isProcessing">
+                      <v-icon
+                        v-if="forms.register.isProcessing"
+                        name="sync"
+                        class="mr-2"
+                        spin
+                      />Create Account
+                    </b-button>
                   </b-col>
                 </b-row>
               </b-form>
@@ -119,7 +145,20 @@
 
 <script>
 import { StudentApi, AuthApi } from '../../mixins/api'
+import { validate, reset } from '../../helpers/forms';
 import { StudentCategories } from '../../helpers/enum'
+
+const fields = {
+  firstName: null,
+  middleName: null,
+  lastName: null,
+  mobileNo: null,
+  username: null,
+  password: null,
+  passwordConfirmation: null,
+  studentCategoryId: null
+}
+
 export default {
   name: 'Register',
   mixins: [StudentApi, AuthApi],
@@ -127,54 +166,43 @@ export default {
     return {
       StudentCategories: StudentCategories,
       forms: {
-        student: {
-          fields: {
-            firstName: null,
-            middleName: null,
-            lastName: null,
-            mobileNo: null,
-            username: null,
-            password: null,
-            passwordConfirmation: null,
-            studentCategoryId: null
-          }
+        register: {
+          isProcessing: false,
+          fields: { ...fields },
+          states: { ...fields },
+          errors: { ...fields }
         }
       }
     }
   },
-  created(){
-    const studentCategory = this.StudentCategories[this.$route.params.type.toUpperCase()]
-
-    if(studentCategory) {
-      this.forms.student.fields.studentCategoryId = studentCategory.id
-    } else {
-      this.$router.go(-1)
-    }
-    
-  },
   methods: {
     createAccount(){
-      this.registerStudent(this.forms.student.fields).then(response => {
-        const { username, password } = this.forms.student.fields;
-        this.authenticate({ username, password }).then(response => {
-          const res = response.data
-          localStorage.setItem('accessToken', res.accessToken)
+      const { register, register: { fields: { username, password } } } = this.forms;
+      register.isProcessing = true
+      register.fields.studentCategoryId = localStorage.getItem('studentCategoryId');
+      this.registerStudent(register.fields).then(({ data }) => {
+        this.authenticate({ username, password }).then(({ data }) => {
+          localStorage.setItem('accessToken', data.accessToken)
           this.$store.commit('loginUser')
-
-          if (this.forms.student.fields.studentCategoryId === 1) {
-            this.$router.push({ name : 'Admission' })
-          } else {
-            this.$router.push({ name : 'Application' })
-          }
-          
-        }).catch(response =>{
-          console.log(response)
+          this.getAuthenticatedUser().then(({ data }) => {
+            register.isProcessing = false;
+            localStorage.setItem('studentId', data.userable.id);
+            const routeName =
+              StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
+                ? 'New Student Info' 
+                : 'Student Info';
+            localStorage.removeItem('studentCategoryId')
+            this.$router.push({ name : routeName });
+          })
         })
       })
-      .catch(response => {
-        console.log(response);
+      .catch(error => {
+        console.log(error)
+        register.isProcessing = false;
+        const { errors } = error.response.data;
+        validate(register, errors);
       })
-      // this.$http.post('api/v1/register', this.forms.student.fields)
+      // this.$http.post('api/v1/register', this.forms.register.fields)
       //   .then(response => {
       //     const res = response.data
       //     this.$store.commit('loginUser')
