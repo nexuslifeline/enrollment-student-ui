@@ -221,7 +221,7 @@
                     <!-- Previous Education -->
                     <!-- Application -->
                     <div >
-                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && isApplied">
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && forms.activeApplication.fields.applicationStatusId === 4">
                         <b-row>
                           <b-col md="12">
                             <b-alert variant="success" show>
@@ -266,7 +266,7 @@
                           </b-col>
                         </b-row>
                       </div>
-                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && !isApplied">
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && forms.activeApplication.fields.applicationStatusId === 2">
                         <b-row>
                           <b-col md="6">
                             <b-form-group>
@@ -351,7 +351,7 @@
                     </div>
                     <!-- Application -->
                   </b-card-body>
-                  <template v-slot:footer>
+                  <template v-slot:footer v-if="forms.activeApplication.fields.applicationStatusId !== 4">
                     <b-button
                       @click="forms.activeApplication.fields.applicationStepId--"
                       :disabled="forms.activeApplication.fields.applicationStepId === 1"
@@ -571,20 +571,27 @@ export default {
       ];
       const applicationStepId =
         ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-          ? ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id
+          ? ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id 
           : activeApplication.applicationStepId + 1;
+
+      const applicationStatusId =
+        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+          ? 4
+          : activeApplication.applicationStatusId;
 
       const data = {
         ...payloads[currentStepIndex],
         activeApplication: {
           ...activeApplication,
           id: activeApplication.id,
-          applicationStepId
+          applicationStepId,
+          applicationStatusId
         }
       }
 
       this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
+        console.log(data)
         copyValue(data.activeApplication, activeApplication);
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
         this.isProcessing = false;

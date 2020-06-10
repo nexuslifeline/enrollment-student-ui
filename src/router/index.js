@@ -86,7 +86,7 @@ function configRoutes () {
       component: Login
     },
     {
-      path: '/register/:type',
+      path: '/register',
       name: 'Register',
       component: Register,
     },
