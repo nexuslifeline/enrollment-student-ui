@@ -27,7 +27,6 @@
                           <b-form-group>
                             <label>Firstname</label>
                             <b-form-input
-                              placeholder="Firstname"
                               v-model="forms.student.fields.firstName" />
                           </b-form-group>
                         </b-col>
@@ -35,7 +34,6 @@
                           <b-form-group>
                             <label>Middlename</label>
                             <b-form-input
-                              placeholder="Middlename"
                               v-model="forms.student.fields.middleName" />
                           </b-form-group>
                         </b-col>
@@ -45,7 +43,6 @@
                           <b-form-group>
                             <label>Lastname</label>
                             <b-form-input
-                              placeholder="Lastname"
                               v-model="forms.student.fields.lastName" />
                           </b-form-group>
                         </b-col>
@@ -53,7 +50,6 @@
                           <b-form-group>
                             <label>Mobile No.</label>
                             <b-form-input
-                              placeholder="Mobile No."
                               v-model="forms.student.fields.mobileNo" />
                           </b-form-group>
                         </b-col>
@@ -67,7 +63,6 @@
                           <b-form-group>
                             <label>City Town</label>
                             <b-form-input
-                              placeholder="City Town"
                               v-model="forms.address.fields.city" />
                           </b-form-group>
                         </b-col>
@@ -75,7 +70,6 @@
                           <b-form-group>
                             <label>Province</label>
                             <b-form-input
-                              placeholder="Province"
                               v-model="forms.address.fields.province" />
                           </b-form-group>
                         </b-col>
@@ -84,16 +78,20 @@
                         <b-col md="6">
                           <b-form-group>
                             <label>Country</label>
-                            <b-form-input
-                              placeholder="Country"
-                              v-model="forms.address.fields.country" />
+                            <b-form-select v-model="forms.address.fields.countryId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='country in options.countries.items' :key='country.id' :value='country.id'>
+                                {{country.name}}
+                              </b-form-select-option>
+                            </b-form-select>
                           </b-form-group>
                         </b-col>
                         <b-col md="6">
                           <b-form-group>
                             <label>Postal Code</label>
                             <b-form-input
-                              placeholder="Postal Code"
                               v-model="forms.address.fields.postalCode" />
                           </b-form-group>
                         </b-col>
@@ -103,7 +101,6 @@
                           <b-form-group>
                             <label>Address</label>
                             <b-form-textarea
-                              placeholder="Address"
                               rows="3"
                               v-model="forms.address.fields.address" />
                           </b-form-group>
@@ -118,7 +115,6 @@
                           <b-form-group>
                             <label>Father</label>
                             <b-form-input
-                              placeholder="Father"
                               v-model="forms.family.fields.fatherName" />
                           </b-form-group>
                         </b-col>
@@ -126,7 +122,6 @@
                           <b-form-group>
                             <label>Contact No.</label>
                             <b-form-input
-                              placeholder="Contact No"
                               v-model="forms.family.fields.fatherMobileNo" />
                           </b-form-group>
                         </b-col>
@@ -136,7 +131,6 @@
                           <b-form-group>
                             <label>Occupation</label>
                             <b-form-input
-                              placeholder="Occupation"
                               v-model="forms.family.fields.fatherOccupation" />
                           </b-form-group>
                         </b-col>
@@ -144,7 +138,6 @@
                           <b-form-group>
                             <label>Email Address</label>
                             <b-form-input
-                              placeholder="Email Address"
                               v-model="forms.family.fields.fatherEmail" />
                           </b-form-group>
                         </b-col>
@@ -154,7 +147,6 @@
                           <b-form-group>
                             <label>Mother</label>
                             <b-form-input
-                              placeholder="Mother"
                               v-model="forms.family.fields.motherName" />
                           </b-form-group>
                         </b-col>
@@ -162,7 +154,6 @@
                           <b-form-group>
                             <label>Contact No.</label>
                             <b-form-input
-                              placeholder="Contact No"
                               v-model="forms.family.fields.motherMobileNo" />
                           </b-form-group>
                         </b-col>
@@ -172,7 +163,6 @@
                           <b-form-group>
                             <label>Occupation</label>
                             <b-form-input
-                              placeholder="Occupation"
                               v-model="forms.family.fields.motherOccupation" />
                           </b-form-group>
                         </b-col>
@@ -180,7 +170,6 @@
                           <b-form-group>
                             <label>Email Address</label>
                             <b-form-input
-                              placeholder="Email Address"
                               v-model="forms.family.fields.motherEmail" />
                           </b-form-group>
                         </b-col>
@@ -194,7 +183,6 @@
                           <b-form-group>
                             <label>Last School Attended</label>
                             <b-form-input
-                              placeholder="Last School Attended"
                               v-model="forms.education.fields.lastSchoolAttended" />
                           </b-form-group>
                         </b-col>
@@ -202,7 +190,6 @@
                           <b-form-group>
                             <label>Level</label>
                             <b-form-input
-                              placeholder="Level"
                               v-model="forms.education.fields.year" />
                           </b-form-group>
                         </b-col>
@@ -212,7 +199,6 @@
                           <b-form-group>
                             <label>Last School Address</label>
                             <b-form-input
-                              placeholder="Last School Address"
                               v-model="forms.education.fields.lastSchoolAddress" />
                           </b-form-group>
                         </b-col>
@@ -386,7 +372,7 @@
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from '../../mixins/api';
 import StageIndicator from '../components/StageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
-import { Semesters, ApplicationSteps } from '../../helpers/enum';
+import { Semesters, ApplicationSteps, Countries } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
 
 const studentFields = {
@@ -400,7 +386,7 @@ const studentFields = {
 const addressFields = {
   city: null,
   province: null,
-  country: null,
+  countryId: Countries.PHILIPPINES.id,
   postalCode: null,
   address: null
 }
@@ -498,7 +484,10 @@ export default {
           items:[]
         },
         courses :{
-          items:[]
+          items: []
+        },
+        countries: {
+          items: Countries
         },
         semesters: {
           items: Semesters
@@ -560,7 +549,16 @@ export default {
         transcript: { fields: transcript },
         activeApplication: { fields: activeApplication }
       } = this.forms;
-      const { subjects : { items: subjects } } = this.tables
+
+      const { items } = this.tables.subjects
+      let subjects = []
+
+      items.forEach(subject => {
+				subjects.push({
+					subjectId: subject.id
+				})
+			})
+      
       const currentStepIndex = activeApplication.applicationStepId - 1;
       const payloads = [
         student,
@@ -591,7 +589,6 @@ export default {
 
       this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
-        console.log(data)
         copyValue(data.activeApplication, activeApplication);
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
         this.isProcessing = false;
@@ -602,6 +599,9 @@ export default {
     },
     loadCourses() {
       const { fields } = this.forms.transcript;
+      const { items } = this.options.levels
+      // console.log(fields.levelId)
+      fields.schoolCategoryId = items.find(i => i.id == fields.levelId).schoolCategoryId
       fields.courseId = null
       fields.semesterId = null
       const params = { paginate: false }
