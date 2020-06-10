@@ -68,7 +68,7 @@
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
                               </template>
-                              <b-form-select-option v-for='civilStatus in options.civilStatuses.items' :key='civilStatus.id' :value='civilStatus.id'>
+                              <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
                                 {{civilStatus.name}}
                               </b-form-select-option>
                             </b-form-select>
@@ -126,7 +126,7 @@
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
                               </template>
-                              <b-form-select-option v-for='country in options.countries.items' :key='country.id' :value='country.id'>
+                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
                                 {{country.name}}
                               </b-form-select-option>
                             </b-form-select>
@@ -604,7 +604,7 @@ const studentFields = {
 const addressFields = {
   city: null,
   province: null,
-  countryId: 185,
+  countryId: Countries.PHILIPPINES.id,
   postalCode: null,
   address: null,
   permanentAddress: null,
@@ -742,10 +742,10 @@ export default {
             items: Semesters
           },
           civilStatuses: {
-            items: CivilStatuses.enums
+            items: CivilStatuses
           },
           countries: {
-            items: Countries.enums
+            items: Countries
           }
         },
         selectedApprovalStage: 1,
@@ -769,20 +769,23 @@ export default {
       }
     },
     created(){
-      //console.log(this.options.civilStatuses)
+      const params = { paginate: false }
       const studentId = localStorage.getItem('studentId');
-      //console.log(studentId)
       this.getStudent(studentId).then(({ data: student }) => {
         Object.keys(this.forms).forEach((key) => {
           const source = student[key] || student;
           if (source) {
             copyValue(source, this.forms[key].fields);
           }
+        })  
+
+        this.getAdmissionFiles(student.activeAdmission.id, params).then(response => {
+          const res = response.data
+          this.tables.files.items = res
         })
-         this.tables.files.items = student.activeAdmission.files
       })
+
       this.isLoading = false;
-      let params = { paginate: false }
       this.getLevelList(params).then(response => {
         const res = response.data
         this.options.levels.items = res
@@ -825,7 +828,16 @@ export default {
           transcript: { fields: transcript },
           activeAdmission: { fields: activeAdmission }
         } = this.forms;
-        const { subjects : { items: subjects } } = this.tables
+        ///const { subjects : { items: subjects } } = this.tables
+
+        const { items } = this.tables.subjects
+        let subjects = []
+        items.forEach(subject => {
+          subjects.push({
+            subjectId: subject.id
+          })
+        })
+
         const currentStepIndex = activeAdmission.admissionStepId - 1;
         const payloads = [
           student,
@@ -867,9 +879,11 @@ export default {
       },
       loadCourses() {
         const { fields } = this.forms.transcript;
+        const { items } = this.options.levels
         fields.courseId = null
         fields.semesterId = null
         const params = { paginate: false }
+        fields.schoolCategoryId = items.find(i => i.id == fields.levelId).schoolCategoryId
         this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
           this.options.courses.items = data
           if (data.length === 0) {
