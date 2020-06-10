@@ -108,8 +108,8 @@ export default {
             localStorage.setItem('studentId', data.userable.id);
             const routeName =
               StudentCategories.NEW.id === data.userable.transcript.studentCategoryId 
-                ? 'New Student Info' 
-                : 'Student Info';
+                ? 'Admission' 
+                : 'Application';
             this.$router.push({ name : routeName });
           })
         }).catch((error) => {

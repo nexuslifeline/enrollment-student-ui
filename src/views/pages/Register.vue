@@ -27,7 +27,6 @@
                     <b-form-group>
                       <label>Firstname</label>
                       <b-form-input 
-                        placeholder="Firstname"
                         v-model="forms.register.fields.firstName"
                         :state="forms.register.states.firstName" />
                         <b-form-invalid-feedback>
@@ -39,7 +38,6 @@
                     <b-form-group>
                       <label>Middlename</label>
                       <b-form-input 
-                        placeholder="Middlename"
                         v-model="forms.register.fields.middleName" />
                     </b-form-group>
                   </b-col>
@@ -49,7 +47,6 @@
                     <b-form-group>
                       <label>Lastname</label>
                       <b-form-input 
-                        placeholder="Lastname"
                         v-model="forms.register.fields.lastName" 
                         :state="forms.register.states.lastName" />
                         <b-form-invalid-feedback>
@@ -61,7 +58,6 @@
                     <b-form-group>
                       <label>Mobile No.</label>
                       <b-form-input 
-                        placeholder="Mobile No."
                         v-model="forms.register.fields.mobileNo" />
                     </b-form-group>
                   </b-col>
@@ -81,7 +77,6 @@
                     <b-form-group>
                       <label>Email Address</label>
                       <b-form-input 
-                        placeholder="Email Address"
                         v-model="forms.register.fields.username" 
                         :state="forms.register.states.username" />
                         <b-form-invalid-feedback>
@@ -94,7 +89,6 @@
                       <label>Password</label>
                       <b-form-input 
                         type="password"
-                        placeholder="Password"
                         v-model="forms.register.fields.password" 
                         :state="forms.register.states.password" />
                         <b-form-invalid-feedback>
@@ -109,7 +103,6 @@
                       <label>Confirm Password</label>
                       <b-form-input 
                         type='password'
-                        placeholder="Confirm Password"
                         v-model="forms.register.fields.passwordConfirmation" />
                     </b-form-group>
                   </b-col>
@@ -118,7 +111,7 @@
                   <b-col
                     xs=12
                     sm=12
-                    offset-md=4
+                    offset-md=8
                     md=4
                   >
                     <b-button 
@@ -189,8 +182,8 @@ export default {
             localStorage.setItem('studentId', data.userable.id);
             const routeName =
               StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
-                ? 'New Student Info' 
-                : 'Student Info';
+                ? 'Admission' 
+                : 'Application';
             localStorage.removeItem('studentCategoryId')
             this.$router.push({ name : routeName });
           })
