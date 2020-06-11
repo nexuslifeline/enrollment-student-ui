@@ -38,9 +38,9 @@
               <b-form-input
                 v-model="forms.register.fields.username"
                 :state="forms.register.states.username" />
-                <b-form-invalid-feedback>
-                  {{forms.register.errors.username}}
-                </b-form-invalid-feedback>
+              <b-form-invalid-feedback>
+                {{forms.register.errors.username}}
+              </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group class="form-group">
               <label class="label">Password</label>
@@ -48,19 +48,23 @@
                 type="password"
                 v-model="forms.register.fields.password"
                 :state="forms.register.states.password" />
-                <b-form-invalid-feedback>
-                  {{forms.register.errors.password}}
-                </b-form-invalid-feedback>
+              <b-form-invalid-feedback>
+                {{forms.register.errors.password}}
+              </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group>
               <label class="label">Confirm Password</label>
               <b-form-input
                 type='password'
-                v-model="forms.register.fields.passwordConfirmation" />
+                v-model="forms.register.fields.passwordConfirmation"
+                :state="forms.register.states.passwordConfirmation"/>
+              <b-form-invalid-feedback>
+                {{forms.register.errors.passwordConfirmation}}
+              </b-form-invalid-feedback>
             </b-form-group>
             <div class="mt-3">
               <b-button
-                @click="currentFormIndex = 1"
+                @click="onGetStarted"
                 block
                 variant="primary">
                 Get Started
@@ -156,7 +160,32 @@ export default {
     }
   },
   methods: {
-    createAccount(){
+    onGetStarted() {
+      reset(this.forms.register);
+      if (this.validateFirstStage()) {
+        this.currentFormIndex = 1;
+      }
+    },
+    validateFirstStage() {
+      // this is only to check if username and password are provided before allowing to proceed
+      // do take note that our core validations are on backend
+      let valid = true;
+      const errorsFields = {
+        username: 'The email field is required!',
+        password: 'The password field is required!',
+        passwordConfirmation: 'The confirm password field is required!'
+      }
+      const { fields, states, errors } = this.forms.register;
+      Object.keys(errorsFields).forEach((key) => {
+        if (!fields[key]) {
+          states[key] = false;
+          errors[key] = errorsFields[key];
+          valid = false;
+        }
+      });
+      return valid;
+    },
+    createAccount() {
       const { register, register: { fields: { username, password } } } = this.forms;
       register.isProcessing = true
       register.fields.studentCategoryId = localStorage.getItem('studentCategoryId');
@@ -190,16 +219,16 @@ export default {
         }
         validate(register, errors);
       })
-      // this.$http.post('api/v1/register', this.forms.register.fields)
-      //   .then(response => {
-      //     const res = response.data
-      //     this.$store.commit('loginUser')
-      //     localStorage.setItem('accessToken', res.token.accessToken)
-      //     this.$router.push({ name: 'Student Info'})
-      //   })
-      //   .catch(response => {
-      //     console.log(response)
-      //   })
+        // this.$http.post('api/v1/register', this.forms.register.fields)
+        //   .then(response => {
+        //     const res = response.data
+        //     this.$store.commit('loginUser')
+        //     localStorage.setItem('accessToken', res.token.accessToken)
+        //     this.$router.push({ name: 'Student Info'})
+        //   })
+        //   .catch(response => {
+        //     console.log(response)
+        //   })
     }
   }
 }
