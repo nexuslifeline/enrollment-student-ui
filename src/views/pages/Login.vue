@@ -31,7 +31,7 @@
         </b-form-group>
         <b-button
           @click="login()"
-          variant="outline-primary"
+          variant="primary"
           class="login__btn"
           :disabled="forms.auth.isProcessing">
           <v-icon
@@ -49,11 +49,11 @@
         </div>
         <div class="login__register-actions">
           <b-button
-            variant="outline-primary"
+            variant="primary"
             @click="register(studentCategories.NEW.id)"> Signup New Student
           </b-button>
           <b-button
-            variant="outline-primary"
+            variant="primary"
             @click="register(studentCategories.OLD.id)"> Signup Old Student
           </b-button>
         </div>
