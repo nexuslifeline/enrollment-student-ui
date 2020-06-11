@@ -5,10 +5,9 @@ $dark-gray: #7c7c7c;
 $dark-gray-10: #9c9c9c;
 $light-blue: #A1CFFD;
 $green: #00cc45;
+$darkblue: #0654A2;
 
 $brand-primary: $blue;
-
-
 
 @mixin for-size($size, $extra:0) {
   @if $size==small-phone-only {
