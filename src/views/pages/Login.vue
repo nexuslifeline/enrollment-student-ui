@@ -1,68 +1,67 @@
 <template>
-  <div class="login__container">
-    <div class="login__left-pane">
-      <div class="login__form">
-        <div class="login__intro">
-          <h4 class="login__intro-title">Welcome Back :)</h4>
-          <p class="login__intro-description">
-            To keep connected with us please login with you personal information by email address and password.
-          </p>
-        </div>
-        <b-form-group id="username">
-          <b-form-input
-            v-model="forms.auth.fields.username"
-            placeholder="Username"
-            :state="forms.auth.states.username"
-          />
-          <b-form-invalid-feedback>
-            {{forms.auth.errors.username}}
-          </b-form-invalid-feedback>
-        </b-form-group>
-        <b-form-group>
-          <b-form-input
-            v-model="forms.auth.fields.password"
-            type="password"
-            placeholder="Password"
-            :state="forms.auth.states.password"
-          />
-          <b-form-invalid-feedback>
-            {{forms.auth.errors.password}}
-          </b-form-invalid-feedback>
-        </b-form-group>
-        <b-button
-          @click="login()"
-          variant="primary"
-          class="login__btn"
-          :disabled="forms.auth.isProcessing">
-          <v-icon
-            v-if="forms.auth.isProcessing"
-            name="sync"
-            class="mr-2"
-            spin
-          />Login
-        </b-button>
-      </div>
-      <div class="login__new-account-options">
-        <div class="login__create-account">
-          <div class="login__create-account-line"></div>
-          <span class="login__center-text">Create an Account</span>
-        </div>
-        <div class="login__register-actions">
+  <transition name="slide-fade" appear>
+    <div class="login__container">
+      <div class="login__left-pane">
+        <div class="login__form">
+          <div class="login__intro">
+            <h4 class="login__intro-title">Welcome Back :)</h4>
+            <p class="login__intro-description">
+              To keep connected with us please login with you personal information by email address and password.
+            </p>
+          </div>
+          <b-form-group id="username">
+            <b-form-input
+              v-model="forms.auth.fields.username"
+              placeholder="Username"
+              :state="forms.auth.states.username"/>
+            <b-form-invalid-feedback>
+              {{forms.auth.errors.username}}
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
+              v-model="forms.auth.fields.password"
+              type="password"
+              placeholder="Password"
+              :state="forms.auth.states.password"/>
+              <b-form-invalid-feedback>
+                {{forms.auth.errors.password}}
+              </b-form-invalid-feedback>
+          </b-form-group>
           <b-button
+            @click="login()"
             variant="primary"
-            @click="register(studentCategories.NEW.id)"> Signup New Student
-          </b-button>
-          <b-button
-            variant="primary"
-            @click="register(studentCategories.OLD.id)"> Signup Old Student
+            class="login__btn"
+            :disabled="forms.auth.isProcessing">
+            <v-icon
+              v-if="forms.auth.isProcessing"
+              name="sync"
+              class="mr-2"
+              spin/>Login
           </b-button>
         </div>
+        <div class="login__new-account-options">
+          <div class="login__create-account">
+            <div class="login__create-account-line"></div>
+            <span class="login__center-text">Create an Account</span>
+          </div>
+          <div class="login__register-actions">
+            <b-button
+              variant="primary"
+              @click="register(studentCategories.NEW.id)"> Signup New Student
+            </b-button>
+            <b-button
+              variant="primary"
+              @click="register(studentCategories.OLD.id)"> Signup Old Student
+            </b-button>
+          </div>
+        </div>
+      </div>
+      <div class="login__right-pane">
+        <CarouselProcedure />
       </div>
     </div>
-    <div class="login__right-pane">
-      <CarouselProcedure />
-    </div>
-  </div>
+  </transition>
 </template>
 <script>
 import { AuthApi } from '../../mixins/api';
@@ -103,14 +102,20 @@ export default {
           localStorage.setItem('accessToken', data.accessToken);
           this.$store.commit('loginUser');
 
-          this.getAuthenticatedUser().then(({ data }) => {
+          this.getAuthenticatedUser().then(({ data: { userable } }) => {
             auth.isProcessing = false;
-            localStorage.setItem('studentId', data.userable.id);
-            const routeName =
-              StudentCategories.NEW.id === data.userable.transcript.studentCategoryId 
-                ? 'Admission' 
-                : 'Application';
-            this.$router.push({ name : routeName });
+            if (userable) {
+              // Just note here that there is no way that the student will have both active application and admission
+              const hasActiveAdmission = !!userable.activeAdmission;
+              const hasActiveApplication = !!userable.activeApplication;
+              localStorage.setItem('studentId', userable.id);
+              const routeName = hasActiveApplication
+                ? 'Application'
+                : hasActiveAdmission
+                  ? 'Admission'
+                  : 'Dashboard';
+              this.$router.push({ name : routeName });
+            }
           })
         }).catch((error) => {
           console.log(error)
@@ -128,6 +133,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "../../assets/scss/shared.scss";
+  @import "../../assets/scss/animations.scss";
 
   .login__container {
     height: 100vh;
