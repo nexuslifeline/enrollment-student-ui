@@ -1,129 +1,135 @@
 <template>
-  <div class="register__container">
-    <div class="register__main-area">
-      <div class="register__left-pane">
-        <div class="register__overview">
-          <h1 class="register__feature-title">Create an Account</h1>
-          <ul class="register__features">
-            <li class="feature__item">
-              <v-icon name="chart-pie" class="feature__icon mr-3" scale="1.6" />
-              Sed ut perspiciatis unde omnis iste natus
-            </li>
-            <li class="feature__item">
-              <v-icon name="shipping-fast" class="feature__icon mr-3" scale="1.6" />
-              Ut enim ad minima veniam, quis nostrum exercitationem
-            </li>
-            <li class="feature__item">
-              <v-icon name="paper-plane" class="feature__icon mr-3" scale="1.6" />
-              At vero eos et accusamus et iusto odio dignissimos
-            </li>
-            <li class="feature__item">
-              <v-icon name="chart-line" class="feature__icon mr-3" scale="1.6" />
-              Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus
-            </li>
-            <li class="feature__item">
-              <v-icon name="images" class="feature__icon mr-3" scale="1.6" />
-              Itaque earum rerum hic tenetur a sapiente
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="register__right-pane">
-        <div class="register__have-account">
-          <span>Already have an account? <a href='/#/login' class="sign-in__link">Signin</a></span>
-        </div>
-        <div v-show="currentFormIndex === 0" class="register__credential-form">
-            <b-form-group class="form-group">
-              <label class="label">Email</label>
-              <b-form-input
-                v-model="forms.register.fields.username"
-                :state="forms.register.states.username" />
-              <b-form-invalid-feedback>
-                {{forms.register.errors.username}}
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group class="form-group">
-              <label class="label">Password</label>
-              <b-form-input
-                type="password"
-                v-model="forms.register.fields.password"
-                :state="forms.register.states.password" />
-              <b-form-invalid-feedback>
-                {{forms.register.errors.password}}
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group>
-              <label class="label">Confirm Password</label>
-              <b-form-input
-                type='password'
-                v-model="forms.register.fields.passwordConfirmation"
-                :state="forms.register.states.passwordConfirmation"/>
-              <b-form-invalid-feedback>
-                {{forms.register.errors.passwordConfirmation}}
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <div class="mt-3">
-              <b-button
-                @click="onGetStarted"
-                block
-                variant="primary">
-                Get Started
-              </b-button>
-            </div>
+  <transition name="slide-fade" appear>
+    <div class="register__container">
+      <div class="register__main-area">
+        <div class="register__left-pane">
+          <div class="register__overview">
+            <h1 class="register__feature-title">Create an Account</h1>
+            <ul class="register__features">
+              <li class="feature__item">
+                <v-icon name="chart-pie" class="feature__icon mr-3" scale="1.6" />
+                Sed ut perspiciatis unde omnis iste natus
+              </li>
+              <li class="feature__item">
+                <v-icon name="shipping-fast" class="feature__icon mr-3" scale="1.6" />
+                Ut enim ad minima veniam, quis nostrum exercitationem
+              </li>
+              <li class="feature__item">
+                <v-icon name="paper-plane" class="feature__icon mr-3" scale="1.6" />
+                At vero eos et accusamus et iusto odio dignissimos
+              </li>
+              <li class="feature__item">
+                <v-icon name="chart-line" class="feature__icon mr-3" scale="1.6" />
+                Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus
+              </li>
+              <li class="feature__item">
+                <v-icon name="images" class="feature__icon mr-3" scale="1.6" />
+                Itaque earum rerum hic tenetur a sapiente
+              </li>
+            </ul>
           </div>
-        <div v-show="currentFormIndex === 1" class="register__credential-form">
-            <b-form-group class="form-group">
-              <label class="label">Firstname</label>
-              <b-form-input
-                v-model="forms.register.fields.firstName"
-                :state="forms.register.states.firstName" />
-                <b-form-invalid-feedback>
-                  {{forms.register.errors.firstName}}
-                </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group class="form-group">
-              <label class="label">Middlename</label>
-              <b-form-input
-                v-model="forms.register.fields.middleName" />
-            </b-form-group>
-            <b-form-group class="form-group">
-              <label class="label">Lastname</label>
-              <b-form-input
-                v-model="forms.register.fields.lastName"
-                :state="forms.register.states.lastName" />
-                <b-form-invalid-feedback>
-                  {{forms.register.errors.lastName}}
-                </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group class="form-group">
-              <label class="label">Mobile No.</label>
-              <b-form-input
-                v-model="forms.register.fields.mobileNo" />
-            </b-form-group>
-            <div class="register__about-actions">
-              <b-button
-                @click="currentFormIndex = 0"
-                variant="outline-secondary"
-                class="register__back-btn">
-                Back
-              </b-button>
-              <b-button
-                @click="createAccount()"
-                variant="primary"
-                :disabled="forms.register.isProcessing"
-                class="register__create-btn">
-                <v-icon
-                  v-if="forms.register.isProcessing"
-                  name="sync"
-                  class="mr-2"
-                  spin
-                />Register
-              </b-button>
-            </div>
+        </div>
+        <div class="register__right-pane">
+          <div class="register__have-account">
+            <span>Already have an account? <a href='/#/login' class="sign-in__link">Signin</a></span>
           </div>
+          <transition
+            name="slide-fade"
+            mode="out-in">
+            <div key="1" v-if="currentFormIndex === 0" class="register__credential-form">
+              <b-form-group class="form-group">
+                <label class="label">Email</label>
+                <b-form-input
+                  v-model="forms.register.fields.username"
+                  :state="forms.register.states.username" />
+                <b-form-invalid-feedback>
+                  {{forms.register.errors.username}}
+                </b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group class="form-group">
+                <label class="label">Password</label>
+                <b-form-input
+                  type="password"
+                  v-model="forms.register.fields.password"
+                  :state="forms.register.states.password" />
+                <b-form-invalid-feedback>
+                  {{forms.register.errors.password}}
+                </b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group>
+                <label class="label">Confirm Password</label>
+                <b-form-input
+                  type='password'
+                  v-model="forms.register.fields.passwordConfirmation"
+                  :state="forms.register.states.passwordConfirmation"/>
+                <b-form-invalid-feedback>
+                  {{forms.register.errors.passwordConfirmation}}
+                </b-form-invalid-feedback>
+              </b-form-group>
+              <div class="mt-3">
+                <b-button
+                  @click="onGetStarted"
+                  block
+                  variant="primary">
+                  Get Started
+                </b-button>
+              </div>
+            </div>
+            <div key="2" v-else class="register__credential-form">
+              <b-form-group class="form-group">
+                <label class="label">Firstname</label>
+                <b-form-input
+                  v-model="forms.register.fields.firstName"
+                  :state="forms.register.states.firstName" />
+                  <b-form-invalid-feedback>
+                    {{forms.register.errors.firstName}}
+                  </b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group class="form-group">
+                <label class="label">Middlename</label>
+                <b-form-input
+                  v-model="forms.register.fields.middleName" />
+              </b-form-group>
+              <b-form-group class="form-group">
+                <label class="label">Lastname</label>
+                <b-form-input
+                  v-model="forms.register.fields.lastName"
+                  :state="forms.register.states.lastName" />
+                  <b-form-invalid-feedback>
+                    {{forms.register.errors.lastName}}
+                  </b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group class="form-group">
+                <label class="label">Mobile No.</label>
+                <b-form-input
+                  v-model="forms.register.fields.mobileNo" />
+              </b-form-group>
+              <div class="register__about-actions">
+                <b-button
+                  @click="currentFormIndex = 0"
+                  variant="outline-secondary"
+                  class="register__back-btn">
+                  Back
+                </b-button>
+                <b-button
+                  @click="createAccount()"
+                  variant="primary"
+                  :disabled="forms.register.isProcessing"
+                  class="register__create-btn">
+                  <v-icon
+                    v-if="forms.register.isProcessing"
+                    name="sync"
+                    class="mr-2"
+                    spin
+                  />Register
+                </b-button>
+              </div>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -233,9 +239,9 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
   @import "../../assets/scss/shared.scss";
+  @import "../../assets/scss/animations.scss";
 
   .register__container {
     height: 100vh;
