@@ -340,3 +340,8 @@ export const Countries = new Enum({
   ZAMBIA: { id: 262, name: 'Zambia', description: 'Zambia' },
   ZIMBABWE: { id: 263, name: 'Zimbabwe', description: 'Zimbabwe' }
 });
+
+export const TranscriptStatuses = new Enum({
+  FINALIZED: { id: 1, name: 'Finalized' },
+  DRAFT: { id: 2, name: 'Draft' },
+});

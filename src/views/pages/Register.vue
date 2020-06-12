@@ -76,6 +76,15 @@
               </div>
             </div>
             <div key="2" v-else class="register__credential-form">
+              <b-form-group v-if="forms.register.fields.studentCategoryId == StudentCategories.OLD.id" class="form-group">
+                <label class="label">Student No</label>
+                <b-form-input
+                  v-model="forms.register.fields.studentNo"
+                  :state="forms.register.states.studentNo" />
+                  <b-form-invalid-feedback>
+                    {{forms.register.errors.studentNo}}
+                  </b-form-invalid-feedback>
+              </b-form-group>
               <b-form-group class="form-group">
                 <label class="label">Firstname</label>
                 <b-form-input
@@ -138,6 +147,7 @@ import { validate, reset } from '../../helpers/forms';
 import { StudentCategories } from '../../helpers/enum'
 
 const fields = {
+  studentNo: null,
   firstName: null,
   middleName: null,
   lastName: null,
@@ -164,6 +174,11 @@ export default {
         }
       }
     }
+  },
+  created(){
+    this.forms.register.fields.studentCategoryId = localStorage.getItem('studentCategoryId');
+    //console.log(this.forms.register.fields.studentCategoryId)
+    //console.log(this.StudentCategories.OLD.id)
   },
   methods: {
     onGetStarted() {
@@ -193,8 +208,7 @@ export default {
     },
     createAccount() {
       const { register, register: { fields: { username, password } } } = this.forms;
-      register.isProcessing = true
-      register.fields.studentCategoryId = localStorage.getItem('studentCategoryId');
+      register.isProcessing = true  
       reset(register);
       this.registerStudent(register.fields).then(({ data }) => {
         this.authenticate({ username, password }).then(({ data }) => {
