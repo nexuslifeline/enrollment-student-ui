@@ -6,6 +6,12 @@
         :activeIndex="selectedIndex"
         @selectedItem="onSelectStage"
       />
+      <br />
+      <GroupStageIndicator
+        :stages="groupStages"
+        :activeId="selectedId"
+        @selectedIdChange="onSelectIdChange"
+      />
     </div>
     <div class="right-pane">
       <div class="approval-container">
@@ -56,6 +62,7 @@
 
 <script>
 import StageIndicator from '../components/StageIndicator'
+import GroupStageIndicator from '../components/GroupStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import { SchoolCategories } from '../../helpers/enum'
 
@@ -63,17 +70,23 @@ export default {
   name: 'Demo',
   components: {
     StageIndicator,
-    ApprovalIndicator
+    ApprovalIndicator,
+    GroupStageIndicator
   },
   data() {
     return {
       SchoolCategories: SchoolCategories,
       selectedIndex: 0,
+      selectedId: 1,
       selectedApprovalStage: 1,
       stages: [
         {
-          header: 'Complete Address',
+          header: 'Personal Information',
           description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit psum dolor sit amet psum dolor sit amet'
+        },
+        {
+          header: 'Complete Address',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
         },
         {
           header: 'Family Background',
@@ -82,6 +95,18 @@ export default {
         {
           header: 'Educational Background',
           description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        },
+        {
+          header: 'Admission',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        },
+        {
+          header: 'Current Academic Year',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        },
+        {
+          header: 'Requirements',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
         }
       ],
       approvalStages: [
@@ -89,6 +114,23 @@ export default {
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Staff', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
+      ],
+      groupStages: [
+        {
+          header: 'PROFILE INFORMATION',
+          children: [
+            { id: 1, subHeader: 'Profile' },
+            { id: 2, subHeader: 'Family Background' },
+            { id: 3, subHeader: 'Previous Education' }
+          ]
+        },
+        {
+          header: 'ADMISSION',
+          children: [
+            { id: 4, subHeader: 'Academic Year' },
+            { id: 5, subHeader: 'Requirements' }
+          ]
+        },
       ]
     }
   },
@@ -98,6 +140,10 @@ export default {
     },
     onApprovalStageSelect(idx) {
       this.selectedApprovalStage = idx;
+    },
+    onSelectIdChange(id) {
+      console.log(id)
+      this.selectedId = id;
     }
   }
 }

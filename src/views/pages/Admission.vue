@@ -8,18 +8,22 @@
             <b-row>
               <b-col md="4">
                 <div class="left-pane">
-                  <StageIndicator
+                  <!--<StageIndicator
                     :stages="stages"
                     :activeIndex="forms.activeAdmission.fields.admissionStepId - 1"
                     headerKey="name"
-                    descriptionKey="description" />
+                    descriptionKey="description" />-->
+                  <GroupStageIndicator
+                    :stages="groupStages"
+                    :activeId="forms.activeAdmission.fields.admissionStepId"
+                  />
                 </div>
               </b-col>
               <b-col md="8">
                 <b-card style="min-height: 600px;">
                   <b-card-body>
-                    <h4>{{heading.name}}</h4> 
-                    <p>{{heading.description}}</p>
+                    <h4>{{heading && heading.subHeader}}</h4>
+                    <p>{{heading && heading.description}}</p>
                     <!-- About You -->
                     <div v-show="forms.activeAdmission.fields.admissionStepId === 1">
                       <b-row class="mt-4">
@@ -584,7 +588,8 @@
 </template>
 <script>
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi } from "../../mixins/api"
-import StageIndicator from '../components/StageIndicator'
+//import StageIndicator from '../components/StageIndicator'
+import GroupStageIndicator from '../components/GroupStageIndicator';
 import { Semesters, AdmissionSteps, CivilStatuses, Countries } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import { copyValue } from '../../helpers/extractor';
@@ -661,7 +666,7 @@ export default {
     name : "NewStudentInfo",
     mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi ],
     components: {
-      StageIndicator, ApprovalIndicator
+      GroupStageIndicator, ApprovalIndicator
     },
     data(){
       return{
@@ -749,17 +754,35 @@ export default {
           }
         },
         selectedApprovalStage: 1,
-        stages: [
-          'Lorem ipsum dolor amet',
-          'Lorem ipsum dolor amet',
-          'Lorem ipsum dolor amet',
-          'Lorem ipsum dolor amet',
-          'Lorem ipsum dolor amet',
-          'Lorem ipsum dolor amet'
-        ].map((description, idx) => {
-          const { name } = AdmissionSteps.values[idx];
-          return { name, description }
-        }) || [],
+        groupStages: [
+          {
+            header: 'PROFILE INFORMATION',
+            children: [
+              { id: 1, subHeader: 'Profile', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 2, subHeader: 'Address', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 3, subHeader: 'Family', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 4, subHeader: 'Education', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+            ]
+          },
+          {
+            header: 'ADMISSION',
+            children: [
+              { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 6, subHeader: 'Requirements', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+            ]
+          },
+        ],
+        // stages: [
+        //   'Lorem ipsum dolor amet',
+        //   'Lorem ipsum dolor amet',
+        //   'Lorem ipsum dolor amet',
+        //   'Lorem ipsum dolor amet',
+        //   'Lorem ipsum dolor amet',
+        //   'Lorem ipsum dolor amet'
+        // ].map((description, idx) => {
+        //   const { name } = AdmissionSteps.values[idx];
+        //   return { name, description }
+        // }) || [],
         approvalStages: [
           { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
           { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
@@ -896,14 +919,12 @@ export default {
       loadSubjects() {
         const { courseId, semesterId, levelId } = this.forms.transcript.fields;
         const { subjects } = this.tables;
-        
         if (this.options.courses.items.length > 0) {
           if (courseId === null || semesterId === null) {
             this.tables.subjects.items = []
             return
           }
         }
-      
         subjects.isBusy = true
         const params = {
           courseId,
@@ -927,10 +948,14 @@ export default {
       },
       heading() {
         const { fields } = this.forms.activeAdmission
-        if (fields.admissionStepId) {
-          return AdmissionSteps.getEnum(fields.admissionStepId)
+        if (fields.applicationStepId) {
+          const subHeaders = [
+            ...this.groupStages[0].children,
+            ...this.groupStages[1].children
+          ]
+          return subHeaders.find(({ id }) => id === fields.admissionStepId)
         }
-        return { name: '', description: ''}
+        return null;
       }
   }
 }
