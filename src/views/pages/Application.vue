@@ -25,6 +25,15 @@
                       <b-row class="mt-4">
                         <b-col md="6">
                           <b-form-group>
+                            <label>Student No</label>
+                            <b-form-input
+                              v-model="forms.student.fields.studentNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
                             <label>Firstname</label>
                             <b-form-input
                               v-model="forms.student.fields.firstName" />
@@ -52,6 +61,50 @@
                             <b-form-input
                               v-model="forms.student.fields.mobileNo" />
                           </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Birthdate</label>
+                            <b-form-input type="date" v-model="forms.student.fields.birthDate" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Civil Status</label>
+                            <b-form-select v-model="forms.student.fields.civilStatusId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
+                                {{civilStatus.name}}
+                              </b-form-select-option>
+                            </b-form-select>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md=12>
+                          <b-row>
+                            <b-col md=12>
+                              <p>In case of emergency, Please contact : </p>
+                            </b-col>
+                          </b-row>
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Parent/Guardian</label>
+                                <b-form-input type="text" v-model="forms.student.fields.parentGuardianName"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Parent/Guardian Contact No.</label>
+                                <b-form-input type="text" v-model="forms.student.fields.parentGuardianContactNo"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
                         </b-col>
                       </b-row>
                     </div>
@@ -82,7 +135,7 @@
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
                               </template>
-                              <b-form-select-option v-for='country in options.countries.items' :key='country.id' :value='country.id'>
+                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
                                 {{country.name}}
                               </b-form-select-option>
                             </b-form-select>
@@ -97,12 +150,31 @@
                         </b-col>
                       </b-row>
                       <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Home Landline/Mobile No.</label>
+                            <b-form-input
+                              v-model="forms.address.fields.homeLandlineMobileNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
                         <b-col md="12">
                           <b-form-group>
-                            <label>Address</label>
+                            <label>Current Address</label>
                             <b-form-textarea
                               rows="3"
                               v-model="forms.address.fields.address" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-form-group>
+                            <label>Permanent Address</label>
+                            <b-form-textarea
+                              rows="3"
+                              v-model="forms.address.fields.permanentAddress" />
                           </b-form-group>
                         </b-col>
                       </b-row>
@@ -179,14 +251,14 @@
                     <!-- Previous Education -->
                     <div v-show="forms.activeApplication.fields.applicationStepId === 4">
                       <b-row>
-                        <b-col md="6">
+                        <b-col md="8">
                           <b-form-group>
                             <label>Last School Attended</label>
                             <b-form-input
                               v-model="forms.education.fields.lastSchoolAttended" />
                           </b-form-group>
                         </b-col>
-                        <b-col md="6">
+                        <b-col md="4">
                           <b-form-group>
                             <label>Level</label>
                             <b-form-input
@@ -201,6 +273,114 @@
                             <b-form-input
                               v-model="forms.education.fields.lastSchoolAddress" />
                           </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Elementary Course Completed or Primary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourse" />
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourseYear" />
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>High School Course Completed or Secondary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourse"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourseYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourse"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourseYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label >College Degree(if graduated) or Tertiary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegree"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegreeYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegreeHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
                         </b-col>
                       </b-row>
                     </div>
@@ -372,15 +552,20 @@
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from '../../mixins/api';
 import StageIndicator from '../components/StageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
-import { Semesters, ApplicationSteps, Countries } from '../../helpers/enum';
+import { Semesters, ApplicationSteps, Countries, CivilStatuses } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
 
 const studentFields = {
   id: null,
+  studentNo: null,
   firstName: null,
   middleName: null,
   lastName: null,
-  mobileNo: null
+  mobileNo: null,
+  birthDate: null,
+  civilStatusId: null,
+  parentGuardianName: null,
+  parentGuardianContactNo: null
 }
 
 const addressFields = {
@@ -388,7 +573,9 @@ const addressFields = {
   province: null,
   countryId: Countries.PHILIPPINES.id,
   postalCode: null,
-  address: null
+  address: null,
+  permanentAddress: null,
+  homeLandlineMobileNo: null
 }
 
 const familyFields = {
@@ -405,7 +592,19 @@ const familyFields = {
 const educationFields = {
   lastSchoolAttended: null,
   lastSchoolAddress: null,
-  year: null
+  year: null,
+  elementaryCourse: null,
+  elementaryCourseYear: null,
+  elementaryCourseHonors: null,
+  highSchoolCourse: null,
+  highSchoolCourseYear: null,
+  highSchoolCourseHonors: null,
+  seniorSchoolCourse: null,
+  seniorSchoolCourseYear: null,
+  seniorSchoolCourseHonors: null,
+  collegeDegree: null,
+  collegeDegreeYear: null,
+  collegeDegreeHonors: null,
 }
 
 const activeApplicationFields = {
@@ -488,6 +687,9 @@ export default {
         },
         countries: {
           items: Countries
+        },
+        civilStatuses: {
+          items: CivilStatuses
         },
         semesters: {
           items: Semesters
