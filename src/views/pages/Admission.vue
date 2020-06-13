@@ -756,7 +756,7 @@ export default {
         selectedApprovalStage: 1,
         groupStages: [
           {
-            header: 'PROFILE INFORMATION',
+            header: 'Personal Information',
             children: [
               { id: 1, subHeader: 'Profile', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
               { id: 2, subHeader: 'Address', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
@@ -765,7 +765,7 @@ export default {
             ]
           },
           {
-            header: 'ADMISSION',
+            header: 'Admission',
             children: [
               { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
               { id: 6, subHeader: 'Requirements', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
