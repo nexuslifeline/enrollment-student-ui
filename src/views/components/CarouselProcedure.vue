@@ -1,22 +1,25 @@
 <template>
- <carousel :autoplay="true" :perPage="1">
-  <slide>
-    <div class="carousel__slide-image">
-      <SvgRocket />
-    </div>
-    <div class="carousel__slide-text">
-      <h4 class="carousel__slide-title">Signup</h4>
-      <p class="carousel__slide-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-        incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-    </slide>
+<div class="carousel__container">
+  <carousel :autoplay="true" :perPage="1">
     <slide>
-      <h4 class="carousel__slide-title">Submit Application</h4>
-      <p class="carousel__slide-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-        incididunt ut labore et dolore magna aliqua.</p>
+      <div class="carousel__slide-image">
+        <SvgRocket />
       </div>
-    </slide>
-  </carousel>
+      <div class="carousel__slide-text">
+        <h4 class="carousel__slide-title">Signup</h4>
+        <p class="carousel__slide-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </slide>
+      <slide>
+        <div>
+        <h4 class="carousel__slide-title">Submit Application</h4>
+        <p class="carousel__slide-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </slide>
+    </carousel>
+  </div>
 </template>
 
 <script>
@@ -63,5 +66,11 @@ export default {
       width: 100%;
     }
   }
+
+  @supports (-ms-ime-align: auto) {
+  .carousel__container {
+        width: 50vw;
+  }
+}
 
 </style>
