@@ -150,6 +150,7 @@ export default {
     align-items: center;
     justify-content: center;
     padding: 25px;
+    width: 50vw;
   }
 
   .login__form {
@@ -169,6 +170,7 @@ export default {
     background-color: $brand-primary;
     display: flex;
     align-items: center;
+    width: 50vw;
 
     @include for-size(tablet-landscape-down, 250px) {
       display: none;
