@@ -107,26 +107,134 @@
                     <!-- Complete Address -->
                     <div v-show="forms.activeAdmission.fields.admissionStepId === 2">
                       <b-row>
-                        <b-col md="6">
+                         <b-col md="4">
                           <b-form-group>
-                            <label>City Town</label>
+                            <label>House No/Street</label>
                             <b-form-input
-                              v-model="forms.address.fields.city" />
+                              v-model="forms.address.fields.currentHouseNoStreet" />
                           </b-form-group>
                         </b-col>
-                        <b-col md="6">
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>City/Town</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentCityTown" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
                           <b-form-group>
                             <label>Province</label>
                             <b-form-input
-                              v-model="forms.address.fields.province" />
+                              v-model="forms.address.fields.currentProvince" />
                           </b-form-group>
                         </b-col>
                       </b-row>
                       <b-row>
-                        <b-col md="6">
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Postal Code</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentPostalCode" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>District</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentDistrict" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Region</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentRegion" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="6">
                           <b-form-group>
                             <label>Country</label>
-                            <b-form-select v-model="forms.address.fields.countryId">
+                            <b-form-select v-model="forms.address.fields.currentCountryId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                                {{country.name}}
+                              </b-form-select-option>
+                            </b-form-select>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Home Landline/Mobile No.</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentHomeLandlineMobileNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-form-group>
+                            <label>Current Address</label>
+                            <b-form-textarea
+                              rows="3"
+                              v-model="forms.address.fields.currentCompleteAddress" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="4">
+                          <b-form-group>
+                            <label>House No/Street</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentHouseNoStreet" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>City/Town</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentCityTown" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Province</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentProvince" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Postal Code</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentPostalCode" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>District</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentDistrict" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Region</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentRegion" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="6">
+                          <b-form-group>
+                            <label>Country</label>
+                            <b-form-select v-model="forms.address.fields.permanentCountryId">
                               <template v-slot:first>
                                 <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
                               </template>
@@ -138,28 +246,9 @@
                         </b-col>
                         <b-col md="6">
                           <b-form-group>
-                            <label>Postal Code</label>
-                            <b-form-input
-                              v-model="forms.address.fields.postalCode" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
                             <label>Home Landline/Mobile No.</label>
                             <b-form-input
-                              v-model="forms.address.fields.homeLandlineMobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-form-group>
-                            <label>Current Address</label>
-                            <b-form-textarea
-                              rows="3"
-                              v-model="forms.address.fields.address" />
+                              v-model="forms.address.fields.permanentHomeLandlineMobileNo" />
                           </b-form-group>
                         </b-col>
                       </b-row>
@@ -169,7 +258,7 @@
                             <label>Permanent Address</label>
                             <b-form-textarea
                               rows="3"
-                              v-model="forms.address.fields.permanentAddress" />
+                              v-model="forms.address.fields.permanentCompleteAddress" />
                           </b-form-group>
                         </b-col>
                       </b-row>
@@ -468,7 +557,7 @@
                     <!--End  Admission -->
                     <!-- Requirements -->
                     <div>
-                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId !=4">
+                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId === 2">
                         <b-row>
                           <b-col md=12 class="mb-3">
                               <b-form-file 
@@ -506,7 +595,7 @@
                     </div>
                     <!--End Requirements -->
                     <div>
-                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId ===4">
+                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && (forms.activeAdmission.fields.applicationStatusId === 4 || forms.activeAdmission.fields.applicationStatusId === 1)">
                         <b-row>
                           <b-col md="12">
                             <b-alert variant="success" show>
@@ -553,12 +642,12 @@
                       </div>
                     </div>
                   </b-card-body>
-                  <template v-slot:footer>
+                  <template v-slot:footer v-if="forms.activeAdmission.fields.applicationStatusId !==4 && forms.activeAdmission.fields.applicationStatusId !==1">
                     <b-button
                       @click="forms.activeAdmission.fields.admissionStepId--"
                       :disabled="forms.activeAdmission.fields.admissionStepId === 1"
                       class="float-left"
-                      v-show="forms.activeAdmission.fields.admissionStepId && forms.activeAdmission.fields.applicationStatusId !==4">
+                      >
                       Back
                     </b-button>
                     <b-button
@@ -566,7 +655,7 @@
                       variant="outline-primary"
                       class="float-right"
                       :disabled="isProcessing"
-                      v-show="forms.activeAdmission.fields.admissionStepId && forms.activeAdmission.fields.applicationStatusId !==4">
+                      >
                       <v-icon
                         v-if="isProcessing"
                         name="sync"
@@ -607,13 +696,25 @@ const studentFields = {
 }
 
 const addressFields = {
-  city: null,
-  province: null,
-  countryId: Countries.PHILIPPINES.id,
-  postalCode: null,
-  address: null,
-  permanentAddress: null,
-  homeLandlineMobileNo: null
+  currentHouseNoStreet: null,
+  currentCityTown: null,
+  currentProvince: null,
+  currentRegion: null,
+  currentDistrict: null,
+  currentPostalCode: null,
+  currentCountryId: Countries.PHILIPPINES.id,
+  currentCompleteAddress: null,
+  currentHomeLandlineMobileNo: null,
+  currentHouseNoStreet: null,
+  permanentHouseNoStreet: null,
+  permanentCityTown: null,
+  permanentProvince: null,
+  permanentRegion: null,
+  permanentDistrict: null,
+  permanentPostalCode: null,
+  permanentCountryId: Countries.PHILIPPINES.id,
+  permanentCompleteAddress: null,
+  permanentHomeLandlineMobileNo: null
 }
 
 const familyFields = {
@@ -806,9 +907,22 @@ export default {
           const res = response.data
           this.tables.files.items = res
         })
+        
+        
+        //todo : review code for percentage and approval stage
+        this.percentage = 
+          student.activeAdmission.applicationStatusId == 1 ?
+            100 :  student.transcript.transcriptStatusId == 2 ? 
+              60: 30
+        this.selectedApprovalStage = 
+          student.activeAdmission.applicationStatusId == 1 ?
+            3 : student.transcript.transcriptStatusId == 2 ? 
+              2 : 2
+      
       })
 
       this.isLoading = false;
+
       this.getLevelList(params).then(response => {
         const res = response.data
         this.options.levels.items = res
