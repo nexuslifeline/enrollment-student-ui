@@ -7,11 +7,19 @@
         @selectedItem="onSelectStage"
       />
       <br />
+      <div class="profile-photo">
+        <PhotoViewer
+          @onPhotoChange="onPhotoChange"
+          @onPhotoRemove="onPhotoRemove"
+        />
+      </div>
+      <br />
       <GroupStageIndicator
         :stages="groupStages"
         :activeId="selectedId"
         @selectedIdChange="onSelectIdChange"
       />
+      <br />
     </div>
     <div class="right-pane">
       <div class="approval-container">
@@ -64,6 +72,7 @@
 import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
+import PhotoViewer from '../components/PhotoViewer'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -71,7 +80,8 @@ export default {
   components: {
     StageIndicator,
     ApprovalIndicator,
-    GroupStageIndicator
+    GroupStageIndicator,
+    PhotoViewer
   },
   data() {
     return {
@@ -144,6 +154,14 @@ export default {
     onSelectIdChange(id) {
       console.log(id)
       this.selectedId = id;
+    },
+    onPhotoChange(file) {
+      const formData = new FormData();
+      formData.append('photo', file);
+      console.log(formData)
+    },
+    onPhotoRemove() {
+      console.log('remove')
     }
   }
 }
@@ -177,5 +195,10 @@ export default {
 
   .approval-actions {
     padding: 20px 50px;
+  }
+
+  .profile-photo {
+    height: 200px;
+    width: 200px;
   }
 </style>
