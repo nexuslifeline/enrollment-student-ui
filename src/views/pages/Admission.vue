@@ -1,677 +1,627 @@
 <template>
-  <div>
-    <!-- main container -->
-    <b-overlay :show='isLoading' rounded="sm">
-      <b-row>
-        <b-col md="12">
-          <b-card>
+  <div class="admission__container">
+    <div class="admission__pane">
+       <div class="admission__left-pane">
+        <GroupStageIndicator
+          :stages="groupStages"
+          :activeId="forms.activeAdmission.fields.admissionStepId"
+        />
+      </div>
+      <div class="admission__main-pane">
+        <div class="admission__wizard-form">
+          <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
+          <p class="admission__form-description">{{heading && heading.description}}</p>
+
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 1">
+            <b-row class="mt-4">
+              <b-col md="6">
+                <b-form-group>
+                <label>Firstname</label>
+                <b-form-input
+                  v-model="forms.student.fields.firstName" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                <label>Middlename</label>
+                <b-form-input
+                  v-model="forms.student.fields.middleName" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Lastname</label>
+                  <b-form-input
+                    v-model="forms.student.fields.lastName" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Mobile No.</label>
+                  <b-form-input
+                    v-model="forms.student.fields.mobileNo" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Birthdate</label>
+                  <b-form-input type="date" v-model="forms.student.fields.birthDate" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Civil Status</label>
+                  <b-form-select v-model="forms.student.fields.civilStatusId">
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
+                      {{civilStatus.name}}
+                    </b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md=12>
+                  <b-row>
+                      <b-col md=12>
+                        <p>In case of emergency, Please contact : </p>
+                      </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label>Parent/Guardian</label>
+                        <b-form-input type="text" v-model="forms.student.fields.parentGuardianName"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label>Parent/Guardian Contact No.</label>
+                        <b-form-input type="text" v-model="forms.student.fields.parentGuardianContactNo"/>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 2">
             <b-row>
               <b-col md="4">
-                <div class="left-pane">
-                  <!--<StageIndicator
-                    :stages="stages"
-                    :activeIndex="forms.activeAdmission.fields.admissionStepId - 1"
-                    headerKey="name"
-                    descriptionKey="description" />-->
-                  <GroupStageIndicator
-                    :stages="groupStages"
-                    :activeId="forms.activeAdmission.fields.admissionStepId"
+                <b-form-group>
+                  <label>House No/Street</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentHouseNoStreet" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label>City/Town</label>
+                    <b-form-input
+                      v-model="forms.address.fields.currentCityTown" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label>Province</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentProvince" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="4">
+                <b-form-group>
+                  <label>Postal Code</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentPostalCode" />
+                  </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label>District</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentDistrict" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label>Region</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentRegion" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Country</label>
+                    <b-form-select v-model="forms.address.fields.currentCountryId">
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                      {{country.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Home Landline/Mobile No.</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentHomeLandlineMobileNo" />
+                </b-form-group>
+              </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="12">
+                  <b-form-group>
+                    <label>Current Address</label>
+                    <b-form-textarea
+                      rows="3"
+                      v-model="forms.address.fields.currentCompleteAddress" />
+                    </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>House No/Street</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentHouseNoStreet" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>City/Town</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentCityTown" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>Province</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentProvince" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>Postal Code</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentPostalCode" />
+                    </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>District</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentDistrict" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>Region</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentRegion" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Country</label>
+                    <b-form-select v-model="forms.address.fields.permanentCountryId">
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                        {{country.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Home Landline/Mobile No.</label>
+                    <b-form-input
+                      v-model="forms.address.fields.permanentHomeLandlineMobileNo" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="12">
+                  <b-form-group>
+                    <label>Permanent Address</label>
+                    <b-form-textarea
+                      rows="3"
+                      v-model="forms.address.fields.permanentCompleteAddress" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 3">
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Father</label>
+                  <b-form-input
+                    v-model="forms.family.fields.fatherName" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Contact No.</label>
+                  <b-form-input
+                    v-model="forms.family.fields.fatherMobileNo" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Occupation</label>
+                  <b-form-input
+                    v-model="forms.family.fields.fatherOccupation" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Email Address</label>
+                  <b-form-input
+                    v-model="forms.family.fields.fatherEmail" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row class="mt-3">
+              <b-col md="6">
+                <b-form-group>
+                  <label>Mother</label>
+                  <b-form-input
+                    v-model="forms.family.fields.motherName" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Contact No.</label>
+                  <b-form-input
+                    v-model="forms.family.fields.motherMobileNo" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Occupation</label>
+                  <b-form-input
+                    v-model="forms.family.fields.motherOccupation" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Email Address</label>
+                  <b-form-input
+                    v-model="forms.family.fields.motherEmail" />
+                  </b-form-group>
+              </b-col>
+            </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 4">
+            <b-row>
+              <b-col md="8">
+                <b-form-group>
+                  <label>Last School Attended</label>
+                  <b-form-input
+                    v-model="forms.education.fields.lastSchoolAttended" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                <label>Level</label>
+                <b-form-input
+                  v-model="forms.education.fields.year" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-form-group>
+                  <label>Last School Address</label>
+                  <b-form-input
+                    v-model="forms.education.fields.lastSchoolAddress" />
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                    <label>Elementary Course Completed or Primary</label>
+                    <b-form-input
+                      v-model="forms.education.fields.elementaryCourse" />
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Year</label>
+                      <b-form-input
+                        v-model="forms.education.fields.elementaryCourseYear" />
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Honor Received</label>
+                      <b-form-input
+                        v-model="forms.education.fields.elementaryCourseHonors"/>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label>High School Course Completed or Secondary</label>
+                      <b-form-input
+                        v-model="forms.education.fields.highSchoolCourse"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Year</label>
+                      <b-form-input
+                        v-model="forms.education.fields.highSchoolCourseYear"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Honor Received</label>
+                      <b-form-input
+                        v-model="forms.education.fields.highSchoolCourseHonors"/>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                      <b-form-input
+                        v-model="forms.education.fields.seniorSchoolCourse"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Year</label>
+                      <b-form-input
+                        v-model="forms.education.fields.seniorSchoolCourseYear"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Honor Received</label>
+                      <b-form-input
+                        v-model="forms.education.fields.seniorSchoolCourseHonors"/>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label >College Degree(if graduated) or Tertiary</label>
+                      <b-form-input
+                        v-model="forms.education.fields.collegeDegree"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Year</label>
+                      <b-form-input
+                        v-model="forms.education.fields.collegeDegreeYear"/>
+                      </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Honor Received</label>
+                      <b-form-input
+                        v-model="forms.education.fields.collegeDegreeHonors"/>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 5">
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Level</label>
+                  <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'>
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                      {{level.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Course</label>
+                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                      {{course.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label>Semester</label>
+                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                      {{semester.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-table
+                  sticky-header="300px"
+                  head-variant="light"
+                  responsive small hover outlined show-empty
+                  :fields="tables.subjects.fields"
+                  :items.sync="tables.subjects.items"
+                  :busy="tables.subjects.isBusy">
+                  <template v-slot:cell(name)="data">
+                    <span>{{data.item.code}} {{data.item.name}}</span><br>
+                    <small>{{data.item.description}}</small>
+                  </template>
+                </b-table>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col sm="9">
+                <h5 class="float-right">TOTAL</h5>
+              </b-col>
+              <b-col sm="3">
+                <h5 class='text-center pl-3'>{{totalUnits}}</h5>
+              </b-col>
+            </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId === 2">
+            <b-row>
+              <b-col md=12 class="mb-3">
+                <b-form-file
+                  placeholder="Choose a file or drop it here..."
+                  drop-placeholder="Drop file here..."
+                  v-model='selectedFile'
+                  :disabled='isUploading'
+                  class="mb-2">
+                </b-form-file>
+                <b-button @click="uploadFile(selectedFile)" variant='outline-primary'> <v-icon
+                  v-if="this.isUploading"
+                  name="sync"
+                  class="mr-2"
+                  spin
+                />Upload</b-button>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <b-table
+                  sticky-header="300px"
+                  head-variant="light"
+                  responsive small hover outlined show-empty
+                  :fields="tables.files.fields"
+                  :items.sync="tables.files.items"
+                  :busy="tables.files.isBusy">
+                  <template v-slot:cell(action)="row">
+                    <b-button @click="removeFile(row)" size="sm" variant="danger"><b-icon-x></b-icon-x></b-button>
+                  </template>
+                </b-table>
+              </b-col>
+            </b-row>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && (forms.activeAdmission.fields.applicationStatusId === 4 || forms.activeAdmission.fields.applicationStatusId === 1)">
+            <b-row>
+              <b-col md="12">
+                <b-alert variant="success" show>
+                  <h5>APPLICATION SUBMITTED!</h5>
+                  <p>Thank you for submitting your application for this school year. 
+                  <br> We will review your application and once approved, you will
+                  <br>be able to proceed to payment.
+                  <br>
+                  <br>We will try to get back to you as soon as we can!</p>
+                </b-alert>
+                <b-row class="pb-2">
+                  <b-col md="12">
+                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                  </b-col>
+                </b-row>
+                <b-row class="pb-5">
+                  <b-col md="2">
+                    <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                </b-row>
+                <div class="approval-container">
+                  <ApprovalIndicator
+                    :stages="approvalStages"
+                    :currentStage="selectedApprovalStage"
                   />
                 </div>
               </b-col>
-              <b-col md="8">
-                <b-card style="min-height: 600px;">
-                  <b-card-body>
-                    <h4>{{heading && heading.subHeader}}</h4>
-                    <p>{{heading && heading.description}}</p>
-                    <!-- About You -->
-                    <div v-show="forms.activeAdmission.fields.admissionStepId === 1">
-                      <b-row class="mt-4">
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Firstname</label>
-                            <b-form-input
-                              v-model="forms.student.fields.firstName" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Middlename</label>
-                            <b-form-input
-                              v-model="forms.student.fields.middleName" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Lastname</label>
-                            <b-form-input
-                              v-model="forms.student.fields.lastName" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Mobile No.</label>
-                            <b-form-input
-                              v-model="forms.student.fields.mobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Birthdate</label>
-                            <b-form-input type="date" v-model="forms.student.fields.birthDate" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Civil Status</label>
-                            <b-form-select v-model="forms.student.fields.civilStatusId">
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
-                                {{civilStatus.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md=12>
-                          <b-row>
-                            <b-col md=12>
-                              <p>In case of emergency, Please contact : </p>
-                            </b-col>
-                          </b-row>
-                          <b-row>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label>Parent/Guardian</label>
-                                <b-form-input type="text" v-model="forms.student.fields.parentGuardianName"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label>Parent/Guardian Contact No.</label>
-                                <b-form-input type="text" v-model="forms.student.fields.parentGuardianContactNo"/>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                    </div>
-                    <!-- About You -->
-                    <!-- Complete Address -->
-                    <div v-show="forms.activeAdmission.fields.admissionStepId === 2">
-                      <b-row>
-                         <b-col md="4">
-                          <b-form-group>
-                            <label>House No/Street</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentHouseNoStreet" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>City/Town</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentCityTown" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Province</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentProvince" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Postal Code</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentPostalCode" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>District</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentDistrict" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Region</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentRegion" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                         <b-col md="6">
-                          <b-form-group>
-                            <label>Country</label>
-                            <b-form-select v-model="forms.address.fields.currentCountryId">
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
-                                {{country.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Home Landline/Mobile No.</label>
-                            <b-form-input
-                              v-model="forms.address.fields.currentHomeLandlineMobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-form-group>
-                            <label>Current Address</label>
-                            <b-form-textarea
-                              rows="3"
-                              v-model="forms.address.fields.currentCompleteAddress" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                         <b-col md="4">
-                          <b-form-group>
-                            <label>House No/Street</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentHouseNoStreet" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>City/Town</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentCityTown" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Province</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentProvince" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Postal Code</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentPostalCode" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>District</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentDistrict" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Region</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentRegion" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                         <b-col md="6">
-                          <b-form-group>
-                            <label>Country</label>
-                            <b-form-select v-model="forms.address.fields.permanentCountryId">
-                              <template v-slot:first>
-                                <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
-                              </template>
-                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
-                                {{country.name}}
-                              </b-form-select-option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Home Landline/Mobile No.</label>
-                            <b-form-input
-                              v-model="forms.address.fields.permanentHomeLandlineMobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-form-group>
-                            <label>Permanent Address</label>
-                            <b-form-textarea
-                              rows="3"
-                              v-model="forms.address.fields.permanentCompleteAddress" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                    </div>
-                    <!-- Complete Address -->
-                    <!-- Family Background -->
-                    <div v-show="forms.activeAdmission.fields.admissionStepId === 3">
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Father</label>
-                            <b-form-input
-                              v-model="forms.family.fields.fatherName" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Contact No.</label>
-                            <b-form-input
-                              v-model="forms.family.fields.fatherMobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Occupation</label>
-                            <b-form-input
-                              v-model="forms.family.fields.fatherOccupation" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Email Address</label>
-                            <b-form-input
-                              v-model="forms.family.fields.fatherEmail" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row class="mt-3">
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Mother</label>
-                            <b-form-input
-                              v-model="forms.family.fields.motherName" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Contact No.</label>
-                            <b-form-input
-                              v-model="forms.family.fields.motherMobileNo" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Occupation</label>
-                            <b-form-input
-                              v-model="forms.family.fields.motherOccupation" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="6">
-                          <b-form-group>
-                            <label>Email Address</label>
-                            <b-form-input
-                              v-model="forms.family.fields.motherEmail" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                    </div>
-                    <!-- Family Background -->
-                    <!-- Previous Education -->
-                    <div v-show="forms.activeAdmission.fields.admissionStepId === 4">
-                      <b-row>
-                        <b-col md="8">
-                          <b-form-group>
-                            <label>Last School Attended</label>
-                            <b-form-input
-                              v-model="forms.education.fields.lastSchoolAttended" />
-                          </b-form-group>
-                        </b-col>
-                        <b-col md="4">
-                          <b-form-group>
-                            <label>Level</label>
-                            <b-form-input
-                              v-model="forms.education.fields.year" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-form-group>
-                            <label>Last School Address</label>
-                            <b-form-input
-                              v-model="forms.education.fields.lastSchoolAddress" />
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-row>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label>Elementary Course Completed or Primary</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.elementaryCourse" />
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Year</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.elementaryCourseYear" />
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Honor Received</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.elementaryCourseHonors"/>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-row>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label>High School Course Completed or Secondary</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.highSchoolCourse"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Year</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.highSchoolCourseYear"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Honor Received</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.highSchoolCourseHonors"/>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-row>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.seniorSchoolCourse"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Year</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.seniorSchoolCourseYear"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Honor Received</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.seniorSchoolCourseHonors"/>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col md="12">
-                          <b-row>
-                            <b-col md="6">
-                              <b-form-group>
-                                <label >College Degree(if graduated) or Tertiary</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.collegeDegree"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Year</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.collegeDegreeYear"/>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md="3">
-                              <b-form-group>
-                                <label>Honor Received</label>
-                                <b-form-input
-                                   v-model="forms.education.fields.collegeDegreeHonors"/>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                    </div>
-                    <!-- Previous Education -->
-                    <!-- Admission -->
-                    <div >
-                      <div v-show="forms.activeAdmission.fields.admissionStepId === 5">
-                        <b-row>
-                          <b-col md="6">
-                            <b-form-group>
-                              <label>Level</label>
-                              <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'>
-                                <template v-slot:first>
-                                  <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                                </template>
-                                <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                                  {{level.name}}
-                                </b-form-select-option>
-                              </b-form-select>
-                            </b-form-group>
-                          </b-col>
-                          <b-col md="6">
-                            <b-form-group>
-                              <label>Course</label>
-                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
-                                <template v-slot:first>
-                                  <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                                </template>
-                                <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                                  {{course.name}}
-                                </b-form-select-option>
-                              </b-form-select>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <!-- <b-col md="6">
-                            <b-form-group>
-                              <label>School Year</label>
-                              <b-form-select v-model='forms.transcript.fields.schoolYearId'>
-                                <template v-slot:first>
-                                  <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
-                                </template>
-                                <b-form-select-option v-for='year in options.schoolYears.items' :key='year.id' :value='year.id'>
-                                  {{year.name}}
-                                </b-form-select-option>
-                              </b-form-select>
-                            </b-form-group>
-                          </b-col> -->
-                          <b-col md="6">
-                            <b-form-group>
-                              <label>Semester</label>
-                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
-                                <template v-slot:first>
-                                  <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                                </template>
-                                <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                                  {{semester.name}}
-                                </b-form-select-option>
-                              </b-form-select>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col md="12">
-                            <b-table
-                              sticky-header="300px"
-                              head-variant="light"
-                              responsive small hover outlined show-empty
-                              :fields="tables.subjects.fields"
-                              :items.sync="tables.subjects.items"
-                              :busy="tables.subjects.isBusy">
-                              <template v-slot:cell(name)="data">
-                                <span>{{data.item.code}} {{data.item.name}}</span><br>
-                                <small>{{data.item.description}}</small>
-                              </template>
-                            </b-table>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col sm="9">
-                            <h5 class="float-right">TOTAL</h5>
-                          </b-col>
-                          <b-col sm="3">
-                            <h5 class='text-center pl-3'>{{totalUnits}}</h5>
-                          </b-col>
-                        </b-row>
-                      </div>
-                    </div>
-                    <!--End  Admission -->
-                    <!-- Requirements -->
-                    <div>
-                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId === 2">
-                        <b-row>
-                          <b-col md=12 class="mb-3">
-                              <b-form-file 
-                                placeholder="Choose a file or drop it here..."
-                                drop-placeholder="Drop file here..."
-                                v-model='selectedFile'
-                                :disabled='isUploading'
-                                class="mb-2">
-                                </b-form-file>
-                              <b-button @click="uploadFile(selectedFile)" variant='outline-primary'> <v-icon
-                                v-if="this.isUploading"
-                                name="sync"
-                                class="mr-2"
-                                spin
-                              />Upload</b-button>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col md=12>
-                            <b-table
-                              sticky-header="300px"
-                              head-variant="light"
-                              responsive small hover outlined show-empty
-                              :fields="tables.files.fields"
-                              :items.sync="tables.files.items"
-                              :busy="tables.files.isBusy"
-                            >
-                            <template v-slot:cell(action)="row">
-                              <b-button @click="removeFile(row)" size="sm" variant="danger"><b-icon-x></b-icon-x></b-button>
-                            </template>
-                            </b-table>
-                          </b-col>
-                        </b-row>
-                      </div>
-                    </div>
-                    <!--End Requirements -->
-                    <div>
-                      <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && (forms.activeAdmission.fields.applicationStatusId === 4 || forms.activeAdmission.fields.applicationStatusId === 1)">
-                        <b-row>
-                          <b-col md="12">
-                            <b-alert variant="success" show>
-                              <h5>APPLICATION SUBMITTED!</h5>
-                              <p>Thank you for submitting your application for this school year. 
-                              <br> We will review your application and once approved, you will
-                              <br>be able to proceed to payment.
-                              <br>
-                              <br>We will try to get back to you as soon as we can!</p>
-                            </b-alert>
-                            <b-row class="pb-2">
-                              <b-col md="12">
-                                <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                              </b-col>
-                            </b-row>
-                            <b-row class="pb-5">
-                              <b-col md="2">
-                                <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                              <b-col md="2">
-                                <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                              <b-col md="2">
-                                <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                              <b-col md="2">
-                                <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                              <b-col md="2">
-                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                              <b-col md="2">
-                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                              </b-col>
-                            </b-row>
-                            <div class="approval-container">
-                              <ApprovalIndicator
-                                :stages="approvalStages"
-                                :currentStage="selectedApprovalStage"
-                              />
-                            </div>
-                          </b-col>
-                        </b-row>
-                      </div>
-                    </div>
-                  </b-card-body>
-                  <template v-slot:footer v-if="forms.activeAdmission.fields.applicationStatusId !==4 && forms.activeAdmission.fields.applicationStatusId !==1">
-                    <b-button
-                      @click="forms.activeAdmission.fields.admissionStepId--"
-                      :disabled="forms.activeAdmission.fields.admissionStepId === 1"
-                      class="float-left"
-                      >
-                      Back
-                    </b-button>
-                    <b-button
-                      @click="onUpdateStudent()"
-                      variant="outline-primary"
-                      class="float-right"
-                      :disabled="isProcessing"
-                      >
-                      <v-icon
-                        v-if="isProcessing"
-                        name="sync"
-                        class="mr-2"
-                        spin
-                      />
-                      {{forms.activeAdmission.fields.admissionStepId !== 6 ? 'Next' : 'Submit Application'}}
-                    </b-button>
-                  </template>
-                </b-card>
-              </b-col>
             </b-row>
-          </b-card>
-        </b-col>
-      </b-row>
-    </b-overlay>
+          </div>
+        </div>
+      </div>
+      <div class="admission__action-bar">
+        <b-button
+          @click="forms.activeAdmission.fields.admissionStepId--"
+          v-if="forms.activeAdmission.fields.admissionStepId !== 1"
+          variant="outline-secondary"
+          :disabled="forms.activeAdmission.fields.admissionStepId === 1"
+          class="admission__back-action">
+          Back
+        </b-button>
+        <b-button
+          @click="onUpdateStudent()"
+          variant="primary"
+          class="admission__main-action"
+          :disabled="isProcessing">
+          <v-icon
+            v-if="isProcessing"
+            name="sync"
+            class="mr-2"
+            spin />
+            {{forms.activeAdmission.fields.admissionStepId !== 6 ? 'Next' : 'Submit Application'}}
+        </b-button>
+      </div>
+    </div>
   </div>
   <!-- main container -->
 </template>
@@ -901,24 +851,23 @@ export default {
           if (source) {
             copyValue(source, this.forms[key].fields);
           }
-        })  
+        })
 
         this.getAdmissionFiles(student.activeAdmission.id, params).then(response => {
           const res = response.data
           this.tables.files.items = res
         })
-        
-        
+
         //todo : review code for percentage and approval stage
-        this.percentage = 
+        this.percentage =
           student.activeAdmission.applicationStatusId == 1 ?
-            100 :  student.transcript.transcriptStatusId == 2 ? 
+            100 :  student.transcript.transcriptStatusId == 2 ?
               60: 30
-        this.selectedApprovalStage = 
+        this.selectedApprovalStage =
           student.activeAdmission.applicationStatusId == 1 ?
-            3 : student.transcript.transcriptStatusId == 2 ? 
+            3 : student.transcript.transcriptStatusId == 2 ?
               2 : 2
-      
+
       })
 
       this.isLoading = false;
@@ -1062,15 +1011,104 @@ export default {
       },
       heading() {
         const { fields } = this.forms.activeAdmission
-        if (fields.applicationStepId) {
+        if (fields.admissionStepId) {
           const subHeaders = [
             ...this.groupStages[0].children,
             ...this.groupStages[1].children
           ]
           return subHeaders.find(({ id }) => id === fields.admissionStepId)
         }
-        return null;
+        return {};
       }
   }
 }
 </script>
+<style lang="scss" scoped>
+  @import "../../assets/scss/shared.scss";
+
+  .admission__container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admission__pane {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+  }
+
+  .admission__left-pane {
+    height: 100%;
+    padding: 25px;
+    flex: 0 1 260px;
+
+    @include for-size(tablet-portrait-down) {
+      // for the meantime, we'll hide this
+      // planning to add nav dots for lower screen size in the future
+      display: none;
+    }
+  }
+
+  .admission__main-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admission__action-bar {
+    position: fixed;
+    height: 60px;
+    background-color: $white;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 30px;
+    border-top: 1px solid $brand-border-color;
+  }
+
+  .admission__back-action {
+    min-width: 140px;
+  }
+
+  .admission__main-action {
+    margin-left: auto;
+    min-width: 160px;
+  }
+
+  .admission__wizard-form {
+    padding: 30px 25px 50px 25px;
+    width: 100%;
+    max-width: 750px;
+    border: 1px solid $brand-border-color;
+    margin: 25px 10px;
+    border-radius: 5px;
+    background-color: $white;
+
+    @include for-size(tablet-portrait-down) {
+      margin: 0 0 50px 0;
+      border: none;
+    }
+  }
+
+  .admission__form-title {
+    font-size: 18px;
+  }
+
+  .admission__form-description {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: $gray;
+  }
+</style>

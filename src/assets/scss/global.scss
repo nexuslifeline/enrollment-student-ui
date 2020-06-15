@@ -1,0 +1,17 @@
+@import "./shared.scss";
+
+body {
+  background-color: $white !important;
+}
+
+label {
+  margin-bottom: 2px;
+}
+
+.c-app, .c-body, .c-main {
+  background-color: $light-gray !important;
+}
+
+#app {
+  background-color: $white !important;
+}
