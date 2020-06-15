@@ -10,6 +10,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 window.moment = require('moment')
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
+import './assets/scss/global.scss'
 
 Vue.config.performance = true
 Vue.component('v-icon', Icon)
