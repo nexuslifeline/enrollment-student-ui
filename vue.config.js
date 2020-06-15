@@ -10,6 +10,9 @@ module.exports = {
   transpileDependencies: [
     '@coreui/utils'
   ],
+  outputDir: process.env.NODE_ENV === 'production'
+    ? 'release-stc-student/'
+    : 'dev-stc-student',
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
     svgRule.uses.clear();
