@@ -16,6 +16,10 @@ const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
 const Application = () => import('@/views/pages/Application')
 const Admission = () => import('@/views/pages/Admission')
+const Billing = () => import('@/views/pages/Billing')
+const Grade = () => import('@/views/pages/Grade')
+const Profile = () => import('@/views/pages/Profile')
+const Payment = () => import('@/views/pages/Payment')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -71,6 +75,30 @@ function configRoutes () {
           path: 'admission',
           name: 'Admission',
           component: Admission,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'billing',
+          name: 'Billing',
+          component: Billing,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'grade',
+          name: 'Grade',
+          component: Grade,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'payment',
+          name: 'Payment',
+          component: Payment,
           meta: {requiresAuth: true}
         },
       ]

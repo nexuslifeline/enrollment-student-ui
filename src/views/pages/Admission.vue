@@ -1,7 +1,7 @@
 <template>
   <div class="admission__container">
     <div class="admission__pane">
-       <div class="admission__left-pane">
+      <div class="admission__left-pane">
         <GroupStageIndicator
           :stages="groupStages"
           :activeId="forms.activeAdmission.fields.admissionStepId"
@@ -16,9 +16,13 @@
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
-                <label>Firstname</label>
+                <label class="required">Firstname</label>
                 <b-form-input
-                  v-model="forms.student.fields.firstName" />
+                  v-model="forms.student.fields.firstName" 
+                  :state="forms.student.states.firstName" />
+                <b-form-invalid-feedback>
+                  {{forms.student.errors.firstName}}
+                </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -32,9 +36,13 @@
             <b-row>
               <b-col md="6">
                 <b-form-group>
-                  <label>Lastname</label>
+                  <label class="required">Lastname</label>
                   <b-form-input
-                    v-model="forms.student.fields.lastName" />
+                    v-model="forms.student.fields.lastName" 
+                    :state="forms.student.states.lastName" />
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.lastName}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -48,79 +56,120 @@
             <b-row>
               <b-col md="6">
                 <b-form-group>
-                  <label>Birthdate</label>
-                  <b-form-input type="date" v-model="forms.student.fields.birthDate" />
+                  <label class="required">Birthdate</label>
+                  <b-form-input type="date" 
+                    v-model="forms.student.fields.birthDate" 
+                    :state="forms.student.states.birthDate" />
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.birthDate}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
                 <b-form-group>
-                  <label>Civil Status</label>
-                  <b-form-select v-model="forms.student.fields.civilStatusId">
+                  <label class="required">Civil Status</label>
+                  <b-form-select 
+                    v-model="forms.student.fields.civilStatusId"
+                    :state="forms.student.states.civilStatusId" >
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
                     </template>
                     <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
                       {{civilStatus.name}}
                     </b-form-select-option>
-                    </b-form-select>
+                  </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.civilStatusId}}
+                  </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-              </b-row>
-              <b-row>
-                <b-col md=12>
-                  <b-row>
-                      <b-col md=12>
-                        <p>In case of emergency, Please contact : </p>
-                      </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group>
-                        <label>Parent/Guardian</label>
-                        <b-form-input type="text" v-model="forms.student.fields.parentGuardianName"/>
-                      </b-form-group>
-                    </b-col>
-                    <b-col md="6">
-                      <b-form-group>
-                        <label>Parent/Guardian Contact No.</label>
-                        <b-form-input type="text" v-model="forms.student.fields.parentGuardianContactNo"/>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <b-row>
+                  <b-col md=12>
+                    <p>In case of emergency, Please contact : </p>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian</label>
+                      <b-form-input 
+                        v-model="forms.student.fields.parentGuardianName"
+                        :state="forms.student.states.parentGuardianName" />
+                      <b-form-invalid-feedback>
+                        {{forms.student.errors.parentGuardianName}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian Contact No.</label>
+                      <b-form-input 
+                        v-model="forms.student.fields.parentGuardianContactNo"
+                        :state="forms.student.states.parentGuardianContactNo" />
+                      <b-form-invalid-feedback>
+                        {{forms.student.errors.parentGuardianContactNo}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
           </div>
           <div v-show="forms.activeAdmission.fields.admissionStepId === 2">
             <b-row>
+              <b-col md=12>
+                <h5>Current Address</h5>
+              </b-col>
+            </b-row>
+            <b-row>
               <b-col md="4">
                 <b-form-group>
-                  <label>House No/Street</label>
+                  <label class="required">House No/Street</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentHouseNoStreet" />
+                    v-model="forms.address.fields.currentHouseNoStreet" 
+                    :state="forms.address.states.addressCurrentHouseNoStreet" />
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentHouseNoStreet}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
-                  <label>City/Town</label>
-                    <b-form-input
-                      v-model="forms.address.fields.currentCityTown" />
+                  <label class="required">City/Town</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentCityTown" 
+                    :state="forms.address.states.addressCurrentCityTown" />
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentCityTown}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
-                  <label>Province</label>
+                  <label class="required">Province</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentProvince" />
+                    v-model="forms.address.fields.currentProvince"
+                    :state="forms.address.states.addressCurrentProvince" />
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentProvince}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row>
               <b-col md="4">
                 <b-form-group>
-                  <label>Postal Code</label>
+                  <label class="required">Postal Code</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentPostalCode" />
-                  </b-form-group>
+                    v-model="forms.address.fields.currentPostalCode"
+                    :state="forms.address.states.addressCurrentPostalCode" />
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentPostalCode}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
@@ -140,8 +189,10 @@
             <b-row>
               <b-col md="6">
                 <b-form-group>
-                  <label>Country</label>
-                    <b-form-select v-model="forms.address.fields.currentCountryId">
+                  <label class="required">Country</label>
+                    <b-form-select 
+                      v-model="forms.address.fields.currentCountryId"
+                      :state="forms.address.states.addressCurrentCountryId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
                     </template>
@@ -149,13 +200,20 @@
                       {{country.name}}
                     </b-form-select-option>
                   </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentCountryId}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
                 <b-form-group>
-                  <label>Home Landline/Mobile No.</label>
+                  <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentHomeLandlineMobileNo" />
+                    v-model="forms.address.fields.currentHomeLandlineMobileNo"
+                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo" />
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               </b-row>
@@ -166,39 +224,64 @@
                     <b-form-textarea
                       rows="3"
                       v-model="forms.address.fields.currentCompleteAddress" />
-                    </b-form-group>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <hr>
+              <b-row>
+                <b-col md=6>
+                  <h5>Permanent Address</h5>
+                </b-col>
+                <b-col md=6 class="text-right">
+                  <b-form-checkbox @input="onSameAddress($event)">Same as Current Address</b-form-checkbox>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md="4">
                   <b-form-group>
-                    <label>House No/Street</label>
+                    <label class="required">House No/Street</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHouseNoStreet" />
+                      v-model="forms.address.fields.permanentHouseNoStreet"
+                      :state="forms.address.states.addressPermanentHouseNoStreet" />
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentHouseNoStreet}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
                   <b-form-group>
-                    <label>City/Town</label>
+                    <label class="required">City/Town</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentCityTown" />
+                      v-model="forms.address.fields.permanentCityTown"
+                      :state="forms.address.states.addressPermanentCityTown" />
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentCityTown}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
                   <b-form-group>
-                    <label>Province</label>
+                    <label class="required">Province</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentProvince" />
+                      v-model="forms.address.fields.permanentProvince"
+                      :state="forms.address.states.addressPermanentProvince" />
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentProvince}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md="4">
                   <b-form-group>
-                    <label>Postal Code</label>
+                    <label class="required">Postal Code</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentPostalCode" />
-                    </b-form-group>
+                      v-model="forms.address.fields.permanentPostalCode"
+                      :state="forms.address.states.addressPermanentPostalCode" />
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentPostalCode}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
                 </b-col>
                 <b-col md="4">
                   <b-form-group>
@@ -218,8 +301,10 @@
               <b-row>
                 <b-col md="6">
                   <b-form-group>
-                    <label>Country</label>
-                    <b-form-select v-model="forms.address.fields.permanentCountryId">
+                    <label class="required">Country</label>
+                    <b-form-select 
+                      v-model="forms.address.fields.permanentCountryId"
+                      :state="forms.address.states.addressPermanentCountryId">                  
                       <template v-slot:first>
                         <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
                       </template>
@@ -227,13 +312,20 @@
                         {{country.name}}
                       </b-form-select-option>
                     </b-form-select>
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentCountryId}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
                 <b-col md="6">
                   <b-form-group>
-                    <label>Home Landline/Mobile No.</label>
+                    <label class="required">Home Landline/Mobile No.</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHomeLandlineMobileNo" />
+                      v-model="forms.address.fields.permanentHomeLandlineMobileNo"
+                      :state="forms.address.states.addressPermanentHomeLandlineMobileNo" />
+                    <b-form-invalid-feedback>
+                      {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -252,9 +344,13 @@
             <b-row>
               <b-col md="6">
                 <b-form-group>
-                  <label>Father</label>
+                  <label class="required">Father</label>
                   <b-form-input
-                    v-model="forms.family.fields.fatherName" />
+                    v-model="forms.family.fields.fatherName"
+                    :state="forms.family.states.familyFatherName" />
+                  <b-form-invalid-feedback>
+                    {{forms.family.errors.familyFatherName}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -277,16 +373,24 @@
                 <b-form-group>
                   <label>Email Address</label>
                   <b-form-input
-                    v-model="forms.family.fields.fatherEmail" />
+                    v-model="forms.family.fields.fatherEmail"
+                    :state="forms.family.states.familyFatherEmail" />
+                  <b-form-invalid-feedback>
+                    {{forms.family.errors.familyFatherEmail}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row class="mt-3">
               <b-col md="6">
                 <b-form-group>
-                  <label>Mother</label>
+                  <label class="required">Mother</label>
                   <b-form-input
-                    v-model="forms.family.fields.motherName" />
+                    v-model="forms.family.fields.motherName"
+                    :state="forms.family.states.familyMotherName" />
+                  <b-form-invalid-feedback>
+                    {{forms.family.errors.familyMotherName}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -309,7 +413,11 @@
                 <b-form-group>
                   <label>Email Address</label>
                   <b-form-input
-                    v-model="forms.family.fields.motherEmail" />
+                    v-model="forms.family.fields.motherEmail"
+                    :state="forms.family.states.familyMotherEmail" />
+                  <b-form-invalid-feedback>
+                    {{forms.family.errors.familyMotherEmail}}
+                  </b-form-invalid-feedback>
                   </b-form-group>
               </b-col>
             </b-row>
@@ -454,7 +562,9 @@
               <b-col md="6">
                 <b-form-group>
                   <label>Level</label>
-                  <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'>
+                  <b-form-select @input="loadCourses()" 
+                    v-model='forms.transcript.fields.levelId'
+                    :state="forms.transcript.states.transcriptLevelId">                   
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
@@ -462,6 +572,9 @@
                       {{level.name}}
                     </b-form-select-option>
                   </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{forms.transcript.errors.transcriptLevelId}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -495,6 +608,12 @@
             </b-row>
             <b-row>
               <b-col md="12">
+                <b-form-group>
+                  <b-form-input :state="forms.transcript.states.subjects" hidden/>
+                  <b-form-invalid-feedback>
+                    {{forms.transcript.errors.subjects}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
                 <b-table
                   sticky-header="300px"
                   head-variant="light"
@@ -518,7 +637,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && forms.activeAdmission.fields.applicationStatusId === 2">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 6">
             <b-row>
               <b-col md=12 class="mb-3">
                 <b-form-file
@@ -552,7 +671,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 6 && (forms.activeAdmission.fields.applicationStatusId === 4 || forms.activeAdmission.fields.applicationStatusId === 1)">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === 7">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -570,16 +689,16 @@
                 </b-row>
                 <b-row class="pb-5">
                   <b-col md="2">
-                    <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
                   </b-col>
                   <b-col md="2">
-                    <b-progress :value="percentage === 30 ? 100 : 0" variant="success"></b-progress>
+                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
                   </b-col>
                   <b-col md="2">
-                    <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
                   </b-col>
                   <b-col md="2">
-                    <b-progress :value="percentage === 60 ? 100 : 0" variant="success"></b-progress>
+                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
                   </b-col>
                   <b-col md="2">
                     <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
@@ -594,6 +713,19 @@
                     :currentStage="selectedApprovalStage"
                   />
                 </div>
+                <b-alert
+                  :show="dismissCountDown"
+                  variant="info"
+                  @dismissed="onUpdateStudent()"
+                  @dismiss-count-down="countDownChanged"
+                >
+                  Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
+                  <v-icon
+                    v-if="dismissCountDown"
+                    name="spinner"
+                    class="mr-2 float-right"
+                    spin />
+                </b-alert>
               </b-col>
             </b-row>
           </div>
@@ -602,7 +734,7 @@
       <div class="admission__action-bar">
         <b-button
           @click="forms.activeAdmission.fields.admissionStepId--"
-          v-if="forms.activeAdmission.fields.admissionStepId !== 1"
+          v-if="forms.activeAdmission.fields.admissionStepId !== 1 && forms.activeAdmission.fields.admissionStepId !== 7"
           variant="outline-secondary"
           :disabled="forms.activeAdmission.fields.admissionStepId === 1"
           class="admission__back-action">
@@ -612,7 +744,8 @@
           @click="onUpdateStudent()"
           variant="primary"
           class="admission__main-action"
-          :disabled="isProcessing">
+          :disabled="isProcessing"
+          v-if="forms.activeAdmission.fields.admissionStepId !== 7">
           <v-icon
             v-if="isProcessing"
             name="sync"
@@ -629,9 +762,10 @@
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
-import { Semesters, AdmissionSteps, CivilStatuses, Countries } from '../../helpers/enum'
+import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import { copyValue } from '../../helpers/extractor';
+import { validate, reset } from '../../helpers/forms';
 
 const studentFields = {
   id: null,
@@ -667,6 +801,27 @@ const addressFields = {
   permanentHomeLandlineMobileNo: null
 }
 
+const addressErrorFields = {
+  addressCurrentHouseNoStreet: null,
+  addressCurrentCityTown: null,
+  addressCurrentProvince: null,
+  addressCurrentRegion: null,
+  addressCurrentDistrict: null,
+  addressCurrentPostalCode: null,
+  addressCurrentCountryId: null,
+  addressCurrentCompleteAddress: null,
+  addressCurrentHomeLandlineMobileNo: null,
+  addressPermanentHouseNoStreet: null,
+  addressPermanentCityTown: null,
+  addressPermanentProvince: null,
+  addressPermanentRegion: null,
+  addressPermanentDistrict: null,
+  addressPermanentPostalCode: null,
+  addressPermanentCountryId: null,
+  addressPermanentCompleteAddress: null,
+  addressPermanentHomeLandlineMobileNo: null
+}
+
 const familyFields = {
   fatherName: null,
   fatherOccupation: null,
@@ -676,6 +831,17 @@ const familyFields = {
   motherOccupation: null,
   motherMobileNo: null,
   motherEmail: null
+}
+
+const familyErrorFields = {
+  familyFatherName: null,
+  familyFatherOccupation: null,
+  familyFatherMobileNo: null,
+  familyFatherEmail: null,
+  familyMotherName: null,
+  familyMotherOccupation: null,
+  familyMotherMobileNo: null,
+  familyMotherEmail: null
 }
 
 const educationFields = {
@@ -713,6 +879,11 @@ const transcriptFields = {
   schoolCategoryId: null
 }
 
+const transcriptErrorFields = {
+  transcriptLevelId: null,
+  subjects: null
+}
+
 export default {
     name : "NewStudentInfo",
     mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi ],
@@ -726,26 +897,37 @@ export default {
         isLoading: false,
         isApplied: false,
         isProcessing: false,
+        dismissCountDown: 0,
         percentage: 30,
         forms:  {
           student: {
-          fields: { ...studentFields }
+            fields: { ...studentFields },
+            states: { ...studentFields },
+            errors: { ...studentFields }
           },
           address: {
-            fields: { ...addressFields }
+            fields: { ...addressFields },
+            states: { ...addressErrorFields },
+            errors: { ...addressErrorFields }
           },
           family: {
-            fields: { ...familyFields }
+            fields: { ...familyFields },
+            states: { ...familyErrorFields },
+            errors: { ...familyErrorFields }
           },
           education: {
-            fields: { ...educationFields }
+            fields: { ...educationFields },
+            states: { ...educationFields },
+            errors: { ...educationFields }
           },
-          activeAdmission: {
+          activeAdmission : {
             fields: { ...activeAdmissionFields }
           },
-          transcript : {
-            fields: { ...transcriptFields }
-          }
+          transcript: {
+            fields: { ...transcriptFields },
+            states: { ...transcriptErrorFields },
+            errors: { ...transcriptErrorFields }
+          },
         },
         tables: {
           subjects: {
@@ -819,7 +1001,8 @@ export default {
             header: 'Admission',
             children: [
               { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 6, subHeader: 'Requirements', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+              { id: 6, subHeader: 'Requirements', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 7, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
             ]
           },
         ],
@@ -853,6 +1036,10 @@ export default {
           }
         })
 
+        if (student.activeAdmission.applicationStatusId === ApplicationStatuses.APPROVED.id) {
+          this.showCountdown()
+        }
+
         this.getAdmissionFiles(student.activeAdmission.id, params).then(response => {
           const res = response.data
           this.tables.files.items = res
@@ -866,7 +1053,7 @@ export default {
         this.selectedApprovalStage =
           student.activeAdmission.applicationStatusId == 1 ?
             3 : student.transcript.transcriptStatusId == 2 ?
-              2 : 2
+              2 : 1
 
       })
 
@@ -907,11 +1094,11 @@ export default {
       onUpdateStudent() {
         const {
           student: { fields: { id: studentId } },
-          student: { fields: student },
-          address: { fields: address },
-          family: { fields: family },
-          education: { fields: education },
-          transcript: { fields: transcript },
+          student,
+          address,
+          family,
+          education,
+          transcript,
           activeAdmission: { fields: activeAdmission }
         } = this.forms;
         ///const { subjects : { items: subjects } } = this.tables
@@ -926,22 +1113,32 @@ export default {
 
         const currentStepIndex = activeAdmission.admissionStepId - 1;
         const payloads = [
-          student,
-          { address },
-          { family },
-          { education },
-          { transcript, subjects }
+          student.fields,
+          { address: address.fields },
+          { family: family.fields },
+          { education: education.fields },
+          { transcript: transcript.fields, subjects }
         ];
 
+        const formsToValidate = [
+          student,
+          address,
+          family,
+          education,
+          transcript
+        ]
+
         const admissionStepId =
-          AdmissionSteps.REQUIREMENTS.id === activeAdmission.admissionStepId
-            ? AdmissionSteps.REQUIREMENTS.id
+          AdmissionSteps.STATUS.id === activeAdmission.admissionStepId
+            ? AdmissionSteps.STATUS.id
             : activeAdmission.admissionStepId + 1;
 
         const applicationStatusId =
           AdmissionSteps.REQUIREMENTS.id === activeAdmission.admissionStepId
-            ? 4
-            : activeAdmission.applicationStatusId;
+            ? ApplicationStatuses.SUBMITTED.id
+            : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
+              ? ApplicationStatuses.COMPLETED.id
+              : activeAdmission.applicationStatusId;
 
         const data = {
           ...payloads[currentStepIndex],
@@ -953,13 +1150,22 @@ export default {
           }
         }
 
+        formsToValidate.forEach(form => {
+          reset(form)
+        })
+
         this.isProcessing = true;
         this.updateStudent(data, studentId).then(({ data }) => {
+          if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
+            this.$router.push({ name: 'Dashboard' })
+            return
+          }
           copyValue(data.activeAdmission, activeAdmission);
           this.$set(this.forms.activeAdmission, 'fields',  { ...activeAdmission })
           this.isProcessing = false;
         }).catch((error) => {
-          console.log(error)
+          const { errors } = error.response.data;
+          validate(formsToValidate[currentStepIndex], errors);
           this.isProcessing = false;
         });
       },
@@ -969,7 +1175,11 @@ export default {
         fields.courseId = null
         fields.semesterId = null
         const params = { paginate: false }
-        fields.schoolCategoryId = items.find(i => i.id == fields.levelId).schoolCategoryId
+
+        const level = items.find(i => i.id == fields.levelId)
+        if (level) {
+          fields.schoolCategoryId = level.schoolCategoryId
+        } 
         this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
           this.options.courses.items = data
           if (data.length === 0) {
@@ -999,6 +1209,36 @@ export default {
             subjects.items = data
             subjects.isBusy = false
         });
+      },
+      onSameAddress(isSame) {
+        const { address: { fields: address } } = this.forms
+        if(isSame) {
+          address.permanentHouseNoStreet = address.currentHouseNoStreet
+          address.permanentCityTown = address.currentCityTown
+          address.permanentProvince = address.currentProvince
+          address.permanentRegion = address.currentRegion
+          address.permanentDistrict = address.currentDistrict
+          address.permanentPostalCode = address.currentPostalCode
+          address.permanentCountryId = address.currentCountryId
+          address.permanentCompleteAddress = address.currentCompleteAddress
+          address.permanentHomeLandlineMobileNo = address.currentHomeLandlineMobileNo
+        } else {
+          address.permanentHouseNoStreet = null
+          address.permanentCityTown = null
+          address.permanentProvince = null
+          address.permanentRegion = null
+          address.permanentDistrict = null
+          address.permanentPostalCode = null
+          address.permanentCountryId = Countries.PHILIPPINES.id
+          address.permanentCompleteAddress = null
+          address.permanentHomeLandlineMobileNo = null
+        }
+      },
+      countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown
+      },
+      showCountdown() {
+        this.dismissCountDown = 20
       }
     },
     computed: {
@@ -1110,5 +1350,14 @@ export default {
     font-size: 14px;
     margin-bottom: 20px;
     color: $gray;
+  }
+
+  .approval-container {
+    width: 100%;
+    height: 100px;
+  }
+
+  .approval-actions {
+    padding: 20px 50px;
   }
 </style>

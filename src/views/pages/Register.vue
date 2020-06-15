@@ -215,6 +215,7 @@ export default {
           localStorage.setItem('accessToken', data.accessToken)
           this.$store.commit('loginUser')
           this.getAuthenticatedUser().then(({ data }) => {
+            console.log(data)
             register.isProcessing = false;
             localStorage.setItem('studentId', data.userable.id);
             const routeName =
