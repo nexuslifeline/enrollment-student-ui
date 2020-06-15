@@ -51,7 +51,8 @@ export const AdmissionSteps = new Enum({
   FAMILY: { id: 3, name: 'Family', description: 'Lorem ipsum dolor amet' },
   EDUCATION: { id: 4, name: 'Education', description: 'Lorem ipsum dolor amet' },
   ACADEMIC_YEAR_ADMISSION: { id: 5, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
-  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' }
+  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
+  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' }
 });
 
 export const ApplicationSteps = new Enum({
@@ -59,7 +60,8 @@ export const ApplicationSteps = new Enum({
   ADDRESS: { id: 2, name: 'Address' },
   FAMILY: { id: 3, name: 'Family' },
   EDUCATION: { id: 4, name: 'Education' },
-  ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' }
+  ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' },
+  STATUS: { id: 6, name: 'Status', description: 'Lorem ipsum dolor amet' }
 });
 
 export const Semesters = new Enum({
@@ -344,4 +346,12 @@ export const Countries = new Enum({
 export const TranscriptStatuses = new Enum({
   FINALIZED: { id: 1, name: 'Finalized' },
   DRAFT: { id: 2, name: 'Draft' },
+});
+
+export const ApplicationStatuses = new Enum({
+  APPROVED: { id: 1, name: 'Approved' },
+  DRAFT: { id: 2, name: 'Draft' },
+  REJECTED: { id: 3, name: 'Reject' },
+  SUBMITTED: { id: 4, name: 'Submitted' },
+  COMPLETED: { id: 5, name: 'Completed' },
 });
