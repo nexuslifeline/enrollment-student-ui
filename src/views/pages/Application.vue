@@ -1261,15 +1261,27 @@ export default {
     align-items: center;
     padding: 0 30px;
     border-top: 1px solid $brand-border-color;
+
+    @include for-size(phone-only) {
+      padding: 0 15px;
+    }
   }
 
   .application__back-action {
     min-width: 140px;
+
+    @include for-size(phone-only) {
+      min-width: 80px;
+    }
   }
 
   .application__main-action {
     margin-left: auto;
     min-width: 160px;
+
+    @include for-size(phone-only) {
+      min-width: 80px;
+    }
   }
 
   .application__wizard-form {
