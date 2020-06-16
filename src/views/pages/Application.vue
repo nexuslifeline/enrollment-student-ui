@@ -15,19 +15,6 @@
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
-                  <label class="required">Student No</label>
-                  <b-form-input
-                    v-model="forms.student.fields.studentNo" 
-                    :state="forms.student.states.studentNo" />
-                  <b-form-invalid-feedback>
-                    {{forms.student.errors.studentNo}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
                   <label class="required">Firstname</label>
                   <b-form-input
                     v-model="forms.student.fields.firstName" 
@@ -36,17 +23,11 @@
                     {{forms.student.errors.firstName}}
                   </b-form-invalid-feedback>
                 </b-form-group>
-              </b-col>
-              <b-col md="6">
                 <b-form-group>
                   <label>Middlename</label>
                   <b-form-input
                     v-model="forms.student.fields.middleName" />
                 </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
                 <b-form-group>
                   <label class="required">Lastname</label>
                   <b-form-input
@@ -58,19 +39,22 @@
                 </b-form-group>
               </b-col>
               <b-col md="6">
-                <b-form-group>
-                  <label>Mobile No.</label>
-                  <b-form-input
-                    v-model="forms.student.fields.mobileNo" />
-                </b-form-group>
+                <div class="profile-photo-container">
+                  <div class="profile-photo">
+                    <PhotoViewer
+                      @onPhotoChange="onPhotoChange"
+                      @onPhotoRemove="onPhotoRemove"
+                      :imageUrl="studentPhotoUrl"
+                    />
+                  </div>
+                </div>
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Birthdate</label>
-                  <b-form-input 
-                    type="date" 
+                  <b-form-input type="date" 
                     v-model="forms.student.fields.birthDate" 
                     :state="forms.student.states.birthDate" />
                   <b-form-invalid-feedback>
@@ -78,12 +62,19 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
+                <b-form-group>
+                  <label>Mobile No.</label>
+                  <b-form-input
+                    v-model="forms.student.fields.mobileNo" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Civil Status</label>
                   <b-form-select 
                     v-model="forms.student.fields.civilStatusId"
-                    :state="forms.student.states.civilStatusId">
+                    :state="forms.student.states.civilStatusId" >
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
                     </template>
@@ -569,6 +560,17 @@
             </b-row>
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === 5">
+            <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
+              <b-col md=12>
+                <b-alert variant="danger" show>
+                  <p>
+                    Sorry, your application is rejected with the ffg. reasons : <br>
+                    {{ this.forms.activeApplication.fields.disapprovalNotes }} <br><br>
+                    <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
+                  </p>
+                </b-alert>
+              </b-col>
+            </b-row>
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -602,19 +604,6 @@
               </b-col>
             </b-row>
             <b-row>
-              <!-- <b-col md="6">
-                <b-form-group>
-                  <label>School Year</label>
-                  <b-form-select v-model='forms.transcript.fields.schoolYearId'>
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='year in options.schoolYears.items' :key='year.id' :value='year.id'>
-                      {{year.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </b-col> -->
               <b-col md="6">
                 <b-form-group>
                   <label>Semester</label>
@@ -630,7 +619,7 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="12">
+              <b-col md=12>
                 <b-form-group>
                   <b-form-input :state="forms.transcript.states.subjects" hidden/>
                   <b-form-invalid-feedback>
@@ -740,7 +729,7 @@
             name="sync"
             class="mr-2"
             spin />
-            {{forms.activeApplication.fields.applicationStepId !== 6 ? 'Next' : 'Submit Application'}}
+            {{forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
         </b-button>
       </div>
     </div>      
@@ -755,6 +744,7 @@ import ApprovalIndicator from '../components/ApprovalIndicator';
 import { Semesters, ApplicationSteps, Countries, CivilStatuses, ApplicationStatuses } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
+import PhotoViewer from '../components/PhotoViewer'
 
 const studentFields = {
   id: null,
@@ -856,7 +846,8 @@ const activeApplicationFields = {
   appliedDate: null,
   schoolYearId: null,
   applicationStatusId : null,
-  applicationStepId: null
+  applicationStepId: null,
+  disapprovalNotes: null
 }
 
 const transcriptFields = {
@@ -878,7 +869,8 @@ export default {
   mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi ],
   components: {
     ApprovalIndicator,
-    GroupStageIndicator
+    GroupStageIndicator,
+    PhotoViewer
   },
   data() {
     return {
@@ -887,6 +879,8 @@ export default {
       dismissCountDown: 0,
       percentage: 30,
       isProcessing: false,
+      studentPhotoUrl: null,
+      ApplicationStatuses: ApplicationStatuses,
       forms: {
         student: {
           fields: { ...studentFields },
@@ -976,6 +970,13 @@ export default {
             { id: 6, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
           ]
         },
+        {
+          header: 'Enrollment',
+          children: [
+            { id: 7, subHeader: 'Payments', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 8, subHeader: 'Waiting', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+          ]
+        },
       ],
       // stages: [
       //   'Lorem ipsum dolor amet',
@@ -1005,6 +1006,10 @@ export default {
           copyValue(source, this.forms[key].fields);
         }
       })
+
+      if(student.photo){
+        this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + student.photo.hashName
+      }
 
       if (student.activeApplication.applicationStatusId === ApplicationStatuses.APPROVED.id) {
         this.showCountdown()
@@ -1184,6 +1189,20 @@ export default {
     },
     showCountdown() {
       this.dismissCountDown = 20
+    },
+    onPhotoChange(file) {
+      const formData = new FormData();
+      formData.append('photo', file);
+      this.savePhoto(formData, this.forms.student.fields.id).then(response =>{
+        const res = response.data
+        this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + res.hashName
+      })
+    },
+    onPhotoRemove() {
+      this.deletePhoto(this.forms.student.fields.id).then(response =>{
+        const res = response.data
+        this.studentPhotoUrl = ""
+      })
     }
   },
   computed: {
@@ -1316,5 +1335,18 @@ export default {
 
   .approval-actions {
     padding: 20px 50px;
+  }
+
+  .profile-photo {
+    height: 200px;
+    width: 200px;
+  }
+
+  .profile-photo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
   }
 </style>
