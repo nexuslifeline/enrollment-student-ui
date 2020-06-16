@@ -242,5 +242,13 @@ export default {
     button {
       width: calc(50% - 5px);
     }
+
+     @include for-size(phone-only) {
+      flex-direction: column;
+      button {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
   }
 </style>
