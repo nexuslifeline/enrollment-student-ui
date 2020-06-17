@@ -11,7 +11,6 @@
         <div class="admission__wizard-form">
           <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
           <p class="admission__form-description">{{heading && heading.description}}</p>
-
           <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
@@ -746,14 +745,16 @@
               </b-col>
             </b-row>
           </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
+            <h5>Payments</h5>
+          </div>
         </div>
       </div>
       <div class="admission__action-bar">
         <b-button
           @click="forms.activeAdmission.fields.admissionStepId--"
-          v-if="forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.PROFILE.id && forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.STATUS.id"
+          v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
           variant="outline-secondary"
-          :disabled="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id"
           class="admission__back-action">
           Back
         </b-button>
@@ -762,7 +763,7 @@
           variant="primary"
           class="admission__main-action"
           :disabled="isProcessing"
-          v-if="forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.STATUS.id">
+          v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
           <v-icon
             v-if="isProcessing"
             name="sync"
@@ -784,6 +785,7 @@ import ApprovalIndicator from '../components/ApprovalIndicator'
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
 import PhotoViewer from '../components/PhotoViewer'
+import ApplicationStep from '../../mixins/api/ApplicationStep';
 
 const studentFields = {
   id: null,
@@ -1097,6 +1099,7 @@ export default {
         const res = response.data
         this.options.levels.items = res
       })
+
     },
     methods: {
       uploadFile(file) {
@@ -1161,18 +1164,20 @@ export default {
           education,
           transcript
         ]
-
+        
         const admissionStepId =
-          AdmissionSteps.STATUS.id === activeAdmission.admissionStepId
+          AdmissionSteps.STATUS.id === activeAdmission.admissionStepId && activeAdmission.applicationStatusId !==1
             ? AdmissionSteps.STATUS.id
-            : activeAdmission.admissionStepId + 1;
+              : activeAdmission.admissionStepId + 1;
 
         const applicationStatusId =
           AdmissionSteps.REQUIREMENTS.id === activeAdmission.admissionStepId
             ? ApplicationStatuses.SUBMITTED.id
-            : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
-              ? ApplicationStatuses.COMPLETED.id
-              : activeAdmission.applicationStatusId;
+              : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
+                ? ApplicationStatuses.APPROVED_ASSESMENT.id
+                  : AdmissionSteps.WAITING.id === activeAdmission.admissionStepId 
+                    ? ApplicationStatuses.COMPLETED.id 
+                      : activeAdmission.applicationStatusId
 
         const data = {
           ...payloads[currentStepIndex],
@@ -1190,10 +1195,10 @@ export default {
 
         this.isProcessing = true;
         this.updateStudent(data, studentId).then(({ data }) => {
-          if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
-            this.$router.push({ name: 'Dashboard' })
-            return
-          }
+          // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
+          //   this.$router.push({ name: 'Dashboard' })
+          //   return
+          // }
           copyValue(data.activeAdmission, activeAdmission);
           this.$set(this.forms.activeAdmission, 'fields',  { ...activeAdmission })
           this.isProcessing = false;
@@ -1287,6 +1292,16 @@ export default {
           const res = response.data
           this.studentPhotoUrl = ""
         })
+      },
+      buttonBackShowHide(admissionStepId) {
+        //arrHidden = steps id where the button back should be hidden
+        let arrHidden = [AdmissionSteps.PROFILE.id, AdmissionSteps.STATUS.id, AdmissionSteps.PAYMENTS.id, AdmissionSteps.WAITING.id]
+        return !arrHidden.includes(admissionStepId)
+      },
+      buttonNextShowHide(admissionStepId) {
+        //arrHidden = steps id where the button next should be hidden
+        let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id]
+        return !arrHidden.includes(admissionStepId)
       }
     },
     computed: {

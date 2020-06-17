@@ -707,12 +707,15 @@
               </b-col>
             </b-row>
           </div>
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
+            <h5> PAYMENTS </h5>
+          </div>
         </div>
       </div>
       <div class="application__action-bar">
         <b-button
           @click="forms.activeApplication.fields.applicationStepId--"
-          v-if="forms.activeApplication.fields.applicationStepId !== 1 && forms.activeApplication.fields.applicationStepId !== 6"
+          v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
           variant="outline-secondary"
           :disabled="forms.activeApplication.fields.applicationStepId === 1"
           class="application__back-action">
@@ -723,7 +726,7 @@
           variant="primary"
           class="application__main-action"
           :disabled="isProcessing"
-          v-if="forms.activeApplication.fields.applicationStepId !== 6">
+          v-if="buttonNextShowHide(forms.activeApplication.fields.applicationStepId)">
           <v-icon
             v-if="isProcessing"
             name="sync"
@@ -1079,17 +1082,21 @@ export default {
         transcript
       ]
 
+      console.log(activeApplication.applicationStepId)
+      console.log(activeApplication.applicationStatusId)
       const applicationStepId =
-        ApplicationSteps.STATUS.id === activeApplication.applicationStepId
-          ? ApplicationSteps.STATUS.id 
-          : activeApplication.applicationStepId + 1;
-
+          ApplicationSteps.STATUS.id === activeApplication.applicationStepId && activeApplication.applicationStatusId !==1
+            ? ApplicationSteps.STATUS.id
+              : activeApplication.applicationStepId + 1;
+      console.log(applicationStepId)
       const applicationStatusId =
-        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-          ? ApplicationStatuses.SUBMITTED.id
-          : ApplicationSteps.STATUS.id === activeApplication.applicationStepId 
-            ? ApplicationStatuses.COMPLETED.id
-            : activeApplication.applicationStatusId;
+          ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+            ? ApplicationStatuses.SUBMITTED.id
+              : ApplicationSteps.STATUS.id === activeApplication.applicationStepId 
+                ? ApplicationStatuses.APPROVED_ASSESMENT.id
+                  : ApplicationSteps.WAITING.id === activeApplication.applicationStepId 
+                    ? ApplicationStatuses.COMPLETED.id 
+                      : activeApplication.applicationStatusId
 
       const data = {
         ...payloads[currentStepIndex],
@@ -1107,10 +1114,10 @@ export default {
 
       this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
-        if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
-          this.$router.push({ name: 'Dashboard' })
-          return
-        }
+        // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
+        //   this.$router.push({ name: 'Dashboard' })
+        //   return
+        // }
         copyValue(data.activeApplication, activeApplication);
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
         this.isProcessing = false;
@@ -1206,6 +1213,16 @@ export default {
         const res = response.data
         this.studentPhotoUrl = ""
       })
+    },
+    buttonBackShowHide(applicationStepId) {
+      //arrHidden = steps id where the button back should be hidden
+      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id]
+      return !arrHidden.includes(applicationStepId)
+    },
+    buttonNextShowHide(applicationStepId) {
+      //arrHidden = steps id where the button next should be hidden
+      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id]
+      return !arrHidden.includes(applicationStepId)
     }
   },
   computed: {
