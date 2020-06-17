@@ -681,7 +681,8 @@
                   :items.sync="tables.files.items"
                   :busy="tables.files.isBusy">
                   <template v-slot:cell(action)="row">
-                    <b-button @click="removeFile(row)" size="sm" variant="danger"><b-icon-x></b-icon-x></b-button>
+                    <b-button @click="removeFile(row)" size="sm" variant="danger">
+                    <v-icon name="trash"></v-icon></b-button>
                   </template>
                 </b-table>
               </b-col>
@@ -1072,7 +1073,7 @@ export default {
           this.tables.files.items = res
         })
 
-        if(student.photo){
+        if (student.photo) {
           this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + student.photo.hashName
         }
 
@@ -1097,7 +1098,7 @@ export default {
     },
     methods: {
       uploadFile(file) {
-        if(file){
+        if (file) {
           this.tables.files.isBusy = true
           this.isUploading = true
           let formData = new FormData()
@@ -1243,7 +1244,7 @@ export default {
       },
       onSameAddress(isSame) {
         const { address: { fields: address } } = this.forms
-        if(isSame) {
+        if (isSame) {
           address.permanentHouseNoStreet = address.currentHouseNoStreet
           address.permanentCityTown = address.currentCityTown
           address.permanentProvince = address.currentProvince
