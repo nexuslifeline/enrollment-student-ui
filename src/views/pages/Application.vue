@@ -11,7 +11,7 @@
         <div class="application__wizard-form">
           <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
           <p class="application__form-description">{{heading && heading.description}}</p>
-          <div v-show="forms.activeApplication.fields.applicationStepId === 1">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
@@ -88,41 +88,8 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col md=12>
-                <b-row>
-                  <b-col md=12>
-                    <p>In case of emergency, Please contact : </p>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian</label>
-                      <b-form-input 
-                        v-model="forms.student.fields.parentGuardianName"
-                        :state="forms.student.states.parentGuardianName" />
-                      <b-form-invalid-feedback>
-                        {{forms.student.errors.parentGuardianName}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian Contact No.</label>
-                      <b-form-input 
-                        v-model="forms.student.fields.parentGuardianContactNo"
-                        :state="forms.student.states.parentGuardianContactNo" />
-                      <b-form-invalid-feedback>
-                        {{forms.student.errors.parentGuardianContactNo}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === 2">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ADDRESS.id">
             <b-row>
               <b-col md=12>
                 <h5>Current Address</h5>
@@ -342,7 +309,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === 3">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.FAMILY.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -423,8 +390,41 @@
                 </b-form-group>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col md=12>
+                <b-row>
+                  <b-col md=12>
+                    <h6>In case of emergency, Please contact : </h6>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian</label>
+                      <b-form-input 
+                        v-model="forms.family.fields.parentGuardianName"
+                        :state="forms.family.states.familyParentGuardianName" />
+                      <b-form-invalid-feedback>
+                        {{forms.family.errors.familyParentGuardianName}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian Contact No.</label>
+                      <b-form-input 
+                        v-model="forms.family.fields.parentGuardianContactNo"
+                        :state="forms.family.states.familyParentGuardianContactNo" />
+                      <b-form-invalid-feedback>
+                        {{forms.family.errors.familyParentGuardianContactNo}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === 4">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
               <b-col md="8">
                 <b-form-group>
@@ -559,7 +559,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === 5">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -649,7 +649,7 @@
               </b-col>
             </b-row>
           </div>
-           <div v-show="forms.activeApplication.fields.applicationStepId === 6">
+           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -707,12 +707,15 @@
               </b-col>
             </b-row>
           </div>
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
+            <h5> PAYMENTS </h5>
+          </div>
         </div>
       </div>
       <div class="application__action-bar">
         <b-button
           @click="forms.activeApplication.fields.applicationStepId--"
-          v-if="forms.activeApplication.fields.applicationStepId !== 1 && forms.activeApplication.fields.applicationStepId !== 6"
+          v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
           variant="outline-secondary"
           :disabled="forms.activeApplication.fields.applicationStepId === 1"
           class="application__back-action">
@@ -723,7 +726,7 @@
           variant="primary"
           class="application__main-action"
           :disabled="isProcessing"
-          v-if="forms.activeApplication.fields.applicationStepId !== 6">
+          v-if="buttonNextShowHide(forms.activeApplication.fields.applicationStepId)">
           <v-icon
             v-if="isProcessing"
             name="sync"
@@ -755,8 +758,6 @@ const studentFields = {
   mobileNo: null,
   birthDate: null,
   civilStatusId: null,
-  parentGuardianName: null,
-  parentGuardianContactNo: null
 }
 
 const addressFields = {
@@ -809,7 +810,9 @@ const familyFields = {
   motherName: null,
   motherOccupation: null,
   motherMobileNo: null,
-  motherEmail: null
+  motherEmail: null,
+  parentGuardianName: null,
+  parentGuardianContactNo: null
 }
 
 const familyErrorFields = {
@@ -820,7 +823,9 @@ const familyErrorFields = {
   familyMotherName: null,
   familyMotherOccupation: null,
   familyMotherMobileNo: null,
-  familyMotherEmail: null
+  familyMotherEmail: null,
+  familyParentGuardianName: null,
+  familyParentGuardianContactNo: null
 }
 
 const educationFields = {
@@ -881,6 +886,7 @@ export default {
       isProcessing: false,
       studentPhotoUrl: null,
       ApplicationStatuses: ApplicationStatuses,
+      ApplicationSteps: ApplicationSteps,
       forms: {
         student: {
           fields: { ...studentFields },
@@ -1076,17 +1082,21 @@ export default {
         transcript
       ]
 
+      console.log(activeApplication.applicationStepId)
+      console.log(activeApplication.applicationStatusId)
       const applicationStepId =
-        ApplicationSteps.STATUS.id === activeApplication.applicationStepId
-          ? ApplicationSteps.STATUS.id 
-          : activeApplication.applicationStepId + 1;
-
+          ApplicationSteps.STATUS.id === activeApplication.applicationStepId && activeApplication.applicationStatusId !==1
+            ? ApplicationSteps.STATUS.id
+              : activeApplication.applicationStepId + 1;
+      console.log(applicationStepId)
       const applicationStatusId =
-        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-          ? ApplicationStatuses.SUBMITTED.id
-          : ApplicationSteps.STATUS.id === activeApplication.applicationStepId 
-            ? ApplicationStatuses.COMPLETED.id
-            : activeApplication.applicationStatusId;
+          ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+            ? ApplicationStatuses.SUBMITTED.id
+              : ApplicationSteps.STATUS.id === activeApplication.applicationStepId 
+                ? ApplicationStatuses.APPROVED_ASSESMENT.id
+                  : ApplicationSteps.WAITING.id === activeApplication.applicationStepId 
+                    ? ApplicationStatuses.COMPLETED.id 
+                      : activeApplication.applicationStatusId
 
       const data = {
         ...payloads[currentStepIndex],
@@ -1104,10 +1114,10 @@ export default {
 
       this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
-        if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
-          this.$router.push({ name: 'Dashboard' })
-          return
-        }
+        // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
+        //   this.$router.push({ name: 'Dashboard' })
+        //   return
+        // }
         copyValue(data.activeApplication, activeApplication);
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
         this.isProcessing = false;
@@ -1203,6 +1213,16 @@ export default {
         const res = response.data
         this.studentPhotoUrl = ""
       })
+    },
+    buttonBackShowHide(applicationStepId) {
+      //arrHidden = steps id where the button back should be hidden
+      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id]
+      return !arrHidden.includes(applicationStepId)
+    },
+    buttonNextShowHide(applicationStepId) {
+      //arrHidden = steps id where the button next should be hidden
+      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id]
+      return !arrHidden.includes(applicationStepId)
     }
   },
   computed: {

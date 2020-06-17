@@ -11,8 +11,7 @@
         <div class="admission__wizard-form">
           <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
           <p class="admission__form-description">{{heading && heading.description}}</p>
-
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 1">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
@@ -89,41 +88,8 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col md=12>
-                <b-row>
-                  <b-col md=12>
-                    <p>In case of emergency, Please contact : </p>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian</label>
-                      <b-form-input 
-                        v-model="forms.student.fields.parentGuardianName"
-                        :state="forms.student.states.parentGuardianName" />
-                      <b-form-invalid-feedback>
-                        {{forms.student.errors.parentGuardianName}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian Contact No.</label>
-                      <b-form-input 
-                        v-model="forms.student.fields.parentGuardianContactNo"
-                        :state="forms.student.states.parentGuardianContactNo" />
-                      <b-form-invalid-feedback>
-                        {{forms.student.errors.parentGuardianContactNo}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 2">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ADDRESS.id">
             <b-row>
               <b-col md=12>
                 <h5>Current Address</h5>
@@ -345,7 +311,7 @@
                 </b-col>
               </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 3">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -426,8 +392,41 @@
                   </b-form-group>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col md=12>
+                <b-row>
+                  <b-col md=12>
+                    <h6>In case of emergency, Please contact : </h6>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian</label>
+                      <b-form-input 
+                        v-model="forms.family.fields.parentGuardianName"
+                        :state="forms.family.states.familyParentGuardianName" />
+                      <b-form-invalid-feedback>
+                        {{forms.family.errors.familyParentGuardianName}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Parent/Guardian Contact No.</label>
+                      <b-form-input 
+                        v-model="forms.family.fields.parentGuardianContactNo"
+                        :state="forms.family.states.familyParentGuardianContactNo" />
+                      <b-form-invalid-feedback>
+                        {{forms.family.errors.familyParentGuardianContactNo}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 4">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
             <b-row>
               <b-col md="8">
                 <b-form-group>
@@ -562,7 +561,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 5">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -642,7 +641,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 6">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
             <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -688,7 +687,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === 7">
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -746,14 +745,16 @@
               </b-col>
             </b-row>
           </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
+            <h5>Payments</h5>
+          </div>
         </div>
       </div>
       <div class="admission__action-bar">
         <b-button
           @click="forms.activeAdmission.fields.admissionStepId--"
-          v-if="forms.activeAdmission.fields.admissionStepId !== 1 && forms.activeAdmission.fields.admissionStepId !== 7"
+          v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
           variant="outline-secondary"
-          :disabled="forms.activeAdmission.fields.admissionStepId === 1"
           class="admission__back-action">
           Back
         </b-button>
@@ -762,13 +763,13 @@
           variant="primary"
           class="admission__main-action"
           :disabled="isProcessing"
-          v-if="forms.activeAdmission.fields.admissionStepId !== 7">
+          v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
           <v-icon
             v-if="isProcessing"
             name="sync"
             class="mr-2"
             spin />
-            {{forms.activeAdmission.fields.admissionStepId !== 6 ? 'Next' : 'Submit Application'}}
+            {{forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUIREMENTS.id ? 'Next' : 'Submit Application'}}
         </b-button>
       </div>
     </div>
@@ -784,6 +785,7 @@ import ApprovalIndicator from '../components/ApprovalIndicator'
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
 import PhotoViewer from '../components/PhotoViewer'
+import ApplicationStep from '../../mixins/api/ApplicationStep';
 
 const studentFields = {
   id: null,
@@ -792,9 +794,7 @@ const studentFields = {
   lastName: null,
   mobileNo: null,
   birthDate: null,
-  civilStatusId: null,
-  parentGuardianName: null,
-  parentGuardianContactNo: null
+  civilStatusId: null
 }
 
 const addressFields = {
@@ -807,7 +807,6 @@ const addressFields = {
   currentCountryId: Countries.PHILIPPINES.id,
   currentCompleteAddress: null,
   currentHomeLandlineMobileNo: null,
-  currentHouseNoStreet: null,
   permanentHouseNoStreet: null,
   permanentCityTown: null,
   permanentProvince: null,
@@ -848,7 +847,9 @@ const familyFields = {
   motherName: null,
   motherOccupation: null,
   motherMobileNo: null,
-  motherEmail: null
+  motherEmail: null,
+  parentGuardianName: null,
+  parentGuardianContactNo: null
 }
 
 const familyErrorFields = {
@@ -859,7 +860,9 @@ const familyErrorFields = {
   familyMotherName: null,
   familyMotherOccupation: null,
   familyMotherMobileNo: null,
-  familyMotherEmail: null
+  familyMotherEmail: null,
+  familyParentGuardianName: null,
+  familyParentGuardianContactNo: null
 }
 
 const educationFields = {
@@ -920,6 +923,7 @@ export default {
         percentage: 30,
         studentPhotoUrl: null,
         ApplicationStatuses: ApplicationStatuses,
+        AdmissionSteps: AdmissionSteps,
         forms:  {
           student: {
             fields: { ...studentFields },
@@ -1074,7 +1078,7 @@ export default {
         })
 
         if (student.photo) {
-          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + student.photo.hashName
+          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL +  student.photo.hashName
         }
 
         //todo : review code for percentage and approval stage
@@ -1095,6 +1099,7 @@ export default {
         const res = response.data
         this.options.levels.items = res
       })
+
     },
     methods: {
       uploadFile(file) {
@@ -1159,18 +1164,20 @@ export default {
           education,
           transcript
         ]
-
+        
         const admissionStepId =
-          AdmissionSteps.STATUS.id === activeAdmission.admissionStepId
+          AdmissionSteps.STATUS.id === activeAdmission.admissionStepId && activeAdmission.applicationStatusId !==1
             ? AdmissionSteps.STATUS.id
-            : activeAdmission.admissionStepId + 1;
+              : activeAdmission.admissionStepId + 1;
 
         const applicationStatusId =
           AdmissionSteps.REQUIREMENTS.id === activeAdmission.admissionStepId
             ? ApplicationStatuses.SUBMITTED.id
-            : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
-              ? ApplicationStatuses.COMPLETED.id
-              : activeAdmission.applicationStatusId;
+              : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
+                ? ApplicationStatuses.APPROVED_ASSESMENT.id
+                  : AdmissionSteps.WAITING.id === activeAdmission.admissionStepId 
+                    ? ApplicationStatuses.COMPLETED.id 
+                      : activeAdmission.applicationStatusId
 
         const data = {
           ...payloads[currentStepIndex],
@@ -1188,10 +1195,10 @@ export default {
 
         this.isProcessing = true;
         this.updateStudent(data, studentId).then(({ data }) => {
-          if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
-            this.$router.push({ name: 'Dashboard' })
-            return
-          }
+          // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
+          //   this.$router.push({ name: 'Dashboard' })
+          //   return
+          // }
           copyValue(data.activeAdmission, activeAdmission);
           this.$set(this.forms.activeAdmission, 'fields',  { ...activeAdmission })
           this.isProcessing = false;
@@ -1285,6 +1292,16 @@ export default {
           const res = response.data
           this.studentPhotoUrl = ""
         })
+      },
+      buttonBackShowHide(admissionStepId) {
+        //arrHidden = steps id where the button back should be hidden
+        let arrHidden = [AdmissionSteps.PROFILE.id, AdmissionSteps.STATUS.id, AdmissionSteps.PAYMENTS.id, AdmissionSteps.WAITING.id]
+        return !arrHidden.includes(admissionStepId)
+      },
+      buttonNextShowHide(admissionStepId) {
+        //arrHidden = steps id where the button next should be hidden
+        let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id]
+        return !arrHidden.includes(admissionStepId)
       }
     },
     computed: {
