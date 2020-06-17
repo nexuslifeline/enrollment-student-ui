@@ -16,25 +16,19 @@
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
-                <label class="required">Firstname</label>
-                <b-form-input
-                  v-model="forms.student.fields.firstName" 
-                  :state="forms.student.states.firstName" />
-                <b-form-invalid-feedback>
-                  {{forms.student.errors.firstName}}
-                </b-form-invalid-feedback>
+                  <label class="required">Firstname</label>
+                  <b-form-input
+                    v-model="forms.student.fields.firstName" 
+                    :state="forms.student.states.firstName" />
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.firstName}}
+                  </b-form-invalid-feedback>
                 </b-form-group>
-              </b-col>
-              <b-col md="6">
                 <b-form-group>
-                <label>Middlename</label>
-                <b-form-input
-                  v-model="forms.student.fields.middleName" />
+                  <label>Middlename</label>
+                  <b-form-input
+                    v-model="forms.student.fields.middleName" />
                 </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
                 <b-form-group>
                   <label class="required">Lastname</label>
                   <b-form-input
@@ -46,15 +40,19 @@
                 </b-form-group>
               </b-col>
               <b-col md="6">
-                <b-form-group>
-                  <label>Mobile No.</label>
-                  <b-form-input
-                    v-model="forms.student.fields.mobileNo" />
-                </b-form-group>
+                <div class="profile-photo-container">
+                  <div class="profile-photo">
+                    <PhotoViewer
+                      @onPhotoChange="onPhotoChange"
+                      @onPhotoRemove="onPhotoRemove"
+                      :imageUrl="studentPhotoUrl"
+                    />
+                  </div>
+                </div>
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Birthdate</label>
                   <b-form-input type="date" 
@@ -65,7 +63,14 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
+                <b-form-group>
+                  <label>Mobile No.</label>
+                  <b-form-input
+                    v-model="forms.student.fields.mobileNo" />
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Civil Status</label>
                   <b-form-select 
@@ -81,8 +86,8 @@
                   <b-form-invalid-feedback>
                     {{forms.student.errors.civilStatusId}}
                   </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
+                </b-form-group>
+              </b-col>
             </b-row>
             <b-row>
               <b-col md=12>
@@ -638,6 +643,17 @@
             </b-row>
           </div>
           <div v-show="forms.activeAdmission.fields.admissionStepId === 6">
+            <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
+              <b-col md=12>
+                <b-alert variant="danger" show>
+                  <p>
+                    Sorry, your admission is rejected with the ffg. reasons : <br>
+                    {{ this.forms.activeAdmission.fields.disapprovalNotes }} <br><br>
+                    <small>Please be inform that you can modify your admission and resubmit for evaluation.</small>
+                  </p>
+                </b-alert>
+              </b-col>
+            </b-row>
             <b-row>
               <b-col md=12 class="mb-3">
                 <b-form-file
@@ -766,6 +782,7 @@ import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuse
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
+import PhotoViewer from '../components/PhotoViewer'
 
 const studentFields = {
   id: null,
@@ -867,7 +884,8 @@ const activeAdmissionFields = {
   appliedDate: null,
   schoolYearId: null,
   applicationStatusId : null,
-  admissionStepId: null
+  admissionStepId: null,
+  disapprovalNotes: null
 }
 
 const transcriptFields = {
@@ -888,7 +906,7 @@ export default {
     name : "NewStudentInfo",
     mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi ],
     components: {
-      GroupStageIndicator, ApprovalIndicator
+      GroupStageIndicator, ApprovalIndicator, PhotoViewer
     },
     data(){
       return{
@@ -899,6 +917,8 @@ export default {
         isProcessing: false,
         dismissCountDown: 0,
         percentage: 30,
+        studentPhotoUrl: null,
+        ApplicationStatuses: ApplicationStatuses,
         forms:  {
           student: {
             fields: { ...studentFields },
@@ -1005,6 +1025,13 @@ export default {
               { id: 7, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
             ]
           },
+          {
+            header: 'Enrollment',
+            children: [
+              { id: 8, subHeader: 'Payments', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 9, subHeader: 'Waiting', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+            ]
+          },
         ],
         // stages: [
         //   'Lorem ipsum dolor amet',
@@ -1045,16 +1072,20 @@ export default {
           this.tables.files.items = res
         })
 
+        if(student.photo){
+          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + student.photo.hashName
+        }
+
         //todo : review code for percentage and approval stage
         this.percentage =
           student.activeAdmission.applicationStatusId == 1 ?
             100 :  student.transcript.transcriptStatusId == 2 ?
               60: 30
+
         this.selectedApprovalStage =
           student.activeAdmission.applicationStatusId == 1 ?
             3 : student.transcript.transcriptStatusId == 2 ?
               2 : 1
-
       })
 
       this.isLoading = false;
@@ -1239,6 +1270,20 @@ export default {
       },
       showCountdown() {
         this.dismissCountDown = 20
+      },
+      onPhotoChange(file) {
+        const formData = new FormData();
+        formData.append('photo', file);
+        this.savePhoto(formData, this.forms.student.fields.id).then(response =>{
+          const res = response.data
+          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + res.hashName
+        })
+      },
+      onPhotoRemove() {
+        this.deletePhoto(this.forms.student.fields.id).then(response =>{
+          const res = response.data
+          this.studentPhotoUrl = ""
+        })
       }
     },
     computed: {
@@ -1359,5 +1404,18 @@ export default {
 
   .approval-actions {
     padding: 20px 50px;
+  }
+
+  .profile-photo {
+    height: 200px;
+    width: 200px;
+  }
+
+  .profile-photo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
   }
 </style>

@@ -45,6 +45,7 @@ export default {
         ? event.target.files[0]
         : null;
       this.$emit('onPhotoChange', file);
+      this.$refs.photoViewerFile.value = ''
     }
   }
 }

@@ -52,7 +52,9 @@ export const AdmissionSteps = new Enum({
   EDUCATION: { id: 4, name: 'Education', description: 'Lorem ipsum dolor amet' },
   ACADEMIC_YEAR_ADMISSION: { id: 5, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
   REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
-  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' }
+  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 8, name: 'Billing', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 9, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const ApplicationSteps = new Enum({
@@ -61,7 +63,9 @@ export const ApplicationSteps = new Enum({
   FAMILY: { id: 3, name: 'Family' },
   EDUCATION: { id: 4, name: 'Education' },
   ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' },
-  STATUS: { id: 6, name: 'Status', description: 'Lorem ipsum dolor amet' }
+  STATUS: { id: 6, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 7, name: 'Payments', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 8, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const Semesters = new Enum({
