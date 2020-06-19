@@ -746,7 +746,115 @@
             </b-row>
           </div>
           <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
-            <h5>Payments</h5>
+            <b-row class="mt-4">
+              <b-col md=12>
+                <b-row>
+                  <b-col md=12>
+                    <b-alert show variant="success">
+                      <h4 class="alert-heading">Well done!</h4>
+                        <p>
+                          Congratualions! [student], you're one step closer to be enrolled. Here is a summary of your total billing :
+                          <table style="width:100%" class="mt-4">
+                            <tr>
+                              <th>Billing No.</th>
+                              <th>School Year</th>
+                              <th>Semester</th>
+                              <th>Total Amount</th>
+                            </tr>
+                            <tr>
+                              <td>12-3445131-993</td>
+                              <td>2020 - 2021</td>
+                              <td>1st Semester</td>
+                              <td>25,000.00</td>
+                            </tr>
+                          </table>
+                          <br>
+                          To preview detailed fees on your admission, please click <a href="">here</a>
+                        </p>
+                        <hr>
+                        <p class="mb-0" style="font-size:8pt">
+                          To complete your enrollment, please upload a proof of payment below and submit. 
+                          Once we verify, you will receive notification on your enrollment status.
+                        </p>
+                    </b-alert>
+                  </b-col>
+                </b-row> 
+                <b-row class="mt-2">
+                  <b-col md=12>
+                    <h5>Add Payment</h5>
+                    <b-row>
+                      <b-col md=4>
+                        <b-form-group>
+                          <label>Reference No</label>
+                          <b-form-input></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md=4>
+                        <b-form-group>
+                          <label>Payment Mode</label>
+                          <b-form-input></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md=4>
+                        <b-form-group>
+                          <label>Amount</label>
+                          <b-form-input></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col md=4>
+                        <b-form-group>
+                          <label>Date Paid</label>
+                          <b-form-input></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md=8>
+                        <b-form-group>
+                          <label>Notes</label>
+                          <b-form-input></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col md=12>
+                        <label>Proof of Payment</label>
+                        <b-form-file
+                          multiple
+                          placeholder="Choose a file or drop it here..."
+                          drop-placeholder="Drop file here..."
+                          v-model='selectedPaymentFiles'
+                          :disabled='isUploading'
+                          class="mb-2">
+                        </b-form-file>
+                        <b-button @click="insertPayment(selectedPaymentFiles)" variant='outline-primary'> <v-icon
+                          v-if="this.isUploading"
+                          name="sync"
+                          class="mr-2"
+                          spin
+                          
+                        />Add Payment</b-button>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-2"> 
+                      <b-col md=12>
+                        <b-table
+                          class="mt-2"
+                          borderless small
+                          :fields="tables.paymentFiles.fields"
+                          :items.sync="tables.paymentFiles.items"
+                        >
+                          <template v-slot:cell(action)="row">
+                            <b-button size="sm" variant="danger">
+                              <v-icon name="trash"></v-icon></b-button>
+                          </template>
+                        </b-table>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
           </div>
         </div>
       </div>
@@ -777,7 +885,7 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi } from "../../mixins/api"
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses } from '../../helpers/enum'
@@ -908,13 +1016,14 @@ const transcriptErrorFields = {
 
 export default {
     name : "NewStudentInfo",
-    mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi ],
+    mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi ],
     components: {
       GroupStageIndicator, ApprovalIndicator, PhotoViewer
     },
     data(){
       return{
         selectedFile: null,
+        selectedPaymentFiles: [],
         isUploading: false,
         isLoading: false,
         isApplied: false,
@@ -992,6 +1101,46 @@ export default {
               }
             ],
             items: []
+          },
+          paymentFiles: {
+            isBusy: false,
+            fields: [
+              {
+                key: "name",
+                label: "Filename",
+                tdClass: "align-middle",
+                thStyle: { width: "20%" }
+              },
+              {
+                key: "payment_modes.name",
+                label: "Payment Mode",
+                tdClass: "align-middle",
+                thStyle: { width: "25%" }
+              },
+              {
+                key: "total_amount",
+                label: "Amount",
+                tdClass: "align-middle",
+                thStyle: { width: "15%" }
+              },
+              {
+                key: "notes",
+                label: "Notes",
+                tdClass: "align-middle",
+                thStyle: { width: "auto" }
+              },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-center",
+                thClass: "text-center",
+                thStyle: { width: "5px" }
+              }
+            ],
+            items: [
+              { name: "12312312321.jpeg", total_amount: "12,400.00", notes: "bdo payment" },
+              { name: "payment.jpeg", total_amount: "750.00", notes: "sec bank" }
+            ]
           }
         },
         options: {
@@ -1139,6 +1288,8 @@ export default {
           activeAdmission: { fields: activeAdmission }
         } = this.forms;
         ///const { subjects : { items: subjects } } = this.tables
+        
+        console.log()
 
         const { items } = this.tables.subjects
         let subjects = []
@@ -1177,7 +1328,7 @@ export default {
                 ? ApplicationStatuses.APPROVED_ASSESMENT.id
                   : AdmissionSteps.WAITING.id === activeAdmission.admissionStepId 
                     ? ApplicationStatuses.COMPLETED.id 
-                      : activeAdmission.applicationStatusId
+                        : activeAdmission.applicationStatusId
 
         const data = {
           ...payloads[currentStepIndex],
@@ -1302,6 +1453,18 @@ export default {
         //arrHidden = steps id where the button next should be hidden
         let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id]
         return !arrHidden.includes(admissionStepId)
+      },
+      insertPayment(files) {
+        const formData = new FormData()
+        files.forEach(file => {
+          formData.append('payments', file)
+        })
+        console.log(formData)
+        // console.log(formData.getAll('files'))
+        
+        this.addPayment(formData).then(({ data }) =>{
+          console.log(data)
+        })
       }
     },
     computed: {
@@ -1436,4 +1599,10 @@ export default {
     justify-content: center;
     
   }
+
+  .padding-table-columns td
+  {
+    padding: 0 10px 0 0 ; /* Only right padding*/
+  }
+
 </style>
