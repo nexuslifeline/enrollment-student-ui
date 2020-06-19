@@ -23,4 +23,10 @@ module.exports = {
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
   },
+  configureWebpack: {
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[hash:8].js'
+    }
+  }
 }
