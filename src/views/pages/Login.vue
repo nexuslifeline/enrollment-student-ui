@@ -6,7 +6,7 @@
           <div class="login__intro">
             <h4 class="login__intro-title">Welcome Back :)</h4>
             <p class="login__intro-description">
-              To keep connected with us please login with you personal information by email address and password.
+              To keep connected with us please login with your personal information by email address and password.
             </p>
           </div>
           <b-form-group id="username">
