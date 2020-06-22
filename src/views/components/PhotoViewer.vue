@@ -1,7 +1,7 @@
 <template>
-  <div class="photo-viewer">
+  <div class="photo-viewer" @click="onBrowseClick">
     <div class="photo-viewer__action-top">
-      <button @click="$emit('onPhotoRemove')" class="photo-viewer__remove">
+      <button v-if="!!imageUrl" @click="$emit('onPhotoRemove')" class="photo-viewer__remove">
         <v-icon class="photo-viewer__remove-icon" name="times-circle" scale="1.2" />
       </button>
     </div>
@@ -10,6 +10,11 @@
       class="photo-viewer__image"
       :src="imageUrl"
     />
+    <div v-if="isBusy" class="photo-viewer__spinner">
+      <v-icon
+        name="spinner"
+        pulse />
+    </div>
     <div class="photo-viewer__action">
       <input
         @change="onInputFileChange"
@@ -22,7 +27,7 @@
         @click="onBrowseClick"
         class="photo-viewer__browse">
         <span class="photo-viewer__browse-caption">
-          Browse
+          {{!!imageUrl ? 'Browse' : 'Change'}}
         </span>
       </button>
     </div>
@@ -34,6 +39,10 @@ export default {
   props: {
     imageUrl: {
       type: [String]
+    },
+    isBusy: {
+      type: [Boolean],
+      default: false
     }
   },
   methods: {
@@ -52,6 +61,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "../../assets/scss/shared.scss";
+
   .photo-viewer {
     width: 100%;
     height: 100%;
@@ -59,6 +69,20 @@ export default {
     position: relative;
     border-radius: 3px;
     overflow: hidden;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .photo-viewer__spinner {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $light-gray;
+    opacity: .6;
   }
 
   .photo-viewer__image {

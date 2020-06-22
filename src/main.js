@@ -18,6 +18,8 @@ import 'vue-awesome/icons/spinner'
 import 'vue-awesome/icons/check'
 import 'vue-awesome/icons/sync'
 import 'vue-awesome/icons/trash'
+import 'vue-awesome/icons/file-pdf'
+import 'vue-awesome/icons/file-image'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 

@@ -37,6 +37,9 @@
         <button @click="selectedApprovalStage = 3">Stage 4</button>
         <button @click="selectedApprovalStage = approvalStages.length">Mark all Complete</button>
       </div>
+      <div class="file-uploader-container">
+        <FileUploader />
+      </div>
       <div>
         <h3>Enum Helper</h3>
         <h4 class="mt-4">Accessing values</h4>
@@ -73,6 +76,7 @@ import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import PhotoViewer from '../components/PhotoViewer'
+import FileUploader from '../components/FileUploader'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -81,7 +85,8 @@ export default {
     StageIndicator,
     ApprovalIndicator,
     GroupStageIndicator,
-    PhotoViewer
+    PhotoViewer,
+    FileUploader
   },
   data() {
     return {
@@ -167,6 +172,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  .file-uploader-container {
+    width: 500px;
+    height: 200px;
+    margin-bottom: 40px;
+  }
+
   .code-section {
     background-color: black;
     padding: 3px 10px;
