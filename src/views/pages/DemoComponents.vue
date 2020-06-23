@@ -43,6 +43,7 @@
       <div class="file-item-container">
         <button @click="makeFirstFileBusy">Make First File Item Busy</button>
         <button @click="makeFirstFileNotBusy">Make First File Item Not Busy</button>
+        <button @click="addNewFileItem">Add New File Item</button>
         <FileItem
           v-for="(item, index) of fileItems"
           :key="index"
@@ -174,6 +175,11 @@ export default {
     },
     makeFirstFileNotBusy() {
       this.fileItems[0].isBusy = false;
+    },
+    addNewFileItem() {
+      const time = new Date().getTime(); // generated a sample filename only
+      this.fileItems.push({ title: `FILE-${time}.jpg`, isBusy: true, description: 'This is a new item' });
+      setTimeout(() => this.fileItems[this.fileItems.length - 1].isBusy = false, 1000);
     },
     onFileItemSelect(idx) {
       console.log(idx)
