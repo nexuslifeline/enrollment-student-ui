@@ -1,5 +1,10 @@
 <template>
-  <div class="file-uploader" @click="onBrowseClick">
+  <div
+    class="file-uploader"
+    @click="onBrowseClick"
+    @drop="onDrop"
+    @dragenter="onDragEnter"
+    @dragover="onDragOver">
     <template v-if="!isBusy">
       <div class="file-uploader__icons">
         <v-icon
@@ -48,7 +53,7 @@ export default {
     },
     description: {
       type: [String],
-      default: 'Click to browse files.'
+      default: 'Drag or Drop files here or Click to browse files.'
     },
     accept: {
       type: [String],
@@ -65,6 +70,24 @@ export default {
         : null;
       this.$emit('onFileChange', file);
       this.$refs.fileUploader.value = ''
+    },
+    onDragEnter(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    onDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    onDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      const file = files && files.length > 0
+        ? files[0]
+        : null;
+      this.$emit('onFileDrop', file);
     }
   }
 }
