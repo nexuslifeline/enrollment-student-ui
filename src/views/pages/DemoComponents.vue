@@ -40,6 +40,19 @@
       <div class="file-uploader-container">
         <FileUploader @onFileChange="onFileChange" @onFileDrop="onFileDrop" />
       </div>
+      <div class="file-item-container">
+        <button @click="makeFirstFileBusy">Make First File Item Busy</button>
+        <button @click="makeFirstFileNotBusy">Make First File Item Not Busy</button>
+        <FileItem
+          v-for="(item, index) of fileItems"
+          :key="index"
+          :title="item.title"
+          :description="item.description"
+          :fileIndex="index"
+          @onFileItemSelect="onFileItemSelect"
+          :isBusy="item.isBusy"
+        />
+      </div>
       <div>
         <h3>Enum Helper</h3>
         <h4 class="mt-4">Accessing values</h4>
@@ -77,6 +90,7 @@ import GroupStageIndicator from '../components/GroupStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import PhotoViewer from '../components/PhotoViewer'
 import FileUploader from '../components/FileUploader'
+import FileItem from '../components/FileItem'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -86,7 +100,8 @@ export default {
     ApprovalIndicator,
     GroupStageIndicator,
     PhotoViewer,
-    FileUploader
+    FileUploader,
+    FileItem
   },
   data() {
     return {
@@ -94,6 +109,10 @@ export default {
       selectedIndex: 0,
       selectedId: 1,
       selectedApprovalStage: 1,
+      fileItems: [
+        { title: 'FILE-01232-XERIJKJ.jpg', isBusy: false, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing' },
+        { title: 'FILE-21232-XERIJKJ.jpg', isBusy: false, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing' }
+      ],
       stages: [
         {
           header: 'Personal Information',
@@ -150,6 +169,15 @@ export default {
     }
   },
   methods: {
+    makeFirstFileBusy() {
+      this.fileItems[0].isBusy = true;
+    },
+    makeFirstFileNotBusy() {
+      this.fileItems[0].isBusy = false;
+    },
+    onFileItemSelect(idx) {
+      console.log(idx)
+    },
     onSelectStage(idx) {
       this.selectedIndex = idx;
     },
@@ -221,5 +249,11 @@ export default {
   .profile-photo {
     height: 200px;
     width: 200px;
+  }
+
+  .file-item-container {
+    min-height: 200px;
+    width: 500px;
+    height: auto;
   }
 </style>
