@@ -5,12 +5,12 @@
         <v-icon
           name="file-pdf"
           class="file-uploader__file-icon file-uploader__file--pdf mr-3"
-          scale="2.8"
+          scale="3.1"
         />
         <v-icon
           name="file-image"
           class="file-uploader__file-icon file-uploader__file--image ml-3"
-          scale="2.8"
+          scale="2.6"
         />
       </div>
       <div class="file-uploader__title">
@@ -118,14 +118,14 @@ export default {
   }
 
   .file-uploader__file-icon {
-    color: $gray;
+    color: $dark-gray;
   }
 
   .file-uploader__file--pdf {
-    transform: rotate(-36deg);
+    transform: rotate(-35deg);
   }
 
   .file-uploader__file--image {
-    transform: rotate(36deg);
+    transform: rotate(30deg);
   }
 </style>
