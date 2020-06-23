@@ -361,3 +361,15 @@ export const ApplicationStatuses = new Enum({
   PAYMENT_SUBMITTED: { id: 6, name: 'Payment Submitted' },
   COMPLETED: { id: 7, name: 'Completed' },
 });
+
+export const BillingTypes = new Enum({
+  INITIAL: { id: 1, name: 'Initial' },
+  BILLING: { id: 2, name: 'Billing' },
+});
+
+export const PayTypes = new Enum({
+  INITIAL: { id: 1, name: 'Initial' },
+  CUSTOM: { id: 2, name: 'Billing' },
+  ATTACHMENT: { id: 2, name: 'Billing' },
+});
+
