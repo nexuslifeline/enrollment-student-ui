@@ -38,7 +38,7 @@
         <button @click="selectedApprovalStage = approvalStages.length">Mark all Complete</button>
       </div>
       <div class="file-uploader-container">
-        <FileUploader />
+        <FileUploader @onFileChange="onFileChange" />
       </div>
       <div>
         <h3>Enum Helper</h3>
@@ -163,6 +163,11 @@ export default {
     onPhotoChange(file) {
       const formData = new FormData();
       formData.append('photo', file);
+      console.log(formData)
+    },
+    onFileChange(file) {
+      const formData = new FormData();
+      formData.append('file', file);
       console.log(formData)
     },
     onPhotoRemove() {
