@@ -746,113 +746,265 @@
             </b-row>
           </div>
           <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
-            <b-row class="mt-4">
-              <b-col md=12>
-                <b-row>
-                  <b-col md=12>
-                    <b-alert show variant="success">
-                      <h4 class="alert-heading">Well done!</h4>
+            <div v-show="isPaying===false" > 
+              <!--  -->
+              <b-row class="mt-4">
+                <b-col md=12>
+                  <b-row>
+                    <b-col md=12>
+                      <b-alert show variant="primary">
                         <p>
-                          Congratualions! [student], you're one step closer to be enrolled. Here is a summary of your total billing :
-                          <table style="width:100%" class="mt-4">
-                            <tr>
-                              <th>Billing No.</th>
-                              <th>School Year</th>
-                              <th>Semester</th>
-                              <th>Total Amount</th>
-                            </tr>
-                            <tr>
-                              <td>12-3445131-993</td>
-                              <td>2020 - 2021</td>
-                              <td>1st Semester</td>
-                              <td>25,000.00</td>
-                            </tr>
-                          </table>
-                          <br>
-                          To preview detailed fees on your admission, please click <a href="">here</a>
+                          The initial fees should be paid in order to secure the registration of the student. The student will not
+                          be officially registered until payment is complete.
                         </p>
-                        <hr>
-                        <p class="mb-0" style="font-size:8pt">
-                          To complete your enrollment, please upload a proof of payment below and submit. 
-                          Once we verify, you will receive notification on your enrollment status.
-                        </p>
+                      </b-alert>
+                    </b-col>
+                  </b-row> 
+                  <b-row class="mt-2">
+                    <b-col md=12>
+                      <b-card 
+                        border-variant="warning"
+                      >
+                        <b-row>
+                          <b-col md=12>
+                            <b-table
+                              :fields="tables.billings.fields"
+                              :items.sync="tables.billings.items"
+                              borderless small responsive
+                            >
+                            </b-table>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md=12>
+                            <b-list-group  >
+                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
+                                @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
+                                <div class="mr-4" style="color:black">
+                                  <h5 class="mb-1 mt-3">PAY {{ forms.billing.fields.totalAmount }} ONLY</h5>
+                                  <p class="mb-2">
+                                    Make a payment for initial fee only to be officially registered.
+                                  </p>
+                                </div>
+                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                              </b-list-group-item>
+                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                                @click="onPaySelected(),selectecPaytype=PayTypes.CUSTOM.id">
+                                <div class="mr-4" style="color:black">
+                                  <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
+                                  <p class="mb-2">
+                                    Make a full payment or partial payment not less than initial fee to be officially registered.
+                                  </p>
+                                </div>
+                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                              </b-list-group-item>
+                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                                @click="onPaySelected(),selectecPaytype=PayTypes.ATTACHMENT.id">
+                                <div class="mr-4" style="color:black">
+                                  <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
+                                  <p class="mb-2">
+                                    For those students that are already been enrolled for the SY 2000-2021 you will be 
+                                    needing to attached your official receipt or or any 
+                                    proof of payment to be confirmed and enrolled in the system.
+                                  </p>
+                                </div>
+                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                              </b-list-group-item>
+                            </b-list-group>
+                          </b-col>
+                        </b-row>
+                      </b-card>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              
+            </div>
+            <div v-show="isPaying">
+               <!--  -->
+              <b-row>
+                <b-col md=12>
+                  <b-card border-variant="warning">
+                    <b-alert show>
+                      <b-form-group>
+                        <b-form-radio-group
+                          v-model="forms.payment.fields.paymentModeId"
+                          :options="options.paymentModes.items"
+                          stacked
+                        ></b-form-radio-group>
+                      </b-form-group>
                     </b-alert>
-                  </b-col>
-                </b-row> 
-                <b-row class="mt-2">
-                  <b-col md=12>
-                    <h5>Add Payment</h5>
-                    <b-row>
-                      <b-col md=4>
-                        <b-form-group>
-                          <label>Reference No</label>
-                          <b-form-input></b-form-input>
-                        </b-form-group>
-                      </b-col>
-                      <b-col md=4>
-                        <b-form-group>
-                          <label>Payment Mode</label>
-                          <b-form-input></b-form-input>
-                        </b-form-group>
-                      </b-col>
-                      <b-col md=4>
-                        <b-form-group>
-                          <label>Amount</label>
-                          <b-form-input></b-form-input>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col md=4>
-                        <b-form-group>
-                          <label>Date Paid</label>
-                          <b-form-input></b-form-input>
-                        </b-form-group>
-                      </b-col>
-                      <b-col md=8>
-                        <b-form-group>
-                          <label>Notes</label>
-                          <b-form-input></b-form-input>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
+                  </b-card>
+                  <h6>
+                    You have until {{ forms.billing.fields.dueDate }} to make the payment. This reference number will not be valid until that.
+                  </h6>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md=12>
+                  <b-table
+                    v-if="selectedPaymentMode === 1"
+                    :fields="tables.bankAccounts.fields"
+                    :items.sync="tables.bankAccounts.items"
+                    borderless small responsive
+                  >
+                  </b-table>
+
+                  <b-table
+                    v-if="selectedPaymentMode === 4"
+                    :fields="tables.eWalletAccounts.fields"
+                    :items.sync="tables.eWalletAccounts.items"
+                    borderless small responsive 
+                  >
+                  </b-table>
+                </b-col>
+              </b-row>
+              <b-row class="mt-3">
+                <b-col md=12>
+                  <div class="file-uploader-container">
+                    <FileUploader
+                      @onFileChange="onFileChange" @onFileDrop="onFileDrop"
+                    />
+                  </div>
+                  <div class="file-item-container">
+                    <FileItem
+                      v-for="(item, index) of paymentFiles"
+                      :key="index"
+                      :title="item.name"
+                      :fileIndex="index"
+                      :isBusy="item.isBusy"
+                    />
+                  </div>
+                </b-col>
+              </b-row>
+              <b-row class="mt-3" >
+                <b-col md=12>
+                  <div style="border:1px dashed gray; padding: 20px">
                     <b-row>
                       <b-col md=12>
-                        <label>Proof of Payment</label>
-                        <b-form-file
-                          multiple
-                          placeholder="Choose a file or drop it here..."
-                          drop-placeholder="Drop file here..."
-                          v-model='selectedPaymentFiles'
-                          :disabled='isUploading'
-                          class="mb-2">
-                        </b-form-file>
-                        <b-button @click="insertPayment(selectedPaymentFiles)" variant='outline-primary'> <v-icon
-                          v-if="this.isUploading"
-                          name="sync"
-                          class="mr-2"
-                          spin
-                          
-                        />Add Payment</b-button>
+                        <b-row>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Enter amount you pay</label>
+                              <b-form-input
+                                v-model="forms.payment.fields.amount"
+                                :state="forms.payment.states.amount"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.amount }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Reference No</label>
+                              <b-form-input
+                                v-model="forms.payment.fields.referenceNo"
+                                :state="forms.payment.states.referenceNo"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.referenceNo }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Date Paid</label>
+                              <b-form-input
+                                type="date"
+                                v-model="forms.payment.fields.datePaid"
+                                :state="forms.payment.states.datePaid"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.datePaid }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md=12>
+                            <b-form-group>
+                              <label>Add Notes</label>
+                              <b-form-textarea
+                                rows="4"
+                                v-model="forms.payment.fields.notes"
+                                :state="forms.payment.states.notes"
+                              ></b-form-textarea>
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.notes }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
                       </b-col>
                     </b-row>
-                    <b-row class="mt-2"> 
-                      <b-col md=12>
-                        <b-table
-                          class="mt-2"
-                          borderless small
-                          :fields="tables.paymentFiles.fields"
-                          :items.sync="tables.paymentFiles.items"
-                        >
-                          <template v-slot:cell(action)="row">
-                            <b-button size="sm" variant="danger">
-                              <v-icon name="trash"></v-icon></b-button>
-                          </template>
-                        </b-table>
-                      </b-col>
-                    </b-row>
+                  </div>
+                </b-col>
+              </b-row>
+              <b-row class="mt-2">
+                <b-col md=12>
+                  <b-button variant="danger" @click="isPaying=false">
+                    CANCEL
+                  </b-button>
+                </b-col>
+              </b-row>
+            </div>
+          </div>
+          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
+             <b-row>
+              <b-col md="12">
+                <b-alert variant="success" show>
+                  <h5>PAYMENT SUBMITTED !</h5>
+                  <p> Thank you for submitting your application for this school year. 
+                  <br> We will review your payment and once approved, we will
+                  <br> notify you.
+                  <br>
+                  <br>We will try to get back to you as soon as we can!</p>
+                </b-alert>
+                <!-- <b-row class="pb-2">
+                  <b-col md="12">
+                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
                   </b-col>
-                </b-row>
+                </b-row> -->
+                <!-- <b-row class="pb-5">
+                  <b-col md="2">
+                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                  <b-col md="2">
+                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                  </b-col>
+                </b-row> -->
+                <div class="approval-container">
+                  <ApprovalIndicator
+                    :stages="paymentApprovalStages"
+                    :currentStage="selectedPaymentApprovalStage"
+                  />
+                </div>
+                <b-alert
+                  :show="dismissCountDown"
+                  variant="info"
+                  @dismissed="onUpdateStudent()"
+                  @dismiss-count-down="countDownChanged"
+                >
+                  Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
+                  <v-icon
+                    v-if="dismissCountDown"
+                    name="spinner"
+                    class="mr-2 float-right"
+                    spin />
+                </b-alert>
               </b-col>
             </b-row>
           </div>
@@ -885,11 +1037,13 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi } from "../../mixins/api"
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
-import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses } from '../../helpers/enum'
+import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PayTypes } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
+import  FileUploader from '../components/FileUploader'
+import  FileItem from '../components/FileItem'
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
 import PhotoViewer from '../components/PhotoViewer'
@@ -1009,6 +1163,30 @@ const transcriptFields = {
   schoolCategoryId: null
 }
 
+const billingFields = {
+  id: null,
+  billingNo: null,
+  dueDate: null,
+  totalAmount: null
+}
+
+const paymentFields = {
+  id: null,
+  referenceNo: null,
+  amount: 0,
+  datePaid: null,
+  paymentModeId: 1,
+  notes: null
+}
+
+const paymentErrorFields = {
+  referenceNo: null,
+  amount: null,
+  datePaid: null,
+  paymentModeId: 1,
+  notes: null
+}
+
 const transcriptErrorFields = {
   transcriptLevelId: null,
   subjects: null
@@ -1016,14 +1194,15 @@ const transcriptErrorFields = {
 
 export default {
     name : "NewStudentInfo",
-    mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi ],
+    mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi, PaymentFileApi,  BillingApi, BankAccountApi, EWalletAccountApi ],
     components: {
-      GroupStageIndicator, ApprovalIndicator, PhotoViewer
+      GroupStageIndicator, ApprovalIndicator, PhotoViewer, FileUploader, FileItem
     },
     data(){
       return{
+        selectedPaymentMode: 1,
         selectedFile: null,
-        selectedPaymentFiles: [],
+        paymentFiles: [],
         isUploading: false,
         isLoading: false,
         isApplied: false,
@@ -1033,6 +1212,10 @@ export default {
         studentPhotoUrl: null,
         ApplicationStatuses: ApplicationStatuses,
         AdmissionSteps: AdmissionSteps,
+        BillingTypes: BillingTypes,
+        PayTypes: PayTypes,
+        selectedPayType: 1,
+        isPaying: false,
         forms:  {
           student: {
             fields: { ...studentFields },
@@ -1061,6 +1244,16 @@ export default {
             fields: { ...transcriptFields },
             states: { ...transcriptErrorFields },
             errors: { ...transcriptErrorFields }
+          },
+          billing: {
+            fields: { ...billingFields },
+            states: { ...billingFields },
+            errors: { ...billingFields }
+          },
+          payment: {
+            fields: { ...paymentFields },
+            states: { ...paymentErrorFields },
+            errors: { ...paymentErrorFields }
           },
         },
         tables: {
@@ -1102,45 +1295,82 @@ export default {
             ],
             items: []
           },
-          paymentFiles: {
+          bankAccounts: {
             isBusy: false,
             fields: [
               {
-                key: "name",
-                label: "Filename",
-                tdClass: "align-middle",
-                thStyle: { width: "20%" }
-              },
-              {
-                key: "payment_modes.name",
-                label: "Payment Mode",
+                key: "bank",
+                label: "Bank",
                 tdClass: "align-middle",
                 thStyle: { width: "25%" }
               },
               {
-                key: "total_amount",
-                label: "Amount",
-                tdClass: "align-middle",
-                thStyle: { width: "15%" }
-              },
-              {
-                key: "notes",
-                label: "Notes",
+                key: "accountName",
+                label: "Account Name",
                 tdClass: "align-middle",
                 thStyle: { width: "auto" }
               },
               {
-                key: "action",
-                label: "",
-                tdClass: "align-middle text-center",
-                thClass: "text-center",
-                thStyle: { width: "5px" }
-              }
+                key: "accountNumber",
+                label: "Account No.",
+                tdClass: "align-middle",
+                thStyle: { width: "25%" }
+              },
             ],
-            items: [
-              { name: "12312312321.jpeg", total_amount: "12,400.00", notes: "bdo payment" },
-              { name: "payment.jpeg", total_amount: "750.00", notes: "sec bank" }
-            ]
+            items: []
+          },
+          eWalletAccounts: {
+            isBusy: false,
+            fields: [
+              {
+                key: "provider",
+                label: "Provider",
+                tdClass: "align-middle",
+                thStyle: { width: "25%" }
+              },
+              {
+                key: "accountName",
+                label: "Account Name",
+                tdClass: "align-middle",
+                thStyle: { width: "auto" }
+              },
+              {
+                key: "accountId",
+                label: "Account ID",
+                tdClass: "align-middle",
+                thStyle: { width: "25%" }
+              },
+            ],
+            items:  []
+          },
+          billings: {
+            fields: [
+              {
+                key: "billingNo",
+                label: "Reference No",
+                tdClass: "align-middle",
+                thStyle: { width: "20%" }
+              },
+              {
+                key: "dueDate",
+                label: "Date",
+                tdClass: "align-middle",
+                thStyle: { width: "20%" }
+              },
+              {
+                key: "studentFee.totalAmount",
+                label: "Total Fees",
+                tdClass: "align-middle",
+                thStyle: { width: "25%" }
+              },
+              {
+                key: "totalAmount",
+                label: "Initial Fee",
+                tdClass: "align-middle",
+                thStyle: { width: "auto%" }
+              },
+            ],
+            items: []
           }
         },
         options: {
@@ -1158,9 +1388,17 @@ export default {
           },
           countries: {
             items: Countries
+          },
+          paymentModes: {
+            items: [
+              { text: 'Bank Deposit/Transfer', value: 1 },
+              { text: 'E-Wallet', value: 4 },
+              { text: 'Others', value: 3 }
+            ]
           }
         },
         selectedApprovalStage: 1,
+        selectedPaymentApprovalStage: 1,
         groupStages: [
           {
             header: 'Personal Information',
@@ -1187,21 +1425,15 @@ export default {
             ]
           },
         ],
-        // stages: [
-        //   'Lorem ipsum dolor amet',
-        //   'Lorem ipsum dolor amet',
-        //   'Lorem ipsum dolor amet',
-        //   'Lorem ipsum dolor amet',
-        //   'Lorem ipsum dolor amet',
-        //   'Lorem ipsum dolor amet'
-        // ].map((description, idx) => {
-        //   const { name } = AdmissionSteps.values[idx];
-        //   return { name, description }
-        // }) || [],
         approvalStages: [
           { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
           { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
           { approvedLabel: 'Approved by Staff', waitingLabel: 'Waiting for Approval' },
+          { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
+        ],
+        paymentApprovalStages: [
+          { approvedLabel: 'Payment Submitted', waitingLabel: 'Waiting for Approval' },
+          { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
           { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
         ],
       }
@@ -1240,7 +1472,15 @@ export default {
           student.activeAdmission.applicationStatusId == 1 ?
             3 : student.transcript.transcriptStatusId == 2 ?
               2 : 1
+
+        if (student.activeAdmission.admissionStepId >= AdmissionSteps.PAYMENTS.id) {
+          this.loadBilling()
+        }
+
       })
+
+      this.loadEWalletAccounts();
+      this.loadBankAccounts();
 
       this.isLoading = false;
 
@@ -1326,9 +1566,38 @@ export default {
             ? ApplicationStatuses.SUBMITTED.id
               : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
                 ? ApplicationStatuses.APPROVED_ASSESMENT.id
-                  : AdmissionSteps.WAITING.id === activeAdmission.admissionStepId 
-                    ? ApplicationStatuses.COMPLETED.id 
-                        : activeAdmission.applicationStatusId
+                  : AdmissionSteps.PAYMENTS.id === activeAdmission.admissionStepId 
+                    ? ApplicationStatuses.PAYMENT_SUBMITTED.id
+                      : AdmissionSteps.WAITING.id === activeAdmission.admissionStepId 
+                        ? ApplicationStatuses.COMPLETED.id 
+                            : activeAdmission.applicationStatusId
+
+        
+
+        this.isProcessing = true;
+        
+        if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id) {
+          /// udpate payment on next
+          const { payment, billing: { fields: { id: billingId }} } = this.forms
+
+          reset(payment)
+
+          const data = {
+            ...payment.fields,
+            billingId
+          }
+
+          if (payment.fields.id != null) {
+            this.updatePayment(data, payment.fields.id).then(({ data }) =>{
+              copyValue(data, payment)
+            }).catch((error) => {
+              const { errors } = error.response.data;
+              validate(payment, errors)
+              this.isProcessing = false;
+              return
+            });
+          }  
+        }
 
         const data = {
           ...payloads[currentStepIndex],
@@ -1343,8 +1612,10 @@ export default {
         formsToValidate.forEach(form => {
           reset(form)
         })
+      
+        console.log(data)
+        
 
-        this.isProcessing = true;
         this.updateStudent(data, studentId).then(({ data }) => {
           // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
           //   this.$router.push({ name: 'Dashboard' })
@@ -1358,6 +1629,7 @@ export default {
           validate(formsToValidate[currentStepIndex], errors);
           this.isProcessing = false;
         });
+
       },
       loadCourses() {
         const { fields } = this.forms.transcript;
@@ -1454,16 +1726,139 @@ export default {
         let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id]
         return !arrHidden.includes(admissionStepId)
       },
-      insertPayment(files) {
-        const formData = new FormData()
-        files.forEach(file => {
-          formData.append('payments', file)
+      loadBilling() {
+        const { billings } = this.tables
+        const { payment } = this.forms
+
+        const {
+          student: { fields: { id: studentId } },
+          transcript: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
+        } = this.forms;
+
+        const params = { 
+            studentId: studentId, 
+              schoolYearId: schoolYearId, 
+                semesterId: semesterId, 
+                  billingTypeId: BillingTypes.INITIAL.id, 
+                    paginate: false 
+        }
+
+        this.getBillingList(params).then(({ data }) => {
+          billings.items = data
+          copyValue(data[0], this.forms.billing.fields)
+          //copyValue(data[0].payments[0], this.forms.payment).
+          
+          payment.fields.id = null;
+          if (data[0].payments[0] != null) {
+            payment.fields.id = data[0].payments[0].id
+            payment.fields.referenceNo = data[0].payments[0].referenceNo
+            payment.fields.amount = data[0].payments[0].amount
+            payment.fields.datePaid = data[0].payments[0].datePaid
+            payment.fields.notes = data[0].payments[0].notes
+            payment.fields.paymentModeId = data[0].payments[0].paymentModeId
+
+            this.getPaymentFiles(payment.fields.id).then(({ data }) => {
+              this.paymentFiles = data.data
+            })
+
+          }
+
+          console.log(payment)
         })
-        console.log(formData)
-        // console.log(formData.getAll('files'))
+      },
+      onFileChange(file) {
+        const formData = new FormData();
+        const { payment } = this.forms
+
+        formData.append('file', file);
+
+        this.addPaymentFile(formData, payment.fields.id ).then(({ data }) =>{
+          console.log(data.name)
+          this.paymentFiles.push(
+            { name: data.name, isBusy: true}
+          );
+          setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
+        })
+      },
+      onFileDrop(file) {
+        const formData = new FormData();
+        const { payment } = this.forms
+
+        formData.append('file', file);
+
+        this.addPaymentFileApi(formData, payment.fields.id).then(({ data }) =>{
+          console.log(data.name)
+          this.paymentFiles.push(
+            { name: data.name, isBusy: true}
+          );
+          setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
+        })
+      },
+      onPaySelected() {
+        // if payment is null add payment
+        const { payment, billing: { fields: { id: billingId }} } = this.forms
+
+        reset(payment)
+
+        const data = {
+          ...payment.fields,
+          billingId
+        }
+        this.isPaying = true
+        if (payment.fields.id === null) {
+          this.addPayment(data).then(({ data }) =>{
+            copyValue(data, payment)
+            payment.fields.id = data.id
+          }).catch((error) => {
+            const { errors } = error.response.data;
+            validate(payment, errors);
+          });
+        }
+      },
+      insertUpdatePayment() {
+        const { payment, billing: { fields: { id: billingId }} } = this.forms
+
+        reset(payment)
+
+        const data = {
+          ...payment.fields,
+          billingId
+        }
         
-        this.addPayment(formData).then(({ data }) =>{
-          console.log(data)
+
+        //payment insert
+        if (payment.fields.id === null) {
+          console.log('add')
+          this.addPayment(data).then(({ data }) =>{
+            copyValue(data, payment)
+            payment.fields.id = data.id
+          }).catch((error) => {
+            const { errors } = error.response.data;
+            validate(payment, errors);
+          });
+        } else {
+          //payment update
+          console.log('update')
+          this.updatePayment(data, payment.fields.id).then(({ data }) =>{
+            //copyValue(data, payment)
+          }).catch((error) => {
+            const { errors } = error.response.data;
+            validate(payment, errors);
+          });
+        }
+      },
+      loadBankAccounts() {
+        const params = { paginate: false }
+        const { bankAccounts } = this.tables
+        this.getBankAccountList(params).then(({ data }) => {
+          bankAccounts.items = data
+        })
+      },
+      loadEWalletAccounts() {
+        const params = { paginate: false }
+        const { eWalletAccounts } = this.tables
+        this.getEWalletAccountList(params).then(({ data }) => {
+          eWalletAccounts.items = data
         })
       }
     },
@@ -1600,9 +1995,15 @@ export default {
     
   }
 
-  .padding-table-columns td
-  {
-    padding: 0 10px 0 0 ; /* Only right padding*/
+  .file-uploader-container {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 40px;
+  }
+
+  .file-item-container {
+    width: 100%;
+    height: auto;
   }
 
 </style>

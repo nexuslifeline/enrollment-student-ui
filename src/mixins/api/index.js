@@ -7,3 +7,7 @@ export { default as SemesterApi } from './Semester';
 export { default as ApplicationStepApi } from './ApplicationStep';
 export { default as AdmissionFileApi } from './AdmissionFile';
 export { default as PaymentApi } from './Payment';
+export { default as PaymentFileApi } from './PaymentFile';
+export { default as BillingApi } from './Billing';
+export { default as BankAccountApi } from './BankAccount';
+export { default as EWalletAccountApi } from './EWalletAccount';
