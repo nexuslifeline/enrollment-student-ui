@@ -13,13 +13,26 @@
           @onPhotoRemove="onPhotoRemove"
         />
       </div>
+      <hr />
+      <h4>PROFILE MAKER SAMPLE</h4>
+      <div class="profile-photo-maker">
+        <ProfileMaker initials="PC" :colorIndex="0" :fontSize="85" />
+      </div>
+      <div class="profile-photo-maker-slight-radius">
+        <ProfileMaker initials="PR" :colorIndex="2" :fontSize="60" />
+      </div>
+      <div class="profile-photo-maker-circle">
+        <ProfileMaker initials="GM" :colorIndex="1" :fontSize="35" />
+      </div>
       <br />
+      <hr />
       <GroupStageIndicator
         :stages="groupStages"
         :activeId="selectedId"
         @selectedIdChange="onSelectIdChange"
       />
       <br />
+      <hr />
     </div>
     <div class="right-pane">
       <div class="approval-container">
@@ -92,6 +105,7 @@ import ApprovalIndicator from '../components/ApprovalIndicator'
 import PhotoViewer from '../components/PhotoViewer'
 import FileUploader from '../components/FileUploader'
 import FileItem from '../components/FileItem'
+import ProfileMaker from '../components/ProfileMaker'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -102,7 +116,8 @@ export default {
     GroupStageIndicator,
     PhotoViewer,
     FileUploader,
-    FileItem
+    FileItem,
+    ProfileMaker
   },
   data() {
     return {
@@ -216,6 +231,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  @import "../../assets/scss/shared.scss";
+
   .file-uploader-container {
     width: 500px;
     height: 200px;
@@ -255,6 +272,32 @@ export default {
   .profile-photo {
     height: 200px;
     width: 200px;
+    margin: 10px;
+  }
+
+  .profile-photo-maker {
+    height: 200px;
+    width: 200px;
+    border: 1px solid $dark-gray;
+    margin: 10px;
+  }
+
+  .profile-photo-maker-slight-radius {
+    height: 150px;
+    width: 150px;
+    border: 1px solid $dark-gray;
+    margin: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .profile-photo-maker-circle {
+    height: 100px;
+    width: 100px;
+    border: 1px solid $darkblue;
+    margin: 10px;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
   .file-item-container {

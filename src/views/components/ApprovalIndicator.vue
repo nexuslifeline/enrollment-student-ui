@@ -34,11 +34,16 @@
 <script>
   export default {
     props: {
-      stages: {},
-      currentStage : 0
-    },
-    methods: {
-
+      stages: {
+        type: [Array]
+      },
+      currentStage: {
+        type: [Number],
+        default: 0
+      },
+      rejectedStage: {
+        type: [Number]
+      }
     },
     computed: {
       stepLineValue() {
