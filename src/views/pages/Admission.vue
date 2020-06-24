@@ -1,210 +1,99 @@
 <template>
-  <div class="admission__container">
-    <div class="admission__pane">
-      <div class="admission__left-pane">
-        <GroupStageIndicator
-          :stages="groupStages"
-          :activeId="forms.activeAdmission.fields.admissionStepId"
-        />
-      </div>
-      <div class="admission__main-pane">
-        <div class="admission__wizard-form">
-          <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
-          <p class="admission__form-description">{{heading && heading.description}}</p>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
-            <b-row class="mt-4">
-              <b-col md="6">
-                <b-form-group>
-                  <label class="required">Firstname</label>
-                  <b-form-input
-                    v-model="forms.student.fields.firstName" 
-                    :state="forms.student.states.firstName" />
-                  <b-form-invalid-feedback>
-                    {{forms.student.errors.firstName}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group>
-                  <label>Middlename</label>
-                  <b-form-input
-                    v-model="forms.student.fields.middleName" />
-                </b-form-group>
-                <b-form-group>
-                  <label class="required">Lastname</label>
-                  <b-form-input
-                    v-model="forms.student.fields.lastName" 
-                    :state="forms.student.states.lastName" />
-                  <b-form-invalid-feedback>
-                    {{forms.student.errors.lastName}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <div class="profile-photo-container">
-                  <div class="profile-photo">
-                    <PhotoViewer
-                      @onPhotoChange="onPhotoChange"
-                      @onPhotoRemove="onPhotoRemove"
-                      :imageUrl="studentPhotoUrl"
-                    />
+  <div>
+    <div class="admission__container">
+      <div class="admission__pane">
+        <div class="admission__left-pane">
+          <GroupStageIndicator
+            :stages="groupStages"
+            :activeId="forms.activeAdmission.fields.admissionStepId"
+          />
+        </div>
+        <div class="admission__main-pane">
+          <div class="admission__wizard-form">
+            <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
+            <p class="admission__form-description">{{heading && heading.description}}</p>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
+              <b-row class="mt-4">
+                <b-col md="6">
+                  <b-form-group>
+                    <label class="required">Firstname</label>
+                    <b-form-input
+                      v-model="forms.student.fields.firstName" 
+                      :state="forms.student.states.firstName" />
+                    <b-form-invalid-feedback>
+                      {{forms.student.errors.firstName}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                  <b-form-group>
+                    <label>Middlename</label>
+                    <b-form-input
+                      v-model="forms.student.fields.middleName" />
+                  </b-form-group>
+                  <b-form-group>
+                    <label class="required">Lastname</label>
+                    <b-form-input
+                      v-model="forms.student.fields.lastName" 
+                      :state="forms.student.states.lastName" />
+                    <b-form-invalid-feedback>
+                      {{forms.student.errors.lastName}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <div class="profile-photo-container">
+                    <div class="profile-photo">
+                      <PhotoViewer
+                        @onPhotoChange="onPhotoChange"
+                        @onPhotoRemove="onPhotoRemove"
+                        :imageUrl="studentPhotoUrl"
+                      />
+                    </div>
                   </div>
-                </div>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">Birthdate</label>
-                  <b-form-input type="date" 
-                    v-model="forms.student.fields.birthDate" 
-                    :state="forms.student.states.birthDate" />
-                  <b-form-invalid-feedback>
-                    {{forms.student.errors.birthDate}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label>Mobile No.</label>
-                  <b-form-input
-                    v-model="forms.student.fields.mobileNo" />
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">Civil Status</label>
-                  <b-form-select 
-                    v-model="forms.student.fields.civilStatusId"
-                    :state="forms.student.states.civilStatusId" >
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
-                      {{civilStatus.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                  <b-form-invalid-feedback>
-                    {{forms.student.errors.civilStatusId}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ADDRESS.id">
-            <b-row>
-              <b-col md=12>
-                <h5>Current Address</h5>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">House No/Street</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentHouseNoStreet" 
-                    :state="forms.address.states.addressCurrentHouseNoStreet" />
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentHouseNoStreet}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">City/Town</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentCityTown" 
-                    :state="forms.address.states.addressCurrentCityTown" />
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentCityTown}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">Province</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentProvince"
-                    :state="forms.address.states.addressCurrentProvince" />
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentProvince}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="4">
-                <b-form-group>
-                  <label class="required">Postal Code</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentPostalCode"
-                    :state="forms.address.states.addressCurrentPostalCode" />
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentPostalCode}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label>District</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentDistrict" />
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                  <label>Region</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentRegion" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label class="required">Country</label>
-                    <b-form-select 
-                      v-model="forms.address.fields.currentCountryId"
-                      :state="forms.address.states.addressCurrentCountryId">
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
-                      {{country.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentCountryId}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label class="required">Home Landline/Mobile No.</label>
-                  <b-form-input
-                    v-model="forms.address.fields.currentHomeLandlineMobileNo"
-                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo" />
-                  <b-form-invalid-feedback>
-                    {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
+                </b-col>
               </b-row>
               <b-row>
-                <b-col md="12">
+                <b-col md="4">
                   <b-form-group>
-                    <label>Current Address</label>
-                    <b-form-textarea
-                      rows="3"
-                      v-model="forms.address.fields.currentCompleteAddress" />
+                    <label class="required">Birthdate</label>
+                    <b-form-input type="date" 
+                      v-model="forms.student.fields.birthDate" 
+                      :state="forms.student.states.birthDate" />
+                    <b-form-invalid-feedback>
+                      {{forms.student.errors.birthDate}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label>Mobile No.</label>
+                    <b-form-input
+                      v-model="forms.student.fields.mobileNo" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <label class="required">Civil Status</label>
+                    <b-form-select 
+                      v-model="forms.student.fields.civilStatusId"
+                      :state="forms.student.states.civilStatusId" >
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
+                        {{civilStatus.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                    <b-form-invalid-feedback>
+                      {{forms.student.errors.civilStatusId}}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
               </b-row>
-              <hr>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ADDRESS.id">
               <b-row>
-                <b-col md=6>
-                  <h5>Permanent Address</h5>
-                </b-col>
-                <b-col md=6 class="text-right">
-                  <b-form-checkbox @input="onSameAddress($event)">Same as Current Address</b-form-checkbox>
+                <b-col md=12>
+                  <h5>Current Address</h5>
                 </b-col>
               </b-row>
               <b-row>
@@ -212,10 +101,10 @@
                   <b-form-group>
                     <label class="required">House No/Street</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHouseNoStreet"
-                      :state="forms.address.states.addressPermanentHouseNoStreet" />
+                      v-model="forms.address.fields.currentHouseNoStreet" 
+                      :state="forms.address.states.addressCurrentHouseNoStreet" />
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentHouseNoStreet}}
+                      {{forms.address.errors.addressCurrentHouseNoStreet}}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -223,10 +112,10 @@
                   <b-form-group>
                     <label class="required">City/Town</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentCityTown"
-                      :state="forms.address.states.addressPermanentCityTown" />
+                      v-model="forms.address.fields.currentCityTown" 
+                      :state="forms.address.states.addressCurrentCityTown" />
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentCityTown}}
+                      {{forms.address.errors.addressCurrentCityTown}}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -234,10 +123,10 @@
                   <b-form-group>
                     <label class="required">Province</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentProvince"
-                      :state="forms.address.states.addressPermanentProvince" />
+                      v-model="forms.address.fields.currentProvince"
+                      :state="forms.address.states.addressCurrentProvince" />
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentProvince}}
+                      {{forms.address.errors.addressCurrentProvince}}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -247,10 +136,10 @@
                   <b-form-group>
                     <label class="required">Postal Code</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentPostalCode"
-                      :state="forms.address.states.addressPermanentPostalCode" />
+                      v-model="forms.address.fields.currentPostalCode"
+                      :state="forms.address.states.addressCurrentPostalCode" />
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentPostalCode}}
+                      {{forms.address.errors.addressCurrentPostalCode}}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -258,14 +147,14 @@
                   <b-form-group>
                     <label>District</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentDistrict" />
+                      v-model="forms.address.fields.currentDistrict" />
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
                   <b-form-group>
                     <label>Region</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentRegion" />
+                      v-model="forms.address.fields.currentRegion" />
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -273,18 +162,18 @@
                 <b-col md="6">
                   <b-form-group>
                     <label class="required">Country</label>
-                    <b-form-select 
-                      v-model="forms.address.fields.permanentCountryId"
-                      :state="forms.address.states.addressPermanentCountryId">                  
+                      <b-form-select 
+                        v-model="forms.address.fields.currentCountryId"
+                        :state="forms.address.states.addressCurrentCountryId">
                       <template v-slot:first>
-                        <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
+                        <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
                       </template>
                       <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
                         {{country.name}}
                       </b-form-select-option>
                     </b-form-select>
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentCountryId}}
+                      {{forms.address.errors.addressCurrentCountryId}}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -292,747 +181,984 @@
                   <b-form-group>
                     <label class="required">Home Landline/Mobile No.</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHomeLandlineMobileNo"
-                      :state="forms.address.states.addressPermanentHomeLandlineMobileNo" />
+                      v-model="forms.address.fields.currentHomeLandlineMobileNo"
+                      :state="forms.address.states.addressCurrentHomeLandlineMobileNo" />
                     <b-form-invalid-feedback>
-                      {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
+                      {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
                     </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12">
+                    <b-form-group>
+                      <label>Current Address</label>
+                      <b-form-textarea
+                        rows="3"
+                        v-model="forms.address.fields.currentCompleteAddress" />
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <hr>
+                <b-row>
+                  <b-col md=6>
+                    <h5>Permanent Address</h5>
+                  </b-col>
+                  <b-col md=6 class="text-right">
+                    <b-form-checkbox @input="onSameAddress($event)">Same as Current Address</b-form-checkbox>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label class="required">House No/Street</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentHouseNoStreet"
+                        :state="forms.address.states.addressPermanentHouseNoStreet" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentHouseNoStreet}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label class="required">City/Town</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentCityTown"
+                        :state="forms.address.states.addressPermanentCityTown" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentCityTown}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label class="required">Province</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentProvince"
+                        :state="forms.address.states.addressPermanentProvince" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentProvince}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label class="required">Postal Code</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentPostalCode"
+                        :state="forms.address.states.addressPermanentPostalCode" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentPostalCode}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label>District</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentDistrict" />
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <label>Region</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentRegion" />
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Country</label>
+                      <b-form-select 
+                        v-model="forms.address.fields.permanentCountryId"
+                        :state="forms.address.states.addressPermanentCountryId">                  
+                        <template v-slot:first>
+                          <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
+                        </template>
+                        <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                          {{country.name}}
+                        </b-form-select-option>
+                      </b-form-select>
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentCountryId}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="6">
+                    <b-form-group>
+                      <label class="required">Home Landline/Mobile No.</label>
+                      <b-form-input
+                        v-model="forms.address.fields.permanentHomeLandlineMobileNo"
+                        :state="forms.address.states.addressPermanentHomeLandlineMobileNo" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12">
+                    <b-form-group>
+                      <label>Permanent Address</label>
+                      <b-form-textarea
+                        rows="3"
+                        v-model="forms.address.fields.permanentCompleteAddress" />
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label class="required">Father</label>
+                    <b-form-input
+                      v-model="forms.family.fields.fatherName"
+                      :state="forms.family.states.familyFatherName" />
+                    <b-form-invalid-feedback>
+                      {{forms.family.errors.familyFatherName}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Contact No.</label>
+                    <b-form-input
+                      v-model="forms.family.fields.fatherMobileNo" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Occupation</label>
+                    <b-form-input
+                      v-model="forms.family.fields.fatherOccupation" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Email Address</label>
+                    <b-form-input
+                      v-model="forms.family.fields.fatherEmail"
+                      :state="forms.family.states.familyFatherEmail" />
+                    <b-form-invalid-feedback>
+                      {{forms.family.errors.familyFatherEmail}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row class="mt-3">
+                <b-col md="6">
+                  <b-form-group>
+                    <label class="required">Mother</label>
+                    <b-form-input
+                      v-model="forms.family.fields.motherName"
+                      :state="forms.family.states.familyMotherName" />
+                    <b-form-invalid-feedback>
+                      {{forms.family.errors.familyMotherName}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Contact No.</label>
+                    <b-form-input
+                      v-model="forms.family.fields.motherMobileNo" />
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Occupation</label>
+                    <b-form-input
+                      v-model="forms.family.fields.motherOccupation" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Email Address</label>
+                    <b-form-input
+                      v-model="forms.family.fields.motherEmail"
+                      :state="forms.family.states.familyMotherEmail" />
+                    <b-form-invalid-feedback>
+                      {{forms.family.errors.familyMotherEmail}}
+                    </b-form-invalid-feedback>
+                    </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md=12>
+                  <b-row>
+                    <b-col md=12>
+                      <h6>In case of emergency, Please contact : </h6>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label class="required">Parent/Guardian</label>
+                        <b-form-input 
+                          v-model="forms.family.fields.parentGuardianName"
+                          :state="forms.family.states.familyParentGuardianName" />
+                        <b-form-invalid-feedback>
+                          {{forms.family.errors.familyParentGuardianName}}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label class="required">Parent/Guardian Contact No.</label>
+                        <b-form-input 
+                          v-model="forms.family.fields.parentGuardianContactNo"
+                          :state="forms.family.states.familyParentGuardianContactNo" />
+                        <b-form-invalid-feedback>
+                          {{forms.family.errors.familyParentGuardianContactNo}}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
+              <b-row>
+                <b-col md="8">
+                  <b-form-group>
+                    <label>Last School Attended</label>
+                    <b-form-input
+                      v-model="forms.education.fields.lastSchoolAttended" />
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                  <label>Level</label>
+                  <b-form-input
+                    v-model="forms.education.fields.year" />
                   </b-form-group>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md="12">
                   <b-form-group>
-                    <label>Permanent Address</label>
-                    <b-form-textarea
-                      rows="3"
-                      v-model="forms.address.fields.permanentCompleteAddress" />
+                    <label>Last School Address</label>
+                    <b-form-input
+                      v-model="forms.education.fields.lastSchoolAddress" />
                   </b-form-group>
                 </b-col>
               </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label class="required">Father</label>
-                  <b-form-input
-                    v-model="forms.family.fields.fatherName"
-                    :state="forms.family.states.familyFatherName" />
-                  <b-form-invalid-feedback>
-                    {{forms.family.errors.familyFatherName}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Contact No.</label>
-                  <b-form-input
-                    v-model="forms.family.fields.fatherMobileNo" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Occupation</label>
-                  <b-form-input
-                    v-model="forms.family.fields.fatherOccupation" />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Email Address</label>
-                  <b-form-input
-                    v-model="forms.family.fields.fatherEmail"
-                    :state="forms.family.states.familyFatherEmail" />
-                  <b-form-invalid-feedback>
-                    {{forms.family.errors.familyFatherEmail}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row class="mt-3">
-              <b-col md="6">
-                <b-form-group>
-                  <label class="required">Mother</label>
-                  <b-form-input
-                    v-model="forms.family.fields.motherName"
-                    :state="forms.family.states.familyMotherName" />
-                  <b-form-invalid-feedback>
-                    {{forms.family.errors.familyMotherName}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Contact No.</label>
-                  <b-form-input
-                    v-model="forms.family.fields.motherMobileNo" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Occupation</label>
-                  <b-form-input
-                    v-model="forms.family.fields.motherOccupation" />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Email Address</label>
-                  <b-form-input
-                    v-model="forms.family.fields.motherEmail"
-                    :state="forms.family.states.familyMotherEmail" />
-                  <b-form-invalid-feedback>
-                    {{forms.family.errors.familyMotherEmail}}
-                  </b-form-invalid-feedback>
-                  </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md=12>
-                <b-row>
-                  <b-col md=12>
-                    <h6>In case of emergency, Please contact : </h6>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian</label>
-                      <b-form-input 
-                        v-model="forms.family.fields.parentGuardianName"
-                        :state="forms.family.states.familyParentGuardianName" />
-                      <b-form-invalid-feedback>
-                        {{forms.family.errors.familyParentGuardianName}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Parent/Guardian Contact No.</label>
-                      <b-form-input 
-                        v-model="forms.family.fields.parentGuardianContactNo"
-                        :state="forms.family.states.familyParentGuardianContactNo" />
-                      <b-form-invalid-feedback>
-                        {{forms.family.errors.familyParentGuardianContactNo}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
-            <b-row>
-              <b-col md="8">
-                <b-form-group>
-                  <label>Last School Attended</label>
-                  <b-form-input
-                    v-model="forms.education.fields.lastSchoolAttended" />
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group>
-                <label>Level</label>
-                <b-form-input
-                  v-model="forms.education.fields.year" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-form-group>
-                  <label>Last School Address</label>
-                  <b-form-input
-                    v-model="forms.education.fields.lastSchoolAddress" />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                    <label>Elementary Course Completed or Primary</label>
-                    <b-form-input
-                      v-model="forms.education.fields.elementaryCourse" />
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Year</label>
-                      <b-form-input
-                        v-model="forms.education.fields.elementaryCourseYear" />
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Honor Received</label>
-                      <b-form-input
-                        v-model="forms.education.fields.elementaryCourseHonors"/>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label>High School Course Completed or Secondary</label>
-                      <b-form-input
-                        v-model="forms.education.fields.highSchoolCourse"/>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Year</label>
-                      <b-form-input
-                        v-model="forms.education.fields.highSchoolCourseYear"/>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Honor Received</label>
-                      <b-form-input
-                        v-model="forms.education.fields.highSchoolCourseHonors"/>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
-                      <b-form-input
-                        v-model="forms.education.fields.seniorSchoolCourse"/>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Year</label>
-                      <b-form-input
-                        v-model="forms.education.fields.seniorSchoolCourseYear"/>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Honor Received</label>
-                      <b-form-input
-                        v-model="forms.education.fields.seniorSchoolCourseHonors"/>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label >College Degree(if graduated) or Tertiary</label>
-                      <b-form-input
-                        v-model="forms.education.fields.collegeDegree"/>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Year</label>
-                      <b-form-input
-                        v-model="forms.education.fields.collegeDegreeYear"/>
-                      </b-form-group>
-                  </b-col>
-                  <b-col md="3">
-                    <b-form-group>
-                      <label>Honor Received</label>
-                      <b-form-input
-                        v-model="forms.education.fields.collegeDegreeHonors"/>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Level</label>
-                  <b-form-select @input="loadCourses()" 
-                    v-model='forms.transcript.fields.levelId'
-                    :state="forms.transcript.states.transcriptLevelId">                   
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                      {{level.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                  <b-form-invalid-feedback>
-                    {{forms.transcript.errors.transcriptLevelId}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Course</label>
-                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                      {{course.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
-                  <label>Semester</label>
-                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                      {{semester.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="12">
-                <b-form-group>
-                  <b-form-input :state="forms.transcript.states.subjects" hidden/>
-                  <b-form-invalid-feedback>
-                    {{forms.transcript.errors.subjects}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-table
-                  sticky-header="300px"
-                  head-variant="light"
-                  responsive small hover outlined show-empty
-                  :fields="tables.subjects.fields"
-                  :items.sync="tables.subjects.items"
-                  :busy="tables.subjects.isBusy">
-                  <template v-slot:cell(name)="data">
-                    <span>{{data.item.code}} {{data.item.name}}</span><br>
-                    <small>{{data.item.description}}</small>
-                  </template>
-                </b-table>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col sm="9">
-                <h5 class="float-right">TOTAL</h5>
-              </b-col>
-              <b-col sm="3">
-                <h5 class='text-center pl-3'>{{totalUnits}}</h5>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
-            <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
-              <b-col md=12>
-                <b-alert variant="danger" show>
-                  <p>
-                    Sorry, your admission is rejected with the ffg. reasons : <br>
-                    {{ this.forms.activeAdmission.fields.disapprovalNotes }} <br><br>
-                    <small>Please be inform that you can modify your admission and resubmit for evaluation.</small>
-                  </p>
-                </b-alert>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md=12 class="mb-3">
-                <b-form-file
-                  placeholder="Choose a file or drop it here..."
-                  drop-placeholder="Drop file here..."
-                  v-model='selectedFile'
-                  :disabled='isUploading'
-                  class="mb-2">
-                </b-form-file>
-                <b-button @click="uploadFile(selectedFile)" variant='outline-primary'> <v-icon
-                  v-if="this.isUploading"
-                  name="sync"
-                  class="mr-2"
-                  spin
-                />Upload</b-button>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md=12>
-                <b-table
-                  sticky-header="300px"
-                  head-variant="light"
-                  responsive small hover outlined show-empty
-                  :fields="tables.files.fields"
-                  :items.sync="tables.files.items"
-                  :busy="tables.files.isBusy">
-                  <template v-slot:cell(action)="row">
-                    <b-button @click="removeFile(row)" size="sm" variant="danger">
-                    <v-icon name="trash"></v-icon></b-button>
-                  </template>
-                </b-table>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
-            <b-row>
-              <b-col md="12">
-                <b-alert variant="success" show>
-                  <h5>APPLICATION SUBMITTED!</h5>
-                  <p>Thank you for submitting your application for this school year. 
-                  <br> We will review your application and once approved, you will
-                  <br>be able to proceed to payment.
-                  <br>
-                  <br>We will try to get back to you as soon as we can!</p>
-                </b-alert>
-                <b-row class="pb-2">
-                  <b-col md="12">
-                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                  </b-col>
-                </b-row>
-                <b-row class="pb-5">
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                </b-row>
-                <div class="approval-container">
-                  <ApprovalIndicator
-                    :stages="approvalStages"
-                    :currentStage="selectedApprovalStage"
-                  />
-                </div>
-                <b-alert
-                  :show="dismissCountDown"
-                  variant="info"
-                  @dismissed="onUpdateStudent()"
-                  @dismiss-count-down="countDownChanged"
-                >
-                  Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
-                  <v-icon
-                    v-if="dismissCountDown"
-                    name="spinner"
-                    class="mr-2 float-right"
-                    spin />
-                </b-alert>
-              </b-col>
-            </b-row>
-          </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
-            <div v-show="isPaying===false" > 
-              <!--  -->
-              <b-row class="mt-4">
-                <b-col md=12>
+              <b-row>
+                <b-col md="12">
                   <b-row>
-                    <b-col md=12>
-                      <b-alert show variant="primary">
-                        <p>
-                          The initial fees should be paid in order to secure the registration of the student. The student will not
-                          be officially registered until payment is complete.
-                        </p>
-                      </b-alert>
+                    <b-col md="6">
+                      <b-form-group>
+                      <label>Elementary Course Completed or Primary</label>
+                      <b-form-input
+                        v-model="forms.education.fields.elementaryCourse" />
+                      </b-form-group>
                     </b-col>
-                  </b-row> 
-                  <b-row class="mt-2">
-                    <b-col md=12>
-                      <b-card 
-                        border-variant="warning"
-                      >
-                        <b-row>
-                          <b-col md=12>
-                            <b-table
-                              :fields="tables.billings.fields"
-                              :items.sync="tables.billings.items"
-                              borderless small responsive
-                            >
-                            </b-table>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col md=12>
-                            <b-list-group  >
-                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
-                                @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
-                                <div class="mr-4" style="color:black">
-                                  <h5 class="mb-1 mt-3">PAY {{ forms.billing.fields.totalAmount }} ONLY</h5>
-                                  <p class="mb-2">
-                                    Make a payment for initial fee only to be officially registered.
-                                  </p>
-                                </div>
-                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                              </b-list-group-item>
-                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                @click="onPaySelected(),selectecPaytype=PayTypes.CUSTOM.id">
-                                <div class="mr-4" style="color:black">
-                                  <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
-                                  <p class="mb-2">
-                                    Make a full payment or partial payment not less than initial fee to be officially registered.
-                                  </p>
-                                </div>
-                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                              </b-list-group-item>
-                              <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                @click="onPaySelected(),selectecPaytype=PayTypes.ATTACHMENT.id">
-                                <div class="mr-4" style="color:black">
-                                  <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
-                                  <p class="mb-2">
-                                    For those students that are already been enrolled for the SY 2000-2021 you will be 
-                                    needing to attached your official receipt or or any 
-                                    proof of payment to be confirmed and enrolled in the system.
-                                  </p>
-                                </div>
-                                <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                              </b-list-group-item>
-                            </b-list-group>
-                          </b-col>
-                        </b-row>
-                      </b-card>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Year</label>
+                        <b-form-input
+                          v-model="forms.education.fields.elementaryCourseYear" />
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Honor Received</label>
+                        <b-form-input
+                          v-model="forms.education.fields.elementaryCourseHonors"/>
+                      </b-form-group>
                     </b-col>
                   </b-row>
                 </b-col>
               </b-row>
-              
-            </div>
-            <div v-show="isPaying">
-               <!--  -->
               <b-row>
-                <b-col md=12>
-                  <b-card border-variant="warning">
-                    <b-alert show>
+                <b-col md="12">
+                  <b-row>
+                    <b-col md="6">
                       <b-form-group>
-                        <b-form-radio-group
-                          v-model="forms.payment.fields.paymentModeId"
-                          :options="options.paymentModes.items"
-                          stacked
-                        ></b-form-radio-group>
+                        <label>High School Course Completed or Secondary</label>
+                        <b-form-input
+                          v-model="forms.education.fields.highSchoolCourse"/>
                       </b-form-group>
-                    </b-alert>
-                  </b-card>
-                  <h6>
-                    You have until {{ forms.billing.fields.dueDate }} to make the payment. This reference number will not be valid until that.
-                  </h6>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Year</label>
+                        <b-form-input
+                          v-model="forms.education.fields.highSchoolCourseYear"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Honor Received</label>
+                        <b-form-input
+                          v-model="forms.education.fields.highSchoolCourseHonors"/>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="12">
+                  <b-row>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                        <b-form-input
+                          v-model="forms.education.fields.seniorSchoolCourse"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Year</label>
+                        <b-form-input
+                          v-model="forms.education.fields.seniorSchoolCourseYear"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Honor Received</label>
+                        <b-form-input
+                          v-model="forms.education.fields.seniorSchoolCourseHonors"/>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="12">
+                  <b-row>
+                    <b-col md="6">
+                      <b-form-group>
+                        <label >College Degree(if graduated) or Tertiary</label>
+                        <b-form-input
+                          v-model="forms.education.fields.collegeDegree"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Year</label>
+                        <b-form-input
+                          v-model="forms.education.fields.collegeDegreeYear"/>
+                        </b-form-group>
+                    </b-col>
+                    <b-col md="3">
+                      <b-form-group>
+                        <label>Honor Received</label>
+                        <b-form-input
+                          v-model="forms.education.fields.collegeDegreeHonors"/>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Level</label>
+                    <b-form-select @input="loadCourses()" 
+                      v-model='forms.transcript.fields.levelId'
+                      :state="forms.transcript.states.transcriptLevelId">                   
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                        {{level.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                    <b-form-invalid-feedback>
+                      {{forms.transcript.errors.transcriptLevelId}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Course</label>
+                    <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                        {{course.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="6">
+                  <b-form-group>
+                    <label>Semester</label>
+                    <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                        {{semester.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="12">
+                  <b-form-group>
+                    <b-form-input :state="forms.transcript.states.subjects" hidden/>
+                    <b-form-invalid-feedback>
+                      {{forms.transcript.errors.subjects}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                  <b-table
+                    sticky-header="300px"
+                    head-variant="light"
+                    responsive small hover outlined show-empty
+                    :fields="tables.subjects.fields"
+                    :items.sync="tables.subjects.items"
+                    :busy="tables.subjects.isBusy">
+                    <template v-slot:cell(name)="data">
+                      <span>{{data.item.code}} {{data.item.name}}</span><br>
+                      <small>{{data.item.description}}</small>
+                    </template>
+                  </b-table>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col sm="9">
+                  <h5 class="float-right">TOTAL</h5>
+                </b-col>
+                <b-col sm="3">
+                  <h5 class='text-center pl-3'>{{totalUnits}}</h5>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
+              <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
+                <b-col md=12>
+                  <b-alert variant="danger" show>
+                    <p>
+                      Sorry, your admission is rejected with the ffg. reasons : <br>
+                      {{ forms.activeAdmission.fields.disapprovalNotes }} <br><br>
+                      <small>Please be inform that you can modify your admission and resubmit for evaluation.</small>
+                    </p>
+                  </b-alert>
+                </b-col>
+              </b-row>
+              <!-- <b-row>
+                <b-col md=12 class="mb-3">
+                  <b-form-file
+                    placeholder="Choose a file or drop it here..."
+                    drop-placeholder="Drop file here..."
+                    v-model='selectedFile'
+                    :disabled='isUploading'
+                    class="mb-2">
+                  </b-form-file>
+                  <b-button @click="uploadFile(selectedFile)" variant='outline-primary'> <v-icon
+                    v-if="isUploading"
+                    name="sync"
+                    class="mr-2"
+                    spin
+                  />Upload</b-button>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md=12>
                   <b-table
-                    v-if="selectedPaymentMode === 1"
-                    :fields="tables.bankAccounts.fields"
-                    :items.sync="tables.bankAccounts.items"
-                    borderless small responsive
-                  >
-                  </b-table>
-
-                  <b-table
-                    v-if="selectedPaymentMode === 4"
-                    :fields="tables.eWalletAccounts.fields"
-                    :items.sync="tables.eWalletAccounts.items"
-                    borderless small responsive 
-                  >
+                    sticky-header="300px"
+                    head-variant="light"
+                    responsive small hover outlined show-empty
+                    :fields="tables.files.fields"
+                    :items.sync="tables.files.items"
+                    :busy="tables.files.isBusy">
+                    <template v-slot:cell(action)="row">
+                      <b-button @click="removeFile(row)" size="sm" variant="danger">
+                      <v-icon name="trash"></v-icon></b-button>
+                    </template>
                   </b-table>
                 </b-col>
-              </b-row>
-              <b-row class="mt-3">
+              </b-row> -->
+              <b-row>
                 <b-col md=12>
                   <div class="file-uploader-container">
-                    <FileUploader
-                      @onFileChange="onFileChange" @onFileDrop="onFileDrop"
-                    />
-                  </div>
-                  <div class="file-item-container">
-                    <FileItem
-                      v-for="(item, index) of paymentFiles"
-                      :key="index"
-                      :title="item.name"
-                      :fileIndex="index"
-                      :isBusy="item.isBusy"
-                    />
-                  </div>
+                      <FileUploader
+                        @onFileChange="onAdmissionFileUpload" 
+                        @onFileDrop="onAdmissionFileUpload"
+                      />
+                    </div>
+                    <div class="file-item-container">
+                      <FileItem
+                        v-for="(item, index) of admissionFiles"
+                        :key="index"
+                        :title="item.name"
+                        :description="item.notes"
+                        :fileIndex="index"
+                        @onFileItemSelect="onAdmissionFileItemSelect"
+                        :isBusy="item.isBusy"
+                      />
+                    </div>
                 </b-col>
               </b-row>
-              <b-row class="mt-3" >
-                <b-col md=12>
-                  <div style="border:1px dashed gray; padding: 20px">
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
+              <b-row>
+                <b-col md="12">
+                  <b-alert variant="success" show>
+                    <h5>APPLICATION SUBMITTED!</h5>
+                    <p>Thank you for submitting your application for this school year. 
+                    <br> We will review your application and once approved, you will
+                    <br>be able to proceed to payment.
+                    <br>
+                    <br>We will try to get back to you as soon as we can!</p>
+                  </b-alert>
+                  <b-row class="pb-2">
+                    <b-col md="12">
+                      <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                    </b-col>
+                  </b-row>
+                  <b-row class="pb-5">
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                  </b-row>
+                  <div class="approval-container">
+                    <ApprovalIndicator
+                      :stages="approvalStages"
+                      :currentStage="selectedApprovalStage"
+                    />
+                  </div>
+                  <b-alert
+                    :show="dismissCountDown"
+                    variant="info"
+                    @dismissed="onUpdateStudent()"
+                    @dismiss-count-down="countDownChanged"
+                  >
+                    Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
+                    <v-icon
+                      v-if="dismissCountDown"
+                      name="spinner"
+                      class="mr-2 float-right"
+                      spin />
+                  </b-alert>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
+              <div v-show="isPaying===false" > 
+                <!--  -->
+                <b-row class="mt-4">
+                  <b-col md=12>
                     <b-row>
                       <b-col md=12>
-                        <b-row>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Enter amount you pay</label>
-                              <b-form-input
-                                v-model="forms.payment.fields.amount"
-                                :state="forms.payment.states.amount"
-                              />
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.amount }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Reference No</label>
-                              <b-form-input
-                                v-model="forms.payment.fields.referenceNo"
-                                :state="forms.payment.states.referenceNo"
-                              />
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.referenceNo }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Date Paid</label>
-                              <b-form-input
-                                type="date"
-                                v-model="forms.payment.fields.datePaid"
-                                :state="forms.payment.states.datePaid"
-                              />
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.datePaid }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col md=12>
-                            <b-form-group>
-                              <label>Add Notes</label>
-                              <b-form-textarea
-                                rows="4"
-                                v-model="forms.payment.fields.notes"
-                                :state="forms.payment.states.notes"
-                              ></b-form-textarea>
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.notes }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
+                        <b-alert show variant="primary">
+                          <p>
+                            The initial fees should be paid in order to secure the registration of the student. The student will not
+                            be officially registered until payment is complete.
+                          </p>
+                        </b-alert>
+                      </b-col>
+                    </b-row> 
+                    <b-row class="mt-2">
+                      <b-col md=12>
+                        <b-card 
+                          border-variant="warning"
+                        >
+                          <b-row>
+                            <b-col md=12>
+                              <b-table
+                                :fields="tables.billings.fields"
+                                :items.sync="tables.billings.items"
+                                borderless small responsive
+                              >
+                              </b-table>
+                            </b-col>
+                          </b-row>
+                          <b-row>
+                            <b-col md=12>
+                              <b-list-group  >
+                                <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
+                                  @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
+                                  <div class="mr-4" style="color:black">
+                                    <h5 class="mb-1 mt-3">PAY {{ forms.billing.fields.totalAmount }} ONLY</h5>
+                                    <p class="mb-2">
+                                      Make a payment for initial fee only to be officially registered.
+                                    </p>
+                                  </div>
+                                  <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                                </b-list-group-item>
+                                <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                                  @click="onPaySelected(),selectecPaytype=PayTypes.CUSTOM.id">
+                                  <div class="mr-4" style="color:black">
+                                    <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
+                                    <p class="mb-2">
+                                      Make a full payment or partial payment not less than initial fee to be officially registered.
+                                    </p>
+                                  </div>
+                                  <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                                </b-list-group-item>
+                                <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                                  @click="onPaySelected(),selectecPaytype=PayTypes.ATTACHMENT.id">
+                                  <div class="mr-4" style="color:black">
+                                    <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
+                                    <p class="mb-2">
+                                      For those students that are already been enrolled for the SY 2000-2021 you will be 
+                                      needing to attached your official receipt or or any 
+                                      proof of payment to be confirmed and enrolled in the system.
+                                    </p>
+                                  </div>
+                                  <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                                </b-list-group-item>
+                              </b-list-group>
+                            </b-col>
+                          </b-row>
+                        </b-card>
                       </b-col>
                     </b-row>
+                  </b-col>
+                </b-row>
+                
+              </div>
+              <div v-show="isPaying">
+                <!--  -->
+                <b-row>
+                  <b-col md=12>
+                    <b-card border-variant="warning">
+                      <b-alert show>
+                        <b-form-group>
+                          <b-form-radio-group
+                            v-model="forms.payment.fields.paymentModeId"
+                            :options="options.paymentModes.items"
+                            stacked
+                          ></b-form-radio-group>
+                        </b-form-group>
+                      </b-alert>
+                    </b-card>
+                    <h6>
+                      You have until {{ forms.billing.fields.dueDate }} to make the payment. This reference number will not be valid until that.
+                    </h6>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md=12>
+                    <b-table
+                      v-if="selectedPaymentMode === 1"
+                      :fields="tables.bankAccounts.fields"
+                      :items.sync="tables.bankAccounts.items"
+                      borderless small responsive
+                    >
+                    </b-table>
+
+                    <b-table
+                      v-if="selectedPaymentMode === 4"
+                      :fields="tables.eWalletAccounts.fields"
+                      :items.sync="tables.eWalletAccounts.items"
+                      borderless small responsive 
+                    >
+                    </b-table>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-3">
+                  <b-col md=12>
+                    <div class="file-uploader-container">
+                      <FileUploader
+                        @onFileChange="onPaymentFileUpload" 
+                        @onFileDrop="onPaymentFileUpload"
+                      />
+                    </div>
+                    <div class="file-item-container">
+                      <FileItem
+                        v-for="(item, index) of paymentFiles"
+                        :key="index"
+                        :title="item.name"
+                        :description="item.notes"
+                        :fileIndex="index"
+                        @onFileItemSelect="onPaymentFileItemSelect"
+                        :isBusy="item.isBusy"
+                      />
+                    </div>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-3" >
+                  <b-col md=12>
+                    <div style="border:1px dashed gray; padding: 20px">
+                      <b-row>
+                        <b-col md=12>
+                          <b-row>
+                            <b-col md=4>
+                              <b-form-group>
+                                <label>Enter amount you pay</label>
+                                <b-form-input
+                                  v-model="forms.payment.fields.amount"
+                                  :state="forms.payment.states.amount"
+                                />
+                                <b-form-invalid-feedback>
+                                  {{ forms.payment.errors.amount }}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md=4>
+                              <b-form-group>
+                                <label>Reference No</label>
+                                <b-form-input
+                                  v-model="forms.payment.fields.referenceNo"
+                                  :state="forms.payment.states.referenceNo"
+                                />
+                                <b-form-invalid-feedback>
+                                  {{ forms.payment.errors.referenceNo }}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md=4>
+                              <b-form-group>
+                                <label>Date Paid</label>
+                                <b-form-input
+                                  type="date"
+                                  v-model="forms.payment.fields.datePaid"
+                                  :state="forms.payment.states.datePaid"
+                                />
+                                <b-form-invalid-feedback>
+                                  {{ forms.payment.errors.datePaid }}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                          <b-row>
+                            <b-col md=12>
+                              <b-form-group>
+                                <label>Add Notes</label>
+                                <b-form-textarea
+                                  rows="4"
+                                  v-model="forms.payment.fields.notes"
+                                  :state="forms.payment.states.notes"
+                                ></b-form-textarea>
+                                <b-form-invalid-feedback>
+                                  {{ forms.payment.errors.notes }}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                    </div>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-2">
+                  <b-col md=12>
+                    <b-button variant="danger" @click="isPaying=false">
+                      CANCEL
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </div>
+            </div>
+            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
+              <b-row>
+                <b-col md="12">
+                  <b-alert variant="success" show>
+                    <h5>PAYMENT SUBMITTED !</h5>
+                    <p> Thank you for submitting your application for this school year. 
+                    <br> We will review your payment and once approved, we will
+                    <br> notify you.
+                    <br>
+                    <br>We will try to get back to you as soon as we can!</p>
+                  </b-alert>
+                  <!-- <b-row class="pb-2">
+                    <b-col md="12">
+                      <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                    </b-col>
+                  </b-row> -->
+                  <!-- <b-row class="pb-5">
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                    <b-col md="2">
+                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                    </b-col>
+                  </b-row> -->
+                  <div class="approval-container">
+                    <ApprovalIndicator
+                      :stages="paymentApprovalStages"
+                      :currentStage="selectedPaymentApprovalStage"
+                    />
                   </div>
-                </b-col>
-              </b-row>
-              <b-row class="mt-2">
-                <b-col md=12>
-                  <b-button variant="danger" @click="isPaying=false">
-                    CANCEL
-                  </b-button>
+                  <b-alert
+                    :show="dismissCountDown"
+                    variant="info"
+                    @dismissed="onUpdateStudent()"
+                    @dismiss-count-down="countDownChanged"
+                  >
+                    Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
+                    <v-icon
+                      v-if="dismissCountDown"
+                      name="spinner"
+                      class="mr-2 float-right"
+                      spin />
+                  </b-alert>
                 </b-col>
               </b-row>
             </div>
           </div>
-          <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
-             <b-row>
-              <b-col md="12">
-                <b-alert variant="success" show>
-                  <h5>PAYMENT SUBMITTED !</h5>
-                  <p> Thank you for submitting your application for this school year. 
-                  <br> We will review your payment and once approved, we will
-                  <br> notify you.
-                  <br>
-                  <br>We will try to get back to you as soon as we can!</p>
-                </b-alert>
-                <!-- <b-row class="pb-2">
-                  <b-col md="12">
-                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                  </b-col>
-                </b-row> -->
-                <!-- <b-row class="pb-5">
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                </b-row> -->
-                <div class="approval-container">
-                  <ApprovalIndicator
-                    :stages="paymentApprovalStages"
-                    :currentStage="selectedPaymentApprovalStage"
-                  />
-                </div>
-                <b-alert
-                  :show="dismissCountDown"
-                  variant="info"
-                  @dismissed="onUpdateStudent()"
-                  @dismiss-count-down="countDownChanged"
-                >
-                  Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
-                  <v-icon
-                    v-if="dismissCountDown"
-                    name="spinner"
-                    class="mr-2 float-right"
-                    spin />
-                </b-alert>
-              </b-col>
-            </b-row>
-          </div>
+        </div>
+        <div class="admission__action-bar">
+          <b-button
+            @click="forms.activeAdmission.fields.admissionStepId--"
+            v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
+            variant="outline-secondary"
+            class="admission__back-action">
+            Back
+          </b-button>
+          <b-button
+            @click="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
+            variant="primary"
+            class="admission__main-action"
+            :disabled="isProcessing"
+            v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
+            <v-icon
+              v-if="isProcessing"
+              name="sync"
+              class="mr-2"
+              spin />
+              {{forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUIREMENTS.id ? 'Next' : 'Submit Application'}}
+          </b-button>
         </div>
       </div>
-      <div class="admission__action-bar">
-        <b-button
-          @click="forms.activeAdmission.fields.admissionStepId--"
-          v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
-          variant="outline-secondary"
-          class="admission__back-action">
-          Back
-        </b-button>
-        <b-button
-          @click="onUpdateStudent()"
-          variant="primary"
-          class="admission__main-action"
-          :disabled="isProcessing"
-          v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
+    </div>
+    <b-modal 
+      v-model="showPaymentFileModal"
+      centered
+      header-bg-variant="success"
+      header-text-variant="light"
+      :noCloseOnEsc="true"
+      :noCloseOnBackdrop="true"
+      >
+      <div slot="modal-title"> <!-- modal title -->
+        Payment File
+      </div> <!-- modal title -->
+      <b-row> <!-- modal body -->
+        <b-col md=12>
+          <label>Notes</label>
+          <b-textarea 
+            v-model="forms.paymentFile.fields.notes"
+            :state="forms.paymentFile.states.notes"
+            rows=7 />
+          <b-form-invalid-feedback>
+            {{ forms.paymentFile.errors.notes }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row> <!-- modal body -->
+      <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+        <b-button 
+          class="float-left" 
+          @click="onDeletePaymentFile()"
+          variant="outline-danger">
           <v-icon
-            v-if="isProcessing"
+            v-if="isFileDeleting"
             name="sync"
             class="mr-2"
-            spin />
-            {{forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUIREMENTS.id ? 'Next' : 'Submit Application'}}
+            spin
+          />
+          Delete
         </b-button>
-      </div>
-    </div>
+        <b-button 
+          @click="onUpdatePaymentFile()"
+          class="float-right" 
+          variant="outline-primary">
+          <v-icon
+            v-if="isFileUpdating"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Update
+        </b-button>
+      </div> <!-- modal footer buttons -->
+    </b-modal>
+    <b-modal 
+      v-model="showAdmissionFileModal"
+      centered
+      header-bg-variant="success"
+      header-text-variant="light"
+      :noCloseOnEsc="true"
+      :noCloseOnBackdrop="true"
+      >
+      <div slot="modal-title"> <!-- modal title -->
+        Admission File
+      </div> <!-- modal title -->
+      <b-row> <!-- modal body -->
+        <b-col md=12>
+          <label>Notes</label>
+          <b-textarea 
+            v-model="forms.admissionFile.fields.notes"
+            :state="forms.admissionFile.states.notes"
+            rows=7 />
+          <b-form-invalid-feedback>
+            {{ forms.admissionFile.errors.notes }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row> <!-- modal body -->
+      <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+        <b-button 
+          class="float-left" 
+          @click="onDeleteAdmissionFile()"
+          variant="outline-danger">
+          <v-icon
+            v-if="isFileDeleting"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Delete
+        </b-button>
+        <b-button 
+          @click="onUpdateAdmissionFile()"
+          class="float-right" 
+          variant="outline-primary">
+          <v-icon
+            v-if="isFileUpdating"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Update
+        </b-button>
+      </div> <!-- modal footer buttons -->
+    </b-modal>
   </div>
   <!-- main container -->
 </template>
@@ -1040,14 +1166,13 @@
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
-import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PayTypes } from '../../helpers/enum'
+import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PaymentStatuses, PayTypes } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset } from '../../helpers/forms';
-import PhotoViewer from '../components/PhotoViewer'
-import ApplicationStep from '../../mixins/api/ApplicationStep';
+import PhotoViewer from '../components/PhotoViewer';
 
 const studentFields = {
   id: null,
@@ -1176,7 +1301,8 @@ const paymentFields = {
   amount: 0,
   datePaid: null,
   paymentModeId: 1,
-  notes: null
+  notes: null,
+  paymentStatusId: null
 }
 
 const paymentErrorFields = {
@@ -1184,6 +1310,16 @@ const paymentErrorFields = {
   amount: null,
   datePaid: null,
   paymentModeId: 1,
+  notes: null
+}
+
+const paymentFileFields = {
+  id: null,
+  notes: null
+}
+
+const admissionFileFields = {
+  id: null,
   notes: null
 }
 
@@ -1200,18 +1336,23 @@ export default {
     },
     data(){
       return{
+        showPaymentFileModal: false,
+        showAdmissionFileModal: false,
         selectedPaymentMode: 1,
-        selectedFile: null,
         paymentFiles: [],
-        isUploading: false,
-        isLoading: false,
+        selectedPaymentFileIndex: null,
+        admissionFiles: [],
+        selectedAdmissionFileIndex: null,
         isApplied: false,
         isProcessing: false,
+        isFileUpdating: false,
+        isFileDeleting: false,
         dismissCountDown: 0,
         percentage: 30,
         studentPhotoUrl: null,
         ApplicationStatuses: ApplicationStatuses,
         AdmissionSteps: AdmissionSteps,
+        PaymentStatuses: PaymentStatuses,
         BillingTypes: BillingTypes,
         PayTypes: PayTypes,
         selectedPayType: 1,
@@ -1255,6 +1396,16 @@ export default {
             states: { ...paymentErrorFields },
             errors: { ...paymentErrorFields }
           },
+          paymentFile: {
+            fields: { ...paymentFileFields },
+            states: { ...paymentFileFields },
+            errors: { ...paymentFileFields }
+          },
+          admissionFile: {
+            fields: { ...admissionFileFields },
+            states: { ...admissionFileFields },
+            errors: { ...admissionFileFields }
+          }
         },
         tables: {
           subjects: {
@@ -1453,11 +1604,21 @@ export default {
           this.showCountdown()
         }
 
-        this.getAdmissionFiles(student.activeAdmission.id, params).then(response => {
-          const res = response.data
-          this.tables.files.items = res
+        //load admission files
+        this.getAdmissionFiles(student.activeAdmission.id, params).then(({ data }) => {
+          this.tables.files.items = data
+          console.log(data)
+          data.forEach(file => {
+            this.admissionFiles.push({
+              id: file.id,
+              name: file.name,
+              notes: file.notes,
+              isBusy: false
+            })
+          })
         })
 
+        //student photo
         if (student.photo) {
           this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL +  student.photo.hashName
         }
@@ -1482,8 +1643,6 @@ export default {
       this.loadEWalletAccounts();
       this.loadBankAccounts();
 
-      this.isLoading = false;
-
       this.getLevelList(params).then(response => {
         const res = response.data
         this.options.levels.items = res
@@ -1491,32 +1650,32 @@ export default {
 
     },
     methods: {
-      uploadFile(file) {
-        if (file) {
-          this.tables.files.isBusy = true
-          this.isUploading = true
-          let formData = new FormData()
-          formData.append('file', file)
-          this.saveFile(formData , this.forms.activeAdmission.fields.id).then(response => {
-            const res = response.data
-            this.tables.files.items.push({ id: res.id, name: res.name })
-            this.tables.files.isBusy = false
-            this.isUploading = false
-            this.selectedFile = null
-          }).catch(err => {
-             this.isUploading = false
-             this.tables.files.isBusy = false
-          })
-        }
-      },
-      removeFile(row){
-        this.tables.files.isBusy = false
-        this.deleteFile(this.forms.activeAdmission.fields.id, row.item.id).then(response => {
-          const res = response.data
-          this.tables.files.items.splice(row.index, 1);
-          this.tables.files.isBusy = true
-        })
-      },
+      // uploadFile(file) {
+      //   if (file) {
+      //     this.tables.files.isBusy = true
+      //     this.isUploading = true
+      //     const formData = new FormData()
+      //     formData.append('file', file)
+      //     this.addPaymentFile(formData , this.forms.activeAdmission.fields.id).then(response => {
+      //       const res = response.data
+      //       this.tables.files.items.push({ id: res.id, name: res.name })
+      //       this.tables.files.isBusy = false
+      //       this.isUploading = false
+      //       this.selectedFile = null
+      //     }).catch(err => {
+      //        this.isUploading = false
+      //        this.tables.files.isBusy = false
+      //     })
+      //   }
+      // },
+      // removeFile(row){
+      //   this.tables.files.isBusy = false
+      //   this.deleteFile(this.forms.activeAdmission.fields.id, row.item.id).then(response => {
+      //     const res = response.data
+      //     this.tables.files.items.splice(row.index, 1);
+      //     this.tables.files.isBusy = true
+      //   })
+      // },
       onUpdateStudent() {
         const {
           student: { fields: { id: studentId } },
@@ -1572,33 +1731,6 @@ export default {
                         ? ApplicationStatuses.COMPLETED.id 
                             : activeAdmission.applicationStatusId
 
-        
-
-        this.isProcessing = true;
-        
-        if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id) {
-          /// udpate payment on next
-          const { payment, billing: { fields: { id: billingId }} } = this.forms
-
-          reset(payment)
-
-          const data = {
-            ...payment.fields,
-            billingId
-          }
-
-          if (payment.fields.id != null) {
-            this.updatePayment(data, payment.fields.id).then(({ data }) =>{
-              copyValue(data, payment)
-            }).catch((error) => {
-              const { errors } = error.response.data;
-              validate(payment, errors)
-              this.isProcessing = false;
-              return
-            });
-          }  
-        }
-
         const data = {
           ...payloads[currentStepIndex],
           activeAdmission: {
@@ -1612,15 +1744,17 @@ export default {
         formsToValidate.forEach(form => {
           reset(form)
         })
-      
-        console.log(data)
-        
+
+        this.isProcessing = true
 
         this.updateStudent(data, studentId).then(({ data }) => {
           // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
           //   this.$router.push({ name: 'Dashboard' })
           //   return
           // }
+          if (data.activeAdmission.admissionStepId === AdmissionSteps.PAYMENTS.id) {
+            this.loadBilling()
+          }
           copyValue(data.activeAdmission, activeAdmission);
           this.$set(this.forms.activeAdmission, 'fields',  { ...activeAdmission })
           this.isProcessing = false;
@@ -1629,7 +1763,27 @@ export default {
           validate(formsToValidate[currentStepIndex], errors);
           this.isProcessing = false;
         });
+      },
+      onUpdatePayment() {
+        const { payment, billing: { fields: { id: billingId }} } = this.forms
 
+        reset(payment)
+
+        const dataPayment = {
+          ...payment.fields,
+          billingId
+        }
+
+        if (payment.fields.id != null) {
+          this.updatePayment(dataPayment, payment.fields.id).then(({ data }) =>{
+            copyValue(data, payment)
+            this.onUpdateStudent()
+          }).catch((error) => {
+            const { errors } = error.response.data;
+            validate(payment, errors)
+            this.isProcessing = false;
+          });
+        }
       },
       loadCourses() {
         const { fields } = this.forms.transcript;
@@ -1756,43 +1910,51 @@ export default {
             payment.fields.datePaid = data[0].payments[0].datePaid
             payment.fields.notes = data[0].payments[0].notes
             payment.fields.paymentModeId = data[0].payments[0].paymentModeId
+            payment.fields.paymentStatusId = data[0].payments[0].paymentStatusId
+
+            this.selectedPaymentApprovalStage = 
+              payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id ?
+                2 : 1
 
             this.getPaymentFiles(payment.fields.id).then(({ data }) => {
-              this.paymentFiles = data.data
+              data.data.forEach(file => {
+                this.paymentFiles.push({
+                  id: file.id,
+                  name: file.name,
+                  notes: file.notes,
+                  isBusy: false
+                })
+              })
             })
 
           }
-
-          console.log(payment)
         })
       },
-      onFileChange(file) {
+      onPaymentFileUpload(file) {
         const formData = new FormData();
         const { payment } = this.forms
 
         formData.append('file', file);
 
-        this.addPaymentFile(formData, payment.fields.id ).then(({ data }) =>{
-          console.log(data.name)
+        this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
           this.paymentFiles.push(
             { name: data.name, isBusy: true}
           );
           setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
         })
       },
-      onFileDrop(file) {
-        const formData = new FormData();
-        const { payment } = this.forms
-
-        formData.append('file', file);
-
-        this.addPaymentFileApi(formData, payment.fields.id).then(({ data }) =>{
-          console.log(data.name)
-          this.paymentFiles.push(
-            { name: data.name, isBusy: true}
-          );
-          setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
-        })
+      onAdmissionFileUpload(file) {
+        if (file) {
+          const { activeAdmission } = this.forms
+          const formData = new FormData()
+          formData.append('file', file)
+          this.addAdmissionFile(formData, activeAdmission.fields.id).then(({ data }) =>{
+            this.admissionFiles.push(
+              { id:data.id, name: data.name, notes: data.notes, isBusy: true}
+            );
+            setTimeout(() => this.admissionFiles[this.admissionFiles.length - 1].isBusy = false, 1000);
+          })
+        }
       },
       onPaySelected() {
         // if payment is null add payment
@@ -1815,38 +1977,6 @@ export default {
           });
         }
       },
-      insertUpdatePayment() {
-        const { payment, billing: { fields: { id: billingId }} } = this.forms
-
-        reset(payment)
-
-        const data = {
-          ...payment.fields,
-          billingId
-        }
-        
-
-        //payment insert
-        if (payment.fields.id === null) {
-          console.log('add')
-          this.addPayment(data).then(({ data }) =>{
-            copyValue(data, payment)
-            payment.fields.id = data.id
-          }).catch((error) => {
-            const { errors } = error.response.data;
-            validate(payment, errors);
-          });
-        } else {
-          //payment update
-          console.log('update')
-          this.updatePayment(data, payment.fields.id).then(({ data }) =>{
-            //copyValue(data, payment)
-          }).catch((error) => {
-            const { errors } = error.response.data;
-            validate(payment, errors);
-          });
-        }
-      },
       loadBankAccounts() {
         const params = { paginate: false }
         const { bankAccounts } = this.tables
@@ -1860,6 +1990,100 @@ export default {
         this.getEWalletAccountList(params).then(({ data }) => {
           eWalletAccounts.items = data
         })
+      },
+      onPaymentFileItemSelect(idx) {
+        const { paymentFile } = this.forms
+        reset(paymentFile)
+        this.selectedPaymentFileIndex = idx
+
+        paymentFile.fields.id = this.paymentFiles[idx].id
+        paymentFile.fields.notes = this.paymentFiles[idx].notes
+
+        this.showPaymentFileModal = true
+      },
+      onAdmissionFileItemSelect(idx) {
+        const { admissionFile } = this.forms
+        reset(admissionFile)
+        this.selectedAdmissionFileIndex = idx
+
+        admissionFile.fields.id = this.admissionFiles[idx].id
+        admissionFile.fields.notes = this.admissionFiles[idx].notes
+
+        this.showAdmissionFileModal = true
+      },
+      onUpdatePaymentFile () {
+        const { payment: { fields:{ id: paymentId } },
+                paymentFile } = this.forms
+
+        const seletedFile = this.paymentFiles[this.selectedPaymentFileIndex]
+        this.isFileUpdating = true
+        seletedFile.isBusy = true
+        this.updatePaymentFile(paymentFile.fields, paymentId, paymentFile.fields.id).then(({ data }) => {
+          seletedFile.notes = data.notes;
+          this.isFileUpdating = false
+          this.showPaymentFileModal = false;
+          setTimeout(() => seletedFile.isBusy = false, 1000);
+        }).catch((error) => {
+          const { errors } = error.response.data;
+          validate(paymentFile, errors);
+          this.isFileUpdating = false
+          seletedFile.isBusy = false
+        });
+      },
+      onDeletePaymentFile () {
+        const { payment: { fields:{ id: paymentId } },
+              paymentFile: { fields:{ id: paymentFileId } }
+            }= this.forms
+
+        const seletedFile = this.paymentFiles[this.selectedPaymentFileIndex]
+        this.isFileDeleting = true
+        seletedFile.isBusy = true
+        this.deletePaymentFile(paymentId, paymentFileId).then(()=> {
+          this.isFileDeleting = false
+          this.showPaymentFileModal = false
+          this.paymentFiles.splice(this.selectedPaymentFileIndex, 1);
+        }).catch((error) => {
+          console.log(error)
+          this.isFileDeleting = false
+          seletedFile.isBusy = false
+        });
+      },
+      onUpdateAdmissionFile () {
+        const { activeAdmission: { fields:{ id: admissionId } },
+                admissionFile } = this.forms
+
+        const seletedFile = this.admissionFiles[this.selectedAdmissionFileIndex]
+        this.isFileUpdating = true
+        seletedFile.isBusy = true
+        this.updateAdmissionFile(admissionFile.fields, admissionId, admissionFile.fields.id).then(({ data }) => {
+          seletedFile.notes = data.notes;
+          this.isFileUpdating = false
+          this.showAdmissionFileModal = false;
+          setTimeout(() => seletedFile.isBusy = false, 1000);
+        }).catch((error) => {
+          const { errors } = error.response.data;
+          validate(admissionFile, errors);
+          this.isFileUpdating = false
+          seletedFile.isBusy = false
+        });
+      },
+      onDeleteAdmissionFile () {
+        const { activeAdmission: { fields:{ id: admissionId } },
+              admissionFile: { fields:{ id: admissionFileId } }
+            }= this.forms
+
+        const seletedFile = this.admissionFiles[this.selectedAdmissionFileIndex]
+        this.isFileDeleting = true
+        seletedFile.isBusy = true
+        this.deleteAdmissionFile(admissionId, admissionFileId).then(()=> {
+          this.isFileDeleting = false
+          this.showAdmissionFileModal = false
+          this.admissionFiles.splice(this.selectedAdmissionFileIndex, 1);
+        }).catch((error) => {
+          console.log(error)
+          this.isFileDeleting = false
+          seletedFile.isBusy = false
+        });
       }
     },
     computed: {
@@ -1992,7 +2216,6 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    
   }
 
   .file-uploader-container {
@@ -2005,5 +2228,6 @@ export default {
     width: 100%;
     height: auto;
   }
+
 
 </style>
