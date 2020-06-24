@@ -45,6 +45,7 @@
                       <PhotoViewer
                         @onPhotoChange="onPhotoChange"
                         @onPhotoRemove="onPhotoRemove"
+                        :isBusy="isProfilePhotoBusy"
                         :imageUrl="studentPhotoUrl"
                       />
                     </div>
@@ -611,6 +612,11 @@
                   </b-form-group>
                 </b-col>
               </b-row>
+              <!-- <b-row>
+                <b-col md=4 offset-md="8">
+                  <b-button variant="outline-primary" block >ADD SUBJECT</b-button>
+                </b-col>
+              </b-row> -->
               <b-row>
                 <b-col md="12">
                   <b-form-group>
@@ -768,9 +774,20 @@
               </b-row>
             </div>
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
-              <div v-show="isPaying===false" > 
+              <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
+                <b-col md=12>
+                  <b-alert variant="danger" show>
+                    <p>
+                      Sorry, your payment is rejected with the ffg. reasons : <br>
+                      {{ forms.payment.fields.disapprovalNotes }} <br><br>
+                      <small>Please be inform that you can modify your payment and resubmit for evaluation.</small>
+                    </p>
+                  </b-alert>
+                </b-col>
+              </b-row>
+              <div v-show="isPaying===false" class="mt-4" > 
                 <!--  -->
-                <b-row class="mt-4">
+                <b-row >
                   <b-col md=12>
                     <b-row>
                       <b-col md=12>
@@ -1302,7 +1319,8 @@ const paymentFields = {
   datePaid: null,
   paymentModeId: 1,
   notes: null,
-  paymentStatusId: null
+  paymentStatusId: PaymentStatuses.PENDING.id,
+  disapprovalNotes: null,
 }
 
 const paymentErrorFields = {
@@ -1338,6 +1356,7 @@ export default {
       return{
         showPaymentFileModal: false,
         showAdmissionFileModal: false,
+        isProfilePhotoBusy: false,
         selectedPaymentMode: 1,
         paymentFiles: [],
         selectedPaymentFileIndex: null,
@@ -1422,18 +1441,6 @@ export default {
                 label: "UNITS",
                 tdClass: "align-middle text-center",
                 thClass: "text-center",
-                thStyle: { width: "20%" }
-              }
-            ],
-            items: []
-          },
-          files: {
-            isBusy: false,
-            fields: [
-              {
-                key: "name",
-                label: "Filename",
-                tdClass: "align-middle",
                 thStyle: { width: "auto" }
               },
               {
@@ -1500,25 +1507,34 @@ export default {
                 key: "billingNo",
                 label: "Reference No",
                 tdClass: "align-middle",
-                thStyle: { width: "20%" }
+                thStyle: { width: "20" }
               },
               {
                 key: "dueDate",
                 label: "Date",
                 tdClass: "align-middle",
-                thStyle: { width: "20%" }
+                thStyle: { width: "15%" }
               },
               {
                 key: "studentFee.totalAmount",
                 label: "Total Fees",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: { width: "20%" }
               },
               {
                 key: "totalAmount",
                 label: "Initial Fee",
-                tdClass: "align-middle",
-                thStyle: { width: "auto%" }
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: { width: "20%" }
+              },
+              {
+                key: "previousBalance",
+                label: "Previous Balance",
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: { width: "25%" }
               },
             ],
             items: []
@@ -1771,6 +1787,7 @@ export default {
 
         const dataPayment = {
           ...payment.fields,
+          paymentStatusId: PaymentStatuses.PENDING.id, //set payment status to pending for approval
           billingId
         }
 
@@ -1858,11 +1875,18 @@ export default {
       },
       onPhotoChange(file) {
         const formData = new FormData();
+        this.isProfilePhotoBusy = true
         formData.append('photo', file);
+
+        console.log(this.isProfilePhotoBusy)
         this.savePhoto(formData, this.forms.student.fields.id).then(response =>{
           const res = response.data
           this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + res.hashName
+
+          setTimeout(() => this.isProfilePhotoBusy = false, 3000)
         })
+
+        
       },
       onPhotoRemove() {
         this.deletePhoto(this.forms.student.fields.id).then(response =>{
@@ -1901,17 +1925,13 @@ export default {
           billings.items = data
           copyValue(data[0], this.forms.billing.fields)
           //copyValue(data[0].payments[0], this.forms.payment).
-          
+          console.log(data.payments)
           payment.fields.id = null;
           if (data[0].payments[0] != null) {
-            payment.fields.id = data[0].payments[0].id
-            payment.fields.referenceNo = data[0].payments[0].referenceNo
-            payment.fields.amount = data[0].payments[0].amount
-            payment.fields.datePaid = data[0].payments[0].datePaid
-            payment.fields.notes = data[0].payments[0].notes
-            payment.fields.paymentModeId = data[0].payments[0].paymentModeId
-            payment.fields.paymentStatusId = data[0].payments[0].paymentStatusId
 
+            copyValue(data[0].payments[0], this.forms.payment.fields)
+            
+            //set payment approval stage
             this.selectedPaymentApprovalStage = 
               payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id ?
                 2 : 1
@@ -1926,6 +1946,21 @@ export default {
                 })
               })
             })
+
+            // if rejected move a step back on admission step and application status
+            if (payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id) {
+              const admission = {
+                activeAdmission: {
+                  id: this.forms.activeAdmission.fields.id,
+                  admissionStepId: AdmissionSteps.PAYMENTS.id,
+                  applicationStatusId: ApplicationStatuses.APPROVED_ASSESMENT.id
+                }
+              }
+
+              this.updateStudent(admission, this.forms.student.fields.id).then(({ data }) =>{
+                copyValue(data.activeAdmission, this.forms.activeAdmission.fields);
+              })
+            }
 
           }
         })
