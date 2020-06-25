@@ -565,7 +565,7 @@
             </div>
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
               <b-row>
-                <b-col md="6">
+                <b-col md="4">
                   <b-form-group>
                     <label>Level</label>
                     <b-form-select @input="loadCourses()" 
@@ -583,7 +583,7 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col md="6">
+                <b-col md="4">
                   <b-form-group>
                     <label>Course</label>
                     <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
@@ -596,9 +596,7 @@
                     </b-form-select>
                   </b-form-group>
                 </b-col>
-              </b-row>
-              <b-row>
-                <b-col md="6">
+                <b-col md="4">
                   <b-form-group>
                     <label>Semester</label>
                     <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
@@ -635,6 +633,15 @@
                     <template v-slot:cell(name)="data">
                       <span>{{data.item.code}} {{data.item.name}}</span><br>
                       <small>{{data.item.description}}</small>
+                    </template>
+                    <template v-slot:table-busy>
+                      <div class="text-center my-2">
+                        <v-icon 
+                          name="spinner" 
+                          spin
+                          class="mr-2" />
+                        <strong>Loading...</strong>
+                      </div>
                     </template>
                   </b-table>
                 </b-col>
@@ -785,7 +792,7 @@
                   </b-alert>
                 </b-col>
               </b-row>
-              <div v-show="isPaying===false" class="mt-4" > 
+              <div v-show="!isPaying" class="mt-4" > 
                 <!--  -->
                 <b-row >
                   <b-col md=12>
@@ -879,115 +886,125 @@
                     </h6>
                   </b-col>
                 </b-row>
-                <b-row>
+                <b-row class="mt-5">
                   <b-col md=12>
-                    <b-table
-                      v-if="selectedPaymentMode === 1"
-                      :fields="tables.bankAccounts.fields"
-                      :items.sync="tables.bankAccounts.items"
-                      borderless small responsive
-                    >
-                    </b-table>
-
-                    <b-table
-                      v-if="selectedPaymentMode === 4"
-                      :fields="tables.eWalletAccounts.fields"
-                      :items.sync="tables.eWalletAccounts.items"
-                      borderless small responsive 
-                    >
-                    </b-table>
+                    <div class="payment-step-container">
+                      <span class="payment-step__number">1</span>
+                      <div class="payment-step-details-container">
+                        <span>Choose your preferred Account.</span>
+                        <b-table
+                          v-if="forms.payment.fields.paymentModeId === 1"
+                          :fields="tables.bankAccounts.fields"
+                          :items.sync="tables.bankAccounts.items"
+                          borderless small responsive
+                        >
+                        </b-table>
+                        <b-table
+                          v-if="forms.payment.fields.paymentModeId === 4"
+                          :fields="tables.eWalletAccounts.fields"
+                          :items.sync="tables.eWalletAccounts.items"
+                          borderless small responsive 
+                        >
+                        </b-table>               
+                      </div>
+                    </div>
                   </b-col>
                 </b-row>
                 <b-row class="mt-3">
                   <b-col md=12>
-                    <div class="file-uploader-container">
-                      <FileUploader
-                        @onFileChange="onPaymentFileUpload" 
-                        @onFileDrop="onPaymentFileUpload"
-                      />
+                    <div class="payment-step-container">
+                      <span class="payment-step__number">2</span>
+                      <div class="payment-step-details-container">
+                        <span>Confirmation of your payment.</span>
+                        <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
+                        <div class="file-uploader-container">
+                          <FileUploader
+                            @onFileChange="onPaymentFileUpload" 
+                            @onFileDrop="onPaymentFileUpload"
+                          />
+                        </div>
+                        <div class="file-item-container">
+                          <FileItem
+                            v-for="(item, index) of paymentFiles"
+                            :key="index"
+                            :title="item.name"
+                            :description="item.notes"
+                            :fileIndex="index"
+                            @onFileItemSelect="onPaymentFileItemSelect"
+                            :isBusy="item.isBusy"
+                          />
+                        </div>
+                        <div class="mt-3">
+                          <div style="border:1px dashed gray; padding: 20px">
+                            <b-row>
+                              <b-col md=12>
+                                <b-row>
+                                  <b-col md=4>
+                                    <b-form-group>
+                                      <label>Enter amount you pay</label>
+                                      <vue-autonumeric
+                                        v-model="forms.payment.fields.amount"
+                                        class="form-control text-right" 
+                                        :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
+                                        :state="forms.payment.states.amount">
+                                      </vue-autonumeric>
+                                      <b-form-invalid-feedback>
+                                        {{ forms.payment.errors.amount }}
+                                      </b-form-invalid-feedback>
+                                    </b-form-group>
+                                  </b-col>
+                                  <b-col md=4>
+                                    <b-form-group>
+                                      <label>Reference No</label>
+                                      <b-form-input
+                                        v-model="forms.payment.fields.referenceNo"
+                                        :state="forms.payment.states.referenceNo"
+                                      />
+                                      <b-form-invalid-feedback>
+                                        {{ forms.payment.errors.referenceNo }}
+                                      </b-form-invalid-feedback>
+                                    </b-form-group>
+                                  </b-col>
+                                  <b-col md=4>
+                                    <b-form-group>
+                                      <label>Date Paid</label>
+                                      <b-form-input
+                                        type="date"
+                                        v-model="forms.payment.fields.datePaid"
+                                        :state="forms.payment.states.datePaid"
+                                      />
+                                      <b-form-invalid-feedback>
+                                        {{ forms.payment.errors.datePaid }}
+                                      </b-form-invalid-feedback>
+                                    </b-form-group>
+                                  </b-col>
+                                </b-row>
+                                <b-row>
+                                  <b-col md=12>
+                                    <b-form-group>
+                                      <label>Add Notes</label>
+                                      <b-form-textarea
+                                        rows="4"
+                                        v-model="forms.payment.fields.notes"
+                                        :state="forms.payment.states.notes"
+                                      ></b-form-textarea>
+                                      <b-form-invalid-feedback>
+                                        {{ forms.payment.errors.notes }}
+                                      </b-form-invalid-feedback>
+                                    </b-form-group>
+                                  </b-col>
+                                </b-row>
+                              </b-col>
+                            </b-row>
+                          </div>
+                        </div>
+                        <div class="mt-3">
+                          <b-button variant="danger" @click="isPaying=false">
+                            CANCEL
+                          </b-button>
+                        </div>
+                      </div>
                     </div>
-                    <div class="file-item-container">
-                      <FileItem
-                        v-for="(item, index) of paymentFiles"
-                        :key="index"
-                        :title="item.name"
-                        :description="item.notes"
-                        :fileIndex="index"
-                        @onFileItemSelect="onPaymentFileItemSelect"
-                        :isBusy="item.isBusy"
-                      />
-                    </div>
-                  </b-col>
-                </b-row>
-                <b-row class="mt-3" >
-                  <b-col md=12>
-                    <div style="border:1px dashed gray; padding: 20px">
-                      <b-row>
-                        <b-col md=12>
-                          <b-row>
-                            <b-col md=4>
-                              <b-form-group>
-                                <label>Enter amount you pay</label>
-                                <b-form-input
-                                  v-model="forms.payment.fields.amount"
-                                  :state="forms.payment.states.amount"
-                                />
-                                <b-form-invalid-feedback>
-                                  {{ forms.payment.errors.amount }}
-                                </b-form-invalid-feedback>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md=4>
-                              <b-form-group>
-                                <label>Reference No</label>
-                                <b-form-input
-                                  v-model="forms.payment.fields.referenceNo"
-                                  :state="forms.payment.states.referenceNo"
-                                />
-                                <b-form-invalid-feedback>
-                                  {{ forms.payment.errors.referenceNo }}
-                                </b-form-invalid-feedback>
-                              </b-form-group>
-                            </b-col>
-                            <b-col md=4>
-                              <b-form-group>
-                                <label>Date Paid</label>
-                                <b-form-input
-                                  type="date"
-                                  v-model="forms.payment.fields.datePaid"
-                                  :state="forms.payment.states.datePaid"
-                                />
-                                <b-form-invalid-feedback>
-                                  {{ forms.payment.errors.datePaid }}
-                                </b-form-invalid-feedback>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                          <b-row>
-                            <b-col md=12>
-                              <b-form-group>
-                                <label>Add Notes</label>
-                                <b-form-textarea
-                                  rows="4"
-                                  v-model="forms.payment.fields.notes"
-                                  :state="forms.payment.states.notes"
-                                ></b-form-textarea>
-                                <b-form-invalid-feedback>
-                                  {{ forms.payment.errors.notes }}
-                                </b-form-invalid-feedback>
-                              </b-form-group>
-                            </b-col>
-                          </b-row>
-                        </b-col>
-                      </b-row>
-                    </div>
-                  </b-col>
-                </b-row>
-                <b-row class="mt-2">
-                  <b-col md=12>
-                    <b-button variant="danger" @click="isPaying=false">
-                      CANCEL
-                    </b-button>
                   </b-col>
                 </b-row>
               </div>
@@ -1180,7 +1197,8 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi } from "../../mixins/api"
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, 
+  PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PaymentStatuses, PayTypes } from '../../helpers/enum'
@@ -1305,6 +1323,11 @@ const transcriptFields = {
   schoolCategoryId: null
 }
 
+const transcriptErrorFields = {
+  transcriptLevelId: null,
+  subjects: null
+}
+
 const billingFields = {
   id: null,
   billingNo: null,
@@ -1339,11 +1362,6 @@ const paymentFileFields = {
 const admissionFileFields = {
   id: null,
   notes: null
-}
-
-const transcriptErrorFields = {
-  transcriptLevelId: null,
-  subjects: null
 }
 
 export default {
@@ -1434,24 +1452,24 @@ export default {
                 key: "name",
                 label: "SUBJECTS",
                 tdClass: "align-middle",
-                thStyle: { width: "80%" }
+                thStyle: { width: "70%" }
               },
               {
                 key: "units",
-                label: "UNITS",
+                label: "LEC UNITS",
                 tdClass: "align-middle text-center",
                 thClass: "text-center",
-                thStyle: { width: "auto" }
+                thStyle: { width: "15%" }
               },
               {
-                key: "action",
-                label: "",
+                key: "labs",
+                label: "LAB UNITS",
                 tdClass: "align-middle text-center",
                 thClass: "text-center",
-                thStyle: { width: "5px" }
-              }
+                thStyle: { width: "15%" }
+              },
             ],
-            items: []
+            items: [],
           },
           bankAccounts: {
             isBusy: false,
@@ -1973,7 +1991,7 @@ export default {
 
         this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
           this.paymentFiles.push(
-            { name: data.name, isBusy: true}
+            {id: data.id, name: data.name, notes: data.notes, isBusy: true}
           );
           setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
         })
@@ -2134,7 +2152,8 @@ export default {
         if (fields.admissionStepId) {
           const subHeaders = [
             ...this.groupStages[0].children,
-            ...this.groupStages[1].children
+            ...this.groupStages[1].children,
+            ...this.groupStages[2].children
           ]
           return subHeaders.find(({ id }) => id === fields.admissionStepId)
         }
@@ -2255,8 +2274,9 @@ export default {
 
   .file-uploader-container {
     width: 100%;
-    height: 200px;
-    margin-bottom: 40px;
+    height: 250px;
+    margin: 20px 0 20px 0;
+
   }
 
   .file-item-container {
@@ -2264,5 +2284,35 @@ export default {
     height: auto;
   }
 
+  .payment-step__number {
+    background-color: $blue;
+    color: $white;
+    height: 28px;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .payment-step-header-container {
+    display:flex; 
+    align-items: center;
+  }
+
+  .payment-step-details-container {
+    display:flex; 
+    flex-direction: column; 
+    width: 100%;
+  }
+
+  .payment-step-container {
+    display:flex; 
+    flex-direction: row;
+    width: 100%;
+  }
 
 </style>

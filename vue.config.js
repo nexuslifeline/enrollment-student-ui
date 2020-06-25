@@ -4,7 +4,14 @@ module.exports = {
   configureWebpack: {
     //Necessary to run npm link https://webpack.js.org/configuration/resolve/#resolve-symlinks
     resolve: {
-       symlinks: false
+      symlinks: false,
+      alias: {
+        AutoNumeric: 'autonumeric/dist/autoNumeric.min',
+      },
+    },
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[hash:8].js'
     }
   },
   transpileDependencies: [
@@ -23,10 +30,4 @@ module.exports = {
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
   },
-  configureWebpack: {
-    output: {
-      filename: 'js/[name].[hash:8].js',
-      chunkFilename: 'js/[name].[hash:8].js'
-    }
-  }
 }
