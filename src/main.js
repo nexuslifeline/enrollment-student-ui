@@ -29,6 +29,7 @@ Vue.config.performance = true
 Vue.component('v-icon', Icon)
 Vue.use(CoreuiVue)
 Vue.use(BootstrapVue)
+Vue.component('vue-autonumeric', require('vue-autonumeric'))
 //Vue.use(IconsPlugin)
 Vue.prototype.$log = console.log.bind(console)
 
