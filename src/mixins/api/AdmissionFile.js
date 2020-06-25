@@ -2,13 +2,16 @@ import { apiVersion, apiPrefix } from './config';
 
 export default {
   methods: {
-    getAdmissionFiles(id, params) {
-      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/admissions/${id}/files`, { params: params })
+    getAdmissionFiles(admissionId, params) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files`, { params: params })
     },
-    saveFile(data, id) {
-      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/admissions/${id}/files`, data)
+    addAdmissionFile(data, admissionId) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files`, data)
     },
-    deleteFile(admissionId, fileId) {
+    updateAdmissionFile(data, admissionId, fileId) {
+      return this.$authHttp.put(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files/${fileId}`, data)
+    },
+    deleteAdmissionFile(admissionId, fileId) {
       return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files/${fileId}`)
     }
   }

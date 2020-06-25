@@ -2,11 +2,17 @@ import { apiVersion, apiPrefix } from './config';
 
 export default {
   methods: {
-    getPaymentFiles(id, params) {
-    return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments/${id}/files`, { params: params })
+    getPaymentFiles(paymentId, params) {
+    return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files`, { params: params })
     },
-    addPaymentFile(data, id) {
-        return this.$authHttp.post(`${apiPrefix}/${apiVersion}/payments/${id}/files`, data)
+    addPaymentFile(data, paymentId) {
+        return this.$authHttp.post(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files`, data)
+    },
+    updatePaymentFile(data, paymentId, fileId) {
+      return this.$authHttp.put(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files/${fileId}`, data)
+    },
+    deletePaymentFile(paymentId, fileId) {
+      return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files/${fileId}`)
     },
   }
 }
