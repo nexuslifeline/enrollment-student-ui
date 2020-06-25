@@ -800,7 +800,6 @@
                   </b-row>
                 </b-col>
               </b-row>
-              
             </div>
             <div v-show="isPaying">
               <b-row>

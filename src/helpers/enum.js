@@ -71,7 +71,8 @@ export const ApplicationSteps = new Enum({
 export const Semesters = new Enum({
   FIRST_SEM: { id: 1, name: '1st Sem', description: 'First Semester' },
   SECOND_SEM: { id: 2, name: '2nd Sem', description: 'Second Semester' },
-  THIRD_SEM: { id: 3, name: '3rd Sem', description: 'Third Semester' }
+  THIRD_SEM: { id: 3, name: '3rd Sem', description: 'Third Semester' },
+  SUMMER: { id: 4, name: 'Summer', description: 'Summer' }
 });
 
 export const CivilStatuses = new Enum({

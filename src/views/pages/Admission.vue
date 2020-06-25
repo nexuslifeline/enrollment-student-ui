@@ -827,7 +827,7 @@
                                 <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
                                   @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
                                   <div class="mr-4" style="color:black">
-                                    <h5 class="mb-1 mt-3">PAY {{ forms.billing.fields.totalAmount }} ONLY</h5>
+                                    <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} ONLY</h5>
                                     <p class="mb-2">
                                       Make a payment for initial fee only to be officially registered.
                                     </p>
@@ -874,10 +874,19 @@
                       <b-alert show>
                         <b-form-group>
                           <b-form-radio-group
-                            v-model="forms.payment.fields.paymentModeId"
-                            :options="options.paymentModes.items"
-                            stacked
-                          ></b-form-radio-group>
+                          v-model="forms.payment.fields.paymentModeId"
+                          stacked
+                        >
+                          <b-form-radio
+                            v-for="paymentMode in options.paymentModes.items"
+                            :value="paymentMode.id"
+                            :key="paymentMode.id"
+                          >
+                            {{ paymentMode.name }} 
+                            <br>
+                            <small> {{ paymentMode.description }} </small> 
+                          </b-form-radio>
+                        </b-form-radio-group>
                         </b-form-group>
                       </b-alert>
                     </b-card>
@@ -1206,8 +1215,9 @@ import ApprovalIndicator from '../components/ApprovalIndicator'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
 import { copyValue } from '../../helpers/extractor';
-import { validate, reset } from '../../helpers/forms';
+import { validate, reset, formatNumber } from '../../helpers/forms';
 import PhotoViewer from '../components/PhotoViewer';
+import RegisterVue from './Register.vue';
 
 const studentFields = {
   id: null,
@@ -1525,7 +1535,7 @@ export default {
                 key: "billingNo",
                 label: "Reference No",
                 tdClass: "align-middle",
-                thStyle: { width: "20" }
+                thStyle: { width: "auto" }
               },
               {
                 key: "dueDate",
@@ -1538,21 +1548,30 @@ export default {
                 label: "Total Fees",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "20%" }
+                thStyle: { width: "18%" },
+                formatter: (value, key, item) => {
+                  return formatNumber(value)
+                }
               },
               {
                 key: "totalAmount",
                 label: "Initial Fee",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "20%" }
+                thStyle: { width: "18%" },
+                formatter: (value, key, item) => {
+                  return formatNumber(value)
+                }
               },
               {
                 key: "previousBalance",
                 label: "Previous Balance",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "25%" }
+                thStyle: { width: "20%" },
+                formatter: (value, key, item) => {
+                  return formatNumber(value)
+                }
               },
             ],
             items: []
@@ -1576,9 +1595,9 @@ export default {
           },
           paymentModes: {
             items: [
-              { text: 'Bank Deposit/Transfer', value: 1 },
-              { text: 'E-Wallet', value: 4 },
-              { text: 'Others', value: 3 }
+              { id: 1, name: 'Bank Deposit/Transfer', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+              { id: 4, name: 'E-Wallet', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly'  },
+              { id: 3, name: 'Others', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly'  }
             ]
           }
         },
@@ -1640,7 +1659,7 @@ export default {
 
         //load admission files
         this.getAdmissionFiles(student.activeAdmission.id, params).then(({ data }) => {
-          this.tables.files.items = data
+          //this.tables.files.items = data
           console.log(data)
           data.forEach(file => {
             this.admissionFiles.push({
@@ -1684,32 +1703,6 @@ export default {
 
     },
     methods: {
-      // uploadFile(file) {
-      //   if (file) {
-      //     this.tables.files.isBusy = true
-      //     this.isUploading = true
-      //     const formData = new FormData()
-      //     formData.append('file', file)
-      //     this.addPaymentFile(formData , this.forms.activeAdmission.fields.id).then(response => {
-      //       const res = response.data
-      //       this.tables.files.items.push({ id: res.id, name: res.name })
-      //       this.tables.files.isBusy = false
-      //       this.isUploading = false
-      //       this.selectedFile = null
-      //     }).catch(err => {
-      //        this.isUploading = false
-      //        this.tables.files.isBusy = false
-      //     })
-      //   }
-      // },
-      // removeFile(row){
-      //   this.tables.files.isBusy = false
-      //   this.deleteFile(this.forms.activeAdmission.fields.id, row.item.id).then(response => {
-      //     const res = response.data
-      //     this.tables.files.items.splice(row.index, 1);
-      //     this.tables.files.isBusy = true
-      //   })
-      // },
       onUpdateStudent() {
         const {
           student: { fields: { id: studentId } },
@@ -2137,7 +2130,7 @@ export default {
           this.isFileDeleting = false
           seletedFile.isBusy = false
         });
-      }
+      },
     },
     computed: {
       totalUnits() {
@@ -2158,6 +2151,13 @@ export default {
           return subHeaders.find(({ id }) => id === fields.admissionStepId)
         }
         return {};
+      },
+      formattedInitialFeeValue() {
+        const { totalAmount } = this.forms.billing.fields
+        if (totalAmount) {
+          return formatNumber(totalAmount)
+        }
+        return "0.00"
       }
   }
 }
