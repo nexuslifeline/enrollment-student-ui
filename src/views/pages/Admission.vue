@@ -631,17 +631,12 @@
               </b-row> -->
               <b-row>
                 <b-col md="12">
-                  <b-row>
-                    <b-col md=6>
-                      <b-form-group>
-                        <b-form-input :state="forms.transcript.states.subjects" hidden/>
-                        <b-form-invalid-feedback>
-                          {{forms.transcript.errors.subjects}}
-                        </b-form-invalid-feedback>
-                      </b-form-group>
-                    </b-col>
-                    
-                  </b-row>
+                  <b-form-group>
+                    <b-form-input :state="forms.transcript.states.subjects" hidden/>
+                    <b-form-invalid-feedback>
+                      {{forms.transcript.errors.subjects}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
                   <b-table
                     sticky-header="300px"
                     head-variant="light"
@@ -846,7 +841,7 @@
                             <b-col md=12>
                               <b-list-group  >
                                 <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
-                                  @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
+                                  @click="onPaySelected(PayTypes.INITIAL.id)">
                                   <div class="mr-4" style="color:black">
                                     <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} ONLY</h5>
                                     <p class="mb-2">
@@ -856,7 +851,7 @@
                                   <v-icon name="greater-than" style="color:darkblue"></v-icon>
                                 </b-list-group-item>
                                 <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                  @click="onPaySelected(),selectecPaytype=PayTypes.CUSTOM.id">
+                                  @click="onPaySelected(PayTypes.CUSTOM.id)">
                                   <div class="mr-4" style="color:black">
                                     <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
                                     <p class="mb-2">
@@ -866,7 +861,7 @@
                                   <v-icon name="greater-than" style="color:darkblue"></v-icon>
                                 </b-list-group-item>
                                 <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                  @click="onPaySelected(),selectecPaytype=PayTypes.ATTACHMENT.id">
+                                  @click="onPaySelected(PayTypes.ATTACHMENT.id)">
                                   <div class="mr-4" style="color:black">
                                     <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                     <p class="mb-2">
@@ -1044,46 +1039,29 @@
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
               <b-row>
                 <b-col md="12">
-                  <b-alert variant="success" show>
-                    <h5>PAYMENT SUBMITTED !</h5>
-                    <p> Thank you for submitting your application for this school year. 
-                    <br> We will review your payment and once approved, we will
-                    <br> notify you.
-                    <br>
-                    <br>We will try to get back to you as soon as we can!</p>
-                  </b-alert>
-                  <!-- <b-row class="pb-2">
-                    <b-col md="12">
-                      <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                    </b-col>
-                  </b-row> -->
-                  <!-- <b-row class="pb-5">
-                    <b-col md="2">
-                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                    <b-col md="2">
-                      <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                    <b-col md="2">
-                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                    <b-col md="2">
-                      <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                    <b-col md="2">
-                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                    <b-col md="2">
-                      <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                  </b-row> -->
-                  <div class="approval-container">
-                    <ApprovalIndicator
-                      :stages="paymentApprovalStages"
-                      :currentStage="selectedPaymentApprovalStage"
-                    />
+                  <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
+                    <b-alert variant="success" show>
+                      <h5>WELCOME</h5>
+                      <p> You are now officially enrolled. </p>
+                    </b-alert>
                   </div>
-                  <b-alert
+                  <div v-else>
+                    <b-alert variant="success" show>
+                      <h5>PAYMENT SUBMITTED !</h5>
+                      <p> Thank you for submitting your application for this school year. 
+                      <br> We will review your payment and once approved, we will
+                      <br> notify you.
+                      <br>
+                      <br>We will try to get back to you as soon as we can!</p>
+                    </b-alert>
+                    <div class="approval-container">
+                      <ApprovalIndicator
+                        :stages="paymentApprovalStages"
+                        :currentStage="selectedPaymentApprovalStage"
+                      />
+                    </div>
+                  </div>
+                  <!-- <b-alert
                     :show="dismissCountDown"
                     variant="info"
                     @dismissed="onUpdateStudent()"
@@ -1095,7 +1073,7 @@
                       name="spinner"
                       class="mr-2 float-right"
                       spin />
-                  </b-alert>
+                  </b-alert> -->
                 </b-col>
               </b-row>
             </div>
@@ -1338,7 +1316,7 @@ import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi,
   SubjectApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
-import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PaymentStatuses, PayTypes } from '../../helpers/enum'
+import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, BillingTypes, PaymentStatuses, PayTypes, TranscriptStatuses } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
@@ -1459,7 +1437,8 @@ const transcriptFields = {
   levelId: null,
   courseId: null,
   schoolYearId: null,
-  schoolCategoryId: null
+  schoolCategoryId: null,
+  transcriptStatusId: null
 }
 
 const transcriptErrorFields = {
@@ -1531,9 +1510,9 @@ export default {
         ApplicationStatuses: ApplicationStatuses,
         AdmissionSteps: AdmissionSteps,
         PaymentStatuses: PaymentStatuses,
+        TranscriptStatuses: TranscriptStatuses,
         BillingTypes: BillingTypes,
         PayTypes: PayTypes,
-        selectedPayType: 1,
         isPaying: false,
         file: {
           src: null,
@@ -2003,9 +1982,19 @@ export default {
         });
       },
       onUpdatePayment() {
-        const { payment, billing: { fields: { id: billingId }} } = this.forms
+        const { payment, billing: { fields: { totalAmount, id: billingId }} } = this.forms
 
         reset(payment)
+
+        if (payment.fields.amount < totalAmount) {
+          showNotification(this, 'danger', `The amount shouldn't be less than the initial fee: ${formatNumber(totalAmount)}.`)
+          return
+        }
+        
+        if (this.paymentFiles.length == 0) {
+          showNotification(this, 'danger', 'You should attach one or more proof of payment.')
+          return
+        }
 
         const dataPayment = {
           ...payment.fields,
@@ -2100,18 +2089,16 @@ export default {
         this.isProfilePhotoBusy = true
         formData.append('photo', file);
 
-        this.savePhoto(formData, this.forms.student.fields.id).then(response =>{
-          const res = response.data
-          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + res.hashName
-
+        this.savePhoto(formData, this.forms.student.fields.id).then(({ data }) =>{
+          this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + data.hashName
+          localStorage.setItem('studentPhotoUrl', this.studentPhotoUrl);
           setTimeout(() => this.isProfilePhotoBusy = false, 3000)
         })
 
         
       },
       onPhotoRemove() {
-        this.deletePhoto(this.forms.student.fields.id).then(response =>{
-          const res = response.data
+        this.deletePhoto(this.forms.student.fields.id).then(({ data }) =>{
           this.studentPhotoUrl = ""
         })
       },
@@ -2182,6 +2169,24 @@ export default {
               })
             }
 
+            if (payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id) {
+            const { activeAdmission, transcript, student } = this.forms
+            const admission = {
+              activeAdmission: {
+                id: activeAdmission.fields.id
+              },
+              transcript: {
+                id: transcript.fields.id,
+                transcriptStatusId: TranscriptStatuses.ENROLLED.id
+              }
+            }
+
+            this.updateStudent(admission, student.fields.id).then(({ data }) =>{
+              copyValue(data.activeAdmission, activeAdmission.fields);
+              copyValue(data.transcript, transcript.fields)
+            })
+          }
+
           }
         })
       },
@@ -2211,20 +2216,35 @@ export default {
           })
         }
       },
-      onPaySelected() {
+      onPaySelected(payType) {
         // if payment is null add payment
-        const { payment, billing: { fields: { id: billingId }} } = this.forms
+        const { 
+          payment, 
+          billing, 
+          billing: { fields: { id: billingId } },
+          student: { fields: { id: studentId } },
+        } = this.forms
 
         reset(payment)
 
         const data = {
           ...payment.fields,
-          billingId
+          billingId,
+          studentId
         }
+
         this.isPaying = true
+
+        if (payType === PayTypes.INITIAL.id) {
+          payment.fields.amount = billing.fields.totalAmount
+        } else { 
+          payment.fields.amount = 0
+        }
+
         if (payment.fields.id === null) {
           this.addPayment(data).then(({ data }) =>{
             copyValue(data, payment)
+            
             payment.fields.id = data.id
           }).catch((error) => {
             const { errors } = error.response.data;
@@ -2270,19 +2290,19 @@ export default {
         const { payment: { fields:{ id: paymentId } },
                 paymentFile } = this.forms
 
-        const seletedFile = this.paymentFiles[this.selectedPaymentFileIndex]
+        const selectedFile = this.paymentFiles[this.selectedPaymentFileIndex]
         this.isFileUpdating = true
-        seletedFile.isBusy = true
+        selectedFile.isBusy = true
         this.updatePaymentFile(paymentFile.fields, paymentId, paymentFile.fields.id).then(({ data }) => {
-          seletedFile.notes = data.notes;
+          selectedFile.notes = data.notes;
           this.isFileUpdating = false
           this.showPaymentFileModal = false;
-          setTimeout(() => seletedFile.isBusy = false, 1000);
+          setTimeout(() => selectedFile.isBusy = false, 1000);
         }).catch((error) => {
           const { errors } = error.response.data;
           validate(paymentFile, errors);
           this.isFileUpdating = false
-          seletedFile.isBusy = false
+          selectedFile.isBusy = false
         });
       },
       onDeletePaymentFile (index) {
@@ -2294,7 +2314,7 @@ export default {
         this.deletePaymentFile(paymentId, selectedFile.id).then(()=> {
           this.isFileDeleting = false
           this.showPaymentFileModal = false
-          this.paymentFiles.splice(this.selectedPaymentFileIndex, 1);
+          this.paymentFiles.splice(index, 1);
         }).catch((error) => {
           console.log(error)
           this.isFileDeleting = false
@@ -2305,19 +2325,19 @@ export default {
         const { activeAdmission: { fields:{ id: admissionId } },
                 admissionFile } = this.forms
 
-        const seletedFile = this.admissionFiles[this.selectedAdmissionFileIndex]
+        const selectedFile = this.admissionFiles[this.selectedAdmissionFileIndex]
         this.isFileUpdating = true
-        seletedFile.isBusy = true
+        selectedFile.isBusy = true
         this.updateAdmissionFile(admissionFile.fields, admissionId, admissionFile.fields.id).then(({ data }) => {
-          seletedFile.notes = data.notes;
+          selectedFile.notes = data.notes;
           this.isFileUpdating = false
           this.showAdmissionFileModal = false;
-          setTimeout(() => seletedFile.isBusy = false, 1000);
+          setTimeout(() => selectedFile.isBusy = false, 1000);
         }).catch((error) => {
           const { errors } = error.response.data;
           validate(admissionFile, errors);
           this.isFileUpdating = false
-          seletedFile.isBusy = false
+          selectedFile.isBusy = false
         });
       },
       onDeleteAdmissionFile (index) {
@@ -2332,7 +2352,7 @@ export default {
         }).catch((error) => {
           console.log(error)
           this.isFileDeleting = false
-          seletedFile.isBusy = false
+          selectedFile.isBusy = false
         });
       },
       onAddSubject(){
