@@ -22,6 +22,8 @@ import 'vue-awesome/icons/file-upload'
 import 'vue-awesome/icons/greater-than'
 import 'vue-awesome/icons/file-pdf'
 import 'vue-awesome/icons/file-image'
+import 'vue-awesome/icons/search'
+import 'vue-awesome/icons/trash'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 

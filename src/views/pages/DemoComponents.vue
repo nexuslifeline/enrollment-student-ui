@@ -64,6 +64,8 @@
           :description="item.description"
           :fileIndex="index"
           @onFileItemSelect="onFileItemSelect"
+          @onFileItemRemove="onFileItemRemove"
+          @onFileItemPreview="onFileItemRemove"
           :isBusy="item.isBusy"
         />
       </div>
@@ -197,6 +199,14 @@ export default {
       setTimeout(() => this.fileItems[this.fileItems.length - 1].isBusy = false, 1000);
     },
     onFileItemSelect(idx) {
+      console.log(idx)
+    },
+    onFileItemRemove(idx) {
+      console.log(idx)
+      this.fileItems[idx].isBusy = true;
+      setTimeout(() => this.fileItems.splice(idx, 1), 1000);
+    },
+    onFileItemPreview(idx) {
       console.log(idx)
     },
     onSelectStage(idx) {
