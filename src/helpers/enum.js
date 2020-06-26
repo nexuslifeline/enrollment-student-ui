@@ -372,6 +372,7 @@ export const PaymentStatuses = new Enum({
   PENDING: { id: 1, name: 'Pending' },
   APPROVED: { id: 2, name: 'Approve' },
   REJECTED: { id: 3, name: 'Rejected' },
+  SUBMITTED: { id: 4, name: 'Submitted' },
 });
 
 export const PayTypes = new Enum({

@@ -1485,7 +1485,7 @@ export default {
         {
           header: 'Application',
           children: [
-            { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 5, subHeader: 'Subject Enlistment', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
             { id: 6, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
           ]
         },

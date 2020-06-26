@@ -14,5 +14,10 @@ export default {
     deletePaymentFile(paymentId, fileId) {
       return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files/${fileId}`)
     },
+    getPaymentFilePreview(paymentId, fileId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files/${fileId}/preview`, {
+        responseType: 'blob'
+      });
+    }
   }
 }
