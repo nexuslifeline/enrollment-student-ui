@@ -46,7 +46,8 @@ export default {
     }
   },
   methods: {
-    onBrowseClick() {
+    onBrowseClick(e) {
+      e.stopPropagation();
       this.$refs.photoViewerFile.click();
     },
     onInputFileChange(event) {
