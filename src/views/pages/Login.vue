@@ -48,18 +48,66 @@
           <div class="login__register-actions">
             <b-button
               variant="primary"
-              @click="register(studentCategories.NEW.id)"> Signup New Student
+              @click="showConfirmation = true"
+              block> Signup
             </b-button>
-            <b-button
+            <!--<b-button
               variant="primary"
               @click="register(studentCategories.OLD.id)"> Signup Old Student
-            </b-button>
+            </b-button>-->
           </div>
         </div>
+        <span class="login__version">Version: {{version}}</span>
       </div>
       <div class="login__right-pane">
         <CarouselProcedure />
       </div>
+      <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
+        <div v-if="showConfirmation" class="signup__confirmation">
+          <button @click="showConfirmation = false" class="signup__confirmation-close">
+            <v-icon
+              name="times"
+              class="signup__icon-close"
+              scale="2"
+            />
+          </button>
+          <div class="signup__confirmation-content">
+            <p class="signup__confirmation-headline">
+              Do you have an existing student number issued by STC?
+            </p>
+            <ul class="signup__confirmation-answers">
+              <li @click="register(studentCategories.OLD.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                Yes, I already have my student number.
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+              <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                 <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                No, I dont have student number yet.
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
     </div>
   </transition>
 </template>
@@ -82,7 +130,9 @@ export default {
   mixins: [AuthApi],
   data() {
     return {
+      version: process.env.VUE_APP_VERSION,
       studentCategories: StudentCategories,
+      showConfirmation: false,
       forms: {
         auth: {
           isProcessing: false,
@@ -135,11 +185,133 @@ export default {
   @import "../../assets/scss/shared.scss";
   @import "../../assets/scss/animations.scss";
 
+  .login__version {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    font-size: 11px;
+  }
+
+  .signup__confirmation-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+  }
+
+  .signup__icon-close {
+    color: $darkblue;
+
+    &:hover {
+      color: red;
+    }
+  }
+
+  .signup__answer-icon {
+    color: $green;
+    margin-right: 20px;
+  }
+
+  .signup__answer-icon-check-circle {
+    color: $green;
+    margin-right: 20px;
+    display: none;
+  }
+
+  .signup__answer-chevron-right {
+    margin-left: auto;
+    display: none;
+  }
+
+  .signup__answer-item {
+    font-size: 30px;
+    font-weight: 700;
+    color: $darkblue;
+    margin: 13px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 7px 0;
+
+    &:hover {
+      cursor: pointer;
+      border-bottom: 3px solid $brand-primary;
+      color: $brand-primary;
+
+      @include for-size(phone-only) {
+        border: 0;
+      }
+
+      .signup__answer-chevron-right {
+        display: flex;
+        color: $brand-primary;
+      }
+
+      .signup__answer-icon-check-circle {
+        display: flex;
+      }
+
+      .signup__answer-icon {
+        display: none;
+      }
+    }
+
+    @include for-size(phone-only) {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .signup__confirmation-answers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .signup__confirmation-headline {
+    font-size: 40px;
+    font-weight: 700;
+    color: $darkblue;
+    opacity: 1;
+
+    @include for-size(phone-only) {
+      font-size: 30px;
+      font-weight: 600;
+    }
+  }
+
+  .signup__confirmation-content {
+    max-width: 800px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .signup__confirmation {
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: $white;
+    z-index: 2;
+    opacity: .97;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+
   .login__container {
     height: 100vh;
     width: 100vw;
     display: flex;
     overflow: hidden;
+    position: relative;
   }
 
   .login__left-pane {
@@ -151,6 +323,7 @@ export default {
     justify-content: center;
     padding: 25px;
     width: 50vw;
+    position: relative;
   }
 
   .login__form {
@@ -238,12 +411,9 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     margin-top: 30px;
+    width: 100%;
 
-    button {
-      width: calc(50% - 5px);
-    }
-
-     @include for-size(phone-only) {
+    @include for-size(phone-only) {
       flex-direction: column;
       button {
         width: 100%;
