@@ -75,8 +75,8 @@ export default {
   }
 
   .indicator__circle {
-    height: 33px;
-    width: 33px;
+    height: 31px;
+    width: 31px;
     border: 1px solid $brand-primary;
     border-radius: 50%;
     display: flex;
@@ -107,7 +107,6 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 280px;
     margin-top: 10px;
 
     &.active {
@@ -151,13 +150,15 @@ export default {
     list-style: none;
     padding: 0;
     width: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
   }
 
   .indicator__sub-header-item {
     margin-left: 48px;
-    width: 100%;
+    flex: 1;
+    max-width: 100%;
     display: flex;
     flex-direction: row;
     margin-top: 5px;

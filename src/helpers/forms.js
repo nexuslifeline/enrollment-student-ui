@@ -13,3 +13,18 @@ export const reset = (form) => {
     form.errors[key] = null;
   });
 }
+
+// format number with comma and decimal place
+export const formatNumber = (value, decimal = 2) => {
+  let val = (value/1).toFixed(decimal)
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+export const showNotification = (instance, variant, msg) => {
+  instance.$bvToast.toast(msg, {
+    title: "Notification",
+    variant: variant,
+    solid: true,
+    autoHideDelay: 2000,
+  })
+}

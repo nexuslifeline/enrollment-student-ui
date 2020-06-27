@@ -5,7 +5,7 @@
       <TheHeader/>
       <div class="c-body">
         <main class="c-main">
-          <CContainer fluid>
+          <CContainer class="c-container-fluid" fluid>
             <transition name="fade">
               <router-view></router-view>
             </transition>
@@ -32,7 +32,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+@import "../assets/scss/shared.scss";
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -41,4 +43,12 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
+.c-main {
+  padding: 0;
+}
+
+.c-container-fluid {
+  padding: 0 !important;
+}
+
 </style>

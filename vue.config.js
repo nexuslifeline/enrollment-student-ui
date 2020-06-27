@@ -4,12 +4,22 @@ module.exports = {
   configureWebpack: {
     //Necessary to run npm link https://webpack.js.org/configuration/resolve/#resolve-symlinks
     resolve: {
-       symlinks: false
+      symlinks: false,
+      alias: {
+        AutoNumeric: 'autonumeric/dist/autoNumeric.min',
+      },
+    },
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[hash:8].js'
     }
   },
   transpileDependencies: [
     '@coreui/utils'
   ],
+  outputDir: process.env.NODE_ENV === 'production'
+    ? 'release-stc-student/'
+    : 'dev-stc-student',
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
     svgRule.uses.clear();

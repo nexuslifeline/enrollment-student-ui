@@ -7,11 +7,32 @@
         @selectedItem="onSelectStage"
       />
       <br />
+      <div class="profile-photo">
+        <PhotoViewer
+          @onPhotoChange="onPhotoChange"
+          @onPhotoRemove="onPhotoRemove"
+        />
+      </div>
+      <hr />
+      <h4>PROFILE MAKER SAMPLE</h4>
+      <div class="profile-photo-maker">
+        <ProfileMaker initials="PC" :colorIndex="0" :fontSize="85" />
+      </div>
+      <div class="profile-photo-maker-slight-radius">
+        <ProfileMaker initials="PR" :colorIndex="2" :fontSize="60" />
+      </div>
+      <div class="profile-photo-maker-circle">
+        <ProfileMaker initials="GM" :colorIndex="1" :fontSize="35" />
+      </div>
+      <br />
+      <hr />
       <GroupStageIndicator
         :stages="groupStages"
         :activeId="selectedId"
         @selectedIdChange="onSelectIdChange"
       />
+      <br />
+      <hr />
     </div>
     <div class="right-pane">
       <div class="approval-container">
@@ -28,6 +49,25 @@
         <button @click="selectedApprovalStage = 2">Stage 3</button>
         <button @click="selectedApprovalStage = 3">Stage 4</button>
         <button @click="selectedApprovalStage = approvalStages.length">Mark all Complete</button>
+      </div>
+      <div class="file-uploader-container">
+        <FileUploader @onFileChange="onFileChange" @onFileDrop="onFileDrop" />
+      </div>
+      <div class="file-item-container">
+        <button @click="makeFirstFileBusy">Make First File Item Busy</button>
+        <button @click="makeFirstFileNotBusy">Make First File Item Not Busy</button>
+        <button @click="addNewFileItem">Add New File Item</button>
+        <FileItem
+          v-for="(item, index) of fileItems"
+          :key="index"
+          :title="item.title"
+          :description="item.description"
+          :fileIndex="index"
+          @onFileItemSelect="onFileItemSelect"
+          @onFileItemRemove="onFileItemRemove"
+          @onFileItemPreview="onFileItemRemove"
+          :isBusy="item.isBusy"
+        />
       </div>
       <div>
         <h3>Enum Helper</h3>
@@ -64,6 +104,10 @@
 import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
+import PhotoViewer from '../components/PhotoViewer'
+import FileUploader from '../components/FileUploader'
+import FileItem from '../components/FileItem'
+import ProfileMaker from '../components/ProfileMaker'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -71,7 +115,11 @@ export default {
   components: {
     StageIndicator,
     ApprovalIndicator,
-    GroupStageIndicator
+    GroupStageIndicator,
+    PhotoViewer,
+    FileUploader,
+    FileItem,
+    ProfileMaker
   },
   data() {
     return {
@@ -79,6 +127,10 @@ export default {
       selectedIndex: 0,
       selectedId: 1,
       selectedApprovalStage: 1,
+      fileItems: [
+        { title: 'FILE-01232-XERIJKJ.jpg', isBusy: false, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing' },
+        { title: 'FILE-21232-XERIJKJ.jpg', isBusy: false, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing' }
+      ],
       stages: [
         {
           header: 'Personal Information',
@@ -135,6 +187,28 @@ export default {
     }
   },
   methods: {
+    makeFirstFileBusy() {
+      this.fileItems[0].isBusy = true;
+    },
+    makeFirstFileNotBusy() {
+      this.fileItems[0].isBusy = false;
+    },
+    addNewFileItem() {
+      const time = new Date().getTime(); // generated a sample filename only
+      this.fileItems.push({ title: `FILE-${time}.jpg`, isBusy: true, description: 'This is a new item' });
+      setTimeout(() => this.fileItems[this.fileItems.length - 1].isBusy = false, 1000);
+    },
+    onFileItemSelect(idx) {
+      console.log(idx)
+    },
+    onFileItemRemove(idx) {
+      console.log(idx)
+      this.fileItems[idx].isBusy = true;
+      setTimeout(() => this.fileItems.splice(idx, 1), 1000);
+    },
+    onFileItemPreview(idx) {
+      console.log(idx)
+    },
     onSelectStage(idx) {
       this.selectedIndex = idx;
     },
@@ -144,11 +218,37 @@ export default {
     onSelectIdChange(id) {
       console.log(id)
       this.selectedId = id;
+    },
+    onPhotoChange(file) {
+      const formData = new FormData();
+      formData.append('photo', file);
+      console.log(formData)
+    },
+    onFileChange(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log('file change', formData)
+    },
+    onFileDrop(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log('file drop', formData)
+    },
+    onPhotoRemove() {
+      console.log('remove')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+  @import "../../assets/scss/shared.scss";
+
+  .file-uploader-container {
+    width: 500px;
+    height: 200px;
+    margin-bottom: 40px;
+  }
+
   .code-section {
     background-color: black;
     padding: 3px 10px;
@@ -177,5 +277,42 @@ export default {
 
   .approval-actions {
     padding: 20px 50px;
+  }
+
+  .profile-photo {
+    height: 200px;
+    width: 200px;
+    margin: 10px;
+  }
+
+  .profile-photo-maker {
+    height: 200px;
+    width: 200px;
+    border: 1px solid $dark-gray;
+    margin: 10px;
+  }
+
+  .profile-photo-maker-slight-radius {
+    height: 150px;
+    width: 150px;
+    border: 1px solid $dark-gray;
+    margin: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .profile-photo-maker-circle {
+    height: 100px;
+    width: 100px;
+    border: 1px solid $darkblue;
+    margin: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .file-item-container {
+    min-height: 200px;
+    width: 500px;
+    height: auto;
   }
 </style>

@@ -51,7 +51,10 @@ export const AdmissionSteps = new Enum({
   FAMILY: { id: 3, name: 'Family', description: 'Lorem ipsum dolor amet' },
   EDUCATION: { id: 4, name: 'Education', description: 'Lorem ipsum dolor amet' },
   ACADEMIC_YEAR_ADMISSION: { id: 5, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
-  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' }
+  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
+  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 8, name: 'Payment', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 9, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const ApplicationSteps = new Enum({
@@ -59,13 +62,17 @@ export const ApplicationSteps = new Enum({
   ADDRESS: { id: 2, name: 'Address' },
   FAMILY: { id: 3, name: 'Family' },
   EDUCATION: { id: 4, name: 'Education' },
-  ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' }
+  ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' },
+  STATUS: { id: 6, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 7, name: 'Payments', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 8, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const Semesters = new Enum({
   FIRST_SEM: { id: 1, name: '1st Sem', description: 'First Semester' },
   SECOND_SEM: { id: 2, name: '2nd Sem', description: 'Second Semester' },
-  THIRD_SEM: { id: 3, name: '3rd Sem', description: 'Third Semester' }
+  THIRD_SEM: { id: 3, name: '3rd Sem', description: 'Third Semester' },
+  SUMMER: { id: 4, name: 'Summer', description: 'Summer' }
 });
 
 export const CivilStatuses = new Enum({
@@ -344,4 +351,34 @@ export const Countries = new Enum({
 export const TranscriptStatuses = new Enum({
   FINALIZED: { id: 1, name: 'Finalized' },
   DRAFT: { id: 2, name: 'Draft' },
+  ENROLLED: { id: 3, name: 'Enrolled' },
 });
+
+export const ApplicationStatuses = new Enum({
+  APPROVED: { id: 1, name: 'Approved' },
+  DRAFT: { id: 2, name: 'Draft' },
+  REJECTED: { id: 3, name: 'Reject' },
+  SUBMITTED: { id: 4, name: 'Submitted' },
+  APPROVED_ASSESMENT: { id: 5, name: 'Approved Assesment' },
+  PAYMENT_SUBMITTED: { id: 6, name: 'Payment Submitted' },
+  COMPLETED: { id: 7, name: 'Completed' },
+});
+
+export const BillingTypes = new Enum({
+  INITIAL: { id: 1, name: 'Initial' },
+  BILLING: { id: 2, name: 'Billing' },
+});
+
+export const PaymentStatuses = new Enum({
+  PENDING: { id: 1, name: 'Pending' },
+  APPROVED: { id: 2, name: 'Approve' },
+  REJECTED: { id: 3, name: 'Rejected' },
+  SUBMITTED: { id: 4, name: 'Submitted' },
+});
+
+export const PayTypes = new Enum({
+  INITIAL: { id: 1, name: 'Initial' },
+  CUSTOM: { id: 2, name: 'Custom' },
+  ATTACHMENT: { id: 3, name: 'Attachment' },
+});
+

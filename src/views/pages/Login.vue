@@ -4,9 +4,11 @@
       <div class="login__left-pane">
         <div class="login__form">
           <div class="login__intro">
-            <h4 class="login__intro-title">Welcome Back :)</h4>
+            <h4 class="login__intro-title">
+              Welcome to <b>St. Theresa College of Tandag</b>
+            </h4>
             <p class="login__intro-description">
-              To keep connected with us please login with you personal information by email address and password.
+              To keep connected with us please login with your personal information by email address and password.
             </p>
           </div>
           <b-form-group id="username">
@@ -28,19 +30,27 @@
                 {{forms.auth.errors.password}}
               </b-form-invalid-feedback>
           </b-form-group>
-          <b-button
-            @click="login()"
-            variant="primary"
-            class="login__btn"
-            :disabled="forms.auth.isProcessing">
-            <v-icon
-              v-if="forms.auth.isProcessing"
-              name="sync"
-              class="mr-2"
-              spin/>Login
-          </b-button>
+          <div class="login__actions">
+            <b-button
+              variant="primary"
+              class="register__btn"
+              @click="showConfirmation = true"
+              block> Signup
+            </b-button>
+             <b-button
+                @click="login()"
+                variant="primary"
+                class="login__btn"
+                :disabled="forms.auth.isProcessing">
+                <v-icon
+                  v-if="forms.auth.isProcessing"
+                  name="sync"
+                  class="mr-2"
+                  spin/>Login
+              </b-button>
+          </div>
         </div>
-        <div class="login__new-account-options">
+        <!--<div class="login__new-account-options">
           <div class="login__create-account">
             <div class="login__create-account-line"></div>
             <span class="login__center-text">Create an Account</span>
@@ -48,18 +58,83 @@
           <div class="login__register-actions">
             <b-button
               variant="primary"
-              @click="register(studentCategories.NEW.id)"> Signup New Student
-            </b-button>
-            <b-button
-              variant="primary"
               @click="register(studentCategories.OLD.id)"> Signup Old Student
             </b-button>
           </div>
-        </div>
+        </div>-->
+        <span class="login__version">Version: {{version}}</span>
       </div>
       <div class="login__right-pane">
+        <ul class="login__top-links">
+          <li class="login__top-link-item">
+            <a href="https://lms.stctandag.edu.ph/">LMS</a>
+          </li>
+          <li class="login__top-link-item">
+            <a
+              href="https://www.stctandag.edu.ph/"
+              class="login__top-link-item--active">
+              Visit our Website
+            </a>
+          </li>
+        </ul>
         <CarouselProcedure />
       </div>
+      <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
+        <div v-if="showConfirmation" class="signup__confirmation">
+          <button @click="showConfirmation = false" class="signup__confirmation-close">
+            <v-icon
+              name="times"
+              class="signup__icon-close"
+              scale="2"
+            />
+          </button>
+          <div class="signup__confirmation-content">
+            <p class="signup__confirmation-headline">
+              Do you have an existing student number issued by St. Theresa College?
+            </p>
+            <ul class="signup__confirmation-answers">
+              <li @click="register(studentCategories.OLD.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  Yes, I already have my student number.
+                  <span class="signup__confirmation-answer-notes">
+                    (Student who is  currently enrolled in STC Tandag and has a student number.)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+              <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                 <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  No, I don't have student number yet.
+                  <span class="signup__confirmation-answer-notes">
+                    (An unofficially enrolled student who is still processing his/her admission)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
     </div>
   </transition>
 </template>
@@ -82,7 +157,9 @@ export default {
   mixins: [AuthApi],
   data() {
     return {
+      version: process.env.VUE_APP_VERSION,
       studentCategories: StudentCategories,
+      showConfirmation: false,
       forms: {
         auth: {
           isProcessing: false,
@@ -135,29 +212,177 @@ export default {
   @import "../../assets/scss/shared.scss";
   @import "../../assets/scss/animations.scss";
 
+  .login__version {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    font-size: 11px;
+  }
+
+  .signup__confirmation-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+  }
+
+  .signup__icon-close {
+    color: $darkblue;
+
+    &:hover {
+      color: red;
+    }
+  }
+
+  .signup__answer-icon {
+    color: $green;
+    margin-right: 20px;
+  }
+
+  .signup__answer-icon-check-circle {
+    color: $green;
+    margin-right: 20px;
+    display: none;
+  }
+
+  .signup__answer-chevron-right {
+    margin-left: auto;
+    display: none;
+  }
+
+  .signup__answer-item {
+    font-size: 30px;
+    font-weight: 700;
+    color: $darkblue;
+    margin: 13px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 7px 0;
+
+    &:hover {
+      cursor: pointer;
+      border-bottom: 3px solid $brand-primary;
+      color: $brand-primary;
+
+      @include for-size(phone-only) {
+        border: 0;
+      }
+
+      .signup__answer-chevron-right {
+        display: flex;
+        color: $brand-primary;
+      }
+
+      .signup__answer-icon-check-circle {
+        display: flex;
+      }
+
+      .signup__answer-icon {
+        display: none;
+      }
+    }
+
+    @include for-size(phone-only) {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .signup__confirmation-answers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .signup__confirmation-headline {
+    font-size: 40px;
+    font-weight: 700;
+    color: $darkblue;
+    opacity: 1;
+
+    @include for-size(phone-only) {
+      font-size: 30px;
+      font-weight: 600;
+    }
+  }
+
+  .signup__confirmation-content {
+    max-width: 800px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .signup__confirmation {
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: $white;
+    z-index: 2;
+    opacity: .97;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+
   .login__container {
     height: 100vh;
     width: 100vw;
     display: flex;
     overflow: hidden;
+    position: relative;
+    // background-image: url('../../assets/png/clouds.png');
+    // background-repeat: no-repeat;
+    // background-size: 60% 84%;
+    //background: rgb(99,177,255);
+    //background-color: linear-gradient(193deg, rgba(99,177,255,1) 0%, rgba(221,238,255,1) 8%, rgba(235,245,255,1) 26%, rgba(255,255,255,1) 100%);
+
+    background: url('../../assets/png/clouds.png') top left no-repeat,
+    linear-gradient(210deg, rgba(170,212,255,1) 0%, rgba(200,227,255,1) 12%, rgba(235,245,255,1) 24%, rgba(255,255,255,1) 42%, rgba(255,255,255,1) 100%) top left no-repeat;
+    background-size: 55%, cover;
+
+    @include for-size(tablet-landscape-down, 250px) {
+      background: none;
+    }
   }
 
   .login__left-pane {
     flex: 1;
-    background-color: $white;
+    //background-color: $white;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 25px;
+    width: 50vw;
+    position: relative;
   }
 
   .login__form {
-    padding: 20px;
+    padding: 50px 40px;
     width: 100%;
-    max-width: 500px;
+    max-width: 460px;
     display: flex;
     flex-direction: column;
+    background-color: $white;
+    border-radius: 10px;
+    -webkit-box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
+    -moz-box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
+    box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
+
+    @include for-size(tablet-landscape-down, 250px) {
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
 
     @include for-size(phone-only) {
       padding: 10px;
@@ -166,9 +391,12 @@ export default {
 
   .login__right-pane {
     flex: 1;
-    background-color: $brand-primary;
+    //background-color: $brand-primary;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    width: 50vw;
 
     @include for-size(tablet-landscape-down, 250px) {
       display: none;
@@ -176,8 +404,11 @@ export default {
   }
 
   .login__btn {
-    min-width: 150px;
-    margin-left: auto;
+    width: calc(50% - 5px);
+  }
+
+  .register__btn {
+    width: calc(50% - 5px);
   }
 
   .login__intro-description {
@@ -236,9 +467,62 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     margin-top: 30px;
+    width: 100%;
 
-    button {
-      width: calc(50% - 5px);
+    @include for-size(phone-only) {
+      flex-direction: column;
+      button {
+        width: 100%;
+        margin: 8px 0;
+      }
     }
+  }
+
+  .login__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .login__top-links {
+    list-style: none;
+    display: flex;
+    margin-left: auto;
+  }
+
+  .login__top-link-item {
+    margin-right: 15px;
+
+    a {
+      text-decoration:none;
+      color: $darkblue;
+      padding: 5px 25px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    &:hover a {
+      color: $white;
+      background-color: $brand-primary;
+      border-radius: 16px;
+    }
+  }
+
+  .login__top-link-item--active {
+    color: $white !important;
+    background-color: $brand-primary;
+    border-radius: 16px;
+  }
+
+  .signup__confirmation-answer-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .signup__confirmation-answer-notes {
+    font-size: 20px;
+    font-weight: 400;
+    color: $gray;
   }
 </style>

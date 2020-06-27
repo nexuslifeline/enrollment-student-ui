@@ -1,25 +1,25 @@
 {
-  "name": "@coreui/coreui-free-vue-admin-template",
-  "version": "3.0.2",
-  "description": "Open Source Bootstrap Admin Template",
+  "name": "@stc/student-app",
+  "version": "0.1.0",
+  "description": "STC Tandag Student Application",
   "author": {
-    "name": "CoreUI",
-    "url": "https://coreui.io",
-    "github": "https://github.com/coreui",
-    "twitter": "https://twitter.com/core_ui"
+    "name": "nexuslifeline",
+    "url": "http://nexuslifeline.com",
+    "github": "https://github.com/nexuslifeline"
   },
   "contributors": [
     {
-      "name": "CoreUI Team",
-      "url": "https://github.com/orgs/coreui/people"
+      "name": "Nexuslifeline Team",
+      "url": "http://nexuslifeline.com"
     }
   ],
-  "homepage": "http://coreui.io",
-  "copyright": "Copyright 2020 creativeLabs Łukasz Holeczek",
+  "homepage": "http://student.stctandag.edu.ph",
+  "copyright": "Copyright 2020 Nexuslifeline Team",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-staging": "vue-cli-service build --mode develop",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
@@ -33,10 +33,12 @@
     "@coreui/utils": "^1.2.4",
     "@coreui/vue": "^3.0.6",
     "@coreui/vue-chartjs": "^1.0.5",
+    "autonumeric": "^4.6.0",
     "axios-case-converter": "^0.6.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "vue": "~2.6.11",
+    "vue-autonumeric": "^1.2.6",
     "vue-awesome": "^4.0.2",
     "vue-carousel": "^0.18.0",
     "vue-router": "~3.1.6",

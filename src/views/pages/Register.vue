@@ -8,23 +8,23 @@
             <ul class="register__features">
               <li class="feature__item">
                 <v-icon name="chart-pie" class="feature__icon mr-3" scale="1.6" />
-                Sed ut perspiciatis unde omnis iste natus
+                Keep track of your records
               </li>
               <li class="feature__item">
                 <v-icon name="shipping-fast" class="feature__icon mr-3" scale="1.6" />
-                Ut enim ad minima veniam, quis nostrum exercitationem
+                Ease of access with friendly user interface
               </li>
               <li class="feature__item">
                 <v-icon name="paper-plane" class="feature__icon mr-3" scale="1.6" />
-                At vero eos et accusamus et iusto odio dignissimos
+                Access your grades anywhere
               </li>
               <li class="feature__item">
                 <v-icon name="chart-line" class="feature__icon mr-3" scale="1.6" />
-                Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus
+                View your statement of account anywhere
               </li>
               <li class="feature__item">
                 <v-icon name="images" class="feature__icon mr-3" scale="1.6" />
-                Itaque earum rerum hic tenetur a sapiente
+                Review your payment history
               </li>
             </ul>
           </div>
@@ -215,6 +215,7 @@ export default {
           localStorage.setItem('accessToken', data.accessToken)
           this.$store.commit('loginUser')
           this.getAuthenticatedUser().then(({ data }) => {
+            console.log(data)
             register.isProcessing = false;
             localStorage.setItem('studentId', data.userable.id);
             const routeName =
