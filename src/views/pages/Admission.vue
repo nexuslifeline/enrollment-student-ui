@@ -873,7 +873,7 @@
                                   <div class="mr-4" style="color:black">
                                     <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                     <p class="mb-2">
-                                      For those students that are already been enrolled for the SY 2000-2021 you will be 
+                                      For those students that are already been enrolled for the SY 2020-2021 you will be 
                                       needing to attached your official receipt or or any 
                                       proof of payment to be confirmed and enrolled in the system.
                                     </p>
