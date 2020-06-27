@@ -924,7 +924,8 @@
                       <span class="payment-step__number">1</span>
                       <div class="payment-step-details-container">
                         <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                          <span >Choose your preferred Account.</span>
+                          <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. You can deposit/transfer your payment in any bank listed below.</span>
+                          <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
                           <b-table
                             v-if="forms.payment.fields.paymentModeId === 1"
                             :fields="tables.bankAccounts.fields"
@@ -2152,7 +2153,6 @@ export default {
           payment.fields.id = null;
           if (data[0].payments[0] != null) {
 
-            console.log(data)
             copyValue(data[0].payments[0], this.forms.payment.fields)
             
             
