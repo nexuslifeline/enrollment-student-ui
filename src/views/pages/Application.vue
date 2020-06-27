@@ -650,19 +650,19 @@
                     </b-row>
                   </b-card>  
                 </b-col>
-              </b-row>
-            <b-row>
-              <b-col md=3>
-                <b-button
-                  block
-                  class="float-right mt-4"
-                  variant="outline-primary"
-                  @click="onAddSubject()">
-                  <v-icon
-                    name="plus-circle" />
-                  Add Subject</b-button>
-              </b-col>
             </b-row>
+            <b-row>
+                <b-col md=4 offset-md="8">
+                  <b-button
+                    block
+                    class="float-right"
+                    variant="outline-primary"
+                    @click="onAddSubject()">
+                    <v-icon
+                      name="plus-circle" />
+                    Add Subject</b-button>
+                </b-col>
+              </b-row>
             <b-row>
               <b-col md=12>
                 <b-form-group>
@@ -690,6 +690,13 @@
                         class="mr-2" />
                       <strong>Loading...</strong>
                     </div>
+                  </template>
+                  <template v-slot:cell(action)="row">
+                    <b-button 
+                      @click="removeSubject(row)" 
+                      size="sm" variant="danger">
+                      <v-icon name="trash" />
+                    </b-button>
                   </template>
                 </b-table>
               </b-col>
@@ -1502,7 +1509,7 @@ export default {
               key: "name",
               label: "SUBJECTS",
               tdClass: "align-middle",
-              thStyle: { width: "70%" }
+              thStyle: { width: "65%" }
             },
             {
               key: "units",
@@ -1518,6 +1525,12 @@ export default {
               thClass: "text-center",
               thStyle: { width: "15%" }
             },
+            {
+              key: "action",
+              label: "",
+              tdClass: "align-middle text-center",
+              thStyle: {width: "5%"}
+            }
           ],
           items: []
         },
@@ -2291,7 +2304,10 @@ export default {
       this.getSectionList(params).then(({ data }) => {
         this.options.sections.items = data;
       });
-    }
+    },
+    removeSubject(row){
+      this.tables.levelSubjects.items.splice(row.index, 1);
+    },
   },
   computed: {
     totalUnits() {

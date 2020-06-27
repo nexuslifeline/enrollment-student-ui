@@ -684,6 +684,13 @@
                         <strong>Loading...</strong>
                       </div>
                     </template>
+                    <template v-slot:cell(action)="row">
+                    <b-button 
+                      @click="removeSubject(row)" 
+                      size="sm" variant="danger">
+                      <v-icon name="trash" />
+                    </b-button>
+                  </template>
                   </b-table>
                 </b-col>
               </b-row>
@@ -1626,7 +1633,7 @@ export default {
                 key: "name",
                 label: "SUBJECTS",
                 tdClass: "align-middle",
-                thStyle: { width: "70%" }
+                thStyle: { width: "65%" }
               },
               {
                 key: "units",
@@ -1642,6 +1649,12 @@ export default {
                 thClass: "text-center",
                 thStyle: { width: "15%" }
               },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-center",
+                thStyle: {width: "5%"}
+              }
             ],
             items: [],
           },
@@ -2505,7 +2518,10 @@ export default {
         this.getSectionList(params).then(({ data }) => {
           this.options.sections.items = data;
         });
-      }
+      },
+      removeSubject(row){
+        this.tables.levelSubjects.items.splice(row.index, 1);
+      },
     },
     computed: {
       totalUnits() {
