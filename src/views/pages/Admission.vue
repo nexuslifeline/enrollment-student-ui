@@ -938,7 +938,7 @@
                             borderless small responsive>
                           </b-table>
                         </div>
-                        <span v-else>Please attach any proof of your payment provided by the school.</span>              
+                        <span v-else>Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>              
                       </div>
                     </div>
                     <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
