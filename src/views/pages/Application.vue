@@ -792,7 +792,7 @@
                           be officially registered until payment is complete.
                           <br>
                           <br>
-                          <span v-if="forms.studentFee.fields.approvalNotes !== null">
+                          <span v-if="forms.studentFee.fields.approvalNotes">
                             <strong>IMPORTANT NOTICE : </strong>
                             <br>
                               {{ forms.studentFee.fields.approvalNotes }}
@@ -844,7 +844,7 @@
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                   <p class="mb-2">
-                                    For those students that are already been enrolled for the SY 2000-2021 you will be 
+                                    For those students that are already been enrolled for the SY 2020-2021 you will be 
                                     needing to attached your official receipt or or any 
                                     proof of payment to be confirmed and enrolled in the system.
                                   </p>
@@ -868,13 +868,12 @@
                       <b-form-group>
                         <b-form-radio-group
                           v-model="forms.payment.fields.paymentModeId"
-                          stacked
-                        >
+                          stacked>
                           <b-form-radio
                             v-for="paymentMode in options.paymentModes.items"
+                            :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
                             :value="paymentMode.id"
-                            :key="paymentMode.id"
-                          >
+                            :key="paymentMode.id">
                             {{ paymentMode.name }} 
                             <br>
                             <small> {{ paymentMode.description }} </small> 
@@ -893,124 +892,121 @@
                   <div class="payment-step-container">
                     <span class="payment-step__number">1</span>
                     <div class="payment-step-details-container">
-                      <div v-if="forms.payment.fields.paymentModeId === 1 || forms.payment.fields.paymentModeId === 4">
-                        <span >Choose your preferred Account.</span>
+                      <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
+                        <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. You can deposit/transfer your payment in any bank listed below.</span>
+                        <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 1"
                           :fields="tables.bankAccounts.fields"
                           :items.sync="tables.bankAccounts.items"
-                          borderless small responsive
-                        >
+                          borderless small responsive>
                         </b-table>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 4"
                           :fields="tables.eWalletAccounts.fields"
                           :items.sync="tables.eWalletAccounts.items"
-                          borderless small responsive 
-                        >
+                          borderless small responsive>
                         </b-table>
                       </div>
-                      <span v-else>Please attach any proof of your payment provided by the school.</span>
+                      <span v-else>Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
+                    </div>
+                  </div>
+                  <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
+                    <span class="payment-step__number">2</span>
+                    <div class="payment-step-details-container">
+                      <span>Confirmation of your payment.</span>
+                      <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
                     </div>
                   </div>
                 </b-col>
               </b-row>
               <b-row class="mt-3">
                 <b-col md=12>
-                  <div class="payment-step-container">
-                    <span class="payment-step__number">2</span>
-                    <div class="payment-step-details-container">
-                      <span>Confirmation of your payment.</span>
-                      <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
-                      <div class="mt-3">
-                        <div style="border:1px dashed gray; padding: 20px">
-                          <b-row>
-                            <b-col md=12>
-                              <b-row>
-                                <b-col md=4>
-                                  <b-form-group>
-                                    <label>Enter amount you pay</label>
-                                    <vue-autonumeric
-                                      v-model="forms.payment.fields.amount"
-                                      class="form-control text-right" 
-                                      :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                                      :state="forms.payment.states.amount">
-                                    </vue-autonumeric>
-                                    <b-form-invalid-feedback>
-                                      {{ forms.payment.errors.amount }}
-                                    </b-form-invalid-feedback>
-                                  </b-form-group>
-                                </b-col>
-                                <b-col md=4>
-                                  <b-form-group>
-                                    <label>Reference No</label>
-                                    <b-form-input
-                                      v-model="forms.payment.fields.referenceNo"
-                                      :state="forms.payment.states.referenceNo"
-                                    />
-                                    <b-form-invalid-feedback>
-                                      {{ forms.payment.errors.referenceNo }}
-                                    </b-form-invalid-feedback>
-                                  </b-form-group>
-                                </b-col>
-                                <b-col md=4>
-                                  <b-form-group>
-                                    <label>Date Paid</label>
-                                    <b-form-input
-                                      type="date"
-                                      v-model="forms.payment.fields.datePaid"
-                                      :state="forms.payment.states.datePaid"
-                                    />
-                                    <b-form-invalid-feedback>
-                                      {{ forms.payment.errors.datePaid }}
-                                    </b-form-invalid-feedback>
-                                  </b-form-group>
-                                </b-col>
-                              </b-row>
-                              <b-row>
-                                <b-col md=12>
-                                  <b-form-group>
-                                    <label>Add Notes</label>
-                                    <b-form-textarea
-                                      rows="4"
-                                      v-model="forms.payment.fields.notes"
-                                      :state="forms.payment.states.notes"
-                                    ></b-form-textarea>
-                                    <b-form-invalid-feedback>
-                                      {{ forms.payment.errors.notes }}
-                                    </b-form-invalid-feedback>
-                                  </b-form-group>
-                                </b-col>
-                              </b-row>
-                            </b-col>
-                          </b-row>
-                        </div>
-                      </div>
-                      <div class="file-uploader-container">
-                        <FileUploader
-                          @onFileChange="onPaymentFileUpload" 
-                          @onFileDrop="onPaymentFileUpload"
-                        />
-                      </div>
-                      <div class="file-item-container">
-                        <FileItem
-                          v-for="(item, index) of paymentFiles"
-                          :key="index"
-                          :title="item.name"
-                          :description="item.notes"
-                          :fileIndex="index"
-                          @onFileItemSelect="onPaymentFileItemSelect"
-                          @onFileItemRemove="onDeletePaymentFile"
-                          @onFileItemPreview="previewPaymentFile"
-                          :isBusy="item.isBusy"
-                        />
-                      </div>
-                      <div class="mt-3">
-                        <b-button variant="danger" @click="isPaying=false">
-                          CANCEL
-                        </b-button>
-                      </div>
-                    </div>
+                  <div style="border:1px dashed gray; padding: 20px">
+                    <b-row>
+                      <b-col md=12>
+                        <b-row>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Enter amount you pay</label>
+                              <vue-autonumeric
+                                v-model="forms.payment.fields.amount"
+                                class="form-control text-right" 
+                                :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
+                                :state="forms.payment.states.amount">
+                              </vue-autonumeric>
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.amount }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Reference No</label>
+                              <b-form-input
+                                v-model="forms.payment.fields.referenceNo"
+                                :state="forms.payment.states.referenceNo"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.referenceNo }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Date Paid</label>
+                              <b-form-input
+                                type="date"
+                                v-model="forms.payment.fields.datePaid"
+                                :state="forms.payment.states.datePaid"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.datePaid }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md=12>
+                            <b-form-group>
+                              <label>Add Notes</label>
+                              <b-form-textarea
+                                rows="4"
+                                v-model="forms.payment.fields.notes"
+                                :state="forms.payment.states.notes"
+                              ></b-form-textarea>
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.notes }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                      </b-col>
+                    </b-row>
+                  </div>
+                  <div class="file-uploader-container">
+                    <FileUploader
+                      @onFileChange="onPaymentFileUpload" 
+                      @onFileDrop="onPaymentFileUpload"
+                    />
+                  </div>
+                  <div class="file-item-container">
+                    <FileItem
+                      v-for="(item, index) of paymentFiles"
+                      :key="index"
+                      :title="item.name"
+                      :description="item.notes"
+                      :fileIndex="index"
+                      @onFileItemSelect="onPaymentFileItemSelect"
+                      @onFileItemRemove="onDeletePaymentFile"
+                      @onFileItemPreview="previewPaymentFile"
+                      :isBusy="item.isBusy"
+                    />
+                  </div>
+                  <div class="mt-3">
+                    <b-button variant="danger" @click="isPaying=false">
+                      CANCEL
+                    </b-button>
                   </div>
                 </b-col>
               </b-row>
@@ -1021,7 +1017,7 @@
               <b-col md="12">
                 <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
                   <b-alert variant="success" show>
-                    <h5>CONTRAGULATIONS!</h5>
+                    <h5>CONGRATULATIONS!</h5>
                     <p> You are now officially enrolled. </p>
                   </b-alert>
                 </div>
@@ -1749,14 +1745,15 @@ export default {
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
-        { approvedLabel: 'Approved by Staff', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Approved by Finance', waitingLabel: 'Waiting for Finance' },
         { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
       ],
       paymentApprovalStages: [
-          { approvedLabel: 'Payment Submitted', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
-        ],
+        { approvedLabel: 'Payment Submitted', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
+      ],
+      payTypeId: null
     };
   },
   created() {
@@ -2003,7 +2000,7 @@ export default {
       this.dismissCountDown = dismissCountDown
     },
     showCountdown() {
-      this.dismissCountDown = 20
+      this.dismissCountDown = 5
     },
     onPhotoChange(file) {
       const formData = new FormData();
@@ -2121,10 +2118,12 @@ export default {
         setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
       })
     },
-    onPaySelected(payType) {
+    onPaySelected(payTypeId) {
+      this.payTypeId = payTypeId
       // if payment is null add payment
-      if (payType === PayTypes.ATTACHMENT.id) {
+      if (payTypeId === PayTypes.ATTACHMENT.id) {
         this.forms.payment.fields.paymentModeId = 3
+        
       }
       else {
         this.forms.payment.fields.paymentModeId = 1
@@ -2146,7 +2145,7 @@ export default {
       }
       this.isPaying = true
 
-      if (payType === PayTypes.INITIAL.id) {
+      if (payTypeId === PayTypes.INITIAL.id) {
         payment.fields.amount = billing.fields.totalAmount
       } else { 
         payment.fields.amount = 0
