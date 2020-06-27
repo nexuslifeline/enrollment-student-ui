@@ -107,7 +107,7 @@
                 <div class="signup__confirmation-answer-item">
                   Yes, I already have my student number.
                   <span class="signup__confirmation-answer-notes">
-                    (For existing/enrolled students who don't have an account yet)
+                    (Student who is  currently enrolled in STC Tandag and has a student number.)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -126,7 +126,7 @@
                 <div class="signup__confirmation-answer-item">
                   No, I don't have student number yet.
                   <span class="signup__confirmation-answer-notes">
-                    (For new applicants who want to enroll to STC Tandag)
+                    (An unofficially enrolled student who is still processing his/her admission)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
