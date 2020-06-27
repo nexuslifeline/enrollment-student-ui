@@ -104,7 +104,12 @@
                   class="signup__answer-icon-check-circle"
                   scale="2"
                 />
-                Yes, I already have my student number.
+                <div class="signup__confirmation-answer-item">
+                  Yes, I already have my student number.
+                  <span class="signup__confirmation-answer-notes">
+                    (For existing/enrolled students who don't have an account yet)
+                  </span>
+                </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
               <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
@@ -118,7 +123,12 @@
                   class="signup__answer-icon-check-circle"
                   scale="2"
                 />
-                No, I don't have student number yet.
+                <div class="signup__confirmation-answer-item">
+                  No, I don't have student number yet.
+                  <span class="signup__confirmation-answer-notes">
+                    (For new applicants who want to enroll to STC Tandag)
+                  </span>
+                </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
             </ul>
@@ -503,5 +513,16 @@ export default {
     color: $white !important;
     background-color: $brand-primary;
     border-radius: 16px;
+  }
+
+  .signup__confirmation-answer-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .signup__confirmation-answer-notes {
+    font-size: 20px;
+    font-weight: 400;
+    color: $gray;
   }
 </style>
