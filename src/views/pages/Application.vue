@@ -572,11 +572,12 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="6">
+              <b-col md="3">
                 <b-form-group>
-                  <label class="required">Level</label>
-                  <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'
-                    :state="forms.transcript.states.transcriptLevelId">
+                  <label>Level</label>
+                  <b-form-select @input="loadCourses()" 
+                    v-model='forms.transcript.fields.levelId'
+                    :state="forms.transcript.states.transcriptLevelId">                   
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
@@ -589,10 +590,12 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
-                <b-form-group>
+              <b-col md="3">
+                <b-form-group v-if="options.courses.items.length > 0">
                   <label>Course</label>
-                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                  <b-form-select 
+                    @input="loadSubjectsOfLevel()" 
+                    v-model='forms.transcript.fields.courseId' >
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                     </template>
@@ -602,12 +605,12 @@
                   </b-form-select>
                 </b-form-group>
               </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
-                <b-form-group>
+              <b-col md="3">
+                <b-form-group v-if="options.courses.items.length > 0">
                   <label>Semester</label>
-                  <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                  <b-form-select
+                    @input="loadSubjectsOfLevel()" 
+                    v-model='forms.transcript.fields.semesterId'>
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                     </template>
@@ -616,6 +619,16 @@
                     </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
+              </b-col>
+              <b-col md=3>
+                <b-button
+                  block
+                  class="float-right mt-4"
+                  variant="outline-primary"
+                  @click="onAddSubject()">
+                  <v-icon
+                    name="plus-circle" />
+                  Add Subject</b-button>
               </b-col>
             </b-row>
             <b-row>
@@ -630,9 +643,9 @@
                   sticky-header="300px"
                   head-variant="light"
                   responsive small hover outlined show-empty
-                  :fields="tables.subjects.fields"
-                  :items.sync="tables.subjects.items"
-                  :busy="tables.subjects.isBusy">
+                  :fields="tables.levelSubjects.fields"
+                  :items.sync="tables.levelSubjects.items"
+                  :busy="tables.levelSubjects.isBusy">
                   <template v-slot:cell(name)="data">
                     <span>{{data.item.code}} {{data.item.name}}</span><br>
                     <small>{{data.item.description}}</small>
@@ -651,7 +664,7 @@
             </b-row>
             <b-row>
               <b-col sm="9">
-                <h5 class="float-right">TOTAL</h5>
+                <h5 class="float-right">TOTAL UNITS</h5>
               </b-col>
               <b-col sm="3">
                 <h5 class='text-center pl-3'>{{totalUnits}}</h5>
@@ -761,9 +774,9 @@
                           <b-col md=12>
                             <b-list-group  >
                               <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
-                                @click="onPaySelected(), selectecPaytype=PayTypes.INITIAL.id">
+                                @click="onPaySelected(PayTypes.INITIAL.id)">
                                 <div class="mr-4" style="color:black">
-                                  <h5 class="mb-1 mt-3">PAY {{ forms.billing.fields.totalAmount }} ONLY</h5>
+                                  <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} ONLY</h5>
                                   <p class="mb-2">
                                     Make a payment for initial fee only to be officially registered.
                                   </p>
@@ -771,7 +784,7 @@
                                 <v-icon name="greater-than" style="color:darkblue"></v-icon>
                               </b-list-group-item>
                               <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                @click="onPaySelected(),selectecPaytype=PayTypes.CUSTOM.id">
+                                @click="onPaySelected(PayTypes.CUSTOM.id)">
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
                                   <p class="mb-2">
@@ -781,7 +794,7 @@
                                 <v-icon name="greater-than" style="color:darkblue"></v-icon>
                               </b-list-group-item>
                               <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                                @click="onPaySelected(),selectecPaytype=PayTypes.ATTACHMENT.id">
+                                @click="onPaySelected(PayTypes.ATTACHMENT.id)">
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                   <p class="mb-2">
@@ -860,23 +873,6 @@
                     <div class="payment-step-details-container">
                       <span>Confirmation of your payment.</span>
                       <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
-                      <div class="file-uploader-container">
-                        <FileUploader
-                          @onFileChange="onPaymentFileUpload" 
-                          @onFileDrop="onPaymentFileUpload"
-                        />
-                      </div>
-                      <div class="file-item-container">
-                        <FileItem
-                          v-for="(item, index) of paymentFiles"
-                          :key="index"
-                          :title="item.name"
-                          :description="item.notes"
-                          :fileIndex="index"
-                          @onFileItemSelect="onPaymentFileItemSelect"
-                          :isBusy="item.isBusy"
-                        />
-                      </div>
                       <div class="mt-3">
                         <div style="border:1px dashed gray; padding: 20px">
                           <b-row>
@@ -941,6 +937,25 @@
                           </b-row>
                         </div>
                       </div>
+                      <div class="file-uploader-container">
+                        <FileUploader
+                          @onFileChange="onPaymentFileUpload" 
+                          @onFileDrop="onPaymentFileUpload"
+                        />
+                      </div>
+                      <div class="file-item-container">
+                        <FileItem
+                          v-for="(item, index) of paymentFiles"
+                          :key="index"
+                          :title="item.name"
+                          :description="item.notes"
+                          :fileIndex="index"
+                          @onFileItemSelect="onPaymentFileItemSelect"
+                          @onFileItemRemove="onDeletePaymentFile"
+                          @onFileItemPreview="previewPaymentFile"
+                          :isBusy="item.isBusy"
+                        />
+                      </div>
                       <div class="mt-3">
                         <b-button variant="danger" @click="isPaying=false">
                           CANCEL
@@ -955,46 +970,29 @@
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
             <b-row>
               <b-col md="12">
-                <b-alert variant="success" show>
-                  <h5>PAYMENT SUBMITTED !</h5>
-                  <p> Thank you for submitting your application for this school year. 
-                  <br> We will review your payment and once approved, we will
-                  <br> notify you.
-                  <br>
-                  <br>We will try to get back to you as soon as we can!</p>
-                </b-alert>
-                <!-- <b-row class="pb-2">
-                  <b-col md="12">
-                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
-                  </b-col>
-                </b-row> -->
-                <!-- <b-row class="pb-5">
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                </b-row> -->
-                <div class="approval-container">
-                  <ApprovalIndicator
-                    :stages="paymentApprovalStages"
-                    :currentStage="selectedPaymentApprovalStage"
-                  />
+                <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
+                  <b-alert variant="success" show>
+                    <h5>WELCOME</h5>
+                    <p> You are now officially enrolled. </p>
+                  </b-alert>
                 </div>
-                <b-alert
+                <div v-else>
+                  <b-alert variant="success" show>
+                    <h5>PAYMENT SUBMITTED !</h5>
+                    <p> Thank you for submitting your application for this school year. 
+                    <br> We will review your payment and once approved, we will
+                    <br> notify you.
+                    <br>
+                    <br>We will try to get back to you as soon as we can!</p>
+                  </b-alert>
+                  <div class="approval-container">
+                    <ApprovalIndicator
+                      :stages="paymentApprovalStages"
+                      :currentStage="selectedPaymentApprovalStage"
+                    />
+                  </div>
+                </div>
+                <!-- <b-alert
                   :show="dismissCountDown"
                   variant="info"
                   @dismissed="onUpdateStudent()"
@@ -1006,7 +1004,7 @@
                     name="spinner"
                     class="mr-2 float-right"
                     spin />
-                </b-alert>
+                </b-alert> -->
               </b-col>
             </b-row>
           </div>
@@ -1062,7 +1060,7 @@
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
         <b-button 
           class="float-left" 
-          @click="onDeletePaymentFile()"
+          @click="onDeletePaymentFile(selectedPaymentFileIndex)"
           variant="outline-danger">
           <v-icon
             v-if="isFileDeleting"
@@ -1086,18 +1084,124 @@
         </b-button>
       </div> <!-- modal footer buttons -->
     </b-modal>  
+    <!-- Modal Subject -->
+    <b-modal 
+			v-model="showModalSubjects"
+			:noCloseOnEsc="true"
+			:noCloseOnBackdrop="true"
+			size="xl">
+			<div slot="modal-title"> <!-- modal title -->
+					Subjects
+			</div> <!-- modal title -->
+			<b-row> <!-- modal body -->
+				<b-col md=12>
+          <b-row class="mb-2">
+            <b-col offset-md="8" md="4">
+              <b-form-input
+                v-model="filters.subject.criteria"
+                type="text" 
+                placeholder="Search">
+              </b-form-input>
+            </b-col>
+          </b-row>
+					<b-table
+						small hover outlined show-empty
+						:items.sync="tables.subjects.items"
+						:fields="tables.subjects.fields"
+            :filter="filters.subject.criteria"
+						:busy="tables.subjects.isBusy"
+            :current-page="paginations.subject.page"
+            :per-page="paginations.subject.perPage"
+            @filtered="onFiltered($event, paginations.subject)">
+						<template v-slot:cell(action)="row">
+							<b-button 
+                @click="addSubject(row)" 
+                size="sm" variant="success">
+                <v-icon name="plus" />
+              </b-button>
+						</template>
+					</b-table>
+          <b-row>
+            <b-col md=6>
+              Showing {{paginations.subject.from}} to {{paginations.subject.to}} of {{paginations.subject.totalRows}} records.
+            </b-col>
+            <b-col md=6>
+              <b-pagination
+                v-model="paginations.subject.page"
+                :total-rows="paginations.subject.totalRows"
+                :per-page="paginations.subject.perPage"
+                size="sm"
+                align="end"
+                @input="recordDetails(paginations.subject)"
+              />
+            </b-col>
+          </b-row>
+				</b-col>
+			</b-row> <!-- modal body -->
+			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+				<b-button 
+        class="float-right" 
+        variant="outline-danger"
+        @click="showModalSubjects=false">
+        Close
+      </b-button>
+			</div> <!-- modal footer buttons -->
+		</b-modal>
+    <!-- Modal Subject -->
+    <!-- Modal Preview -->
+    <b-modal 
+			v-model="showModalPreview"
+			size="xl"
+			header-bg-variant="success"
+			header-text-variant="light"
+			:noCloseOnEsc="true"
+			:noCloseOnBackdrop="true">
+			<div slot="modal-title"> <!-- modal title -->
+					Preview
+			</div> <!-- modal title -->
+			<b-row class="justify-content-md-center"> <!-- modal body -->
+				<b-col md=12>
+          <div v-if="file.src">
+            <center>
+              <b-img
+                fluid 
+                v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'" 
+                :src="file.src" />
+              <b-embed
+                v-else
+                type="iframe"
+                aspect="16by9"
+                allowfullscreen
+                :src="file.src"
+              ></b-embed>
+            </center>
+          </div>
+				</b-col>
+			</b-row> <!-- modal body -->
+			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+				<b-button 
+          class="float-right"
+          variant="outline-danger"
+          @click="showModalPreview=false">
+          Close
+        </b-button>
+			</div> <!-- modal footer buttons -->
+		</b-modal>
+    <!-- Modal Preview -->
   </div>
   <!-- main container -->
 </template>
 <script>
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi,
-  PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi } from '../../mixins/api';
+  PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
+  SubjectApi } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
-import { Semesters, ApplicationSteps, Countries, CivilStatuses, ApplicationStatuses, PaymentStatuses, BillingTypes, PayTypes } from '../../helpers/enum';
+import { Semesters, ApplicationSteps, Countries, CivilStatuses, ApplicationStatuses, PaymentStatuses, BillingTypes, PayTypes, TranscriptStatuses } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
-import { validate, reset } from '../../helpers/forms';
+import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
+import Tables from '../../helpers/tables'
 import PhotoViewer from '../components/PhotoViewer'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
@@ -1214,7 +1318,8 @@ const transcriptFields = {
   levelId: null,
   courseId: null,
   schoolYearId: null,
-  schoolCategoryId: null
+  schoolCategoryId: null,
+  transcriptStatusId: null
 }
 
 const transcriptErrorFields = {
@@ -1254,9 +1359,10 @@ const paymentFileFields = {
 }
 
 export default {
-  name: "StudentInfo",
+  name: "Application",
   mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi,
-    PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi ],
+    PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
+    SubjectApi, Tables ],
   components: {
     ApprovalIndicator,
     GroupStageIndicator,
@@ -1267,6 +1373,8 @@ export default {
   data() {
     return {
       showPaymentFileModal: false,
+      showModalSubjects: false,
+      showModalPreview: false,
       selectedPaymentMode: 1,
       paymentFiles: [],
       selectedPaymentFileIndex: null,
@@ -1281,9 +1389,14 @@ export default {
       ApplicationStatuses: ApplicationStatuses,
       ApplicationSteps: ApplicationSteps,
       PaymentStatuses: PaymentStatuses,
+      TranscriptStatuses: TranscriptStatuses,
       BillingTypes: BillingTypes,
       PayTypes: PayTypes,
       isPaying: false,
+      file: {
+        src: null,
+        type: null
+      },
       forms: {
         student: {
           fields: { ...studentFields },
@@ -1330,7 +1443,7 @@ export default {
         },
       },
       tables :{
-        subjects: {
+        levelSubjects: {
           isBusy: false,
           fields: [
             {
@@ -1355,6 +1468,71 @@ export default {
             },
           ],
           items: []
+        },
+        subjects: {
+          isBusy: false,
+          fields: [
+            {
+              key: "code",
+              label: "Code",
+              tdClass: "align-middle",
+              thStyle: {width: "6%"}
+            },
+            {
+              key: "name",
+              label: "Name",
+              tdClass: "align-middle",
+              thStyle: {width: "12%"}
+            },
+            {
+              key: "description",
+              label: "Description",
+              tdClass: "align-middle",
+              thStyle: {width: "auto"}
+            },
+            {
+              key: "units",
+              label: "Lec Units",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "8%"}
+            },
+            {
+              key: "amountPerUnit",
+              label: "Amount per Lec Unit",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "16%"}
+            },
+            {
+              key: "labs",
+              label: "Lab Units",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "8%"}
+            },
+            {
+              key: "amountPerLab",
+              label: "Amount per Lab",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "13%"}
+            },
+            {
+              key: "totalAmount",
+              label: "Total Amount",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "12%"}
+            },
+            {
+              key: "action",
+              label: "",
+              tdClass: "align-middle text-center",
+              thStyle: {width: "5%"}
+            }
+          ],
+          items: [],
         },
         bankAccounts: {
           isBusy: false,
@@ -1443,6 +1621,20 @@ export default {
           items: []
         }
       },
+      paginations: {
+        subject: {
+          from: 0,
+          to: 0,
+          totalRows: 0,
+          page: 1,
+          perPage: 10,
+        }
+      },
+      filters: {
+        subject: {
+          criteria: null
+        }
+      },
       options: {
         levels:{
           items:[]
@@ -1485,7 +1677,7 @@ export default {
         {
           header: 'Application',
           children: [
-            { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 5, subHeader: 'Subject Enlistment', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
             { id: 6, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
           ]
         },
@@ -1581,7 +1773,7 @@ export default {
         activeApplication: { fields: activeApplication }
       } = this.forms;
 
-      const { items } = this.tables.subjects
+      const { items } = this.tables.levelSubjects
       let subjects = []
 
       items.forEach(subject => {
@@ -1608,13 +1800,11 @@ export default {
         transcript
       ]
 
-      console.log(activeApplication.applicationStepId)
-      console.log(activeApplication.applicationStatusId)
       const applicationStepId =
           ApplicationSteps.STATUS.id === activeApplication.applicationStepId && activeApplication.applicationStatusId !==1
             ? ApplicationSteps.STATUS.id
               : activeApplication.applicationStepId + 1;
-      console.log(applicationStepId)
+
       const applicationStatusId =
           ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
             ? ApplicationStatuses.SUBMITTED.id
@@ -1660,13 +1850,23 @@ export default {
       });
     },
     onUpdatePayment() {
-      const { payment, billing: { fields: { id: billingId }} } = this.forms
+      const { payment, billing: { fields: { totalAmount, id: billingId }} } = this.forms
 
       reset(payment)
 
+      if (payment.fields.amount < totalAmount) {
+        showNotification(this, 'danger', `The amount shouldn't be less than the initial fee: ${formatNumber(totalAmount)}.`)
+        return
+      }
+      
+      if (this.paymentFiles.length == 0) {
+        showNotification(this, 'danger', 'You should attach atleast one or more proof of payment.')
+        return
+      }
+
       const dataPayment = {
         ...payment.fields,
-        paymentStatusId: PaymentStatuses.PENDING.id, //set payment status to pending for approval
+        paymentStatusId: PaymentStatuses.SUBMITTED.id, //set payment status to pending for approval
         billingId
       }
 
@@ -1695,19 +1895,19 @@ export default {
       this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
         this.options.courses.items = data
         if (data.length === 0) {
-          this.loadSubjects()
+          this.loadSubjectsOfLevel()
           return
         }
-        this.tables.subjects.items = []
+        this.tables.levelSubjects.items = []
       });
     },
-    loadSubjects() {
+    loadSubjectsOfLevel() {
       const { courseId, semesterId, levelId } = this.forms.transcript.fields;
       const { subjects } = this.tables;
 
       if (this.options.courses.items.length > 0) {
         if (courseId === null || semesterId === null) {
-          this.tables.subjects.items = []
+          this.tables.levelSubjects.items = []
           return
         }
       }
@@ -1757,14 +1957,14 @@ export default {
     onPhotoChange(file) {
       const formData = new FormData();
       formData.append('photo', file);
-      this.savePhoto(formData, this.forms.student.fields.id).then(response =>{
-        const res = response.data
-        this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + res.hashName
+      this.savePhoto(formData, this.forms.student.fields.id).then(({ data }) =>{
+        this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + data.hashName
+        localStorage.setItem('studentPhotoUrl', this.studentPhotoUrl);
+        setTimeout(() => this.isProfilePhotoBusy = false, 3000)
       })
     },
     onPhotoRemove() {
-      this.deletePhoto(this.forms.student.fields.id).then(response =>{
-        const res = response.data
+      this.deletePhoto(this.forms.student.fields.id).then(({ data }) =>{
         this.studentPhotoUrl = ""
       })
     },
@@ -1799,7 +1999,6 @@ export default {
         billings.items = data
         copyValue(data[0], this.forms.billing.fields)
         //copyValue(data[0].payments[0], this.forms.payment).
-        console.log(data.payments)
         payment.fields.id = null;
         if (data[0].payments[0] != null) {
 
@@ -1835,6 +2034,24 @@ export default {
               copyValue(data.activeApplication, this.forms.activeApplication.fields);
             })
           }
+
+          if (payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id) {
+            const { activeApplication, transcript, student } = this.forms
+            const application = {
+              activeApplication: {
+                id: activeApplication.fields.id
+              },
+              transcript: {
+                id: transcript.fields.id,
+                transcriptStatusId: TranscriptStatuses.ENROLLED.id
+              }
+            }
+
+            this.updateStudent(application, student.fields.id).then(({ data }) =>{
+              copyValue(data.activeApplication, activeApplication.fields);
+              copyValue(data.transcript, transcript.fields)
+            })
+          }
         }
       })
     },
@@ -1851,17 +2068,31 @@ export default {
         setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
       })
     },
-    onPaySelected() {
+    onPaySelected(payType) {
       // if payment is null add payment
-      const { payment, billing: { fields: { id: billingId }} } = this.forms
+      const { 
+        payment, 
+        billing, 
+        billing: { fields: { id: billingId } },
+        student: { fields: { id: studentId } },
+      } = this.forms
 
       reset(payment)
 
       const data = {
         ...payment.fields,
-        billingId
+        billingId,
+        studentId
       }
       this.isPaying = true
+
+      if (payType === PayTypes.INITIAL.id) {
+        payment.fields.amount = billing.fields.totalAmount
+      } else { 
+        payment.fields.amount = 0
+      }
+      
+
       if (payment.fields.id === null) {
         this.addPayment(data).then(({ data }) =>{
           copyValue(data, payment)
@@ -1900,45 +2131,97 @@ export default {
       const { payment: { fields:{ id: paymentId } },
               paymentFile } = this.forms
 
-      const seletedFile = this.paymentFiles[this.selectedPaymentFileIndex]
+      const selectedFile = this.paymentFiles[this.selectedPaymentFileIndex]
       this.isFileUpdating = true
-      seletedFile.isBusy = true
+      selectedFile.isBusy = true
       this.updatePaymentFile(paymentFile.fields, paymentId, paymentFile.fields.id).then(({ data }) => {
-        seletedFile.notes = data.notes;
+        selectedFile.notes = data.notes;
         this.isFileUpdating = false
         this.showPaymentFileModal = false;
-        setTimeout(() => seletedFile.isBusy = false, 1000);
+        setTimeout(() => selectedFile.isBusy = false, 1000);
       }).catch((error) => {
         const { errors } = error.response.data;
         validate(paymentFile, errors);
         this.isFileUpdating = false
-        seletedFile.isBusy = false
+        selectedFile.isBusy = false
       });
     },
-    onDeletePaymentFile () {
-      const { payment: { fields:{ id: paymentId } },
-            paymentFile: { fields:{ id: paymentFileId } }
-        } = this.forms
+    onDeletePaymentFile (index) {
+      const { payment: { fields:{ id: paymentId } } } = this.forms
 
-      const seletedFile = this.paymentFiles[this.selectedPaymentFileIndex]
+      const selectedFile = this.paymentFiles[index]
       this.isFileDeleting = true
-      seletedFile.isBusy = true
-      this.deletePaymentFile(paymentId, paymentFileId).then(()=> {
+      selectedFile.isBusy = true
+      this.deletePaymentFile(paymentId, selectedFile.id).then(()=> {
         this.isFileDeleting = false
         this.showPaymentFileModal = false
-        this.paymentFiles.splice(this.selectedPaymentFileIndex, 1);
+        this.paymentFiles.splice(index, 1);
       }).catch((error) => {
         console.log(error)
         this.isFileDeleting = false
-        seletedFile.isBusy = false
+        selectedFile.isBusy = false
       });
+    },
+    onAddSubject(){
+      if (this.forms.transcript.fields.levelId == null) {
+        return
+      }
+      this.showModalSubjects = true
+      this.loadSubjectList()
+    },
+    loadSubjectList(){
+      const { subjects } = this.tables
+      const { subject } = this.paginations
+      const { schoolCategoryId } = this.forms.transcript.fields
+      subjects.items = []
+      
+      subjects.isBusy = true
+      let params = { paginate: false, schoolCategoryId }
+      
+      this.getSubjectList(params)
+        .then(({ data }) => {
+          subjects.items = data
+          subject.totalRows = data.length
+          this.recordDetails(subject)
+          subjects.isBusy = false
+        })
+    },
+    addSubject(row) {
+      const { item } = row
+      const { items } = this.tables.levelSubjects
+      // check if subject exist in the table
+      const result = items.find(subject => subject.id === item.id)
+      if (result) {
+        showNotification(this, 'danger', item.name + ' is already added.')
+        return
+      }
+      items.push(row.item)
+    },
+    previewPaymentFile(index) {
+      this.file.type = null
+      this.file.src = null
+
+      const { payment: { fields:{ id: paymentId } } } = this.forms
+
+      const selectedFile = this.paymentFiles[index]
+
+      this.getPaymentFilePreview(paymentId, selectedFile.id)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: response.headers.contentType })
+          const reader = new FileReader();
+          
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.showModalPreview = true
+        })
     },
   },
   computed: {
     totalUnits() {
       let totalUnits = 0
-      this.tables.subjects.items.forEach(i => {
-        totalUnits += i.units
+      this.tables.levelSubjects.items.forEach(i => {
+        totalUnits += i.totalUnits
       })
       return totalUnits
     },
@@ -1953,6 +2236,13 @@ export default {
         return subHeaders.find(({ id }) => id === fields.applicationStepId)
       }
       return null;
+    },
+    formattedInitialFeeValue() {
+      const { totalAmount } = this.forms.billing.fields
+      if (totalAmount) {
+        return formatNumber(totalAmount)
+      }
+      return "0.00"
     }
   },
 };

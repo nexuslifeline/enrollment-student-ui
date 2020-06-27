@@ -8,10 +8,9 @@
     <template #toggler>
       <CHeaderNavLink>
         <div class="c-avatar">
-          <img
-            src="img/avatars/6.jpg"
-            class="c-avatar-img "
-          />
+          <b-avatar 
+            :text="'N'"
+            :src="loadAvatar()" />
         </div>
       </CHeaderNavLink>
     </template>
@@ -35,7 +34,8 @@ export default {
   mixins: [AuthApi],
   data () {
     return {
-      itemsCount: 42
+      itemsCount: 42,
+      src: null
     }
   },
   methods: {
@@ -49,6 +49,9 @@ export default {
           console.log(err)
         });
       }
+    },
+    loadAvatar(){
+      return localStorage.getItem('studentPhotoUrl')
     }
   }
 }

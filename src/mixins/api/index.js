@@ -11,3 +11,4 @@ export { default as PaymentFileApi } from './PaymentFile';
 export { default as BillingApi } from './Billing';
 export { default as BankAccountApi } from './BankAccount';
 export { default as EWalletAccountApi } from './EWalletAccount';
+export { default as SubjectApi } from './Subject';

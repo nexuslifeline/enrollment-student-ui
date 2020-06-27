@@ -13,6 +13,11 @@ export default {
     },
     deleteAdmissionFile(admissionId, fileId) {
       return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files/${fileId}`)
+    },
+    getAdmissionFilePreview(admissionId, fileId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/admissions/${admissionId}/files/${fileId}/preview`, {
+        responseType: 'blob'
+      });
     }
   }
 }
