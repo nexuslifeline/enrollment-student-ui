@@ -707,7 +707,7 @@
               <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
-                    <p>
+                    <p style="font-weight:bold">
                       Sorry, your admission is rejected with the ffg. reasons : <br>
                       {{ forms.activeAdmission.fields.disapprovalNotes }} <br><br>
                       <small>Please be inform that you can modify your admission and resubmit for evaluation.</small>
@@ -715,39 +715,6 @@
                   </b-alert>
                 </b-col>
               </b-row>
-              <!-- <b-row>
-                <b-col md=12 class="mb-3">
-                  <b-form-file
-                    placeholder="Choose a file or drop it here..."
-                    drop-placeholder="Drop file here..."
-                    v-model='selectedFile'
-                    :disabled='isUploading'
-                    class="mb-2">
-                  </b-form-file>
-                  <b-button @click="uploadFile(selectedFile)" variant='outline-primary'> <v-icon
-                    v-if="isUploading"
-                    name="sync"
-                    class="mr-2"
-                    spin
-                  />Upload</b-button>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col md=12>
-                  <b-table
-                    sticky-header="300px"
-                    head-variant="light"
-                    responsive small hover outlined show-empty
-                    :fields="tables.files.fields"
-                    :items.sync="tables.files.items"
-                    :busy="tables.files.isBusy">
-                    <template v-slot:cell(action)="row">
-                      <b-button @click="removeFile(row)" size="sm" variant="danger">
-                      <v-icon name="trash"></v-icon></b-button>
-                    </template>
-                  </b-table>
-                </b-col>
-              </b-row> -->
               <b-row>
                 <b-col md=12>
                   <div class="file-uploader-container">
@@ -834,7 +801,7 @@
               <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
-                    <p>
+                    <p style="font-weight: bold">
                       Sorry, your payment is rejected with the ffg. reasons : <br>
                       {{ forms.payment.fields.disapprovalNotes }} <br><br>
                       <small>Please be inform that you can modify your payment and resubmit for evaluation.</small>
@@ -849,15 +816,17 @@
                     <b-row>
                       <b-col md=12>
                         <b-alert show variant="primary">
-                          <p>
+                          <p style="font-weight: bold"> 
                             The initial fees should be paid in order to secure the registration of the student. The student will not
                             be officially registered until payment is complete.
                           <br>
                           <br>
                           <span v-if="forms.studentFee.fields.approvalNotes !== null">
-                            <strong>IMPORTANT NOTICE</strong>
+                            <strong>IMPORTANT NOTICE : </strong>
                             <br>
+                            
                             {{ forms.studentFee.fields.approvalNotes }}
+
                           </span>
                         </p>
                         </b-alert>
@@ -1754,7 +1723,7 @@ export default {
             fields: [
               {
                 key: "billingNo",
-                label: "Reference No",
+                label: "Billing No",
                 tdClass: "align-middle",
                 thStyle: { width: "auto" }
               },

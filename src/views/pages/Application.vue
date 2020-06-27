@@ -563,7 +563,7 @@
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
-                  <p>
+                  <p style="font-weight:bold">
                     Sorry, your application is rejected with the ffg. reasons : <br>
                     {{ this.forms.activeApplication.fields.disapprovalNotes }} <br><br>
                     <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
@@ -787,15 +787,15 @@
                   <b-row>
                     <b-col md=12>
                       <b-alert show variant="primary">
-                        <p>
+                        <p style="font-weight: bold"> 
                           The initial fees should be paid in order to secure the registration of the student. The student will not
                           be officially registered until payment is complete.
                           <br>
                           <br>
                           <span v-if="forms.studentFee.fields.approvalNotes !== null">
-                            <strong>IMPORTANT NOTICE</strong>
+                            <strong>IMPORTANT NOTICE : </strong>
                             <br>
-                            {{ forms.studentFee.fields.approvalNotes }}
+                              {{ forms.studentFee.fields.approvalNotes }}
                           </span>
                         </p>
                       </b-alert>
@@ -1630,7 +1630,7 @@ export default {
           fields: [
             {
               key: "billingNo",
-              label: "Reference No",
+              label: "Billing No",
               tdClass: "align-middle",
               thStyle: { width: "20" }
             },
