@@ -9,7 +9,9 @@
         <h4 class="carousel__slide-title">
           Start your bright future with us!
         </h4>
-        <p class="carousel__slide-description">School of competent and dedicated teachers that provides quality education and creative programs.</p>
+        <p class="carousel__slide-description">
+          School of competent and dedicated teachers that provides quality education and creative programs.
+        </p>
         </div>
       </slide>
       <slide>

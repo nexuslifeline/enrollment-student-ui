@@ -606,7 +606,7 @@
                     <b-row>
                       <b-col md="6">
                         <b-form-group >
-                          <label>Section</label>
+                          <label>Preferred Section</label>
                           <b-form-select
                             v-model='forms.transcript.fields.sectionId'
                             :state="forms.transcript.states.transcriptSectionId">
@@ -1814,25 +1814,25 @@ export default {
           {
             header: 'Personal Information',
             children: [
-              { id: 1, subHeader: 'Profile', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 2, subHeader: 'Address', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 3, subHeader: 'Family', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 4, subHeader: 'Education', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+              { id: 1, subHeader: 'Profile', description: 'Officially registering you is just few steps away. First, tell us a bit about yourself.' },
+              { id: 2, subHeader: 'Address', description: 'Let us know your address. Please include all required(*) fields.' },
+              { id: 3, subHeader: 'Family', description: 'Details about your family. Please include all required(*) fields.' },
+              { id: 4, subHeader: 'Education', description: 'Details about your previous educational background. Please include all required(*) fields.' }
             ]
           },
           {
             header: 'Admission',
             children: [
-              { id: 5, subHeader: 'Subject Enlistment', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 6, subHeader: 'Requirements', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 7, subHeader: 'Status', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+              { id: 5, subHeader: 'Subject Enlistment', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
+              { id: 6, subHeader: 'Requirements', description: 'We will just need to validate your requirements. Please attach here all Student Admission requirements(Form 138, Certificate of Good Moral).' },
+              { id: 7, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your requirements and your application for the current academic year.' }
             ]
           },
           {
             header: 'Enrollment',
             children: [
-              { id: 8, subHeader: 'Payments', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-              { id: 9, subHeader: 'Waiting', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+              { id: 8, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
+              { id: 9, subHeader: 'Waiting', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
             ]
           },
         ],

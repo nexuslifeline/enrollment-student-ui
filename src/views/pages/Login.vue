@@ -65,6 +65,18 @@
         <span class="login__version">Version: {{version}}</span>
       </div>
       <div class="login__right-pane">
+        <ul class="login__top-links">
+          <li class="login__top-link-item">
+            <a href="#">LMS</a>
+          </li>
+          <li class="login__top-link-item">
+            <a
+              href="https://www.stctandag.edu.ph/"
+              class="login__top-link-item--active">
+              Visit our Website
+            </a>
+          </li>
+        </ul>
         <CarouselProcedure />
       </div>
       <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
@@ -106,7 +118,7 @@
                   class="signup__answer-icon-check-circle"
                   scale="2"
                 />
-                No, I dont have student number yet.
+                No, I don't have student number yet.
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
             </ul>
@@ -371,6 +383,8 @@ export default {
     flex: 1;
     //background-color: $brand-primary;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     width: 50vw;
 
@@ -459,5 +473,35 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
+  }
+
+  .login__top-links {
+    list-style: none;
+    display: flex;
+    margin-left: auto;
+  }
+
+  .login__top-link-item {
+    margin-right: 15px;
+
+    a {
+      text-decoration:none;
+      color: $darkblue;
+      padding: 5px 25px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    &:hover a {
+      color: $white;
+      background-color: $brand-primary;
+      border-radius: 16px;
+    }
+  }
+
+  .login__top-link-item--active {
+    color: $white !important;
+    background-color: $brand-primary;
+    border-radius: 16px;
   }
 </style>
