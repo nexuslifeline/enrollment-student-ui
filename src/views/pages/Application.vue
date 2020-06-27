@@ -652,16 +652,16 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-col md=4 offset-md="8">
-                  <b-button
-                    block
-                    class="float-right"
-                    variant="outline-primary"
-                    @click="onAddSubject()">
-                    <v-icon
-                      name="plus-circle" />
-                    Add Subject</b-button>
-                </b-col>
+              <b-col md=4 offset-md="8">
+                <b-button
+                  block
+                  class="float-right"
+                  variant="outline-primary"
+                  @click="onAddSubject()">
+                  <v-icon
+                    name="plus-circle" />
+                  Add Subject</b-button>
+              </b-col>
               </b-row>
             <b-row>
               <b-col md=12>
@@ -1563,32 +1563,11 @@ export default {
               thStyle: {width: "8%"}
             },
             {
-              key: "amountPerUnit",
-              label: "Amount per Lec Unit",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              thStyle: {width: "16%"}
-            },
-            {
               key: "labs",
               label: "Lab Units",
               tdClass: "align-middle text-right",
               thClass: "text-right",
               thStyle: {width: "8%"}
-            },
-            {
-              key: "amountPerLab",
-              label: "Amount per Lab",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              thStyle: {width: "13%"}
-            },
-            {
-              key: "totalAmount",
-              label: "Total Amount",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              thStyle: {width: "12%"}
             },
             {
               key: "action",
