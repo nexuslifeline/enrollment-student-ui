@@ -5,7 +5,7 @@
         <div class="login__form">
           <div class="login__intro">
             <h4 class="login__intro-title">
-              Welcome to <b>St. Therese College of Tandag</b>
+              Welcome to <b>St. Theresa College of Tandag</b>
             </h4>
             <p class="login__intro-description">
               To keep connected with us please login with your personal information by email address and password.
@@ -90,7 +90,7 @@
           </button>
           <div class="signup__confirmation-content">
             <p class="signup__confirmation-headline">
-              Do you have an existing student number issued by STC?
+              Do you have an existing student number issued by St. Theresa College?
             </p>
             <ul class="signup__confirmation-answers">
               <li @click="register(studentCategories.OLD.id)" class="signup__answer-item">

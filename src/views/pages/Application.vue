@@ -1703,9 +1703,9 @@ export default {
         },
         paymentModes: {
           items: [
-            { id: 1, name: 'Bank Deposit/Transfer', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
-            { id: 4, name: 'E-Wallet', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly'  },
-            { id: 3, name: 'Others', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly'  }
+            { id: 1, name: 'Bank Deposit/Transfer', description: 'With this payment mode, you can deposit or transfer your payment using your preferred Bank. You can just take a photo of the deposit slip or screenshot of the Bank Transfer transaction you made. Attach it here and we will just review it.' },
+            { id: 4, name: 'E-Wallet', description: 'With this payment mode, you can send us the payment using the E-Wallet services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
+            { id: 3, name: 'Others', description: 'If you are already enrolled, you can select this payment mode so should just attach your receipt here or any proof of your payment.'  }
           ]
         }
       },
