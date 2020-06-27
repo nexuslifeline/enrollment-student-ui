@@ -572,54 +572,86 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="3">
-                <b-form-group>
-                  <label>Level</label>
-                  <b-form-select @input="loadCourses()" 
-                    v-model='forms.transcript.fields.levelId'
-                    :state="forms.transcript.states.transcriptLevelId">                   
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                      {{level.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                  <b-form-invalid-feedback>
-                    {{forms.transcript.errors.transcriptLevelId}}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col md="3">
-                <b-form-group v-if="options.courses.items.length > 0">
-                  <label>Course</label>
-                  <b-form-select 
-                    @input="loadSubjectsOfLevel()" 
-                    v-model='forms.transcript.fields.courseId' >
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                      {{course.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-              <b-col md="3">
-                <b-form-group v-if="options.courses.items.length > 0">
-                  <label>Semester</label>
-                  <b-form-select
-                    @input="loadSubjectsOfLevel()" 
-                    v-model='forms.transcript.fields.semesterId'>
-                    <template v-slot:first>
-                      <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                    </template>
-                    <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                      {{semester.name}}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
+                <b-col md=12>
+                  <b-card border-variant="primary">
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group>
+                          <label>Level</label>
+                          <b-form-select 
+                            @input="loadCourses()" 
+                            v-model='forms.transcript.fields.levelId'
+                            :state="forms.transcript.states.transcriptLevelId">                   
+                            <template v-slot:first>
+                              <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                            </template>
+                            <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                              {{level.name}}
+                            </b-form-select-option>
+                          </b-form-select>
+                          <b-form-invalid-feedback>
+                            {{forms.transcript.errors.transcriptLevelId}}
+                          </b-form-invalid-feedback>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="6">
+                        <b-form-group v-if="options.courses.items.length > 0">
+                          <label>Course</label>
+                          <b-form-select 
+                            @input="loadSubjectsOfLevel()" 
+                            v-model='forms.transcript.fields.courseId' >
+                            <template v-slot:first>
+                              <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                            </template>
+                            <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                              {{course.name}}
+                            </b-form-select-option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group >
+                          <label>Section</label>
+                          <b-form-select
+                            v-model='forms.transcript.fields.sectionId'
+                            :state="forms.transcript.states.transcriptSectionId">
+                            <template v-slot:first>
+                              <b-form-select-option :value='null' disabled>-- Section --</b-form-select-option>
+                            </template>
+                            <b-form-select-option 
+                              v-for='section in options.sections.items' 
+                              :key='section.id' 
+                              :value='section.id'>
+                              {{ section.name }}
+                            </b-form-select-option>
+                          </b-form-select>
+                          <b-form-invalid-feedback>
+                            {{forms.transcript.errors.transcriptSectionId}}
+                          </b-form-invalid-feedback>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="6">
+                        <b-form-group v-if="options.courses.items.length > 0">
+                          <label>Semester</label>
+                          <b-form-select
+                            @input="loadSubjectsOfLevel()" 
+                            v-model='forms.transcript.fields.semesterId'>
+                            <template v-slot:first>
+                              <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                            </template>
+                            <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                              {{ semester.name }}
+                            </b-form-select-option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                  </b-card>  
+                </b-col>
+              </b-row>
+            <b-row>
               <b-col md=3>
                 <b-button
                   block
@@ -751,6 +783,13 @@
                         <p>
                           The initial fees should be paid in order to secure the registration of the student. The student will not
                           be officially registered until payment is complete.
+                          <br>
+                          <br>
+                          <span v-if="forms.studentFee.fields.approvalNotes !== null">
+                            <strong>IMPORTANT NOTICE</strong>
+                            <br>
+                            {{ forms.studentFee.fields.approvalNotes }}
+                          </span>
                         </p>
                       </b-alert>
                     </b-col>
@@ -847,21 +886,24 @@
                   <div class="payment-step-container">
                     <span class="payment-step__number">1</span>
                     <div class="payment-step-details-container">
-                      <span>Choose your preferred Account.</span>
-                      <b-table
-                        v-if="forms.payment.fields.paymentModeId === 1"
-                        :fields="tables.bankAccounts.fields"
-                        :items.sync="tables.bankAccounts.items"
-                        borderless small responsive
-                      >
-                      </b-table>
-                      <b-table
-                        v-if="forms.payment.fields.paymentModeId === 4"
-                        :fields="tables.eWalletAccounts.fields"
-                        :items.sync="tables.eWalletAccounts.items"
-                        borderless small responsive 
-                      >
-                      </b-table>               
+                      <div v-if="forms.payment.fields.paymentModeId === 1 || forms.payment.fields.paymentModeId === 4">
+                        <span >Choose your preferred Account.</span>
+                        <b-table
+                          v-if="forms.payment.fields.paymentModeId === 1"
+                          :fields="tables.bankAccounts.fields"
+                          :items.sync="tables.bankAccounts.items"
+                          borderless small responsive
+                        >
+                        </b-table>
+                        <b-table
+                          v-if="forms.payment.fields.paymentModeId === 4"
+                          :fields="tables.eWalletAccounts.fields"
+                          :items.sync="tables.eWalletAccounts.items"
+                          borderless small responsive 
+                        >
+                        </b-table>
+                      </div>
+                      <span v-else>Please attach any proof of your payment provided by the school.</span>
                     </div>
                   </div>
                 </b-col>
@@ -972,7 +1014,7 @@
               <b-col md="12">
                 <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
                   <b-alert variant="success" show>
-                    <h5>WELCOME</h5>
+                    <h5>CONTRAGULATIONS!</h5>
                     <p> You are now officially enrolled. </p>
                   </b-alert>
                 </div>
@@ -1194,7 +1236,7 @@
 <script>
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi,
   PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
-  SubjectApi } from '../../mixins/api';
+  SubjectApi, SectionApi } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
@@ -1319,11 +1361,13 @@ const transcriptFields = {
   courseId: null,
   schoolYearId: null,
   schoolCategoryId: null,
-  transcriptStatusId: null
+  transcriptStatusId: null,
+  sectionId: null
 }
 
 const transcriptErrorFields = {
   transcriptLevelId: null,
+  transcriptSectionId: null,
   subjects: null
 }
 
@@ -1358,11 +1402,15 @@ const paymentFileFields = {
   notes: null
 }
 
+const studentFeeFields = {
+  approvalNotes: null
+}
+
 export default {
   name: "Application",
   mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi,
     PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
-    SubjectApi, Tables ],
+    SubjectApi, SectionApi, Tables ],
   components: {
     ApprovalIndicator,
     GroupStageIndicator,
@@ -1376,6 +1424,7 @@ export default {
       showModalSubjects: false,
       showModalPreview: false,
       selectedPaymentMode: 1,
+      selectedPayType: 1,
       paymentFiles: [],
       selectedPaymentFileIndex: null,
       isFileUpdating: false,
@@ -1430,6 +1479,9 @@ export default {
           fields: { ...billingFields },
           states: { ...billingFields },
           errors: { ...billingFields }
+        },
+        studentFee: {
+          fields: { ...studentFeeFields },
         },
         payment: {
           fields: { ...paymentFields },
@@ -1640,6 +1692,9 @@ export default {
           items:[]
         },
         courses :{
+          items: []
+        },
+        sections :{
           items: []
         },
         countries: {
@@ -1882,6 +1937,7 @@ export default {
       }
     },
     loadCourses() {
+      this.options.sections.items = []
       const { fields } = this.forms.transcript;
       const { items } = this.options.levels
       // console.log(fields.levelId)
@@ -1896,6 +1952,7 @@ export default {
         this.options.courses.items = data
         if (data.length === 0) {
           this.loadSubjectsOfLevel()
+          this.loadSections()
           return
         }
         this.tables.levelSubjects.items = []
@@ -1923,6 +1980,8 @@ export default {
           subjects.items = data
           subjects.isBusy = false
       });
+
+      this.loadSections()
     },
     onSameAddress(isSame) {
       const { address: { fields: address } } = this.forms
@@ -1998,11 +2057,13 @@ export default {
       this.getBillingList(params).then(({ data }) => {
         billings.items = data
         copyValue(data[0], this.forms.billing.fields)
+        this.forms.studentFee.fields.approvalNotes = data[0].studentFee.approvalNotes
         //copyValue(data[0].payments[0], this.forms.payment).
         payment.fields.id = null;
         if (data[0].payments[0] != null) {
 
           copyValue(data[0].payments[0], this.forms.payment.fields)
+          
           
           //set payment approval stage
           this.selectedPaymentApprovalStage = 
@@ -2070,6 +2131,13 @@ export default {
     },
     onPaySelected(payType) {
       // if payment is null add payment
+      if (payType === PayTypes.ATTACHMENT.id) {
+        this.forms.payment.fields.paymentModeId = 3
+      }
+      else {
+        this.forms.payment.fields.paymentModeId = 1
+      }
+      
       const { 
         payment, 
         billing, 
@@ -2216,6 +2284,14 @@ export default {
           this.showModalPreview = true
         })
     },
+    loadSections () {
+      this.forms.transcript.fields.sectionId = null
+      const { schoolYearId, levelId, courseId, semesterId } = this.forms.transcript.fields
+      let params = { paginate: false, schoolYearId: schoolYearId, levelId: levelId , courseId: courseId, semesterId: semesterId };
+      this.getSectionList(params).then(({ data }) => {
+        this.options.sections.items = data;
+      });
+    }
   },
   computed: {
     totalUnits() {
