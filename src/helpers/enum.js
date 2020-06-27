@@ -378,7 +378,7 @@ export const PaymentStatuses = new Enum({
 
 export const PayTypes = new Enum({
   INITIAL: { id: 1, name: 'Initial' },
-  CUSTOM: { id: 2, name: 'Billing' },
-  ATTACHMENT: { id: 2, name: 'Billing' },
+  CUSTOM: { id: 2, name: 'Custom' },
+  ATTACHMENT: { id: 3, name: 'Attachment' },
 });
 
