@@ -2093,14 +2093,14 @@ export default {
       },
       loadSubjectsOfLevel() {
         const { courseId, semesterId, levelId } = this.forms.transcript.fields;
-        const { subjects } = this.tables;
+        const { levelSubjects } = this.tables;
         if (this.options.courses.items.length > 0) {
           if (courseId === null || semesterId === null) {
             this.tables.levelSubjects.items = []
             return
           }
         }
-        subjects.isBusy = true
+        levelSubjects.isBusy = true
         const params = {
           courseId,
           semesterId,
@@ -2108,8 +2108,8 @@ export default {
         }
         this.getSubjectsOfLevelList(levelId, params)
           .then(({ data }) => {
-            subjects.items = data
-            subjects.isBusy = false
+            levelSubjects.items = data
+            levelSubjects.isBusy = false
         });
 
         this.loadSections()
