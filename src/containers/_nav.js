@@ -10,8 +10,14 @@ export default [
       },
       {
         _name: 'CSidebarNavItem',
-        name: 'Student Information',
-        to: '/studentinfo',
+        name: 'Application',
+        to: '/application',
+        icon: 'cil-user'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Admission',
+        to: '/admission',
         icon: 'cil-user'
       }
     ]

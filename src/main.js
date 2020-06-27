@@ -6,16 +6,16 @@ import CoreuiVue from '@coreui/vue'
 import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
 import { httpRequest, httpAuthRequest } from './helpers/http'
-//import axios from 'axios'
-
-//axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-// const axiosConfig = {
-//   baseURL: 'http://enrollment.test',
-//   timeout: 30000
-// }
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+window.moment = require('moment')
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
 
 Vue.config.performance = true
+Vue.component('v-icon', Icon)
 Vue.use(CoreuiVue)
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
 Vue.prototype.$log = console.log.bind(console)
 
 Vue.prototype.$http = httpRequest

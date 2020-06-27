@@ -1,0 +1,1205 @@
+<template>
+  <div>
+    <!-- main container -->
+    <b-overlay :show='isLoading' rounded="sm">
+      <b-row>
+        <b-col md="12">
+          <b-card>
+            <b-row>
+              <b-col md="4">
+                <div class="left-pane">
+                  <!-- <StageIndicator
+                    :stages="stages"
+                    :activeIndex="forms.activeApplication.fields.applicationStepId - 1"
+                    headerKey="name"
+                    descriptionKey="description" /> -->
+                  <GroupStageIndicator
+                    :stages="groupStages"
+                    :activeId="forms.activeApplication.fields.applicationStepId"
+                  />
+                </div>
+              </b-col>
+              <b-col md="8">
+                <b-card style="min-height: 600px">
+                  <b-card-body>
+                    <h4>{{heading && heading.subHeader}}</h4>
+                    <p>{{heading && heading.description}}</p>
+                    <!-- About You -->
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 1">
+                      <b-row class="mt-4">
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Student No</label>
+                            <b-form-input
+                              v-model="forms.student.fields.studentNo" 
+                              :state="forms.student.states.studentNo" />
+                            <b-form-invalid-feedback>
+                              {{forms.student.errors.studentNo}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Firstname</label>
+                            <b-form-input
+                              v-model="forms.student.fields.firstName" 
+                              :state="forms.student.states.firstName" />
+                            <b-form-invalid-feedback>
+                              {{forms.student.errors.firstName}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Middlename</label>
+                            <b-form-input
+                              v-model="forms.student.fields.middleName" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Lastname</label>
+                            <b-form-input
+                              v-model="forms.student.fields.lastName" 
+                              :state="forms.student.states.lastName" />
+                            <b-form-invalid-feedback>
+                              {{forms.student.errors.lastName}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Mobile No.</label>
+                            <b-form-input
+                              v-model="forms.student.fields.mobileNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Birthdate</label>
+                            <b-form-input 
+                              type="date" 
+                              v-model="forms.student.fields.birthDate" 
+                              :state="forms.student.states.birthDate" />
+                            <b-form-invalid-feedback>
+                              {{forms.student.errors.birthDate}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Civil Status</label>
+                            <b-form-select 
+                              v-model="forms.student.fields.civilStatusId"
+                              :state="forms.student.states.civilStatusId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Civil Status --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='civilStatus in options.civilStatuses.items.values' :key='civilStatus.id' :value='civilStatus.id'>
+                                {{civilStatus.name}}
+                              </b-form-select-option>
+                            </b-form-select>
+                            <b-form-invalid-feedback>
+                              {{forms.student.errors.civilStatusId}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md=12>
+                          <b-row>
+                            <b-col md=12>
+                              <p>In case of emergency, Please contact : </p>
+                            </b-col>
+                          </b-row>
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Parent/Guardian</label>
+                                <b-form-input 
+                                  v-model="forms.student.fields.parentGuardianName"
+                                  :state="forms.student.states.parentGuardianName" />
+                                <b-form-invalid-feedback>
+                                  {{forms.student.errors.parentGuardianName}}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Parent/Guardian Contact No.</label>
+                                <b-form-input 
+                                  v-model="forms.student.fields.parentGuardianContactNo"
+                                  :state="forms.student.states.parentGuardianContactNo" />
+                                <b-form-invalid-feedback>
+                                  {{forms.student.errors.parentGuardianContactNo}}
+                                </b-form-invalid-feedback>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                    </div>
+                    <!-- About You -->
+                    <!-- Complete Address -->
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 2">
+                      <b-row>
+                        <b-col md=12>
+                          <h5>Current Address</h5>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="4">
+                          <b-form-group>
+                            <label>House No/Street</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentHouseNoStreet" 
+                              :state="forms.address.states.addressCurrentHouseNoStreet" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressCurrentHouseNoStreet}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>City/Town</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentCityTown" 
+                              :state="forms.address.states.addressCurrentCityTown" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressCurrentCityTown}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Province</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentProvince" 
+                              :state="forms.address.states.addressCurrentProvince" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressCurrentProvince}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Postal/Zip Code</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentPostalCode" 
+                              :state="forms.address.states.addressCurrentPostalCode" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressCurrentPostalCode}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>District</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentDistrict" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Region</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentRegion" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="6">
+                          <b-form-group>
+                            <label>Country</label>
+                            <b-form-select v-model="forms.address.fields.currentCountryId" 
+                            :state="forms.address.states.addressCurrentCountryId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                                {{country.name}}
+                              </b-form-select-option>
+                            </b-form-select>
+                            <b-form-invalid-feedback>
+                                {{forms.address.errors.addressCurrentCountryId}}
+                              </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Home Landline/Mobile No.</label>
+                            <b-form-input
+                              v-model="forms.address.fields.currentHomeLandlineMobileNo" 
+                              :state="forms.address.states.addressCurrentHomeLandlineMobileNo" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-form-group>
+                            <label>Complete Address</label>
+                            <b-form-textarea
+                              rows="3"
+                              v-model="forms.address.fields.currentCompleteAddress" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <hr>
+                      <b-row>
+                        <b-col md=6>
+                          <h5>Permanent Address</h5>
+                        </b-col>
+                        <b-col md=6 class="text-right">
+                          <b-form-checkbox @input="onSameAddress($event)">Same as Current Address</b-form-checkbox>
+                        </b-col>
+                      </b-row>
+                      
+                      <b-row>
+                         <b-col md="4">
+                          <b-form-group>
+                            <label>House No/Street</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentHouseNoStreet" 
+                              :state="forms.address.states.addressPermanentHouseNoStreet" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressPermanentHouseNoStreet}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>City/Town</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentCityTown" 
+                              :state="forms.address.states.addressPermanentCityTown" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressPermanentCityTown}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Province</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentProvince"
+                              :state="forms.address.states.addressPermanentProvince" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressPermanentProvince}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Postal/Zip Code</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentPostalCode"
+                              :state="forms.address.states.addressPermanentPostalCode" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressPermanentPostalCode}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>District</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentDistrict" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Region</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentRegion" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                         <b-col md="6">
+                          <b-form-group>
+                            <label>Country</label>
+                            <b-form-select v-model="forms.address.fields.permanentCountryId"
+                              :state="forms.address.states.addressPermanentCountryId">
+                              <template v-slot:first>
+                                <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
+                              </template>
+                              <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
+                                {{country.name}}
+                              </b-form-select-option>
+                            </b-form-select>
+                            <b-form-invalid-feedback>
+                                {{forms.address.errors.addressPermanentCountryId}}
+                              </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Home Landline/Mobile No.</label>
+                            <b-form-input
+                              v-model="forms.address.fields.permanentHomeLandlineMobileNo" 
+                              :state="forms.address.states.addressPermanentHomeLandlineMobileNo" />
+                            <b-form-invalid-feedback>
+                              {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-form-group>
+                            <label>Complete Address</label>
+                            <b-form-textarea
+                              rows="3"
+                              v-model="forms.address.fields.permanentCompleteAddress" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                    </div>
+                    <!-- Complete Address -->
+                    <!-- Family Background -->
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 3">
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Father</label>
+                            <b-form-input
+                              v-model="forms.family.fields.fatherName"
+                              :state="forms.family.states.familyFatherName" />
+                            <b-form-invalid-feedback>
+                              {{forms.family.errors.familyFatherName}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Contact No.</label>
+                            <b-form-input
+                              v-model="forms.family.fields.fatherMobileNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Occupation</label>
+                            <b-form-input
+                              v-model="forms.family.fields.fatherOccupation" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Email Address</label>
+                            <b-form-input
+                              v-model="forms.family.fields.fatherEmail"
+                              :state="forms.family.states.familyFatherEmail" />
+                            <b-form-invalid-feedback>
+                              {{forms.family.errors.familyFatherEmail}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row class="mt-3">
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Mother</label>
+                            <b-form-input
+                              v-model="forms.family.fields.motherName"
+                              :state="forms.family.states.familyMotherName" />
+                            <b-form-invalid-feedback>
+                              {{forms.family.errors.familyMotherName}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Contact No.</label>
+                            <b-form-input
+                              v-model="forms.family.fields.motherMobileNo" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Occupation</label>
+                            <b-form-input
+                              v-model="forms.family.fields.motherOccupation" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="6">
+                          <b-form-group>
+                            <label>Email Address</label>
+                            <b-form-input
+                              v-model="forms.family.fields.motherEmail"
+                              :state="forms.family.states.familyMotherEmail" />
+                            <b-form-invalid-feedback>
+                              {{forms.family.errors.familyMotherEmail}}
+                            </b-form-invalid-feedback>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                    </div>
+                    <!-- Family Background -->
+                    <!-- Previous Education -->
+                    <div v-show="forms.activeApplication.fields.applicationStepId === 4">
+                      <b-row>
+                        <b-col md="8">
+                          <b-form-group>
+                            <label>Last School Attended</label>
+                            <b-form-input
+                              v-model="forms.education.fields.lastSchoolAttended" />
+                          </b-form-group>
+                        </b-col>
+                        <b-col md="4">
+                          <b-form-group>
+                            <label>Level</label>
+                            <b-form-input
+                              v-model="forms.education.fields.year" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-form-group>
+                            <label>Last School Address</label>
+                            <b-form-input
+                              v-model="forms.education.fields.lastSchoolAddress" />
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>Elementary Course Completed or Primary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourse" />
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourseYear" />
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.elementaryCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label>High School Course Completed or Secondary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourse"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourseYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.highSchoolCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourse"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourseYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.seniorSchoolCourseHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group>
+                                <label >College Degree(if graduated) or Tertiary</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegree"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Year</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegreeYear"/>
+                              </b-form-group>
+                            </b-col>
+                            <b-col md="3">
+                              <b-form-group>
+                                <label>Honor Received</label>
+                                <b-form-input
+                                   v-model="forms.education.fields.collegeDegreeHonors"/>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
+                    </div>
+                    <!-- Previous Education -->
+                    <!-- Application -->
+                    <div >
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && (forms.activeApplication.fields.applicationStatusId === 4 || forms.activeApplication.fields.applicationStatusId === 1)">
+                        <b-row>
+                          <b-col md="12">
+                            <b-alert variant="success" show>
+                              <h5>APPLICATION SUBMITTED!</h5>
+                              <p>Thank you for submitting your application for this school year. 
+                              <br> We will review your application and once approved, you will
+                              <br>be able to proceed to payment.
+                              <br>
+                              <br>We will try to get back to you as soon as we can!</p>
+                            </b-alert>
+                            <b-row class="pb-2">
+                              <b-col md="12">
+                                <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                              </b-col>
+                            </b-row>
+                            <b-row class="pb-5">
+                              <b-col md="2">
+                                <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                              <b-col md="2">
+                                <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
+                              </b-col>
+                            </b-row>
+                            <div class="approval-container">
+                              <ApprovalIndicator
+                                :stages="approvalStages"
+                                :currentStage="selectedApprovalStage"
+                              />
+                            </div>
+                          </b-col>
+                        </b-row>
+                      </div>
+                      <div v-show="forms.activeApplication.fields.applicationStepId === 5 && forms.activeApplication.fields.applicationStatusId === 2">
+                        <b-row>
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Level</label>
+                              <b-form-select @input="loadCourses()" v-model='forms.transcript.fields.levelId'
+                                :state="forms.transcript.states.transcriptLevelId">
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                                  {{level.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                              <b-form-invalid-feedback>
+                                {{forms.transcript.errors.transcriptLevelId}}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Course</label>
+                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.courseId' :disabled='options.courses.items.length === 0'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                                  {{course.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <!-- <b-col md="6">
+                            <b-form-group>
+                              <label>School Year</label>
+                              <b-form-select v-model='forms.transcript.fields.schoolYearId'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- School Year --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='year in options.schoolYears.items' :key='year.id' :value='year.id'>
+                                  {{year.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col> -->
+                          <b-col md="6">
+                            <b-form-group>
+                              <label>Semester</label>
+                              <b-form-select @input="loadSubjects()" v-model='forms.transcript.fields.semesterId' :disabled='options.courses.items.length === 0'>
+                                <template v-slot:first>
+                                  <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                                  {{semester.name}}
+                                </b-form-select-option>
+                              </b-form-select>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md="12">
+                            <b-form-group>
+                              <b-form-input :state="forms.transcript.states.subjects" hidden/>
+                              <b-form-invalid-feedback>
+                                {{forms.transcript.errors.subjects}}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                            <b-table
+                              sticky-header="300px"
+                              head-variant="light"
+                              responsive small hover outlined show-empty
+                              :fields="tables.subjects.fields"
+                              :items.sync="tables.subjects.items"
+                              :busy="tables.subjects.isBusy">
+                              <template v-slot:cell(name)="data">
+                                <span>{{data.item.code}} {{data.item.name}}</span><br>
+                                <small>{{data.item.description}}</small>
+                              </template>
+                            </b-table>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col sm="9">
+                            <h5 class="float-right">TOTAL</h5>
+                          </b-col>
+                          <b-col sm="3">
+                            <h5 class='text-center pl-3'>{{totalUnits}}</h5>
+                          </b-col>
+                        </b-row>
+                      </div>
+                    </div>
+                    <!-- Application -->
+                  </b-card-body>
+                  <template v-slot:footer v-if="forms.activeApplication.fields.applicationStatusId !== 4 && forms.activeApplication.fields.applicationStatusId !==1">
+                    <b-button
+                      @click="forms.activeApplication.fields.applicationStepId--"
+                      :disabled="forms.activeApplication.fields.applicationStepId === 1"
+                      class="float-left">
+                      Back
+                    </b-button>
+                    <b-button
+                      @click="onUpdateStudent()"
+                      variant="outline-primary"
+                      class="float-right"
+                      :disabled="isProcessing">
+                      <v-icon
+                        v-if="isProcessing"
+                        name="sync"
+                        class="mr-2"
+                        spin
+                      />
+                      {{forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
+                    </b-button>
+                  </template>
+                </b-card>
+              </b-col>
+            </b-row>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-overlay>
+  </div>
+  <!-- main container -->
+</template>
+<script>
+import { StudentApi, LevelApi, AuthApi, SchoolYearApi } from '../../mixins/api';
+//import StageIndicator from '../components/StageIndicator';
+import GroupStageIndicator from '../components/GroupStageIndicator';
+import ApprovalIndicator from '../components/ApprovalIndicator';
+import { Semesters, ApplicationSteps, Countries, CivilStatuses } from '../../helpers/enum';
+import { copyValue } from '../../helpers/extractor';
+import { validate, reset } from '../../helpers/forms';
+
+const studentFields = {
+  id: null,
+  studentNo: null,
+  firstName: null,
+  middleName: null,
+  lastName: null,
+  mobileNo: null,
+  birthDate: null,
+  civilStatusId: null,
+  parentGuardianName: null,
+  parentGuardianContactNo: null
+}
+
+const addressFields = {
+  currentHouseNoStreet: null,
+  currentCityTown: null,
+  currentProvince: null,
+  currentRegion: null,
+  currentDistrict: null,
+  currentPostalCode: null,
+  currentCountryId: Countries.PHILIPPINES.id,
+  currentCompleteAddress: null,
+  currentHomeLandlineMobileNo: null,
+  permanentHouseNoStreet: null,
+  permanentCityTown: null,
+  permanentProvince: null,
+  permanentRegion: null,
+  permanentDistrict: null,
+  permanentPostalCode: null,
+  permanentCountryId: Countries.PHILIPPINES.id,
+  permanentCompleteAddress: null,
+  permanentHomeLandlineMobileNo: null
+}
+
+const addressErrorFields = {
+  addressCurrentHouseNoStreet: null,
+  addressCurrentCityTown: null,
+  addressCurrentProvince: null,
+  addressCurrentRegion: null,
+  addressCurrentDistrict: null,
+  addressCurrentPostalCode: null,
+  addressCurrentCountryId: null,
+  addressCurrentCompleteAddress: null,
+  addressCurrentHomeLandlineMobileNo: null,
+  addressPermanentHouseNoStreet: null,
+  addressPermanentCityTown: null,
+  addressPermanentProvince: null,
+  addressPermanentRegion: null,
+  addressPermanentDistrict: null,
+  addressPermanentPostalCode: null,
+  addressPermanentCountryId: null,
+  addressPermanentCompleteAddress: null,
+  addressPermanentHomeLandlineMobileNo: null
+}
+
+const familyFields = {
+  fatherName: null,
+  fatherOccupation: null,
+  fatherMobileNo: null,
+  fatherEmail: null,
+  motherName: null,
+  motherOccupation: null,
+  motherMobileNo: null,
+  motherEmail: null
+}
+
+const familyErrorFields = {
+  familyFatherName: null,
+  familyFatherOccupation: null,
+  familyFatherMobileNo: null,
+  familyFatherEmail: null,
+  familyMotherName: null,
+  familyMotherOccupation: null,
+  familyMotherMobileNo: null,
+  familyMotherEmail: null
+}
+
+const educationFields = {
+  lastSchoolAttended: null,
+  lastSchoolAddress: null,
+  year: null,
+  elementaryCourse: null,
+  elementaryCourseYear: null,
+  elementaryCourseHonors: null,
+  highSchoolCourse: null,
+  highSchoolCourseYear: null,
+  highSchoolCourseHonors: null,
+  seniorSchoolCourse: null,
+  seniorSchoolCourseYear: null,
+  seniorSchoolCourseHonors: null,
+  collegeDegree: null,
+  collegeDegreeYear: null,
+  collegeDegreeHonors: null,
+}
+
+const activeApplicationFields = {
+  id: null,
+  appliedDate: null,
+  schoolYearId: null,
+  applicationStatusId : null,
+  applicationStepId: null
+}
+
+const transcriptFields = {
+  id: null,
+  semesterId: null,
+  levelId: null,
+  courseId: null,
+  schoolYearId: null,
+  schoolCategoryId: null
+}
+
+const transcriptErrorFields = {
+  transcriptLevelId: null,
+  subjects: null
+}
+
+export default {
+  name: "StudentInfo",
+  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi ],
+  components: {
+    ApprovalIndicator,
+    GroupStageIndicator
+  },
+  data() {
+    return {
+      isLoading: false,
+      isApplied: false,
+      percentage: 30,
+      isProcessing: false,
+      forms: {
+        student: {
+          fields: { ...studentFields },
+          states: { ...studentFields },
+          errors: { ...studentFields }
+        },
+        address: {
+          fields: { ...addressFields },
+          states: { ...addressErrorFields },
+          errors: { ...addressErrorFields }
+        },
+        family: {
+          fields: { ...familyFields },
+          states: { ...familyErrorFields },
+          errors: { ...familyErrorFields }
+        },
+        education: {
+          fields: { ...educationFields },
+          states: { ...educationFields },
+          errors: { ...educationFields }
+        },
+        activeApplication : {
+          fields: { ...activeApplicationFields }
+        },
+        transcript: {
+          fields: { ...transcriptFields },
+          states: { ...transcriptErrorFields },
+          errors: { ...transcriptErrorFields }
+        },
+      },
+      tables :{
+        subjects: {
+          isBusy: false,
+          fields: [
+            {
+              key: "name",
+              label: "SUBJECTS",
+              tdClass: "align-middle",
+              thStyle: { width: "80%" }
+            },
+            {
+              key: "units",
+              label: "UNITS",
+              tdClass: "align-middle text-center",
+              thClass: "text-center",
+              thStyle: { width: "20%" }
+            }
+          ],
+          items: []
+        }
+      },
+      options: {
+        levels:{
+          items:[]
+        },
+        courses :{
+          items: []
+        },
+        countries: {
+          items: Countries
+        },
+        civilStatuses: {
+          items: CivilStatuses
+        },
+        semesters: {
+          items: Semesters
+        },
+        schoolYears: {
+          items: []
+        }
+      },
+      selectedApprovalStage: 1,
+      groupStages: [
+        {
+          header: 'Personal Information',
+          children: [
+            { id: 1, subHeader: 'Profile', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 2, subHeader: 'Address', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 3, subHeader: 'Family', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' },
+            { id: 4, subHeader: 'Education', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+          ]
+        },
+        {
+          header: 'Application',
+          children: [
+            { id: 5, subHeader: 'Academic Year', description: 'Lorem ipsum dolor itet sul dien belaro muhi mukaly' }
+          ]
+        },
+      ],
+      // stages: [
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet'
+      // ].map((description, idx) => {
+      //   const { name } = ApplicationSteps.values[idx];
+      //   return { name, description }
+      // }) || [],
+      approvalStages: [
+        { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Approved by Staff', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
+      ]
+    };
+  },
+  created() {
+    this.isLoading = true;
+    const studentId = localStorage.getItem('studentId');
+    this.getStudent(studentId).then(({ data: student }) => {
+      Object.keys(this.forms).forEach((key) => {
+        const source = student[key] || student;
+        if (source) {
+          copyValue(source, this.forms[key].fields);
+        }
+      })
+
+      //todo : review code for percentage and approval stage
+        this.percentage = 
+          student.activeApplication.applicationStatusId == 1 ?
+            100 :  student.transcript.transcriptStatusId == 2 ? 
+              60: 30
+        this.selectedApprovalStage = 
+          student.activeApplication.applicationStatusId == 1 ?
+            3 : student.transcript.transcriptStatusId == 2 ? 
+              2 : 1
+    })
+    this.isLoading = false;
+
+    let params = { paginate: false }
+    this.getLevelList(params).then(response => {
+      const res = response.data
+      this.options.levels.items = res
+    });
+    this.getSchoolYearList(params).then(response => {
+      const res = response.data
+      this.options.schoolYears.items = res
+    });
+  },
+  methods: {
+    onUpdateStudent() {
+      const {
+        student: { fields: { id: studentId } },
+        student,
+        address,
+        family,
+        education,
+        transcript,
+        activeApplication: { fields: activeApplication }
+      } = this.forms;
+
+      const { items } = this.tables.subjects
+      let subjects = []
+
+      items.forEach(subject => {
+				subjects.push({
+					subjectId: subject.id
+				})
+			})
+
+      const currentStepIndex = activeApplication.applicationStepId - 1;
+
+      const payloads = [
+         student.fields,
+        { address: address.fields },
+        { family: family.fields },
+        { education: education.fields },
+        { transcript: transcript.fields, subjects }
+      ];
+
+      const formsToValidate = [
+        student,
+        address,
+        family,
+        education,
+        transcript
+      ]
+
+      const applicationStepId =
+        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+          ? ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id 
+          : activeApplication.applicationStepId + 1;
+
+      const applicationStatusId =
+        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+          ? 4
+          : activeApplication.applicationStatusId;
+
+      const data = {
+        ...payloads[currentStepIndex],
+        activeApplication: {
+          ...activeApplication,
+          id: activeApplication.id,
+          applicationStepId,
+          applicationStatusId
+        }
+      }
+      
+      formsToValidate.forEach(form => {
+        reset(form)
+      })
+
+      this.isProcessing = true;
+      this.updateStudent(data, studentId).then(({ data }) => {
+        copyValue(data.activeApplication, activeApplication);
+        this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
+        this.isProcessing = false;
+      }).catch((error) => {
+        const { errors } = error.response.data;
+        validate(formsToValidate[currentStepIndex], errors);
+        this.isProcessing = false;
+      });
+    },
+    loadCourses() {
+      const { fields } = this.forms.transcript;
+      const { items } = this.options.levels
+      // console.log(fields.levelId)
+      fields.schoolCategoryId = items.find(i => i.id == fields.levelId).schoolCategoryId
+      fields.courseId = null
+      fields.semesterId = null
+      const params = { paginate: false }
+      this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
+        this.options.courses.items = data
+        if (data.length === 0) {
+          this.loadSubjects()
+          return
+        }
+        this.tables.subjects.items = []
+      });
+    },
+    loadSubjects() {
+      const { courseId, semesterId, levelId } = this.forms.transcript.fields;
+      const { subjects } = this.tables;
+
+      if (this.options.courses.items.length > 0) {
+        if (courseId === null || semesterId === null) {
+          this.tables.subjects.items = []
+          return
+        }
+      }
+
+      subjects.isBusy = true
+      const params = {
+        courseId,
+        semesterId,
+        paginate: false
+      }
+      this.getSubjectsOfLevelList(levelId, params)
+        .then(({ data }) => {
+          subjects.items = data
+          subjects.isBusy = false
+      });
+    },
+    onSameAddress(isSame) {
+      const { address: { fields: address } } = this.forms
+      if(isSame) {
+        address.permanentHouseNoStreet = address.currentHouseNoStreet
+        address.permanentCityTown = address.currentCityTown
+        address.permanentProvince = address.currentProvince
+        address.permanentRegion = address.currentRegion
+        address.permanentDistrict = address.currentDistrict
+        address.permanentPostalCode = address.currentPostalCode
+        address.permanentCountryId = address.currentCountryId
+        address.permanentCompleteAddress = address.currentCompleteAddress
+        address.permanentHomeLandlineMobileNo = address.currentHomeLandlineMobileNo
+      } else {
+        address.permanentHouseNoStreet = null
+        address.permanentCityTown = null
+        address.permanentProvince = null
+        address.permanentRegion = null
+        address.permanentDistrict = null
+        address.permanentPostalCode = null
+        address.permanentCountryId = Countries.PHILIPPINES.id
+        address.permanentCompleteAddress = null
+        address.permanentHomeLandlineMobileNo = null
+      }
+    }
+  },
+  computed: {
+    totalUnits() {
+      let totalUnits = 0
+      this.tables.subjects.items.forEach(i => {
+        totalUnits += i.units
+      })
+      return totalUnits
+    },
+    heading() {
+      const { fields } = this.forms.activeApplication
+      if (fields.applicationStepId) {
+        const subHeaders = [
+          ...this.groupStages[0].children,
+          ...this.groupStages[1].children
+        ]
+        return subHeaders.find(({ id }) => id === fields.applicationStepId)
+      }
+      return null;
+    }
+  },
+};
+</script>
