@@ -67,7 +67,7 @@
       <div class="login__right-pane">
         <ul class="login__top-links">
           <li class="login__top-link-item">
-            <a href="#">LMS</a>
+            <a href="https://lms.stctandag.edu.ph/">LMS</a>
           </li>
           <li class="login__top-link-item">
             <a
