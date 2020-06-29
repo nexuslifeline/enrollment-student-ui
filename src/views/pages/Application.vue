@@ -924,7 +924,7 @@
                           borderless small responsive>
                         </b-table>
                       </div>
-                      <span v-else>Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
+                      <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
                     </div>
                   </div>
                   <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
@@ -1837,9 +1837,7 @@ export default {
       let subjects = []
 
       items.forEach(subject => {
-				subjects.push({
-					subjectId: subject.id
-				})
+				subjects.push(subject.id)
 			})
 
       const currentStepIndex = activeApplication.applicationStepId - 1;
