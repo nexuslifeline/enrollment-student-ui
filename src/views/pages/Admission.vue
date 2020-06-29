@@ -193,10 +193,14 @@
                 <b-row>
                   <b-col md="12">
                     <b-form-group>
-                      <label>Current Address</label>
+                      <label>Complete Address</label>
                       <b-form-textarea
                         rows="3"
-                        v-model="forms.address.fields.currentCompleteAddress" />
+                        v-model="forms.address.fields.currentCompleteAddress"
+                        :state="forms.address.states.addressCurrentCompleteAddress" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressCurrentCompleteAddress}}
+                      </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -305,10 +309,14 @@
                 <b-row>
                   <b-col md="12">
                     <b-form-group>
-                      <label>Permanent Address</label>
+                      <label>Complete Address</label>
                       <b-form-textarea
                         rows="3"
-                        v-model="forms.address.fields.permanentCompleteAddress" />
+                        v-model="forms.address.fields.permanentCompleteAddress"
+                        :state="forms.address.states.addressPermanentCompleteAddress" />
+                      <b-form-invalid-feedback>
+                        {{forms.address.errors.addressPermanentCompleteAddress}}
+                      </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -592,7 +600,8 @@
                           <label>Course</label>
                           <b-form-select 
                             @input="loadSubjectsOfLevel()" 
-                            v-model='forms.transcript.fields.courseId' >
+                            v-model='forms.transcript.fields.courseId' 
+                            :state="forms.transcript.states.transcriptCourseId">
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                             </template>
@@ -600,6 +609,9 @@
                               {{course.name}}
                             </b-form-select-option>
                           </b-form-select>
+                          <b-form-invalid-feedback>
+                            {{forms.transcript.errors.transcriptCourseId}}
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -630,7 +642,8 @@
                           <label>Semester</label>
                           <b-form-select
                             @input="loadSubjectsOfLevel()" 
-                            v-model='forms.transcript.fields.semesterId'>
+                            v-model='forms.transcript.fields.semesterId'
+                            :state="forms.transcript.states.transcriptSemesterId">
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                             </template>
@@ -638,6 +651,9 @@
                               {{ semester.name }}
                             </b-form-select-option>
                           </b-form-select>
+                          <b-form-invalid-feedback>
+                            {{forms.transcript.errors.transcriptSemesterId}}
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -1452,6 +1468,8 @@ const transcriptFields = {
 
 const transcriptErrorFields = {
   transcriptLevelId: null,
+  transcriptCourseId: null,
+  transcriptSemesterId: null,
   transcriptSectionId: null,
   subjects: null
 }
