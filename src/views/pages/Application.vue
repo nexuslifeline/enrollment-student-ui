@@ -18,7 +18,8 @@
                   <label class="required">Firstname</label>
                   <b-form-input
                     v-model="forms.student.fields.firstName" 
-                    :state="forms.student.states.firstName" />
+                    :state="forms.student.states.firstName" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.student.errors.firstName}}
                   </b-form-invalid-feedback>
@@ -26,13 +27,15 @@
                 <b-form-group>
                   <label>Middlename</label>
                   <b-form-input
-                    v-model="forms.student.fields.middleName" />
+                    v-model="forms.student.fields.middleName" 
+                    debounce="500"/>
                 </b-form-group>
                 <b-form-group>
                   <label class="required">Lastname</label>
                   <b-form-input
                     v-model="forms.student.fields.lastName" 
-                    :state="forms.student.states.lastName" />
+                    :state="forms.student.states.lastName" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.student.errors.lastName}}
                   </b-form-invalid-feedback>
@@ -66,7 +69,8 @@
                 <b-form-group>
                   <label>Mobile No.</label>
                   <b-form-input
-                    v-model="forms.student.fields.mobileNo" />
+                    v-model="forms.student.fields.mobileNo" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
               <b-col md="4">
@@ -101,7 +105,8 @@
                   <label class="required">House No/Street</label>
                   <b-form-input
                     v-model="forms.address.fields.currentHouseNoStreet" 
-                    :state="forms.address.states.addressCurrentHouseNoStreet" />
+                    :state="forms.address.states.addressCurrentHouseNoStreet" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentHouseNoStreet}}
                   </b-form-invalid-feedback>
@@ -112,7 +117,8 @@
                   <label class="required">City/Town</label>
                   <b-form-input
                     v-model="forms.address.fields.currentCityTown" 
-                    :state="forms.address.states.addressCurrentCityTown" />
+                    :state="forms.address.states.addressCurrentCityTown" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentCityTown}}
                   </b-form-invalid-feedback>
@@ -123,7 +129,8 @@
                   <label class="required">Province</label>
                   <b-form-input
                     v-model="forms.address.fields.currentProvince" 
-                    :state="forms.address.states.addressCurrentProvince" />
+                    :state="forms.address.states.addressCurrentProvince" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentProvince}}
                   </b-form-invalid-feedback>
@@ -136,7 +143,8 @@
                   <label class="required">Postal/Zip Code</label>
                   <b-form-input
                     v-model="forms.address.fields.currentPostalCode" 
-                    :state="forms.address.states.addressCurrentPostalCode" />
+                    :state="forms.address.states.addressCurrentPostalCode" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentPostalCode}}
                   </b-form-invalid-feedback>
@@ -146,14 +154,16 @@
                 <b-form-group>
                   <label >District</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentDistrict" />
+                    v-model="forms.address.fields.currentDistrict" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
                   <label>Region</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentRegion" />
+                    v-model="forms.address.fields.currentRegion" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -161,8 +171,9 @@
               <b-col md="6">
                 <b-form-group>
                   <label class="required">Country</label>
-                  <b-form-select v-model="forms.address.fields.currentCountryId" 
-                  :state="forms.address.states.addressCurrentCountryId">
+                  <b-form-select 
+                    v-model="forms.address.fields.currentCountryId" 
+                    :state="forms.address.states.addressCurrentCountryId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
                     </template>
@@ -180,7 +191,8 @@
                   <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
                     v-model="forms.address.fields.currentHomeLandlineMobileNo" 
-                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo" />
+                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
                   </b-form-invalid-feedback>
@@ -194,7 +206,8 @@
                   <b-form-textarea
                     rows="3"
                     v-model="forms.address.fields.currentCompleteAddress"
-                    :state="forms.address.states.addressCurrentCompleteAddress" />
+                    :state="forms.address.states.addressCurrentCompleteAddress" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentCompleteAddress}}
                   </b-form-invalid-feedback>
@@ -216,7 +229,8 @@
                   <label class="required">House No/Street</label>
                   <b-form-input
                     v-model="forms.address.fields.permanentHouseNoStreet" 
-                    :state="forms.address.states.addressPermanentHouseNoStreet" />
+                    :state="forms.address.states.addressPermanentHouseNoStreet" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentHouseNoStreet}}
                   </b-form-invalid-feedback>
@@ -227,7 +241,8 @@
                   <label class="required">City/Town</label>
                   <b-form-input
                     v-model="forms.address.fields.permanentCityTown" 
-                    :state="forms.address.states.addressPermanentCityTown" />
+                    :state="forms.address.states.addressPermanentCityTown" 
+                    debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentCityTown}}
                   </b-form-invalid-feedback>
@@ -238,7 +253,8 @@
                   <label class="required">Province</label>
                   <b-form-input
                     v-model="forms.address.fields.permanentProvince"
-                    :state="forms.address.states.addressPermanentProvince" />
+                    :state="forms.address.states.addressPermanentProvince"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentProvince}}
                   </b-form-invalid-feedback>
@@ -251,7 +267,8 @@
                   <label class="required">Postal/Zip Code</label>
                   <b-form-input
                     v-model="forms.address.fields.permanentPostalCode"
-                    :state="forms.address.states.addressPermanentPostalCode" />
+                    :state="forms.address.states.addressPermanentPostalCode"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentPostalCode}}
                   </b-form-invalid-feedback>
@@ -261,14 +278,16 @@
                 <b-form-group>
                   <label>District</label>
                   <b-form-input
-                    v-model="forms.address.fields.permanentDistrict" />
+                    v-model="forms.address.fields.permanentDistrict"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
                   <label>Region</label>
                   <b-form-input
-                    v-model="forms.address.fields.permanentRegion" />
+                    v-model="forms.address.fields.permanentRegion"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
             </b-row>
@@ -276,7 +295,8 @@
                 <b-col md="6">
                 <b-form-group>
                   <label class="required">Country</label>
-                  <b-form-select v-model="forms.address.fields.permanentCountryId"
+                  <b-form-select 
+                    v-model="forms.address.fields.permanentCountryId"
                     :state="forms.address.states.addressPermanentCountryId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
@@ -295,7 +315,8 @@
                   <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
                     v-model="forms.address.fields.permanentHomeLandlineMobileNo" 
-                    :state="forms.address.states.addressPermanentHomeLandlineMobileNo" />
+                    :state="forms.address.states.addressPermanentHomeLandlineMobileNo"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
                   </b-form-invalid-feedback>
@@ -309,7 +330,8 @@
                   <b-form-textarea
                     rows="3"
                     v-model="forms.address.fields.permanentCompleteAddress"
-                    :state="forms.address.states.addressPermanentCompleteAddress" />
+                    :state="forms.address.states.addressPermanentCompleteAddress"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentCompleteAddress}}
                   </b-form-invalid-feedback>
@@ -324,7 +346,8 @@
                   <label class="required">Father</label>
                   <b-form-input
                     v-model="forms.family.fields.fatherName"
-                    :state="forms.family.states.familyFatherName" />
+                    :state="forms.family.states.familyFatherName"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.family.errors.familyFatherName}}
                   </b-form-invalid-feedback>
@@ -334,7 +357,8 @@
                 <b-form-group>
                   <label>Contact No.</label>
                   <b-form-input
-                    v-model="forms.family.fields.fatherMobileNo" />
+                    v-model="forms.family.fields.fatherMobileNo"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
             </b-row>
@@ -343,7 +367,8 @@
                 <b-form-group>
                   <label>Occupation</label>
                   <b-form-input
-                    v-model="forms.family.fields.fatherOccupation" />
+                    v-model="forms.family.fields.fatherOccupation"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -351,7 +376,8 @@
                   <label>Email Address</label>
                   <b-form-input
                     v-model="forms.family.fields.fatherEmail"
-                    :state="forms.family.states.familyFatherEmail" />
+                    :state="forms.family.states.familyFatherEmail"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.family.errors.familyFatherEmail}}
                   </b-form-invalid-feedback>
@@ -364,7 +390,8 @@
                   <label class="required">Mother</label>
                   <b-form-input
                     v-model="forms.family.fields.motherName"
-                    :state="forms.family.states.familyMotherName" />
+                    :state="forms.family.states.familyMotherName"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.family.errors.familyMotherName}}
                   </b-form-invalid-feedback>
@@ -374,7 +401,8 @@
                 <b-form-group>
                   <label>Contact No.</label>
                   <b-form-input
-                    v-model="forms.family.fields.motherMobileNo" />
+                    v-model="forms.family.fields.motherMobileNo"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
             </b-row>
@@ -383,7 +411,8 @@
                 <b-form-group>
                   <label>Occupation</label>
                   <b-form-input
-                    v-model="forms.family.fields.motherOccupation" />
+                    v-model="forms.family.fields.motherOccupation" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
               <b-col md="6">
@@ -391,7 +420,8 @@
                   <label>Email Address</label>
                   <b-form-input
                     v-model="forms.family.fields.motherEmail"
-                    :state="forms.family.states.familyMotherEmail" />
+                    :state="forms.family.states.familyMotherEmail"
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{forms.family.errors.familyMotherEmail}}
                   </b-form-invalid-feedback>
@@ -411,7 +441,8 @@
                       <label class="required">Parent/Guardian</label>
                       <b-form-input 
                         v-model="forms.family.fields.parentGuardianName"
-                        :state="forms.family.states.familyParentGuardianName" />
+                        :state="forms.family.states.familyParentGuardianName" 
+                        debounce="500"/>
                       <b-form-invalid-feedback>
                         {{forms.family.errors.familyParentGuardianName}}
                       </b-form-invalid-feedback>
@@ -422,7 +453,8 @@
                       <label class="required">Parent/Guardian Contact No.</label>
                       <b-form-input 
                         v-model="forms.family.fields.parentGuardianContactNo"
-                        :state="forms.family.states.familyParentGuardianContactNo" />
+                        :state="forms.family.states.familyParentGuardianContactNo" 
+                        debounce="500"/>
                       <b-form-invalid-feedback>
                         {{forms.family.errors.familyParentGuardianContactNo}}
                       </b-form-invalid-feedback>
@@ -438,14 +470,16 @@
                 <b-form-group>
                   <label>Last School Attended</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolAttended" />
+                    v-model="forms.education.fields.lastSchoolAttended" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
               <b-col md="4">
                 <b-form-group>
                   <label>Level</label>
                   <b-form-input
-                    v-model="forms.education.fields.year" />
+                    v-model="forms.education.fields.year" 
+                    debounce="500"/>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -454,7 +488,8 @@
                 <b-form-group>
                   <label>Last School Address</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolAddress" />
+                    v-model="forms.education.fields.lastSchoolAddress"
+                    debounce="500" />
                 </b-form-group>
               </b-col>
             </b-row>
@@ -465,21 +500,24 @@
                     <b-form-group>
                       <label>Elementary Course Completed or Primary</label>
                       <b-form-input
-                          v-model="forms.education.fields.elementaryCourse" />
+                          v-model="forms.education.fields.elementaryCourse" 
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Year</label>
                       <b-form-input
-                          v-model="forms.education.fields.elementaryCourseYear" />
+                          v-model="forms.education.fields.elementaryCourseYear"
+                          debounce="500" />
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Honor Received</label>
                       <b-form-input
-                          v-model="forms.education.fields.elementaryCourseHonors"/>
+                          v-model="forms.education.fields.elementaryCourseHonors"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -492,21 +530,24 @@
                     <b-form-group>
                       <label>High School Course Completed or Secondary</label>
                       <b-form-input
-                          v-model="forms.education.fields.highSchoolCourse"/>
+                          v-model="forms.education.fields.highSchoolCourse"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Year</label>
                       <b-form-input
-                          v-model="forms.education.fields.highSchoolCourseYear"/>
+                          v-model="forms.education.fields.highSchoolCourseYear"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Honor Received</label>
                       <b-form-input
-                          v-model="forms.education.fields.highSchoolCourseHonors"/>
+                          v-model="forms.education.fields.highSchoolCourseHonors"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -519,21 +560,24 @@
                     <b-form-group>
                       <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
                       <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourse"/>
+                          v-model="forms.education.fields.seniorSchoolCourse"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Year</label>
                       <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourseYear"/>
+                          v-model="forms.education.fields.seniorSchoolCourseYear"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Honor Received</label>
                       <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourseHonors"/>
+                          v-model="forms.education.fields.seniorSchoolCourseHonors"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -546,21 +590,24 @@
                     <b-form-group>
                       <label >College Degree(if graduated) or Tertiary</label>
                       <b-form-input
-                          v-model="forms.education.fields.collegeDegree"/>
+                          v-model="forms.education.fields.collegeDegree"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Year</label>
                       <b-form-input
-                          v-model="forms.education.fields.collegeDegreeYear"/>
+                          v-model="forms.education.fields.collegeDegreeYear"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                   <b-col md="3">
                     <b-form-group>
                       <label>Honor Received</label>
                       <b-form-input
-                          v-model="forms.education.fields.collegeDegreeHonors"/>
+                          v-model="forms.education.fields.collegeDegreeHonors"
+                          debounce="500"/>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -949,7 +996,8 @@
                                 v-model="forms.payment.fields.amount"
                                 class="form-control text-right" 
                                 :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                                :state="forms.payment.states.amount">
+                                :state="forms.payment.states.amount"
+                                debounce="500">
                               </vue-autonumeric>
                               <b-form-invalid-feedback>
                                 {{ forms.payment.errors.amount }}
@@ -962,6 +1010,7 @@
                               <b-form-input
                                 v-model="forms.payment.fields.referenceNo"
                                 :state="forms.payment.states.referenceNo"
+                                debounce="500"
                               />
                               <b-form-invalid-feedback>
                                 {{ forms.payment.errors.referenceNo }}
@@ -990,6 +1039,7 @@
                                 rows="4"
                                 v-model="forms.payment.fields.notes"
                                 :state="forms.payment.states.notes"
+                                debounce="500"
                               ></b-form-textarea>
                               <b-form-invalid-feedback>
                                 {{ forms.payment.errors.notes }}
@@ -1112,7 +1162,8 @@
           <b-textarea 
             v-model="forms.paymentFile.fields.notes"
             :state="forms.paymentFile.states.notes"
-            rows=7 />
+            rows=7
+            debounce="500" />
           <b-form-invalid-feedback>
             {{ forms.paymentFile.errors.notes }}
           </b-form-invalid-feedback>
@@ -1550,14 +1601,8 @@ export default {
           isBusy: false,
           fields: [
             {
-              key: "code",
-              label: "Code",
-              tdClass: "align-middle",
-              thStyle: {width: "6%"}
-            },
-            {
               key: "name",
-              label: "Name",
+              label: "Subject Code",
               tdClass: "align-middle",
               thStyle: {width: "12%"}
             },
