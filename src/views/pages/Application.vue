@@ -2471,6 +2471,7 @@ export default {
     align-items: center;
     padding: 0 30px;
     border-top: 1px solid $brand-border-color;
+    z-index: 2;
 
     @include for-size(phone-only) {
       padding: 0 15px;
