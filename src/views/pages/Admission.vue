@@ -665,6 +665,7 @@
                         <b-form-group >
                           <label>Preferred Section</label>
                           <b-form-select
+                            :disabled="sectionIsLoading"
                             v-model='forms.transcript.fields.sectionId'
                             :state="forms.transcript.states.transcriptSectionId">
                             <template v-slot:first>
@@ -1933,7 +1934,8 @@ export default {
           { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
           { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
         ],
-        payTypeId: null
+        payTypeId: null,
+        sectionIsLoading: false
       }
     },
     created(){
@@ -2113,6 +2115,7 @@ export default {
         }
       },
       loadCourses() {
+        this.sectionIsLoading = true
         this.options.sections.items = []
         const { fields } = this.forms.transcript;
         const { items } = this.options.levels
@@ -2131,6 +2134,7 @@ export default {
             this.loadSections()
             return
           }
+          this.sectionIsLoading = false
           this.tables.levelSubjects.items = []
           
         });
@@ -2547,9 +2551,10 @@ export default {
       loadSections () {
         this.forms.transcript.fields.sectionId = null
         const { schoolYearId, levelId, courseId, semesterId } = this.forms.transcript.fields
-        let params = { paginate: false, schoolYearId: schoolYearId, levelId: levelId , courseId: courseId, semesterId: semesterId };
+        let params = { paginate: false, schoolYearId, levelId, courseId, semesterId };
         this.getSectionList(params).then(({ data }) => {
           this.options.sections.items = data;
+          this.sectionIsLoading = false
         });
       },
       removeSubject(row){
