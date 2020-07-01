@@ -786,11 +786,16 @@
                 </b-alert>
                 <b-row class="pb-2">
                   <b-col md="12">
-                    <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                    <div>
+                      <span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span>
+                      <span>
+                        We are still reviewing your application. Please check your account from time to time
+                      </span>
+                    </div>
                   </b-col>
                 </b-row>
-                <b-row class="pb-5">
-                  <b-col md="2">
+                <div class="pb-5">
+                  <!--<b-col md="2">
                     <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
                   </b-col>
                   <b-col md="2">
@@ -807,8 +812,12 @@
                   </b-col>
                   <b-col md="2">
                     <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                </b-row>
+                  </b-col>-->
+                  <ProgressIndicator
+                    :barCount="6"
+                    :activeBar="percentage >= 30 ? 2 : percentage >= 60 ? 4 : 6"
+                  />
+                </div>
                 <div class="approval-container">
                   <ApprovalIndicator
                     :stages="approvalStages"
@@ -843,14 +852,14 @@
                 </b-alert>
               </b-col>
             </b-row>
-            <div v-show="!isPaying" class="mt-4" > 
+            <div v-show="!isPaying" class="mt-4" >
               <!--  -->
               <b-row >
                 <b-col md=12>
                   <b-row>
                     <b-col md=12>
                       <b-alert show variant="primary">
-                        <p style="font-weight: bold"> 
+                        <p style="font-weight: bold">
                           The initial fees should be paid in order to secure the registration of the student. The student will not
                           be officially registered until payment is complete.
                           <br>
@@ -863,10 +872,10 @@
                         </p>
                       </b-alert>
                     </b-col>
-                  </b-row> 
+                  </b-row>
                   <b-row class="mt-2">
                     <b-col md=12>
-                      <b-card 
+                      <b-card
                         border-variant="warning"
                       >
                         <b-row>
@@ -907,8 +916,8 @@
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                   <p class="mb-2">
-                                    For those students that are already been enrolled for the SY 2020-2021 you will be 
-                                    needing to attached your official receipt or or any 
+                                    For those students that are already been enrolled for the SY 2020-2021 you will be
+                                    needing to attached your official receipt or or any
                                     proof of payment to be confirmed and enrolled in the system.
                                   </p>
                                 </div>
@@ -937,16 +946,17 @@
                             :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
                             :value="paymentMode.id"
                             :key="paymentMode.id">
-                            {{ paymentMode.name }} 
+                            {{ paymentMode.name }}
                             <br>
-                            <small> {{ paymentMode.description }} </small> 
+                            <small> {{ paymentMode.description }} </small>
                           </b-form-radio>
                         </b-form-radio-group>
                       </b-form-group>
                     </b-alert>
                   </b-card>
                   <h6>
-                    You have until {{ forms.billing.fields.dueDate }} to make the payment. This reference number will not be valid until that.
+                    You have until {{ forms.billing.fields.dueDate }} to make the payment. 
+                    This reference number will not be valid until that.
                   </h6>
                 </b-col>
               </b-row>
@@ -956,7 +966,8 @@
                     <span class="payment-step__number">1</span>
                     <div class="payment-step-details-container">
                       <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                        <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. You can deposit/transfer your payment in any bank listed below.</span>
+                        <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. 
+                        You can deposit/transfer your payment in any bank listed below.</span>
                         <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 1"
@@ -1304,19 +1315,40 @@
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi,
-  PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
-  SubjectApi, SectionApi } from '../../mixins/api';
+import {
+  StudentApi,
+  LevelApi,
+  AuthApi,
+  SchoolYearApi,
+  PaymentApi,
+  PaymentFileApi,
+  BillingApi,
+  EWalletAccountApi,
+  BankAccountApi,
+  SubjectApi,
+  SectionApi
+} from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
-import { Semesters, ApplicationSteps, Countries, CivilStatuses, ApplicationStatuses, PaymentStatuses, BillingTypes, PayTypes, TranscriptStatuses } from '../../helpers/enum';
+import {
+  Semesters,
+  ApplicationSteps,
+  Countries,
+  CivilStatuses,
+  ApplicationStatuses,
+  PaymentStatuses,
+  BillingTypes,
+  PayTypes,
+  TranscriptStatuses
+} from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
 import Tables from '../../helpers/tables'
 import PhotoViewer from '../components/PhotoViewer'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
+import ProgressIndicator from '../components/ProgressIndicator';
 
 const studentFields = {
   id: null,
@@ -1478,15 +1510,27 @@ const studentFeeFields = {
 
 export default {
   name: "Application",
-  mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi,
-    PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi,
-    SubjectApi, SectionApi, Tables ],
+  mixins: [
+    StudentApi,
+    LevelApi,
+    AuthApi,
+    SchoolYearApi,
+    PaymentApi,
+    PaymentFileApi,
+    BillingApi,
+    EWalletAccountApi,
+    BankAccountApi,
+    SubjectApi,
+    SectionApi,
+    Tables
+  ],
   components: {
     ApprovalIndicator,
     GroupStageIndicator,
     PhotoViewer,
     FileUploader,
-    FileItem
+    FileItem,
+    ProgressIndicator
   },
   data() {
     return {
@@ -1926,7 +1970,7 @@ export default {
           applicationStatusId
         }
       }
-      
+
       formsToValidate.forEach(form => {
         reset(form)
       })
@@ -1937,7 +1981,7 @@ export default {
         //   this.$router.push({ name: 'Dashboard' })
         //   return
         // }
-        
+
         //load billing when on payment stage after update
         if (data.activeApplication.applicationStepId === ApplicationSteps.PAYMENTS.id) {
           this.loadBilling()
@@ -1961,7 +2005,7 @@ export default {
         showNotification(this, 'danger', `The amount shouldn't be less than the initial fee: ${formatNumber(totalAmount)}.`)
         return
       }
-      
+
       if (this.paymentFiles.length == 0) {
         showNotification(this, 'danger', 'You should attach atleast one or more proof of payment.')
         return
@@ -1992,7 +2036,7 @@ export default {
       const level = items.find(i => i.id == fields.levelId)
       if (level) {
         fields.schoolCategoryId = level.schoolCategoryId
-      } 
+      }
       fields.courseId = null
       fields.semesterId = null
       const params = { paginate: false }
@@ -2111,8 +2155,7 @@ export default {
         if (data[0].payments[0] != null) {
 
           copyValue(data[0].payments[0], this.forms.payment.fields)
-          
-          
+
           //set payment approval stage
           this.selectedPaymentApprovalStage = 
             payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id ?
@@ -2182,15 +2225,15 @@ export default {
       // if payment is null add payment
       if (payTypeId === PayTypes.ATTACHMENT.id) {
         this.forms.payment.fields.paymentModeId = 3
-        
+
       }
       else {
         this.forms.payment.fields.paymentModeId = 1
       }
-      
-      const { 
-        payment, 
-        billing, 
+
+      const {
+        payment,
+        billing,
         billing: { fields: { id: billingId } },
         student: { fields: { id: studentId } },
       } = this.forms
@@ -2206,10 +2249,9 @@ export default {
 
       if (payTypeId === PayTypes.INITIAL.id) {
         payment.fields.amount = billing.fields.totalAmount
-      } else { 
+      } else {
         payment.fields.amount = 0
       }
-      
 
       if (payment.fields.id === null) {
         this.addPayment(data).then(({ data }) =>{
@@ -2292,10 +2334,10 @@ export default {
       const { subject } = this.paginations
       const { schoolCategoryId } = this.forms.transcript.fields
       subjects.items = []
-      
+
       subjects.isBusy = true
       let params = { paginate: false, schoolCategoryId }
-      
+
       this.getSubjectList(params)
         .then(({ data }) => {
           subjects.items = data
@@ -2328,7 +2370,7 @@ export default {
           this.file.type = response.headers.contentType
           const file = new Blob([response.data], { type: response.headers.contentType })
           const reader = new FileReader();
-          
+
           reader.onload = e => this.file.src = e.target.result
           reader.readAsDataURL(file);
           this.showModalPreview = true
@@ -2525,21 +2567,21 @@ export default {
   }
 
   .payment-step-header-container {
-    display:flex; 
+    display:flex;
     align-items: center;
   }
 
   .payment-step-details-container {
-    display:flex; 
-    flex-direction: column; 
+    display:flex;
+    flex-direction: column;
     width: 100%;
   }
 
   .payment-step-container {
-    display:flex; 
+    display:flex;
     flex-direction: row;
     width: 100%;
   }
-  
+
 
 </style>

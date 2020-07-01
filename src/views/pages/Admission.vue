@@ -813,11 +813,12 @@
                   </b-alert>
                   <b-row class="pb-2">
                     <b-col md="12">
-                      <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span><span>We are still reviewing your application. Please check your account from time to time</span></div>
+                      <div><span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span>
+                      <span>We are still reviewing your application. Please check your account from time to time</span></div>
                     </b-col>
                   </b-row>
-                  <b-row class="pb-5">
-                    <b-col md="2">
+                  <div class="pb-5">
+                    <!--<b-col md="2">
                       <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
                     </b-col>
                     <b-col md="2">
@@ -834,8 +835,12 @@
                     </b-col>
                     <b-col md="2">
                       <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                    </b-col>
-                  </b-row>
+                    </b-col>-->
+                    <ProgressIndicator
+                      :barCount="6"
+                      :activeBar="percentage >= 30 ? 2 : percentage >= 60 ? 4 : 6"
+                    />
+                  </div>
                   <div class="approval-container">
                     <ApprovalIndicator
                       :stages="approvalStages"
@@ -949,7 +954,7 @@
                     </b-row>
                   </b-col>
                 </b-row>
-                
+
               </div>
               <div v-show="isPaying">
                 <!--  -->
@@ -966,16 +971,17 @@
                             :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
                             :value="paymentMode.id"
                             :key="paymentMode.id">
-                            {{ paymentMode.name }} 
+                            {{ paymentMode.name }}
                             <br>
-                            <small> {{ paymentMode.description }} </small> 
+                            <small> {{ paymentMode.description }} </small>
                           </b-form-radio>
                         </b-form-radio-group>
                         </b-form-group>
                       </b-alert>
                     </b-card>
                     <h6>
-                      You have until {{ forms.billing.fields.dueDate }} to make the payment. This reference number will not be valid until that.
+                      You have until {{ forms.billing.fields.dueDate }} to make the payment. 
+                      This reference number will not be valid until that.
                     </h6>
                   </b-col>
                 </b-row>
@@ -985,8 +991,12 @@
                       <span class="payment-step__number">1</span>
                       <div class="payment-step-details-container">
                         <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                          <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. You can deposit/transfer your payment in any bank listed below.</span>
-                          <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
+                          <span v-if="forms.payment.fields.paymentModeId === 1">
+                            Choose your preferred bank. You can deposit/transfer your payment in any bank listed below.
+                          </span>
+                          <span v-if="forms.payment.fields.paymentModeId === 4">
+                            Choose your preferred Account.
+                          </span>
                           <b-table
                             v-if="forms.payment.fields.paymentModeId === 1"
                             :fields="tables.bankAccounts.fields"
@@ -1000,7 +1010,9 @@
                             borderless small responsive>
                           </b-table>
                         </div>
-                        <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
+                        <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">
+                          Please attach any proof of your payment or your receipt provided by the St. Theresa College.
+                        </span>
                       </div>
                     </div>
                     <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
@@ -1174,7 +1186,7 @@
         </div>
       </div>
     </div>
-    <b-modal 
+    <b-modal
       v-model="showPaymentFileModal"
       centered
       header-bg-variant="success"
@@ -1188,10 +1200,10 @@
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
-          <b-textarea 
+          <b-textarea
             v-model="forms.paymentFile.fields.notes"
             :state="forms.paymentFile.states.notes"
-            rows=7 
+            rows=7
             debounce="500"/>
           <b-form-invalid-feedback>
             {{ forms.paymentFile.errors.notes }}
@@ -1199,8 +1211,8 @@
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-        <b-button 
-          class="float-left" 
+        <b-button
+          class="float-left"
           @click="onDeletePaymentFile(selectedPaymentFileIndex)"
           variant="outline-danger">
           <v-icon
@@ -1211,9 +1223,9 @@
           />
           Delete
         </b-button>
-        <b-button 
+        <b-button
           @click="onUpdatePaymentFile()"
-          class="float-right" 
+          class="float-right"
           variant="outline-primary">
           <v-icon
             v-if="isFileUpdating"
@@ -1225,7 +1237,7 @@
         </b-button>
       </div> <!-- modal footer buttons -->
     </b-modal>
-    <b-modal 
+    <b-modal
       v-model="showAdmissionFileModal"
       centered
       header-bg-variant="success"
@@ -1239,10 +1251,10 @@
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
-          <b-textarea 
+          <b-textarea
             v-model="forms.admissionFile.fields.notes"
             :state="forms.admissionFile.states.notes"
-            rows=7 
+            rows=7
             debounce="500"/>
           <b-form-invalid-feedback>
             {{ forms.admissionFile.errors.notes }}
@@ -1250,8 +1262,8 @@
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-        <b-button 
-          class="float-left" 
+        <b-button
+          class="float-left"
           @click="onDeleteAdmissionFile(selectedAdmissionFileIndex)"
           variant="outline-danger">
           <v-icon
@@ -1262,9 +1274,9 @@
           />
           Delete
         </b-button>
-        <b-button 
+        <b-button
           @click="onUpdateAdmissionFile()"
-          class="float-right" 
+          class="float-right"
           variant="outline-primary">
           <v-icon
             v-if="isFileUpdating"
@@ -1277,7 +1289,7 @@
       </div> <!-- modal footer buttons -->
     </b-modal>
     <!-- Modal Subject -->
-    <b-modal 
+    <b-modal
 			v-model="showModalSubjects"
 			:noCloseOnEsc="true"
 			:noCloseOnBackdrop="true"
@@ -1291,8 +1303,8 @@
             <b-col offset-md="8" md="4">
               <b-form-input
                 v-model="filters.subject.criteria"
-                type="text" 
-                placeholder="Search" 
+                type="text"
+                placeholder="Search"
                 debounce="500">
               </b-form-input>
             </b-col>
@@ -1307,8 +1319,8 @@
             :per-page="paginations.subject.perPage"
             @filtered="onFiltered($event, paginations.subject)">
 						<template v-slot:cell(action)="row">
-							<b-button 
-                @click="addSubject(row)" 
+							<b-button
+                @click="addSubject(row)"
                 size="sm" variant="success">
                 <v-icon name="plus" />
               </b-button>
@@ -1399,6 +1411,7 @@ import { copyValue } from '../../helpers/extractor';
 import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
 import Tables from '../../helpers/tables';
 import PhotoViewer from '../components/PhotoViewer';
+import ProgressIndicator from '../components/ProgressIndicator';
 import RegisterVue from './Register.vue';
 
 const studentFields = {
@@ -1567,12 +1580,28 @@ const studentFeeFields = {
 
 export default {
     name : "Admission",
-    mixins: [StudentApi, LevelApi, AuthApi, SchoolYearApi, 
-      AdmissionFileApi, PaymentApi, PaymentFileApi, 
-      BillingApi, BankAccountApi, EWalletAccountApi, 
-      SubjectApi, SectionApi, Tables ],
+    mixins: [
+      StudentApi,
+      LevelApi,
+      AuthApi,
+      SchoolYearApi,
+      AdmissionFileApi,
+      PaymentApi,
+      PaymentFileApi,
+      BillingApi,
+      BankAccountApi,
+      EWalletAccountApi,
+      SubjectApi,
+      SectionApi,
+      Tables
+    ],
     components: {
-      GroupStageIndicator, ApprovalIndicator, PhotoViewer, FileUploader, FileItem
+      GroupStageIndicator,
+      ApprovalIndicator,
+      PhotoViewer,
+      FileUploader,
+      FileItem,
+      ProgressIndicator
     },
     data(){
       return{

@@ -42,6 +42,10 @@
           @stageSelect="onApprovalStageSelect"
         />
       </div>
+      <div>
+        <h3>Progress Indicator</h3>
+        <ProgressIndicator />
+      </div>
       <div class="approval-actions">
         <p>This is for demo purpose only</p>
         <button @click="selectedApprovalStage = 0">Stage 1</button>
@@ -108,6 +112,7 @@ import PhotoViewer from '../components/PhotoViewer'
 import FileUploader from '../components/FileUploader'
 import FileItem from '../components/FileItem'
 import ProfileMaker from '../components/ProfileMaker'
+import ProgressIndicator from '../components/ProgressIndicator'
 import { SchoolCategories } from '../../helpers/enum'
 
 export default {
@@ -119,7 +124,8 @@ export default {
     PhotoViewer,
     FileUploader,
     FileItem,
-    ProfileMaker
+    ProfileMaker,
+    ProgressIndicator
   },
   data() {
     return {
