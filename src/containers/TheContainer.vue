@@ -49,6 +49,7 @@ export default {
 
 .c-container-fluid {
   padding: 0 !important;
+  height: 100%;
 }
 
 </style>
