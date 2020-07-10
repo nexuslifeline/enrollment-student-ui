@@ -1,6 +1,7 @@
 <template>
-  <div class="c-app">
-    <!--<TheSidebar/>-->
+  <div class="c-app"
+    :class="{ 'c-app__side-bar--active': !isOnboarding }">
+    <TheSidebar v-show="!isOnboarding" />
     <CWrapper>
       <TheHeader/>
       <div class="c-body">
@@ -11,14 +12,14 @@
             </transition>
           </CContainer>
         </main>
-        <TheFooter/>
+        <!--<TheFooter/>-->
       </div>
     </CWrapper>
   </div>
 </template>
 
 <script>
-import TheSidebar from './TheSidebar'
+import TheSidebar from './TheSidebarV2'
 import TheHeader from './TheHeader'
 import TheFooter from './TheFooter'
 
@@ -28,28 +29,33 @@ export default {
     TheSidebar,
     TheHeader,
     TheFooter
+  },
+  computed: {
+    isOnboarding() {
+      const path = this.$route.path;
+      return path === '/admission' || path === '/application';
+    }
   }
 }
 </script>
 
-<style>
-@import "../assets/scss/shared.scss";
+<style lang="scss">
+  @import "../assets/scss/shared.scss";
+  @import "../assets/scss/animations.scss";
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-.c-main {
-  padding: 0;
-}
+  .c-main {
+    padding: 0;
+  }
 
-.c-container-fluid {
-  padding: 0 !important;
-  height: 100%;
-}
+  .c-container-fluid {
+    padding: 0 !important;
+    height: 100%;
+  }
 
+  .c-app__side-bar--active {
+    .c-main {
+      width: calc(100% - $side-bar-width) !important;
+      margin-left: $side-bar-width !important;
+    }
+  }
 </style>

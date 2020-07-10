@@ -231,7 +231,7 @@ export default {
   }
 
   .signup__icon-close {
-    color: $darkblue;
+    color: $dark-blue;
 
     &:hover {
       color: red;
@@ -257,7 +257,7 @@ export default {
   .signup__answer-item {
     font-size: 30px;
     font-weight: 700;
-    color: $darkblue;
+    color: $dark-blue;
     margin: 13px 0;
     display: flex;
     flex-direction: row;
@@ -302,7 +302,7 @@ export default {
   .signup__confirmation-headline {
     font-size: 40px;
     font-weight: 700;
-    color: $darkblue;
+    color: $dark-blue;
     opacity: 1;
 
     @include for-size(phone-only) {
@@ -412,7 +412,7 @@ export default {
   }
 
   .login__intro-description {
-    color: $dark-gray-10;
+    color: $dark-gray-100;
   }
 
   .login__intro {
@@ -437,7 +437,7 @@ export default {
   }
 
   .login__no-account {
-    color: $dark-gray-10;
+    color: $dark-gray-100;
   }
 
   .login__create-account {
@@ -496,7 +496,7 @@ export default {
 
     a {
       text-decoration:none;
-      color: $darkblue;
+      color: $dark-blue;
       padding: 5px 25px;
       font-size: 16px;
       font-weight: 600;

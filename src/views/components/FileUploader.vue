@@ -141,7 +141,7 @@ export default {
   }
 
   .file-uploader__file-icon {
-    color: $dark-gray;
+    color: $dark-gray-200;
   }
 
   .file-uploader__file--pdf {

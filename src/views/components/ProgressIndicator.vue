@@ -49,7 +49,7 @@ export default {
   }
 
   .indicator__item {
-    background-color: $light-gray-10;
+    background-color: $light-gray-100;
     border-radius: 5px;
     &.active {
       background-color: $green;

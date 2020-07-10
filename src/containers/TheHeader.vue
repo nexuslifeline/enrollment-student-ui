@@ -2,16 +2,14 @@
   <CHeader fixed with-subheader light>
     <CToggler
       in-header
-      class="ml-3 d-lg-none"
+      class="d-lg-none"
       @click="$store.commit('toggleSidebarMobile')"
     />
     <CToggler
       in-header
-      class="ml-3 d-md-down-none"
+      class="d-md-down-none"
       @click="$store.commit('toggleSidebarDesktop')"
     />
-    <CHeaderBrand class="mx-auto d-lg-none" to="/">
-    </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <!-- <CHeaderNavItem class="px-3">
         <CHeaderNavLink to="/dashboard">
@@ -63,3 +61,15 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  @import "../assets/scss/shared.scss";
+
+  .c-header-nav {
+    height: $header-height !important;
+    min-height: $header-height !important;
+  }
+
+  .c-header {
+    min-height: $header-height !important;
+  }
+</style>

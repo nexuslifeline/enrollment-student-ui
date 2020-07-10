@@ -41,14 +41,14 @@ export default {
   @import "../../assets/scss/shared.scss";
 
   .carousel__slide-title {
-    color: $darkblue;
+    color: $dark-blue;
     text-align: center;
     font-size: 24px;
     font-weight: 700;
   }
 
   .carousel__slide-description {
-    color: $dark-gray;
+    color: $dark-gray-200;
     text-align: center;
     margin-bottom: 0;
   }

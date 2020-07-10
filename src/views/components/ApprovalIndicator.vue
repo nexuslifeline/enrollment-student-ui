@@ -84,7 +84,7 @@
     left:  -50%;
     bottom:  -25px;
     height:  2px;
-    background-color: $dark-gray-10;
+    background-color: $dark-gray-100;
     margin-bottom: 10px;
   }
 
@@ -103,13 +103,13 @@
     align-items: center;
     justify-content: center;
     background-color: white;
-    border: 2px solid $dark-gray-10;
+    border: 2px solid $dark-gray-100;
   }
 
   .wizard__number {
     font-weight: bold;
     font-size: 14px;
-    color: $dark-gray-10;
+    color: $dark-gray-100;
     font-size: 17px;
     display: flex;
     align-items: center;
@@ -136,7 +136,7 @@
     position: absolute;
     display: block;
     font-size: 0.875rem;
-    color: $dark-gray-10;
+    color: $dark-gray-100;
     line-height: 1rem;
     cursor: pointer;
     top: 40px;
@@ -145,7 +145,7 @@
   }
 
   .wizard__step-active-label-indicator {
-    color: $dark-gray-10;
+    color: $dark-gray-100;
     font-size: 0.875rem;
     font-weight: 600;
   }
