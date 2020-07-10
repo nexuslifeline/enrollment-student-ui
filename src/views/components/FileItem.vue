@@ -85,7 +85,7 @@ export default {
   .file-item__title {
     margin: 0;
     font-weight: 500;
-    color: $dark-gray;
+    color: $dark-gray-200;
   }
 
   .file-item__description {
@@ -104,14 +104,14 @@ export default {
   .file-item__icon-preview {
     color: $gray;
     &:hover {
-      color: $dark-gray;
+      color: $dark-gray-200;
     }
   }
 
   .file-item__icon-trash {
     color: $gray;
     &:hover {
-      color: $dark-gray;
+      color: $dark-gray-200;
     }
   }
 

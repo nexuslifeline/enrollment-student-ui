@@ -294,14 +294,14 @@ export default {
   .profile-photo-maker {
     height: 200px;
     width: 200px;
-    border: 1px solid $dark-gray;
+    border: 1px solid $dark-gray-200;
     margin: 10px;
   }
 
   .profile-photo-maker-slight-radius {
     height: 150px;
     width: 150px;
-    border: 1px solid $dark-gray;
+    border: 1px solid $dark-gray-200;
     margin: 10px;
     border-radius: 5px;
     overflow: hidden;
@@ -310,7 +310,7 @@ export default {
   .profile-photo-maker-circle {
     height: 100px;
     width: 100px;
-    border: 1px solid $darkblue;
+    border: 1px solid $dark-blue;
     margin: 10px;
     border-radius: 50%;
     overflow: hidden;

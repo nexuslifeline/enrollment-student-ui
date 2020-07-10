@@ -1,12 +1,33 @@
 <template>
-  <div>
-    <b-button to="/billing" variant="outline-primary" class="m-2">My Billing</b-button>
-    <b-button to="/grade" variant="outline-primary" class="m-2">My Grades</b-button>
-    <b-button to="/profile" variant="outline-primary" class="m-2">My Profile</b-button>
-    <b-button to="/payment" variant="outline-primary" class="m-2">My Payments</b-button>
+  <div class="home-content">
+    <!--<div class="greetings">
+      <h2 class="greetings__title">Welcome home!</h2>
+      <p class="greetings__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+    </div>-->
+    <Menus />
   </div>
 </template>
 
 <script>
-
+  import Menus from './components/menus/Menus'
+  export default {
+    name: 'Home',
+    components: {
+      Menus
+    }
+  }
 </script>
+<style lang="scss" scoped>
+  @import "../assets/scss/shared.scss";
+  .home-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: white;
+  }
+</style>

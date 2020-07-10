@@ -369,7 +369,7 @@ export default {
   .sign-in__link {
     font-weight: 400;
     &:hover {
-      color: $darkblue;
+      color: $dark-blue;
     }
   }
 </style>
