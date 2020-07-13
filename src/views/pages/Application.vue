@@ -614,6 +614,165 @@
               </b-col>
             </b-row>
           </div>
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+            <b-row>
+              <b-col md=12>
+                <h5>
+                  1. Your previous academic year attended
+                </h5>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="5">
+                <b-form-group>
+                  <label class="required">Last School Attended</label>
+                  <b-form-input
+                    v-model="forms.evaluation.fields.lastSchoolAttended" 
+                    :state="forms.evaluation.states.evaluationLastSchoolAttended"
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationLastSchoolAttended }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label class="required">Last School Year Attended</label>
+                  <b-form-input
+                    v-model="forms.evaluation.fields.lastYearAttended" 
+                    :state="forms.evaluation.states.evaluationLastYearAttended"
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationLastYearAttended }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="3" v-if="forms.evaluation.fields.studentCategoryId === StudentCategories.OLD.id">
+                <b-form-group>
+                  <label class="required">Enrolled Year</label>
+                  <b-form-input
+                    v-model="forms.evaluation.fields.enrolledYear" 
+                    :state="forms.evaluation.states.evaluationEnrolledYear"
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationEnrolledYear }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="12">
+                <b-form-group>
+                  <label>Notes</label>
+                  <b-form-textarea
+                    rows="2"
+                    v-model="forms.evaluation.fields.notes" 
+                    debounce="500"/>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <h5>
+                  2. Your Current Academic Year Application
+                </h5>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-form-group>
+                  <label class="required">Level</label>
+                  <b-form-select 
+                    @input="loadCourses()" 
+                    v-model='forms.evaluation.fields.levelId'
+                    :state="forms.evaluation.states.evaluationLevelId">                   
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                      {{level.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationLevelId }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group v-if="options.courses.items.length > 0">
+                  <label class="required">Course</label>
+                  <b-form-select 
+                    @input="loadSubjectsOfLevel()" 
+                    v-model='forms.evaluation.fields.courseId'
+                    :state="forms.evaluation.states.evaluationCourseId"
+                    >
+                    <!-- :state="forms.transcript.states.transcriptCourseId" -->
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
+                      {{course.name}}
+                    </b-form-select-option>
+                  </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationCourseId }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <h5>
+                  3. Attachment of supporting documents
+                </h5>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <div class="file-uploader-container">
+                  <FileUploader
+                    @onFileChange="onEvaluationFileUpload" 
+                    @onFileDrop="onEvaluationFileUpload"
+                  />
+                </div>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md=12>
+                <div class="file-item-container">
+                  <FileItem
+                    v-for="(item, index) of evaluationFiles"
+                    :key="index"
+                    :title="item.name"
+                    :description="item.notes"
+                    :fileIndex="index"
+                    @onFileItemSelect="onEvaluationFileItemSelect"
+                    @onFileItemRemove="onDeleteEvaluationFile"
+                    @onFileItemPreview="previewEvaluationFile"
+                    :isBusy="item.isBusy"
+                  />
+                </div>
+              </b-col>
+            </b-row>
+          </div>
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id">
+            <div>
+              <b-alert variant="success" show>
+                <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
+                <p> Thank you for submitting your application for this school year. 
+                <br> We will review your payment and once approved, we will
+                <br> notify you.
+                <br>
+                <br>We will try to get back to you as soon as we can!</p>
+              </b-alert>
+              <div class="approval-container">
+                <ApprovalIndicator
+                  :stages="evaluationApprovalStages"
+                  :currentStage="selectedEvaluationApprovalStage"
+                />
+              </div>
+            </div>
+          </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
@@ -636,7 +795,8 @@
                           <b-form-select 
                             @input="loadCourses()" 
                             v-model='forms.transcript.fields.levelId'
-                            :state="forms.transcript.states.transcriptLevelId">                   
+                            :state="forms.transcript.states.transcriptLevelId"
+                            disabled>                   
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                             </template>
@@ -655,7 +815,8 @@
                           <b-form-select 
                             @input="loadSubjectsOfLevel()" 
                             v-model='forms.transcript.fields.courseId'
-                            :state="forms.transcript.states.transcriptCourseId">
+                            :state="forms.transcript.states.transcriptCourseId"
+                            disabled>
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                             </template>
@@ -698,9 +859,10 @@
                         <b-form-group v-if="options.courses.items.length > 0">
                           <label>Semester</label>
                           <b-form-select
-                            @input="loadSubjectsOfLevel()" 
+                            @input="loadSections()"
                             v-model='forms.transcript.fields.semesterId'
-                            :state="forms.transcript.states.transcriptSemesterId">
+                            :state="forms.transcript.states.transcriptSemesterId"
+                            >
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                             </template>
@@ -1155,7 +1317,9 @@
             name="sync"
             class="mr-2"
             spin />
-            {{forms.activeApplication.fields.applicationStepId !== 5 ? 'Next' : 'Submit Application'}}
+            {{ forms.activeApplication.fields.applicationStepId !== ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id 
+                && forms.activeApplication.fields.applicationStepId !== ApplicationSteps.REQUEST_EVALUATION.id  ? 
+                  'Next' : 'Submit Application' }}
         </b-button>
       </div>
     </div>
@@ -1210,6 +1374,58 @@
         </b-button>
       </div> <!-- modal footer buttons -->
     </b-modal>  
+
+    <b-modal 
+      v-model="showEvaluationFileModal"
+      centered
+      header-bg-variant="success"
+      header-text-variant="light"
+      :noCloseOnEsc="true"
+      :noCloseOnBackdrop="true"
+      >
+      <div slot="modal-title"> <!-- modal title -->
+        Evaluation File
+      </div> <!-- modal title -->
+      <b-row> <!-- modal body -->
+        <b-col md=12>
+          <label>Notes</label>
+          <b-textarea 
+            v-model="forms.evaluationFile.fields.notes"
+            :state="forms.evaluationFile.states.notes"
+            rows=7
+            debounce="500" />
+          <b-form-invalid-feedback>
+            {{ forms.evaluationFile.errors.notes }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row> <!-- modal body -->
+      <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+        <b-button 
+          class="float-left" 
+          @click="onDeleteEvaluationFile(selectedEvaluationFileIndex)"
+          variant="outline-danger">
+          <v-icon
+            v-if="isFileDeleting"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Delete
+        </b-button>
+        <b-button 
+          @click="onUpdateEvaluationFile()"
+          class="float-right" 
+          variant="outline-primary">
+          <v-icon
+            v-if="isFileUpdating"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Update
+        </b-button>
+      </div> <!-- modal footer buttons -->
+    </b-modal>  
     <!-- Modal Subject -->
     <b-modal 
 			v-model="showModalSubjects"
@@ -1222,17 +1438,56 @@
 			<b-row> <!-- modal body -->
 				<b-col md=12>
           <b-row class="mb-2">
-            <b-col offset-md="8" md="4">
-              <b-form-input
-                v-model="filters.subject.criteria"
-                type="text" 
-                placeholder="Search">
-              </b-form-input>
+            <b-col md="3">
+              <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                <label>Level</label>
+                <b-form-select
+                  @change="filterSubject()"
+                  v-model="filters.subject.levelId"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value='null' >-- All Levels --</b-form-select-option>
+                  </template>
+                  <b-form-select-option v-for='level in options.levelsOfCourses.items' :key='level.id' :value='level.id'>
+                    {{ level.name }}
+                  </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+             <b-col  md="3">
+              <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                <label>Semester</label>
+                <b-form-select
+                  @change="filterSubject()"
+                  v-model="filters.subject.semesterId"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value='null' >-- All Semester --</b-form-select-option>
+                  </template>
+                  <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                    {{ semester.name }}
+                  </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col offset-md="2" md="4">
+              <b-form-group>
+                <label>Search</label>
+                <b-form-input
+                  v-model="filters.subject.criteria"
+                  type="text"
+                  debounce="500"> 
+                </b-form-input>
+              </b-form-group>
             </b-col>
           </b-row>
 					<b-table
 						small hover outlined show-empty
-						:items.sync="tables.subjects.items"
+						:items.sync="tables.subjects.filteredItems"
 						:fields="tables.subjects.fields"
             :filter="filters.subject.criteria"
 						:busy="tables.subjects.isBusy"
@@ -1329,7 +1584,10 @@ import {
   EWalletAccountApi,
   BankAccountApi,
   SubjectApi,
-  SectionApi
+  SectionApi,
+  EvaluationFileApi,
+  EvaluationApi,
+  CurriculumApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import GroupStageIndicator from '../components/GroupStageIndicator';
@@ -1343,7 +1601,10 @@ import {
   PaymentStatuses,
   BillingTypes,
   PayTypes,
-  TranscriptStatuses
+  TranscriptStatuses,
+  EvaluationStatuses,
+  StudentCategories,
+  SchoolCategories
 } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
 import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
@@ -1467,13 +1728,38 @@ const transcriptFields = {
   schoolYearId: null,
   schoolCategoryId: null,
   transcriptStatusId: null,
-  sectionId: null
+  sectionId: null,
+  studentCategoryId: null,
 }
 
 const transcriptErrorFields = {
   transcriptLevelId: null,
   transcriptSectionId: null,
   subjects: null
+}
+
+const evaluationFields = {
+  id : null,
+  curriculumId: null,
+  studentCategoryId: null,
+  levelId: null,
+  courseId: null,
+  evaluationStatusId: null,
+  lastYearAttended: null,
+  lastSchoolAttended: null,
+  enrolledYear: null,
+  notes: null,
+  approvalNotes: null,
+  disapprovalNotes: null,
+  school_category_id: null,
+}
+
+const evaluationErrorFields = {
+  levelId: null,
+  courseId: null,
+  lastYearAttended: null,
+  lastSchoolAttended: null,
+  enrolledYear: null,
 }
 
 const billingFields = {
@@ -1507,6 +1793,11 @@ const paymentFileFields = {
   notes: null
 }
 
+const evaluationFileFields = {
+  id: null,
+  notes: null
+}
+
 const studentFeeFields = {
   approvalNotes: null
 }
@@ -1525,7 +1816,10 @@ export default {
     BankAccountApi,
     SubjectApi,
     SectionApi,
-    Tables
+    Tables,
+    EvaluationFileApi,
+    EvaluationApi,
+    CurriculumApi
   ],
   components: {
     ApprovalIndicator,
@@ -1538,12 +1832,15 @@ export default {
   data() {
     return {
       showPaymentFileModal: false,
+      showEvaluationFileModal: false,
       showModalSubjects: false,
       showModalPreview: false,
       selectedPaymentMode: 1,
       selectedPayType: 1,
       paymentFiles: [],
+      evaluationFiles: [],
       selectedPaymentFileIndex: null,
+      selectedEvaluationFileIndex: null,
       isFileUpdating: false,
       isFileDeleting: false,
       isLoading: false,
@@ -1558,6 +1855,9 @@ export default {
       TranscriptStatuses: TranscriptStatuses,
       BillingTypes: BillingTypes,
       PayTypes: PayTypes,
+      EvaluationStatuses: EvaluationStatuses,
+      StudentCategories: StudentCategories,
+      SchoolCategories: SchoolCategories,
       isPaying: false,
       file: {
         src: null,
@@ -1591,6 +1891,16 @@ export default {
           fields: { ...transcriptFields },
           states: { ...transcriptErrorFields },
           errors: { ...transcriptErrorFields }
+        },
+        evaluation: {
+          fields: { ...evaluationFields },
+          states: { ...evaluationErrorFields },
+          errors: { ...evaluationErrorFields }
+        },
+        evaluationFile: {
+          fields: { ...evaluationFileFields },
+          states: { ...evaluationFileFields },
+          errors: { ...evaluationFileFields }
         },
         billing: {
           fields: { ...billingFields },
@@ -1681,6 +1991,7 @@ export default {
             }
           ],
           items: [],
+          filteredItems: []
         },
         bankAccounts: {
           isBusy: false,
@@ -1780,7 +2091,9 @@ export default {
       },
       filters: {
         subject: {
-          criteria: null
+          criteria: null,
+          levelId: null,
+          courseId: null
         }
       },
       options: {
@@ -1811,10 +2124,14 @@ export default {
             { id: 4, name: 'E-Wallet', description: 'With this payment mode, you can send us the payment using the E-Wallet services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
             { id: 3, name: 'Others', description: 'If you are already enrolled, you can select this payment mode so should just attach your receipt here or any proof of your payment.'  }
           ]
+        },
+        levelsOfCourses: {
+          items: []
         }
       },
       selectedApprovalStage: 1,
       selectedPaymentApprovalStage: 1,
+      selectedEvaluationApprovalStage: 1,
       groupStages: [
         {
           header: 'Personal Information',
@@ -1828,15 +2145,17 @@ export default {
         {
           header: 'Application',
           children: [
-            { id: 5, subHeader: 'Subject Enlistment', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
-            { id: 6, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.' }
+            { id: 5, subHeader: 'Request Evaluation', description: 'Requsting for subject evaluation.' },
+            { id: 6, subHeader: 'Waiting for Evaluation Approval', description: 'Waiting for subject evaluation approval.' },
+            { id: 7, subHeader: 'Subject Enlistment', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
+            { id: 8, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.' }
           ]
         },
         {
           header: 'Enrollment',
           children: [
-            { id: 7, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
-            { id: 8, subHeader: 'Waiting', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
+            { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
+            { id: 10, subHeader: 'Waiting', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
           ]
         },
       ],
@@ -1861,12 +2180,18 @@ export default {
         { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
       ],
+      evaluationApprovalStages: [
+        { approvedLabel: 'Request For Evaluation Submitted', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
+        { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
+      ],
       payTypeId: null,
       sectionIsLoading: false
     };
   },
   created() {
     this.isLoading = true;
+    let params = { paginate: false }
     const studentId = localStorage.getItem('studentId');
     this.getStudent(studentId).then(({ data: student }) => {
       Object.keys(this.forms).forEach((key) => {
@@ -1897,13 +2222,57 @@ export default {
       if (student.activeApplication.applicationStepId >= ApplicationSteps.PAYMENTS.id) {
         this.loadBilling()
       }
+
+      const { transcript } = this.forms
+      if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
+        //set level, course, school cat of transcript
+        const { subjects } = this.tables
+        const { subject } = this.paginations
+
+        transcript.fields.levelId = student.evaluation.levelId
+        transcript.fields.courseId = student.evaluation.courseId
+        transcript.fields.schoolCategoryId = student.evaluation.schoolCategoryId
+        subjects.isBusy = true
+        this.loadSections()
+        //need to load subjects here
+        this.getEvaluation(student.evaluation.id).then(({ data }) => {
+          
+          // const { schoolCategoryId } = this.forms.transcript.fields
+          subjects.items = []
+
+          subjects.items = data.subjects
+          subjects.filteredItems = data.subjects
+          subject.totalRows = data.subjects.length
+          subjects.isBusy = false
+          this.recordDetails(subject)
+
+        })
+      }
+
+      //load evaluation files
+      this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
+        //this.tables.files.items = data
+        data.forEach(file => {
+          this.evaluationFiles.push({
+            id: file.id,
+            name: file.name,
+            notes: file.notes,
+            isBusy: false
+          })
+        })
+      })
     })
 
 
-    let params = { paginate: false }
+    
     this.getLevelList(params).then(response => {
       const res = response.data
       this.options.levels.items = res
+      const level = this.options.levels.items.find(i => i.id == this.forms.evaluation.fields.levelId)
+      if (level) {
+        this.forms.evaluation.fields.schoolCategoryId = level.schoolCategoryId
+      }
+
     });
     this.getSchoolYearList(params).then(response => {
       const res = response.data
@@ -1916,6 +2285,7 @@ export default {
   },
   methods: {
     onUpdateStudent() {
+
       const {
         student: { fields: { id: studentId } },
         student,
@@ -1923,6 +2293,7 @@ export default {
         family,
         education,
         transcript,
+        evaluation,
         activeApplication: { fields: activeApplication }
       } = this.forms;
 
@@ -1935,12 +2306,18 @@ export default {
 
       const currentStepIndex = activeApplication.applicationStepId - 1;
 
+      const evaluationStatusId = 
+        evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id || evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id ? 
+          EvaluationStatuses.SUBMITTED.id : evaluation.fields.evaluationStatusId
+
       const payloads = [
          student.fields,
         { address: address.fields },
         { family: family.fields },
         { education: education.fields },
-        { transcript: transcript.fields, subjects }
+        { evaluation: { ...evaluation.fields, evaluationStatusId } },
+        null,
+        { transcript: transcript.fields, subjects, curriculumId: evaluation.fields.curriculumId  }
       ];
 
       const formsToValidate = [
@@ -1948,9 +2325,11 @@ export default {
         address,
         family,
         education,
-        transcript
+        evaluation,
+        null,
+        transcript,
       ]
-
+      
       const applicationStepId =
           ApplicationSteps.STATUS.id === activeApplication.applicationStepId && activeApplication.applicationStatusId !==1
             ? ApplicationSteps.STATUS.id
@@ -1975,16 +2354,14 @@ export default {
         }
       }
 
+
       formsToValidate.forEach(form => {
+        if (form)
         reset(form)
       })
 
       this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
-        // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
-        //   this.$router.push({ name: 'Dashboard' })
-        //   return
-        // }
 
         //load billing when on payment stage after update
         if (data.activeApplication.applicationStepId === ApplicationSteps.PAYMENTS.id) {
@@ -1994,8 +2371,11 @@ export default {
         copyValue(data.activeApplication, activeApplication);
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
         this.isProcessing = false;
+
       }).catch((error) => {
         const { errors } = error.response.data;
+        if (formsToValidate[currentStepIndex])
+        console.log(currentStepIndex)
         validate(formsToValidate[currentStepIndex], errors);
         this.isProcessing = false;
       });
@@ -2033,9 +2413,10 @@ export default {
       }
     },
     loadCourses() {
-      this.sectionIsLoading = true
+      
       this.options.sections.items = []
-      const { fields } = this.forms.transcript;
+      // const { fields } = this.forms.transcript;
+      const { fields } = this.forms.evaluation;
       const { items } = this.options.levels
       // console.log(fields.levelId)
       const level = items.find(i => i.id == fields.levelId)
@@ -2043,16 +2424,15 @@ export default {
         fields.schoolCategoryId = level.schoolCategoryId
       }
       fields.courseId = null
-      fields.semesterId = null
+      //fields.semesterId = null
+
       const params = { paginate: false }
       this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
         this.options.courses.items = data
         if (data.length === 0) {
-          this.loadSubjectsOfLevel()
           this.loadSections()
           return
         }
-        this.sectionIsLoading = false
         this.tables.levelSubjects.items = []
       });
     },
@@ -2127,12 +2507,12 @@ export default {
     },
     buttonBackShowHide(applicationStepId) {
       //arrHidden = steps id where the button back should be hidden
-      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id]
+      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
       return !arrHidden.includes(applicationStepId)
     },
     buttonNextShowHide(applicationStepId) {
       //arrHidden = steps id where the button next should be hidden
-      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id]
+      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
       return !arrHidden.includes(applicationStepId)
     },
     loadBilling() {
@@ -2323,34 +2703,45 @@ export default {
         this.showPaymentFileModal = false
         this.paymentFiles.splice(index, 1);
       }).catch((error) => {
-        console.log(error)
         this.isFileDeleting = false
         selectedFile.isBusy = false
       });
     },
     onAddSubject(){
-      if (this.forms.transcript.fields.levelId == null) {
+      const { levelId, schoolCategoryId, courseId } = this.forms.transcript.fields
+      const { levelsOfCourses } = this.options
+      this.filters.subject.levelId = null
+      this.filters.subject.semesterId = null
+
+      levelsOfCourses.items = []
+      if (levelId == null) {
         return
       }
+      if (schoolCategoryId === SchoolCategories.COLLEGE.id) {
+        this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
+          levelsOfCourses.items = data
+        }) 
+      }
+
       this.showModalSubjects = true
-      this.loadSubjectList()
+      //this.loadSubjectList()
     },
     loadSubjectList(){
-      const { subjects } = this.tables
-      const { subject } = this.paginations
-      const { schoolCategoryId } = this.forms.transcript.fields
-      subjects.items = []
+      // const { subjects } = this.tables
+      // const { subject } = this.paginations
+      // const { schoolCategoryId } = this.forms.transcript.fields
+      // subjects.items = []
 
-      subjects.isBusy = true
-      let params = { paginate: false, schoolCategoryId }
+      // subjects.isBusy = true
+      // let params = { paginate: false, schoolCategoryId }
 
-      this.getSubjectList(params)
-        .then(({ data }) => {
-          subjects.items = data
-          subject.totalRows = data.length
-          this.recordDetails(subject)
-          subjects.isBusy = false
-        })
+      // this.getSubjectList(params)
+      //   .then(({ data }) => {
+      //     subjects.items = data
+      //     subject.totalRows = data.length
+      //     this.recordDetails(subject)
+      //     subjects.isBusy = false
+      //   })
     },
     addSubject(row) {
       const { item } = row
@@ -2383,6 +2774,7 @@ export default {
         })
     },
     loadSections () {
+      this.sectionIsLoading = true
       this.forms.transcript.fields.sectionId = null
       const { schoolYearId, levelId, courseId, semesterId } = this.forms.transcript.fields
       let params = { paginate: false, schoolYearId, levelId, courseId, semesterId };
@@ -2394,6 +2786,100 @@ export default {
     removeSubject(row){
       this.tables.levelSubjects.items.splice(row.index, 1);
     },
+    onEvaluationFileUpload(file) {
+      const formData = new FormData();
+      const { evaluation } = this.forms
+
+      formData.append('file', file);
+
+      this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
+        this.evaluationFiles.push(
+          { id: data.id, name: data.name, notes: data.notes, isBusy: true }
+        );
+        setTimeout(() => this.evaluationFiles[this.evaluationFiles.length - 1].isBusy = false, 1000);
+      })
+    },
+    onDeleteEvaluationFile (index) {
+      const { evaluation: { fields:{ id: evaluationId } } } = this.forms
+
+      const selectedFile = this.evaluationFiles[index]
+      this.isFileDeleting = true
+      selectedFile.isBusy = true
+      this.deleteEvaluationFile(evaluationId, selectedFile.id).then(()=> {
+        this.isFileDeleting = false
+        this.showEvaluationFileModal = false
+        this.evaluationFiles.splice(index, 1);
+      }).catch((error) => {
+        console.log(error)
+        this.isFileDeleting = false
+        selectedFile.isBusy = false
+      });
+    },
+    onEvaluationFileItemSelect(idx) {
+      const { evaluationFile } = this.forms
+      reset(evaluationFile)
+      this.selectedEvaluationFileIndex = idx
+
+      evaluationFile.fields.id = this.evaluationFiles[idx].id
+      evaluationFile.fields.notes = this.evaluationFiles[idx].notes
+
+      this.showEvaluationFileModal = true
+    },
+    onUpdateEvaluationFile () {
+      const { evaluation: { fields:{ id: evaluationId } },
+              evaluationFile } = this.forms
+
+      const selectedFile = this.evaluationFiles[this.selectedEvaluationFileIndex]
+      this.isFileUpdating = true
+      selectedFile.isBusy = true
+
+      this.updateEvaluationFile(evaluationFile.fields, evaluationId, evaluationFile.fields.id).then(({ data }) => {
+        selectedFile.notes = data.notes;
+        this.isFileUpdating = false
+        this.showEvaluationFileModal = false;
+        setTimeout(() => selectedFile.isBusy = false, 1000);
+      }).catch((error) => {
+        const { errors } = error.response.data;
+        validate(paymentFile, errors);
+        this.isFileUpdating = false
+        selectedFile.isBusy = false
+      });
+    },
+    previewEvaluationFile(index) {
+      this.file.type = null
+      this.file.src = null
+
+      const { evaluation: { fields:{ id: evaluationId } } } = this.forms
+
+      const selectedFile = this.evaluationFiles[index]
+
+      this.getEvaluationFilePreview(evaluationId, selectedFile.id)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: response.headers.contentType })
+          const reader = new FileReader();
+
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.showModalPreview = true
+        })
+    },
+    filterSubject() {
+      const { subjects } = this.tables
+      const { subject } = this.paginations
+      const { levelId, semesterId } = this.filters.subject
+      if (levelId !== null && semesterId !== null) {
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId && s.pivot.semesterId === semesterId)
+      } else if (levelId !== null && semesterId === null) {
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId)
+      } else if (semesterId !== null && levelId === null) {
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.semesterId === semesterId)
+      }
+      else {
+        subjects.filteredItems = subjects.items
+      }
+      this.onFiltered(subjects.filteredItems, subject)
+		},
   },
   computed: {
     totalUnits() {

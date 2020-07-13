@@ -88,12 +88,13 @@
               scale="2"
             />
           </button>
-          <div class="signup__confirmation-content">
+      
+          <div v-if="step===1" class="signup__confirmation-content">
             <p class="signup__confirmation-headline">
-              Do you have an existing student number issued by St. Theresa College?
+              Are you already enrolled for this SY 2020-2021?
             </p>
             <ul class="signup__confirmation-answers">
-              <li @click="register(studentCategories.OLD.id)" class="signup__answer-item">
+              <li @click="onSelectOption(true)" class="signup__answer-item">
                 <v-icon
                   name="check"
                   class="signup__answer-icon"
@@ -112,7 +113,7 @@
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
-              <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
+              <li @click="onSelectOption(false)" class="signup__answer-item">
                 <v-icon
                   name="check"
                   class="signup__answer-icon"
@@ -127,6 +128,91 @@
                   No, I don't have student number yet.
                   <span class="signup__confirmation-answer-notes">
                     (An unofficially enrolled student who is still processing his/her admission)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="step===2" class="signup__confirmation-content">
+            <p class="signup__confirmation-headline">
+              Please select your classification ?
+            </p>
+            <ul class="signup__confirmation-answers">
+              <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  I am a new student
+                  <span class="signup__confirmation-answer-notes">
+                    (Student who is  currently enrolled in STC Tandag and has a student number.)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+              <li @click="register(studentCategories.OLD.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                 <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  I am a old/returning student
+                  <span class="signup__confirmation-answer-notes">
+                    (Continuing student or returning student.)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+              <li @click="register(studentCategories.TRANSFEREE.id)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                 <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  I am a transferee from other school
+                  <span class="signup__confirmation-answer-notes">
+                    (I am a transferee from other school.)
+                  </span>
+                </div>
+                <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
+              </li>
+
+              <li @click="register(null)" class="signup__answer-item">
+                <v-icon
+                  name="check"
+                  class="signup__answer-icon"
+                  scale="2"
+                />
+                 <v-icon
+                  name="check-circle"
+                  class="signup__answer-icon-check-circle"
+                  scale="2"
+                />
+                <div class="signup__confirmation-answer-item">
+                  Go Back
+                  <span class="signup__confirmation-answer-notes">
+                    (Go Back)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -160,6 +246,7 @@ export default {
       version: process.env.VUE_APP_VERSION,
       studentCategories: StudentCategories,
       showConfirmation: false,
+      step: 1,
       forms: {
         auth: {
           isProcessing: false,
@@ -202,9 +289,19 @@ export default {
         })
     },
     register(studentCategoryId) {
-      localStorage.setItem('studentCategoryId', studentCategoryId);
-      this.$router.push({ name: 'Register' })
+      if(studentCategoryId){
+        localStorage.setItem('studentCategoryId', studentCategoryId);
+        this.$router.push({ name: 'Register' })
+        return;
+      }
+      this.step = 1
+    },
+    onSelectOption(isEnrolled) {
+      //event for step 1 selection
+      localStorage.setItem('isEnrolled', isEnrolled);
+      this.step = 2
     }
+
   },
 }
 </script>
