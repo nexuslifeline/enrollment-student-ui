@@ -615,10 +615,10 @@
             </b-row>
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
-            <b-row>
-              <b-col md=12>
+            <b-row class="mb-2">
+              <b-col md=12 >
                 <h5>
-                  1. Your previous academic year attended
+                  1. Your previous academic year attended.
                 </h5>
               </b-col>
             </b-row>
@@ -671,7 +671,7 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row>
+            <b-row class="mb-2 mt-2">
               <b-col md=12>
                 <h5>
                   2. Your Current Academic Year Application
@@ -720,7 +720,7 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row>
+            <b-row class="mb-2  mt-2">
               <b-col md=12>
                 <h5>
                   3. Attachment of supporting documents
@@ -792,7 +792,7 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Level</label>
-                          <b-form-select 
+                          <!-- <b-form-select 
                             @input="loadCourses()" 
                             v-model='forms.transcript.fields.levelId'
                             :state="forms.transcript.states.transcriptLevelId"
@@ -803,7 +803,8 @@
                             <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
                               {{level.name}}
                             </b-form-select-option>
-                          </b-form-select>
+                          </b-form-select> -->
+                          <b-form-input v-model="getSelectedEvaluationLevel" readonly class="font-weight-bold bg-white"/>
                           <b-form-invalid-feedback>
                             {{forms.transcript.errors.transcriptLevelId}}
                           </b-form-invalid-feedback>
@@ -812,7 +813,7 @@
                       <b-col md="6">
                         <b-form-group v-if="options.courses.items.length > 0">
                           <label>Course</label>
-                          <b-form-select 
+                          <!-- <b-form-select 
                             @input="loadSubjectsOfLevel()" 
                             v-model='forms.transcript.fields.courseId'
                             :state="forms.transcript.states.transcriptCourseId"
@@ -823,7 +824,8 @@
                             <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
                               {{course.name}}
                             </b-form-select-option>
-                          </b-form-select>
+                          </b-form-select> -->
+                          <b-form-input v-model="getSelectedEvaluationCourse" readonly class="font-weight-bold bg-white"/>
                           <b-form-invalid-feedback>
                             {{forms.transcript.errors.transcriptCourseId}}
                           </b-form-invalid-feedback>
@@ -1752,6 +1754,7 @@ const evaluationFields = {
   approvalNotes: null,
   disapprovalNotes: null,
   school_category_id: null,
+  studentCurriculumId: null,
 }
 
 const evaluationErrorFields = {
@@ -2232,16 +2235,18 @@ export default {
         transcript.fields.levelId = student.evaluation.levelId
         transcript.fields.courseId = student.evaluation.courseId
         transcript.fields.schoolCategoryId = student.evaluation.schoolCategoryId
+        transcript.fields.curriculumId = student.evaluation.studentCurriculumId
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
         this.getEvaluation(student.evaluation.id).then(({ data }) => {
           
-          // const { schoolCategoryId } = this.forms.transcript.fields
+          //clear subjects
           subjects.items = []
 
+          //init new subjects base on evaluation subjects
           subjects.items = data.subjects
-          subjects.filteredItems = data.subjects
+          subjects.filteredItems = data.subjects.find(subject => subject.isTaken === 0)
           subject.totalRows = data.subjects.length
           subjects.isBusy = false
           this.recordDetails(subject)
@@ -2320,6 +2325,7 @@ export default {
         { transcript: transcript.fields, subjects, curriculumId: evaluation.fields.curriculumId  }
       ];
 
+      // added null to skip waiting for evaluation step 
       const formsToValidate = [
         student,
         address,
@@ -2907,6 +2913,28 @@ export default {
         return formatNumber(totalAmount)
       }
       return "0.00"
+    },
+    getSelectedEvaluationLevel() {
+      console.log(this.forms.evaluation.fields)
+       console.log(this.forms.transcript.fields)
+      const { levelId } = this.forms.transcript.fields
+      if (levelId) {
+        const result = this.options.levels.items.find(level => level.id === levelId)
+        if (result) {
+          return result.name
+        }
+      }
+      return ''
+    },
+    getSelectedEvaluationCourse() {
+      const { courseId } = this.forms.transcript.fields
+      if (courseId) {
+        const result = this.options.courses.items.find(course => course.id === courseId)
+        if (result) {
+          return result.name
+        }
+      }
+      return ''
     }
   },
 };
