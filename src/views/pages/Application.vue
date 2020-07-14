@@ -771,7 +771,21 @@
                   :currentStage="selectedEvaluationApprovalStage"
                 />
               </div>
+              <b-alert
+                  :show="evaluationDismissCountDown"
+                  variant="info"
+                  @dismissed="onUpdateStudent()"
+                  @dismiss-count-down="evaluationCountDownChanged"
+                >
+                  Please wait a few second, we are setting up for you. Time remaining: {{ evaluationDismissCountDown  }} second(s).
+                  <v-icon
+                    v-if="evaluationDismissCountDown"
+                    name="spinner"
+                    class="mr-2 float-right"
+                    spin />
+                </b-alert>
             </div>
+            
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
@@ -1849,6 +1863,7 @@ export default {
       isLoading: false,
       isApplied: false,
       dismissCountDown: 0,
+      evaluationDismissCountDown: 0,
       percentage: 30,
       isProcessing: false,
       studentPhotoUrl: null,
@@ -2212,15 +2227,22 @@ export default {
         this.showCountdown()
       }
 
+
+
       //todo : review code for percentage and approval stage
       this.percentage = 
         student.activeApplication.applicationStatusId == 1 ?
           100 :  student.transcript.transcriptStatusId == 2 ? 
             60: 30
+
       this.selectedApprovalStage = 
         student.activeApplication.applicationStatusId == 1 ?
           3 : student.transcript.transcriptStatusId == 2 ? 
             2 : 1
+
+      this.selectedEvaluationApprovalStage = 
+        student.evaluation.evaluationStatusId == 3 ?
+          2 : 1
 
       if (student.activeApplication.applicationStepId >= ApplicationSteps.PAYMENTS.id) {
         this.loadBilling()
@@ -2228,6 +2250,10 @@ export default {
 
       const { transcript } = this.forms
       if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
+        
+        //show countdown
+        this.evaluationDismissCountDown = 5
+
         //set level, course, school cat of transcript
         const { subjects } = this.tables
         const { subject } = this.paginations
@@ -2240,13 +2266,15 @@ export default {
         this.loadSections()
         //need to load subjects here
         this.getEvaluation(student.evaluation.id).then(({ data }) => {
-          
+        
+           const result = data.subjects.filter(subject => subject.pivot.isTaken === 0)
+
           //clear subjects
           subjects.items = []
 
           //init new subjects base on evaluation subjects
           subjects.items = data.subjects
-          subjects.filteredItems = data.subjects.find(subject => subject.isTaken === 0)
+          subjects.filteredItems = result
           subject.totalRows = data.subjects.length
           subjects.isBusy = false
           this.recordDetails(subject)
@@ -2322,7 +2350,7 @@ export default {
         { education: education.fields },
         { evaluation: { ...evaluation.fields, evaluationStatusId } },
         null,
-        { transcript: transcript.fields, subjects, curriculumId: evaluation.fields.curriculumId  }
+        { transcript: transcript.fields, subjects }
       ];
 
       // added null to skip waiting for evaluation step 
@@ -2381,7 +2409,6 @@ export default {
       }).catch((error) => {
         const { errors } = error.response.data;
         if (formsToValidate[currentStepIndex])
-        console.log(currentStepIndex)
         validate(formsToValidate[currentStepIndex], errors);
         this.isProcessing = false;
       });
@@ -2493,6 +2520,9 @@ export default {
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
+    },
+    evaluationCountDownChanged(dismissCountDown) {
+      this.evaluationDismissCountDown = dismissCountDown
     },
     showCountdown() {
       this.dismissCountDown = 5
@@ -2816,7 +2846,6 @@ export default {
         this.showEvaluationFileModal = false
         this.evaluationFiles.splice(index, 1);
       }).catch((error) => {
-        console.log(error)
         this.isFileDeleting = false
         selectedFile.isBusy = false
       });
@@ -2915,8 +2944,6 @@ export default {
       return "0.00"
     },
     getSelectedEvaluationLevel() {
-      console.log(this.forms.evaluation.fields)
-       console.log(this.forms.transcript.fields)
       const { levelId } = this.forms.transcript.fields
       if (levelId) {
         const result = this.options.levels.items.find(level => level.id === levelId)
