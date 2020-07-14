@@ -2252,7 +2252,10 @@ export default {
       if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
         
         //show countdown
-        this.evaluationDismissCountDown = 5
+        if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
+          this.evaluationDismissCountDown = 5
+        }
+        
 
         //set level, course, school cat of transcript
         const { subjects } = this.tables
@@ -2904,11 +2907,11 @@ export default {
       const { subject } = this.paginations
       const { levelId, semesterId } = this.filters.subject
       if (levelId !== null && semesterId !== null) {
-        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId && s.pivot.semesterId === semesterId)
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId && s.pivot.semesterId === semesterId && s.pivot.isTaken === 0 )
       } else if (levelId !== null && semesterId === null) {
-        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId)
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId && s.pivot.isTaken === 0)
       } else if (semesterId !== null && levelId === null) {
-        subjects.filteredItems = subjects.items.filter(s => s.pivot.semesterId === semesterId)
+        subjects.filteredItems = subjects.items.filter(s => s.pivot.semesterId === semesterId && s.pivot.isTaken === 0)
       }
       else {
         subjects.filteredItems = subjects.items
