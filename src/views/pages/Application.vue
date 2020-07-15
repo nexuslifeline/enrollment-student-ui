@@ -615,6 +615,19 @@
             </b-row>
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+            <b-row v-if="forms.evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
+              <b-col md=12>
+                <b-alert variant="danger" show>
+                  <p>
+                    <strong>
+                      Sorry, your request for evaluation is rejected with the ffg. reasons : <br>
+                      {{ forms.evaluation.fields.disapprovalNotes }} <br><br>
+                    </strong>
+                    <small>Please be inform that you can modify your request and resubmit for evaluation.</small>
+                  </p>
+                </b-alert>
+              </b-col>
+            </b-row>
             <b-row class="mb-2">
               <b-col md=12 >
                 <h5>
@@ -653,6 +666,7 @@
                   <b-form-input
                     v-model="forms.evaluation.fields.enrolledYear" 
                     :state="forms.evaluation.states.evaluationEnrolledYear"
+                    type="number"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{ forms.evaluation.errors.evaluationEnrolledYear }}
@@ -2227,7 +2241,7 @@ export default {
         this.showCountdown()
       }
 
-
+      
 
       //todo : review code for percentage and approval stage
       this.percentage = 
@@ -2281,9 +2295,31 @@ export default {
           subject.totalRows = data.subjects.length
           subjects.isBusy = false
           this.recordDetails(subject)
+          
+          //if true pre populate subject enlistment
+          // if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
+          //       (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
+          //   this.levelSubjects.item = data.subjects.filter(subject => 
+          //       subject.pivot.isTaken === 0 && (subject.pivot.levelId === transcript.fields.levelId && subject.pivot.levelId === transcript.fields.levelId ))
+          // }
 
         })
+      } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
+        //if rejected move 1 step back
+        const { activeApplication } = this.forms
+
+        const data = {
+          activeApplication: {
+            ...activeApplication.fields,
+            applicationStepId : ApplicationSteps.REQUEST_EVALUATION.id
+          }
+        }
+
+        this.updateStudent(data, studentId).then(({ data }) => {
+          this.forms.activeApplication.fields.applicationStepId = data.activeApplication.applicationStepId
+        }) 
       }
+
 
       //load evaluation files
       this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
@@ -2299,8 +2335,6 @@ export default {
       })
     })
 
-
-    
     this.getLevelList(params).then(response => {
       const res = response.data
       this.options.levels.items = res
@@ -2906,6 +2940,7 @@ export default {
       const { subjects } = this.tables
       const { subject } = this.paginations
       const { levelId, semesterId } = this.filters.subject
+
       if (levelId !== null && semesterId !== null) {
         subjects.filteredItems = subjects.items.filter(s => s.pivot.levelId === levelId && s.pivot.semesterId === semesterId && s.pivot.isTaken === 0 )
       } else if (levelId !== null && semesterId === null) {
@@ -2914,8 +2949,15 @@ export default {
         subjects.filteredItems = subjects.items.filter(s => s.pivot.semesterId === semesterId && s.pivot.isTaken === 0)
       }
       else {
-        subjects.filteredItems = subjects.items
+        subjects.filteredItems = subjects.items.filter(s =>  s.pivot.isTaken === 0)
       }
+
+      // if (levelId !== null || semesterId !== null) {
+      //   subjects.filteredItems = subjects.items.filter(s => 
+      //     s.pivot.levelId === levelId && 
+      //       s.pivot.semesterId === semesterId && 
+      //         s.pivot.isTaken === 0 )
+      // }
       this.onFiltered(subjects.filteredItems, subject)
 		},
   },
