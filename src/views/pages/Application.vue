@@ -654,7 +654,7 @@
                   <b-form-input
                     v-model="forms.evaluation.fields.lastYearAttended" 
                     :state="forms.evaluation.states.evaluationLastYearAttended"
-                    debounce="500"/>
+                    debounce="500" />
                   <b-form-invalid-feedback>
                     {{ forms.evaluation.errors.evaluationLastYearAttended }}
                   </b-form-invalid-feedback>
@@ -688,12 +688,12 @@
             <b-row class="mb-2 mt-2">
               <b-col md=12>
                 <h5>
-                  2. Your Current Academic Year Application
+                  2. Your current Academic Year Application.
                 </h5>
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Level</label>
                   <b-form-select 
@@ -712,11 +712,11 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group v-if="options.courses.items.length > 0">
                   <label class="required">Course</label>
                   <b-form-select 
-                    @input="loadSubjectsOfLevel()" 
+                   
                     v-model='forms.evaluation.fields.courseId'
                     :state="forms.evaluation.states.evaluationCourseId"
                     >
@@ -725,7 +725,7 @@
                       <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                     </template>
                     <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                      {{course.name}}
+                      {{ course.description }} {{ course.major ? `(${ course.major })` : ''}}
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
@@ -733,11 +733,29 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
+              <b-col md="4">
+                <b-form-group v-if="options.courses.items.length > 0">
+                  <label>Semester</label>
+                  <b-form-select
+                    v-model='forms.evaluation.fields.semesterId'
+                    :state="forms.evaluation.states.evaluationSemesterId">
+                    <template v-slot:first>
+                      <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
+                    </template>
+                    <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                      {{ semester.name }}
+                    </b-form-select-option>
+                  </b-form-select>
+                  <b-form-invalid-feedback>
+                    {{forms.evaluation.errors.evaluationSemesterId}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
             </b-row>
             <b-row class="mb-2  mt-2">
               <b-col md=12>
                 <h5>
-                  3. Attachment of supporting documents
+                  3. Attachment of supporting documents.
                 </h5>
               </b-col>
             </b-row>
@@ -799,7 +817,6 @@
                     spin />
                 </b-alert>
             </div>
-            
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
@@ -888,8 +905,8 @@
                       <b-col md="6">
                         <b-form-group v-if="options.courses.items.length > 0">
                           <label>Semester</label>
-                          <b-form-select
-                            @input="loadSections()"
+                          <!-- <b-form-select
+                            @change="loadSections()"
                             v-model='forms.transcript.fields.semesterId'
                             :state="forms.transcript.states.transcriptSemesterId"
                             >
@@ -899,7 +916,8 @@
                             <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
                               {{ semester.name }}
                             </b-form-select-option>
-                          </b-form-select>
+                          </b-form-select> -->
+                          <b-form-input v-model="getSelectedEvaluationSemester" readonly class="font-weight-bold bg-white"/>
                           <b-form-invalid-feedback>
                             {{forms.transcript.errors.transcriptSemesterId}}
                           </b-form-invalid-feedback>
@@ -968,7 +986,7 @@
               </b-col>
             </b-row>
           </div>
-           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
+          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -1760,6 +1778,7 @@ const transcriptFields = {
   transcriptStatusId: null,
   sectionId: null,
   studentCategoryId: null,
+  curriculumId: null,
 }
 
 const transcriptErrorFields = {
@@ -1783,14 +1802,16 @@ const evaluationFields = {
   disapprovalNotes: null,
   school_category_id: null,
   studentCurriculumId: null,
+  semesterId: null,
 }
 
 const evaluationErrorFields = {
-  levelId: null,
-  courseId: null,
-  lastYearAttended: null,
-  lastSchoolAttended: null,
-  enrolledYear: null,
+  evaluationLevelId: null,
+  evaluationCourseId: null,
+  evaluationLastYearAttended: null,
+  evaluationLastSchoolAttended: null,
+  evaluationEnrolledYear: null,
+  evaluationSemesterId: null,
 }
 
 const billingFields = {
@@ -1891,6 +1912,7 @@ export default {
       StudentCategories: StudentCategories,
       SchoolCategories: SchoolCategories,
       isPaying: false,
+      Semesters: Semesters,
       file: {
         src: null,
         type: null
@@ -2277,6 +2299,7 @@ export default {
 
         transcript.fields.levelId = student.evaluation.levelId
         transcript.fields.courseId = student.evaluation.courseId
+        transcript.fields.semesterId = student.evaluation.semesterId
         transcript.fields.schoolCategoryId = student.evaluation.schoolCategoryId
         transcript.fields.curriculumId = student.evaluation.studentCurriculumId
         subjects.isBusy = true
@@ -2790,7 +2813,7 @@ export default {
       if (levelId == null) {
         return
       }
-      if (schoolCategoryId === SchoolCategories.COLLEGE.id) {
+      if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
         this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
           levelsOfCourses.items = data
         }) 
@@ -3005,6 +3028,13 @@ export default {
         if (result) {
           return result.name
         }
+      }
+      return ''
+    },
+    getSelectedEvaluationSemester() {
+      const { semesterId } = this.forms.transcript.fields
+      if (semesterId) {
+        return this.Semester.getEnum(semesterId).name
       }
       return ''
     }

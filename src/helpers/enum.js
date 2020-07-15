@@ -52,11 +52,13 @@ export const AdmissionSteps = new Enum({
   ADDRESS: { id: 2, name: 'Address', description: 'Lorem ipsum dolor amet' },
   FAMILY: { id: 3, name: 'Family', description: 'Lorem ipsum dolor amet' },
   EDUCATION: { id: 4, name: 'Education', description: 'Lorem ipsum dolor amet' },
-  ACADEMIC_YEAR_ADMISSION: { id: 5, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
-  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
-  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' },
-  PAYMENTS: { id: 8, name: 'Payment', description: 'Lorem ipsum dolor amet' },
-  WAITING: { id: 9, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
+  REQUEST_EVALUATION: { id: 5, name: 'Request Evaluation' },
+  WAITING_EVALUATION: { id: 6, name: 'Waiting Evaluation' },
+  ACADEMIC_YEAR_ADMISSION: { id: 7, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
+  REQUIREMENTS: { id: 8, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
+  STATUS: { id: 9, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 10, name: 'Payment', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 11, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const ApplicationSteps = new Enum({
