@@ -2523,6 +2523,12 @@ export default {
           }
           copyValue(data.activeAdmission, activeAdmission);
           this.$set(this.forms.activeAdmission, 'fields',  { ...activeAdmission })
+
+          //load subjects of student
+          if (data.activeAdmission.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id) {
+            this.prePopulateStudentSubjects()
+          }
+
           this.isProcessing = false;
         }).catch((error) => {
           const { errors } = error.response.data;
@@ -2581,7 +2587,7 @@ export default {
             this.loadSections()
             return
           }
-          this.tables.levelSubjects.items = []
+          //this.tables.levelSubjects.items = []
           
         });
 
@@ -2929,7 +2935,6 @@ export default {
         const { levelsOfCourses } = this.options
         const { subjects } = this.tables
         const { subject } = this.paginations
-
         this.filters.subject.levelId = levelId
         this.filters.subject.semesterId = semesterId
 
@@ -3126,6 +3131,20 @@ export default {
         // }
         this.onFiltered(subjects.filteredItems, subject)
       },
+      prePopulateStudentSubjects() {
+        const { evaluation, transcript } = this.forms
+        const { subjects } = this.tables
+        if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id || 
+          (evaluation.fields.studentCurriculumId === evaluation.fields.curriculumId )) {
+            this.tables.levelSubjects.isBusy = true
+            this.tables.levelSubjects.items = subjects.filteredItems.filter(subject => 
+              subject.pivot.isTaken === 0 &&
+                  subject.pivot.levelId === evaluation.fields.levelId && 
+                    subject.pivot.semesterId === evaluation.fields.semesterId)
+            
+            this.tables.levelSubjects.isBusy = false
+        }     
+      }
     },
     computed: {
       totalUnits() {
