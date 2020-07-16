@@ -2396,11 +2396,13 @@ export default {
             this.recordDetails(subject)
             
             //if true pre populate subject enlistment
-            // if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
-            //       (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
-            //   this.levelSubjects.item = data.subjects.filter(subject => 
-            //       subject.pivot.isTaken === 0 && (subject.pivot.levelId === transcript.fields.levelId && subject.pivot.levelId === transcript.fields.levelId ))
-            // }
+            if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
+                  (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
+
+                  this.tables.levelSubjects.items = result.filter(subject => 
+                      subject.pivot.levelId === transcript.fields.levelId && 
+                          subject.pivot.semesterId === transcript.fields.semesterId)
+            }
 
           })
         } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
