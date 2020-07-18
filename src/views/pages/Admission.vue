@@ -2268,11 +2268,16 @@ export default {
             ]
           },
           {
-            header: 'Admission',
+            header: 'Admission & Evaluation',
             children: [
-              { id: 5, subHeader: 'Request Evaluation', description: 'Requsting for subject evaluation.' },
-              { id: 6, subHeader: 'Waiting for Evaluation Approval', description: 'Waiting for subject evaluation approval.' },
-              { id: 7, subHeader: 'Subject Enlistment', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
+              { id: 5, subHeader: 'Evaluation Request', description: 'Requsting for subject evaluation.' },
+              { id: 6, subHeader: 'Status', description: 'Waiting for subject evaluation.' }
+            ]
+          },
+          {
+            header: 'Subject Enlistment',
+            children: [
+              { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
               { id: 8, subHeader: 'Requirements', description: 'We will just need to validate your requirements. Please attach here all Student Admission requirements(Form 138, Certificate of Good Moral).' },
               { id: 9, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your requirements and your application for the current academic year.' }
             ]
@@ -2281,7 +2286,7 @@ export default {
             header: 'Enrollment',
             children: [
               { id: 10, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
-              { id: 11, subHeader: 'Waiting', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
+              { id: 11, subHeader: 'Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
             ]
           },
         ],
@@ -3225,8 +3230,8 @@ export default {
 
   .admission__left-pane {
     height: 100%;
-    padding: 25px;
-    flex: 0 1 260px;
+    padding: 25px 20px;
+    flex: 0 1 280px;
 
     @include for-size(tablet-portrait-down) {
       // for the meantime, we'll hide this
