@@ -10,7 +10,11 @@ export default {
     },
     getSubjectsOfLevelList(levelId, params){
       return this.$authHttp
-        .get(`${apiPrefix}/${apiVersion}/levels/${levelId}/subjects`, { params: params});
+        .get(`${apiPrefix}/${apiVersion}/levels/${levelId}/subjects`, { params: params });
+    },
+    getLevelOfCoursesList(courseId, params){
+      return this.$authHttp
+        .get(`${apiPrefix}/${apiVersion}/courses/${courseId}/levels`, { params: params });
     }
   }
 }

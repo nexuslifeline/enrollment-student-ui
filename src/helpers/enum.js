@@ -33,7 +33,8 @@ export const StudentTypes = new Enum({
 
 export const StudentCategories = new Enum({
   NEW: { id: 1, name: 'New Student' },
-  OLD: { id: 2, name: 'Old Student' }
+  OLD: { id: 2, name: 'Old Student' },
+  TRANSFEREE: { id: 3, name: 'Transferee Student' }
 });
 
 export const SchoolCategories = new Enum({
@@ -42,7 +43,8 @@ export const SchoolCategories = new Enum({
   JUNIOR_HIGH_SCHOOL: { id: 3, name: 'Junior High School' },
   SENIOR_HIGH_SCHOOL: { id: 4, name: 'Senior High School' },
   COLLEGE: { id: 5, name: 'College' },
-  GRADUATE_SCHOOL: { id: 6, name: 'Graduate School' }
+  GRADUATE_SCHOOL: { id: 6, name: 'Graduate School' },
+  VOCATIONAL: { id: 7, name: 'Vocational' }
 });
 
 export const AdmissionSteps = new Enum({
@@ -50,11 +52,13 @@ export const AdmissionSteps = new Enum({
   ADDRESS: { id: 2, name: 'Address', description: 'Lorem ipsum dolor amet' },
   FAMILY: { id: 3, name: 'Family', description: 'Lorem ipsum dolor amet' },
   EDUCATION: { id: 4, name: 'Education', description: 'Lorem ipsum dolor amet' },
-  ACADEMIC_YEAR_ADMISSION: { id: 5, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
-  REQUIREMENTS: { id: 6, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
-  STATUS: { id: 7, name: 'Status', description: 'Lorem ipsum dolor amet' },
-  PAYMENTS: { id: 8, name: 'Payment', description: 'Lorem ipsum dolor amet' },
-  WAITING: { id: 9, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
+  REQUEST_EVALUATION: { id: 5, name: 'Request Evaluation' },
+  WAITING_EVALUATION: { id: 6, name: 'Waiting Evaluation' },
+  ACADEMIC_YEAR_ADMISSION: { id: 7, name: 'Academic Year - Admission', description: 'Lorem ipsum dolor amet' },
+  REQUIREMENTS: { id: 8, name: 'Requirements', description: 'Lorem ipsum dolor amet' },
+  STATUS: { id: 9, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 10, name: 'Payment', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 11, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const ApplicationSteps = new Enum({
@@ -62,10 +66,12 @@ export const ApplicationSteps = new Enum({
   ADDRESS: { id: 2, name: 'Address' },
   FAMILY: { id: 3, name: 'Family' },
   EDUCATION: { id: 4, name: 'Education' },
-  ACADEMIC_YEAR_APPLICATION: { id: 5, name: 'Academic Year - Application' },
-  STATUS: { id: 6, name: 'Status', description: 'Lorem ipsum dolor amet' },
-  PAYMENTS: { id: 7, name: 'Payments', description: 'Lorem ipsum dolor amet' },
-  WAITING: { id: 8, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
+  REQUEST_EVALUATION: { id: 5, name: 'Request Evaluation' },
+  WAITING_EVALUATION: { id: 6, name: 'Waiting Evaluation' },
+  ACADEMIC_YEAR_APPLICATION: { id: 7, name: 'Academic Year - Application' },
+  STATUS: { id: 8, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  PAYMENTS: { id: 9, name: 'Payments', description: 'Lorem ipsum dolor amet' },
+  WAITING: { id: 10, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
 export const Semesters = new Enum({
@@ -380,5 +386,12 @@ export const PayTypes = new Enum({
   INITIAL: { id: 1, name: 'Initial' },
   CUSTOM: { id: 2, name: 'Custom' },
   ATTACHMENT: { id: 3, name: 'Attachment' },
+});
+
+export const EvaluationStatuses = new Enum({
+  PENDING: { id: 1, name: 'Pending' },
+  SUBMITTED: { id: 2, name: 'Submitted' },
+  APPROVED: { id: 3, name: 'Approved' },
+  REJECTED: { id: 4, name: 'Rejected' }
 });
 

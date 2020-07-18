@@ -13,3 +13,6 @@ export { default as BankAccountApi } from './BankAccount';
 export { default as EWalletAccountApi } from './EWalletAccount';
 export { default as SubjectApi } from './Subject';
 export { default as SectionApi } from './Section';
+export { default as EvaluationFileApi } from './EvaluationFile';
+export { default as EvaluationApi } from './Evaluation';
+export { default as CurriculumApi } from './Curriculum';

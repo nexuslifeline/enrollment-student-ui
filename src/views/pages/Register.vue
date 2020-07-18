@@ -76,7 +76,9 @@
               </div>
             </div>
             <div key="2" v-else class="register__credential-form">
-              <b-form-group v-if="forms.register.fields.studentCategoryId == StudentCategories.OLD.id" class="form-group">
+              <b-form-group 
+                  class="form-group"
+                  v-if="(isEnrolled === true ? true : (forms.register.fields.studentCategoryId === StudentCategories.OLD.id ? true : false))" >
                 <label class="label">Student No</label>
                 <b-form-input
                   v-model="forms.register.fields.studentNo"
@@ -165,6 +167,7 @@ export default {
     return {
       currentFormIndex: 0,
       StudentCategories: StudentCategories,
+      isEnrolled: null,
       forms: {
         register: {
           isProcessing: false,
@@ -176,9 +179,11 @@ export default {
     }
   },
   created(){
-    this.forms.register.fields.studentCategoryId = localStorage.getItem('studentCategoryId');
-    //console.log(this.forms.register.fields.studentCategoryId)
-    //console.log(this.StudentCategories.OLD.id)
+    this.forms.register.fields.studentCategoryId = Number(localStorage.getItem('studentCategoryId'))
+    this.isEnrolled = localStorage.getItem('isEnrolled') === 'true' ? true : false
+    // console.log('localStorage.getItem(isEnrolled) --> ' + localStorage.getItem('isEnrolled'))
+     console.log('isEnrolled --> ' + this.isEnrolled)
+
   },
   methods: {
     onGetStarted() {
@@ -208,9 +213,13 @@ export default {
     },
     createAccount() {
       const { register, register: { fields: { username, password } } } = this.forms;
+      const data = {
+        isEnrolled : this.isEnrolled,
+        ...register.fields
+      }
       register.isProcessing = true  
       reset(register);
-      this.registerStudent(register.fields).then(({ data }) => {
+      this.registerStudent(data).then(({ data }) => {
         this.authenticate({ username, password }).then(({ data }) => {
           localStorage.setItem('accessToken', data.accessToken)
           this.$store.commit('loginUser')
@@ -218,11 +227,21 @@ export default {
             console.log(data)
             register.isProcessing = false;
             localStorage.setItem('studentId', data.userable.id);
-            const routeName =
-              StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
-                ? 'Admission'
-                : 'Application';
+
+            // const routeName =
+            //   StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
+            //     ? 'Admission'
+            //     : 'Application';
+
+              const routeName =
+                this.isEnrolled === true ? 
+                  'Application' : 
+                    StudentCategories.OLD.id === data.userable.transcript.studentCategoryId ? 'Application' 
+                      : 'Admission'
+
+
             localStorage.removeItem('studentCategoryId')
+            localStorage.removeItem('isEnrolled')
             this.$router.push({ name : routeName });
           })
         })
