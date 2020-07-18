@@ -88,10 +88,10 @@
               scale="2"
             />
           </button>
-      
-          <div v-if="step===1" class="signup__confirmation-content">
+
+          <div v-if="step === 1" class="signup__confirmation-content">
             <p class="signup__confirmation-headline">
-              Are you already enrolled for this SY 2020-2021?
+              Are you already enrolled for SY 2020-2021?
             </p>
             <ul class="signup__confirmation-answers">
               <li @click="onSelectOption(true)" class="signup__answer-item">
@@ -106,9 +106,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  Yes, I already have my student number.
+                  Yes, I am already enrolled.
                   <span class="signup__confirmation-answer-notes">
-                    (Student who is  currently enrolled in STC Tandag and has a student number.)
+                    (Student that are officially enrolled for the SY 2020-2021)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -125,9 +125,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  No, I don't have student number yet.
+                  No, I am not yet enrolled.
                   <span class="signup__confirmation-answer-notes">
-                    (An unofficially enrolled student who is still processing his/her admission)
+                    (Student that are not yet enrolled for the SY 2020-2021)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -135,10 +135,14 @@
             </ul>
           </div>
 
-          <div v-if="step===2" class="signup__confirmation-content">
-            <p class="signup__confirmation-headline">
-              Please select your classification ?
+          <div v-if="step === 2" class="signup__confirmation-content">
+            <p class="signup__confirmation-headline signup__confirmation-headline--no-bottom">
+              What type of student are you?
             </p>
+            <span v-if="isEnrolled" class="signup__confirmation-answer-notes">
+              (If you are not sure, you may refer to your Certificate of Registration(SY 2020-2021)
+              or you may contact us at <a href='#'>{{fbPageUrl}}</a>)
+            </span>
             <ul class="signup__confirmation-answers">
               <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
                 <v-icon
@@ -154,7 +158,7 @@
                 <div class="signup__confirmation-answer-item">
                   I am a new student
                   <span class="signup__confirmation-answer-notes">
-                    (Student who is  currently enrolled in STC Tandag and has a student number.)
+                    (Student who has not previously attended STC, or a Student who are enrolling in STC for the first time)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -171,9 +175,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am a old/returning student
+                  I am a old student
                   <span class="signup__confirmation-answer-notes">
-                    (Continuing student or returning student.)
+                    (Student who already attended past school year in STC)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -190,9 +194,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am a transferee from other school
+                  I am a transferee student
                   <span class="signup__confirmation-answer-notes">
-                    (I am a transferee from other school.)
+                    (Student who is moving to STC from other institution)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -246,6 +250,8 @@ export default {
       version: process.env.VUE_APP_VERSION,
       studentCategories: StudentCategories,
       showConfirmation: false,
+      isEnrolled: false,
+      fbPageUrl: process.env.VUE_APP_FB_PAGE_URL,
       step: 1,
       forms: {
         auth: {
@@ -256,6 +262,9 @@ export default {
         }
       }
     }
+  },
+  created() {
+    this.isEnrolled = !!localStorage.getItem('isEnrolled');
   },
   methods: {
     login() {
@@ -299,7 +308,8 @@ export default {
     onSelectOption(isEnrolled) {
       //event for step 1 selection
       localStorage.setItem('isEnrolled', isEnrolled);
-      this.step = 2
+      this.isEnrolled = isEnrolled;
+      this.step = 2;
     }
 
   },
@@ -352,7 +362,7 @@ export default {
   }
 
   .signup__answer-item {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 700;
     color: $dark-blue;
     margin: 13px 0;
@@ -397,7 +407,7 @@ export default {
   }
 
   .signup__confirmation-headline {
-    font-size: 40px;
+    font-size: 36px;
     font-weight: 700;
     color: $dark-blue;
     opacity: 1;
@@ -406,6 +416,10 @@ export default {
       font-size: 30px;
       font-weight: 600;
     }
+  }
+
+  .signup__confirmation-headline--no-bottom {
+    margin-bottom: 0;
   }
 
   .signup__confirmation-content {
@@ -618,7 +632,7 @@ export default {
   }
 
   .signup__confirmation-answer-notes {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 400;
     color: $gray;
   }
