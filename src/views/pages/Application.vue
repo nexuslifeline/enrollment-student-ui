@@ -466,7 +466,7 @@
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
-              <b-col md="8">
+              <b-col md="6">
                 <b-form-group>
                   <label>Last School Attended</label>
                   <b-form-input
@@ -474,11 +474,19 @@
                     debounce="500"/>
                 </b-form-group>
               </b-col>
-              <b-col md="4">
+              <b-col md="3">
+                <b-form-group>
+                  <label>Last School Yr Attended</label>
+                  <b-form-input
+                    v-model="forms.education.fields.lastSchoolYearAttended" 
+                    debounce="500"/>
+                </b-form-group>
+              </b-col>
+              <b-col md="3">
                 <b-form-group>
                   <label>Level</label>
                   <b-form-input
-                    v-model="forms.education.fields.year" 
+                    v-model="forms.education.fields.lastLevel" 
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -704,7 +712,7 @@
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
                     <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                      {{level.name}}
+                      {{ level.name }}
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
@@ -713,7 +721,10 @@
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="options.courses.items.length > 0">
+                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                        forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                   <label class="required">Course</label>
                   <b-form-select 
                    
@@ -734,7 +745,8 @@
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="options.courses.items.length > 0">
+                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
                   <label>Semester</label>
                   <b-form-select
                     v-model='forms.evaluation.fields.semesterId'
@@ -837,43 +849,18 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Level</label>
-                          <!-- <b-form-select 
-                            @input="loadCourses()" 
-                            v-model='forms.transcript.fields.levelId'
-                            :state="forms.transcript.states.transcriptLevelId"
-                            disabled>                   
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                              {{level.name}}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationLevel" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptLevelId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationLevel }} </label>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="options.courses.items.length > 0">
+                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                            forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                              forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                           <label>Course</label>
-                          <!-- <b-form-select 
-                            @input="loadSubjectsOfLevel()" 
-                            v-model='forms.transcript.fields.courseId'
-                            :state="forms.transcript.states.transcriptCourseId"
-                            disabled>
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                              {{course.name}}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationCourse" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptCourseId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationCourse }} </label>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -903,24 +890,11 @@
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="options.courses.items.length > 0">
+                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ">
                           <label>Semester</label>
-                          <!-- <b-form-select
-                            @change="loadSections()"
-                            v-model='forms.transcript.fields.semesterId'
-                            :state="forms.transcript.states.transcriptSemesterId"
-                            >
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                              {{ semester.name }}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationSemester" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptSemesterId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationSemester }} </label>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -938,13 +912,13 @@
                     name="plus-circle" />
                   Add Subject</b-button>
               </b-col>
-              </b-row>
+            </b-row>
             <b-row>
               <b-col md=12>
                 <b-form-group>
                   <b-form-input :state="forms.transcript.states.subjects" hidden/>
                   <b-form-invalid-feedback>
-                    {{forms.transcript.errors.subjects}}
+                    {{ forms.transcript.errors.subjects }}
                   </b-form-invalid-feedback>
                 </b-form-group>
                 <b-table
@@ -1008,24 +982,6 @@
                   </b-col>
                 </b-row>
                 <div class="pb-5">
-                  <!--<b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 30 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage >= 60 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>
-                  <b-col md="2">
-                    <b-progress :value="percentage === 100 ? 100 : 0" variant="success"></b-progress>
-                  </b-col>-->
                   <ProgressIndicator
                     :barCount="6"
                     :activeBar="percentage >= 30 ? 2 : percentage >= 60 ? 4 : 6"
@@ -1327,19 +1283,6 @@
                     />
                   </div>
                 </div>
-                <!-- <b-alert
-                  :show="dismissCountDown"
-                  variant="info"
-                  @dismissed="onUpdateStudent()"
-                  @dismiss-count-down="countDownChanged"
-                >
-                  Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
-                  <v-icon
-                    v-if="dismissCountDown"
-                    name="spinner"
-                    class="mr-2 float-right"
-                    spin />
-                </b-alert> -->
               </b-col>
             </b-row>
           </div>
@@ -1744,7 +1687,8 @@ const familyErrorFields = {
 const educationFields = {
   lastSchoolAttended: null,
   lastSchoolAddress: null,
-  year: null,
+  lastSchoolYearAttended: null,
+  lastLevel: null,
   elementaryCourse: null,
   elementaryCourseYear: null,
   elementaryCourseHonors: null,
@@ -2000,6 +1944,13 @@ export default {
               thStyle: { width: "15%" }
             },
             {
+              key: "totalUnits",
+              label: "Total Units",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "8%"}
+            },
+            {
               key: "action",
               label: "",
               tdClass: "align-middle text-center",
@@ -2033,6 +1984,13 @@ export default {
             {
               key: "labs",
               label: "Lab Units",
+              tdClass: "align-middle text-right",
+              thClass: "text-right",
+              thStyle: {width: "8%"}
+            },
+            {
+              key: "totalUnits",
+              label: "Total Units",
               tdClass: "align-middle text-right",
               thClass: "text-right",
               thStyle: {width: "8%"}
@@ -2467,6 +2425,13 @@ export default {
           this.prePopulateStudentSubjects()
         }
 
+        //make education last school attended and year
+        //default to request evaluation with the same fields
+        if (data.activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
+          evaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
+          evaluation.fields.lastYearAttended =  data.education.lastSchoolYearAttended
+        }
+
         this.isProcessing = false;
 
       }).catch((error) => {
@@ -2510,10 +2475,11 @@ export default {
     },
     loadCourses() {
       
-      this.options.sections.items = []
       // const { fields } = this.forms.transcript;
       const { fields } = this.forms.evaluation;
       const { items } = this.options.levels
+
+      
       // console.log(fields.levelId)
       const level = items.find(i => i.id == fields.levelId)
       if (level) {
@@ -2521,6 +2487,7 @@ export default {
       }
       
       fields.courseId = null
+      fields.semesterId = null
       // fields.semesterId = null
 
       const params = { paginate: false }
@@ -2981,12 +2948,6 @@ export default {
         subjects.filteredItems = subjects.items.filter(s =>  s.pivot.isTaken === 0)
       }
 
-      // if (levelId !== null || semesterId !== null) {
-      //   subjects.filteredItems = subjects.items.filter(s => 
-      //     s.pivot.levelId === levelId && 
-      //       s.pivot.semesterId === semesterId && 
-      //         s.pivot.isTaken === 0 )
-      // }
       this.onFiltered(subjects.filteredItems, subject)
     },
     prePopulateStudentSubjects() {
@@ -2997,8 +2958,8 @@ export default {
           this.tables.levelSubjects.isBusy = true
           this.tables.levelSubjects.items = subjects.filteredItems.filter(subject => 
             subject.pivot.isTaken === 0 &&
-                subject.pivot.levelId === evaluation.fields.levelId && 
-                  subject.pivot.semesterId === evaluation.fields.semesterId)
+                subject.pivot.levelId === transcript.fields.levelId && 
+                  subject.pivot.semesterId === transcript.fields.semesterId)
           
           this.tables.levelSubjects.isBusy = false
       }     

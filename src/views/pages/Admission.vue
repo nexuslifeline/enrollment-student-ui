@@ -468,7 +468,7 @@
             </div>
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
               <b-row>
-                <b-col md="8">
+                <b-col md="6">
                   <b-form-group>
                     <label>Last School Attended</label>
                     <b-form-input
@@ -476,12 +476,20 @@
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
-                <b-col md="4">
+                <b-col md="3">
                   <b-form-group>
-                  <label>Level</label>
-                  <b-form-input
-                    v-model="forms.education.fields.year" 
-                    debounce="500"/>
+                    <label>Last School Yr Attended</label>
+                    <b-form-input
+                      v-model="forms.education.fields.lastSchoolYearAttended" 
+                      debounce="500"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="3">
+                  <b-form-group>
+                    <label>Level</label>
+                    <b-form-input
+                      v-model="forms.education.fields.lastLevel" 
+                      debounce="500"/>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -715,7 +723,10 @@
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
-                  <b-form-group v-if="options.courses.items.length > 0">
+                    <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                        forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                     <label class="required">Course</label>
                     <b-form-select 
                       v-model='forms.evaluation.fields.courseId'
@@ -735,7 +746,8 @@
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
-                  <b-form-group v-if="options.courses.items.length > 0">
+                  <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
                     <label>Semester</label>
                     <b-form-select
                       v-model='forms.evaluation.fields.semesterId'
@@ -827,41 +839,18 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Level</label>
-                          <!-- <b-form-select 
-                            @input="loadCourses()" 
-                            v-model='forms.transcript.fields.levelId'
-                            :state="forms.transcript.states.transcriptLevelId">                   
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
-                              {{level.name}}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationLevel" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptLevelId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationLevel }} </label>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="options.courses.items.length > 0">
+                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                            forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                              forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                           <label>Course</label>
-                          <!-- <b-form-select 
-                            @input="loadSubjectsOfLevel()" 
-                            v-model='forms.transcript.fields.courseId' 
-                            :state="forms.transcript.states.transcriptCourseId">
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='course in options.courses.items' :key='course.id' :value='course.id'>
-                              {{course.name}}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationCourse" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptCourseId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationCourse }} </label>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -889,22 +878,11 @@
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="options.courses.items.length > 0">
+                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                            forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
                           <label>Semester</label>
-                          <!-- <b-form-select
-                            v-model='forms.transcript.fields.semesterId'
-                            :state="forms.transcript.states.transcriptSemesterId">
-                            <template v-slot:first>
-                              <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
-                            </template>
-                            <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                              {{ semester.name }}
-                            </b-form-select-option>
-                          </b-form-select> -->
-                          <b-form-input v-model="getSelectedEvaluationSemester" readonly class="font-weight-bold bg-white"/>
-                          <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptSemesterId}}
-                          </b-form-invalid-feedback>
+                          <br>
+                          <label class="font-weight-bold">{{ getSelectedEvaluationSemester }} </label>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -970,7 +948,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
+            <!-- <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
               <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -1005,7 +983,7 @@
                     </div>
                 </b-col>
               </b-row>
-            </div>
+            </div> -->
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
               <b-row>
                 <b-col md="12">
@@ -1387,8 +1365,7 @@
               name="sync"
               class="mr-2"
               spin />
-              {{ forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUIREMENTS.id 
-                  && forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUEST_EVALUATION.id  ? 
+              {{  forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUEST_EVALUATION.id  ? 
                     'Next' : 'Submit Application'}}
           </b-button>
         </div>
@@ -1794,7 +1771,8 @@ const familyErrorFields = {
 const educationFields = {
   lastSchoolAttended: null,
   lastSchoolAddress: null,
-  year: null,
+  lastSchoolYearAttended: null,
+  lastLevel: null,
   elementaryCourse: null,
   elementaryCourseYear: null,
   elementaryCourseHonors: null,
@@ -2278,15 +2256,14 @@ export default {
             header: 'Subject Enlistment',
             children: [
               { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
-              { id: 8, subHeader: 'Requirements', description: 'We will just need to validate your requirements. Please attach here all Student Admission requirements(Form 138, Certificate of Good Moral).' },
-              { id: 9, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your requirements and your application for the current academic year.' }
+              { id: 8, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your requirements and your application for the current academic year.' }
             ]
           },
           {
             header: 'Enrollment',
             children: [
-              { id: 10, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
-              { id: 11, subHeader: 'Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
+              { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
+              { id: 10, subHeader: 'Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
             ]
           },
         ],
@@ -2491,7 +2468,7 @@ export default {
               : activeAdmission.admissionStepId + 1;
 
         const applicationStatusId =
-          AdmissionSteps.REQUIREMENTS.id === activeAdmission.admissionStepId
+          AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id === activeAdmission.admissionStepId
             ? ApplicationStatuses.SUBMITTED.id
               : AdmissionSteps.STATUS.id === activeAdmission.admissionStepId 
                 ? ApplicationStatuses.APPROVED_ASSESMENT.id
@@ -2534,6 +2511,13 @@ export default {
             this.prePopulateStudentSubjects()
           }
 
+          //make education last school attended and year
+          //default to request evaluation with the same fields
+          if (data.activeAdmission.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id) {
+            evaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
+            evaluation.fields.lastYearAttended =  data.education.lastSchoolYearAttended
+          }
+
           this.isProcessing = false;
         }).catch((error) => {
           const { errors } = error.response.data;
@@ -2574,12 +2558,13 @@ export default {
         }
       },
       loadCourses() {
-        this.sectionIsLoading = true
         this.options.sections.items = []
         const { fields } = this.forms.evaluation;
         const { items } = this.options.levels
+        
         fields.courseId = null
-        //fields.semesterId = null
+        fields.semesterId = null
+        
         const params = { paginate: false }
 
         const level = items.find(i => i.id == fields.levelId)
@@ -2674,7 +2659,7 @@ export default {
       },
       buttonBackShowHide(admissionStepId) {
         //arrHidden = steps id where the button back should be hidden
-        let arrHidden = [AdmissionSteps.PROFILE.id, AdmissionSteps.STATUS.id, AdmissionSteps.PAYMENTS.id, AdmissionSteps.WAITING.id, AdmissionSteps.WAITING_EVALUATION.id]
+        let arrHidden = [AdmissionSteps.PROFILE.id, AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id, AdmissionSteps.STATUS.id, AdmissionSteps.PAYMENTS.id, AdmissionSteps.WAITING.id, AdmissionSteps.WAITING_EVALUATION.id]
         return !arrHidden.includes(admissionStepId)
       },
       buttonNextShowHide(admissionStepId) {
@@ -3144,8 +3129,8 @@ export default {
             this.tables.levelSubjects.isBusy = true
             this.tables.levelSubjects.items = subjects.filteredItems.filter(subject => 
               subject.pivot.isTaken === 0 &&
-                  subject.pivot.levelId === evaluation.fields.levelId && 
-                    subject.pivot.semesterId === evaluation.fields.semesterId)
+                  subject.pivot.levelId === transcript.fields.levelId && 
+                    subject.pivot.semesterId === transcript.fields.semesterId)
             
             this.tables.levelSubjects.isBusy = false
         }     
