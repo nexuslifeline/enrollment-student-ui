@@ -114,7 +114,7 @@ function configRoutes () {
       component: Login
     },
     {
-      path: '/register',
+      path: '/register/:studentCategoryId/:isEnrolled',
       name: 'Register',
       component: Register,
     },

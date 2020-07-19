@@ -3,12 +3,12 @@
     <CToggler
       in-header
       class="d-lg-none"
-      @click="$store.commit('toggleSidebarMobile')"
+      @click="$store.commit('TOGGLE_SIDEBAR_MOBILE')"
     />
     <CToggler
       in-header
       class="d-md-down-none"
-      @click="$store.commit('toggleSidebarDesktop')"
+      @click="$store.commit('TOGGLE_SIDEBAR_DESKTOP')"
     />
     <CHeaderNav class="d-md-down-none mr-auto">
       <!-- <CHeaderNavItem class="px-3">

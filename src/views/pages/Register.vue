@@ -179,9 +179,9 @@ export default {
     }
   },
   created(){
-    this.forms.register.fields.studentCategoryId = Number(localStorage.getItem('studentCategoryId'))
-    this.isEnrolled = localStorage.getItem('isEnrolled') === 'true' ? true : false
-    // console.log('localStorage.getItem(isEnrolled) --> ' + localStorage.getItem('isEnrolled'))
+    const pathParams = this.$route.params;
+    this.forms.register.fields.studentCategoryId = Number(pathParams.studentCategoryId)
+    this.isEnrolled = (pathParams.isEnrolled === 'y' || pathParams.isEnrolled === 'Y')
      console.log('isEnrolled --> ' + this.isEnrolled)
 
   },
@@ -222,28 +222,31 @@ export default {
       this.registerStudent(data).then(({ data }) => {
         this.authenticate({ username, password }).then(({ data }) => {
           localStorage.setItem('accessToken', data.accessToken)
-          this.$store.commit('loginUser')
-          this.getAuthenticatedUser().then(({ data }) => {
-            console.log(data)
-            register.isProcessing = false;
-            localStorage.setItem('studentId', data.userable.id);
+          this.$store.commit('LOGIN_USER');
+          //localStorage.removeItem('studentCategoryId')
+          //localStorage.removeItem('isEnrolled')
+          this.$router.push({ path: '/dashboard' });
+          register.isProcessing = false;
+          // this.getAuthenticatedUser().then(({ data }) => {
+          //   register.isProcessing = false;
+          //   localStorage.setItem('studentId', data.userable.id);
 
-            // const routeName =
-            //   StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
-            //     ? 'Admission'
-            //     : 'Application';
+          //   // const routeName =
+          //   //   StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
+          //   //     ? 'Admission'
+          //   //     : 'Application';
 
-              const routeName =
-                this.isEnrolled === true ? 
-                  'Application' : 
-                    StudentCategories.OLD.id === data.userable.transcript.studentCategoryId ? 'Application' 
-                      : 'Admission'
+          //     const routeName =
+          //       this.isEnrolled === true ? 
+          //         'Application' : 
+          //           StudentCategories.OLD.id === data.userable.transcript.studentCategoryId ? 'Application' 
+          //             : 'Admission'
 
 
-            localStorage.removeItem('studentCategoryId')
-            localStorage.removeItem('isEnrolled')
-            this.$router.push({ name : routeName });
-          })
+          //   localStorage.removeItem('studentCategoryId')
+          //   localStorage.removeItem('isEnrolled')
+          //   this.$router.push({ name: routeName });
+          // })
         })
       })
       .catch(error => {
@@ -262,7 +265,7 @@ export default {
         // this.$http.post('api/v1/register', this.forms.register.fields)
         //   .then(response => {
         //     const res = response.data
-        //     this.$store.commit('loginUser')
+        //     this.$store.commit('LOGIN_USER')
         //     localStorage.setItem('accessToken', res.token.accessToken)
         //     this.$router.push({ name: 'Student Info'})
         //   })

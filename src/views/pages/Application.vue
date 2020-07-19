@@ -2205,9 +2205,14 @@ export default {
     };
   },
   created() {
+    if (!this.hasActiveApplication && this.hasActiveAdmission) {
+      this.$router.push({ path: '/admission' });
+      return;
+    }
+
     this.isLoading = true;
     let params = { paginate: false }
-    const studentId = localStorage.getItem('studentId');
+    const studentId = this.$store.state.user.id;
     this.getStudent(studentId).then(({ data: student }) => {
       Object.keys(this.forms).forEach((key) => {
         const source = student[key] || student;
@@ -2958,12 +2963,18 @@ export default {
             subject.pivot.isTaken === 0 &&
                 subject.pivot.levelId === transcript.fields.levelId && 
                   subject.pivot.semesterId === transcript.fields.semesterId)
-          
+
           this.tables.levelSubjects.isBusy = false
-      }     
+      }
     }
   },
   computed: {
+    hasActiveAdmission() {
+      return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+    },
+    hasActiveApplication() {
+      return !!(this.$store.state.user && this.$store.state.user.activeApplication);
+    },
     totalUnits() {
       let totalUnits = 0
       this.tables.levelSubjects.items.forEach(i => {
