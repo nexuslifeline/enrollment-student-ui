@@ -114,6 +114,18 @@
               </b-col>
               <b-col md="4">
                 <b-form-group>
+                  <label class="required">Barangay</label>
+                  <b-form-input
+                    v-model="forms.address.fields.currentBarangay" 
+                    :state="forms.address.states.addressCurrentBarangay" 
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressCurrentBarangay}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
                   <label class="required">City/Town</label>
                   <b-form-input
                     v-model="forms.address.fields.currentCityTown" 
@@ -124,6 +136,8 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
+            </b-row>
+            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Province</label>
@@ -136,8 +150,6 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-            </b-row>
-            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Postal/Zip Code</label>
@@ -158,6 +170,8 @@
                     debounce="500"/>
                 </b-form-group>
               </b-col>
+            </b-row>
+            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label>Region</label>
@@ -166,9 +180,7 @@
                     debounce="500"/>
                 </b-form-group>
               </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Country</label>
                   <b-form-select 
@@ -186,7 +198,7 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
@@ -224,7 +236,7 @@
               </b-col>
             </b-row>
             <b-row>
-                <b-col md="4">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">House No/Street</label>
                   <b-form-input
@@ -233,6 +245,18 @@
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentHouseNoStreet}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="4">
+                <b-form-group>
+                  <label class="required">Barangay</label>
+                  <b-form-input
+                    v-model="forms.address.fields.permanentBarangay" 
+                    :state="forms.address.states.addressPermanentBarangay" 
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{forms.address.errors.addressPermanentBarangay}}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -248,6 +272,8 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
+            </b-row>
+            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Province</label>
@@ -260,8 +286,6 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-            </b-row>
-            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Postal/Zip Code</label>
@@ -282,6 +306,9 @@
                     debounce="500" />
                 </b-form-group>
               </b-col>
+              
+            </b-row>
+            <b-row>
               <b-col md="4">
                 <b-form-group>
                   <label>Region</label>
@@ -290,9 +317,7 @@
                     debounce="500" />
                 </b-form-group>
               </b-col>
-            </b-row>
-            <b-row>
-                <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Country</label>
                   <b-form-select 
@@ -310,7 +335,7 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group>
                   <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
@@ -1616,6 +1641,7 @@ const studentFields = {
 
 const addressFields = {
   currentHouseNoStreet: null,
+  currentBarangay: null,
   currentCityTown: null,
   currentProvince: null,
   currentRegion: null,
@@ -1625,6 +1651,7 @@ const addressFields = {
   currentCompleteAddress: null,
   currentHomeLandlineMobileNo: null,
   permanentHouseNoStreet: null,
+  permanentBarangay: null,
   permanentCityTown: null,
   permanentProvince: null,
   permanentRegion: null,
@@ -1637,6 +1664,7 @@ const addressFields = {
 
 const addressErrorFields = {
   addressCurrentHouseNoStreet: null,
+  addressCurrentBarangay: null,
   addressCurrentCityTown: null,
   addressCurrentProvince: null,
   addressCurrentRegion: null,
@@ -1646,6 +1674,7 @@ const addressErrorFields = {
   addressCurrentCompleteAddress: null,
   addressCurrentHomeLandlineMobileNo: null,
   addressPermanentHouseNoStreet: null,
+  addressPermanentBarangay: null,
   addressPermanentCityTown: null,
   addressPermanentProvince: null,
   addressPermanentRegion: null,
@@ -2527,6 +2556,7 @@ export default {
       const { address: { fields: address } } = this.forms
       if(isSame) {
         address.permanentHouseNoStreet = address.currentHouseNoStreet
+        address.permanentBarangay = address.currentBarangay
         address.permanentCityTown = address.currentCityTown
         address.permanentProvince = address.currentProvince
         address.permanentRegion = address.currentRegion
@@ -2537,6 +2567,7 @@ export default {
         address.permanentHomeLandlineMobileNo = address.currentHomeLandlineMobileNo
       } else {
         address.permanentHouseNoStreet = null
+        address.permanentBarangay = null
         address.permanentCityTown = null
         address.permanentProvince = null
         address.permanentRegion = null
