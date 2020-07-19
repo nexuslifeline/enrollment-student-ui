@@ -263,9 +263,6 @@ export default {
       }
     }
   },
-  created() {
-    this.isEnrolled = !!localStorage.getItem('isEnrolled');
-  },
   methods: {
     login() {
       const { auth, auth: { fields: { username, password } } } = this.forms;
@@ -273,25 +270,9 @@ export default {
       this.authenticate({ username, password })
         .then(({ data }) => {
           localStorage.setItem('accessToken', data.accessToken);
-          this.$store.commit('loginUser');
-
-          this.getAuthenticatedUser().then(({ data: { userable } }) => {
-            auth.isProcessing = false;
-            if (userable) {
-              // Just note here that there is no way that the student will have both active application and admission
-              const hasActiveAdmission = !!userable.activeAdmission;
-              const hasActiveApplication = !!userable.activeApplication;
-              localStorage.setItem('studentId', userable.id);
-              const routeName = hasActiveApplication
-                ? 'Application'
-                : hasActiveAdmission
-                  ? 'Admission'
-                  : 'Dashboard';
-              this.$router.push({ name : routeName });
-            }
-          })
+          this.$store.commit('LOGIN_USER');
+          this.$router.push({ path: '/dashboard' });
         }).catch((error) => {
-          console.log(error)
           auth.isProcessing = false;
           const { errors } = error.response.data;
           validate(auth, errors);
@@ -299,15 +280,15 @@ export default {
     },
     register(studentCategoryId) {
       if(studentCategoryId){
-        localStorage.setItem('studentCategoryId', studentCategoryId);
-        this.$router.push({ name: 'Register' })
+        //localStorage.setItem('studentCategoryId', studentCategoryId);
+        this.$router.push({ path: `/register/${studentCategoryId}/${this.isEnrolled ? 'y' : 'n'}` })
         return;
       }
       this.step = 1
     },
     onSelectOption(isEnrolled) {
       //event for step 1 selection
-      localStorage.setItem('isEnrolled', isEnrolled);
+      //localStorage.setItem('isEnrolled', isEnrolled);
       this.isEnrolled = isEnrolled;
       this.step = 2;
     }

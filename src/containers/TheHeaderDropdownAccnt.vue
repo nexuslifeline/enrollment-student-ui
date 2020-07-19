@@ -43,7 +43,7 @@ export default {
       if(localStorage.accessToken) {
         this.revokeAuthentication().then(response => {
           localStorage.removeItem('accessToken')
-          this.$store.commit('logoutUser')
+          this.$store.commit('LOGOUT_USER')
           this.$router.push({ name: 'Login' })
         }).catch(err => {
           console.log(err)

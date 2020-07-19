@@ -16,6 +16,21 @@
     name: 'Home',
     components: {
       Menus
+    },
+    computed: {
+      hasActiveAdmission() {
+        return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+      },
+      hasActiveApplication() {
+        return !!(this.$store.state.user && this.$store.state.user.activeApplication);
+      }
+    },
+    created() {
+      if (this.hasActiveApplication) {
+        this.$router.push({ path: '/application' });
+      } else if (this.hasActiveAdmission) {
+        this.$router.push({ path: '/admission' });
+      }
     }
   }
 </script>

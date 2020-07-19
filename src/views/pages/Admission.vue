@@ -2288,8 +2288,13 @@ export default {
       }
     },
     created(){
+      if (!this.hasActiveAdmission && this.hasActiveApplication) {
+        this.$router.push({ path: '/application' });
+        return;
+      }
+
       const params = { paginate: false }
-      const studentId = localStorage.getItem('studentId');
+      const studentId = this.studentId;
       this.getStudent(studentId).then(({ data: student }) => {
         Object.keys(this.forms).forEach((key) => {
           const source = student[key] || student;
@@ -2330,7 +2335,7 @@ export default {
           student.activeAdmission.applicationStatusId == 1 ?
             3 : student.transcript.transcriptStatusId == 2 ?
               2 : 1
-        
+
         this.selectedEvaluationApprovalStage = 
           student.evaluation.evaluationStatusId == 3 ?
             2 : 1
@@ -2341,12 +2346,12 @@ export default {
 
         const { transcript } = this.forms
         if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
-          
+
           //show countdown
           if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING_EVALUATION.id){
             this.evaluationDismissCountDown = 5
           }
-          
+
 
           //set level, course, school cat of transcript
           const { subjects } = this.tables
@@ -2362,7 +2367,7 @@ export default {
           this.loadSections()
           //need to load subjects here
           this.getEvaluation(student.evaluation.id).then(({ data }) => {
-          
+
             const result = data.subjects.filter(subject => subject.pivot.isTaken === 0)
 
             //clear subjects
@@ -2374,7 +2379,7 @@ export default {
             subject.totalRows = data.subjects.length
             subjects.isBusy = false
             this.recordDetails(subject)
-            
+
             //if true pre populate subject enlistment
             if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
                   (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
@@ -2398,7 +2403,7 @@ export default {
 
           this.updateStudent(data, studentId).then(({ data }) => {
             this.forms.activeAdmission.fields.admissionStepId = data.activeAdmission.admissionStepId
-          }) 
+          })
         }
 
       })
@@ -2425,7 +2430,7 @@ export default {
           activeAdmission: { fields: activeAdmission }
         } = this.forms;
         ///const { subjects : { items: subjects } } = this.tables
-        
+
         const { items } = this.tables.levelSubjects
 
         let subjects = []
@@ -2434,7 +2439,7 @@ export default {
         })
 
         const currentStepIndex = activeAdmission.admissionStepId - 1;
-        
+
         const evaluationStatusId = 
           evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id || evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id ? 
           EvaluationStatuses.SUBMITTED.id : evaluation.fields.evaluationStatusId
@@ -2459,7 +2464,7 @@ export default {
           null,
           transcript
         ]
-        
+
         const admissionStepId =
           AdmissionSteps.STATUS.id === activeAdmission.admissionStepId && activeAdmission.applicationStatusId !==1
             ? AdmissionSteps.STATUS.id
@@ -2532,7 +2537,7 @@ export default {
           showNotification(this, 'danger', `The amount shouldn't be less than the initial fee: ${formatNumber(totalAmount)}.`)
           return
         }
-        
+
         if (this.paymentFiles.length == 0) {
           showNotification(this, 'danger', 'You should attach one or more proof of payment.')
           return
@@ -2559,16 +2564,16 @@ export default {
         this.options.sections.items = []
         const { fields } = this.forms.evaluation;
         const { items } = this.options.levels
-        
+
         fields.courseId = null
         fields.semesterId = null
-        
+
         const params = { paginate: false }
 
         const level = items.find(i => i.id == fields.levelId)
         if (level) {
           fields.schoolCategoryId = level.schoolCategoryId
-        } 
+        }
         this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
           this.options.courses.items = data
           if (data.length === 0) {
@@ -2576,10 +2581,7 @@ export default {
             return
           }
           //this.tables.levelSubjects.items = []
-          
         });
-
-        
       },
       loadSubjectsOfLevel() {
         const { courseId, semesterId, levelId } = this.forms.transcript.fields;
@@ -3127,12 +3129,22 @@ export default {
               subject.pivot.isTaken === 0 &&
                   subject.pivot.levelId === transcript.fields.levelId && 
                     subject.pivot.semesterId === transcript.fields.semesterId)
-            
+
             this.tables.levelSubjects.isBusy = false
-        }     
+        }
       }
     },
     computed: {
+      hasActiveAdmission() {
+        return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+      },
+      hasActiveApplication() {
+        return !!(this.$store.state.user && this.$store.state.user.activeApplication);
+      },
+      studentId() {
+        const { user } = this.$store.state;
+        return (user && user.id) || null;
+      },
       totalUnits() {
         let totalUnits = 0
         this.tables.levelSubjects.items.forEach(i => {

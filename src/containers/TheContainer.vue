@@ -2,7 +2,13 @@
   <div class="c-app"
     :class="{ 'c-app__side-bar--active': !isOnboarding }">
     <TheSidebar v-show="!isOnboarding" />
-    <CWrapper>
+    <Loading 
+      :active.sync="isLoading"
+      loader="dots"
+      color="#AB1B1E"
+      :is-full-page="true"
+    />
+    <CWrapper v-if="!!$store.state.user">
       <TheHeader/>
       <div class="c-body">
         <main class="c-main">
@@ -22,18 +28,44 @@
 import TheSidebar from './TheSidebarV2'
 import TheHeader from './TheHeader'
 import TheFooter from './TheFooter'
+import { AuthApi } from '../mixins/api'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   name: 'TheContainer',
+  mixins: [AuthApi],
   components: {
     TheSidebar,
     TheHeader,
-    TheFooter
+    TheFooter,
+    Loading
+  },
+  data() {
+    return {
+      isLoading: true
+    }
+  },
+  created() {
+    this.loadProfile();
+  },
+  methods: {
+    loadProfile() {
+      this.isLoading = true;
+      this.getAuthenticatedUser().then(({ data: { userable } }) => {
+        if (userable) {
+          this.isLoading = false;
+          this.$store.commit('SET_USER', userable);
+        }
+      }).catch((error) => {
+        this.$router.push({ path: '/login' });
+      })
+    }
   },
   computed: {
     isOnboarding() {
       const path = this.$route.path;
-      return path === '/admission' || path === '/application';
+      return this.$store.state.user && (path === '/admission' || path === '/application');
     }
   }
 }
