@@ -38,7 +38,7 @@
             mode="out-in">
             <div key="1" v-if="currentFormIndex === 0" class="register__credential-form">
               <b-form-group class="form-group">
-                <label class="label">Email</label>
+                <label class="label required">Email</label>
                 <b-form-input
                   v-model="forms.register.fields.username"
                   :state="forms.register.states.username" />
@@ -47,7 +47,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group class="form-group">
-                <label class="label">Password</label>
+                <label class="label required">Password</label>
                 <b-form-input
                   type="password"
                   v-model="forms.register.fields.password"
@@ -57,7 +57,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group>
-                <label class="label">Confirm Password</label>
+                <label class="label required">Confirm Password</label>
                 <b-form-input
                   type='password'
                   v-model="forms.register.fields.passwordConfirmation"
@@ -79,7 +79,7 @@
               <b-form-group 
                   class="form-group"
                   v-if="(isEnrolled === true ? true : (forms.register.fields.studentCategoryId === StudentCategories.OLD.id ? true : false))" >
-                <label class="label">Student No</label>
+                <label class="label required">Student No</label>
                 <b-form-input
                   v-model="forms.register.fields.studentNo"
                   :state="forms.register.states.studentNo" />
@@ -88,7 +88,7 @@
                   </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group class="form-group">
-                <label class="label">Firstname</label>
+                <label class="label required">Firstname</label>
                 <b-form-input
                   v-model="forms.register.fields.firstName"
                   :state="forms.register.states.firstName" />
@@ -102,7 +102,7 @@
                   v-model="forms.register.fields.middleName" />
               </b-form-group>
               <b-form-group class="form-group">
-                <label class="label">Lastname</label>
+                <label class="label required">Lastname</label>
                 <b-form-input
                   v-model="forms.register.fields.lastName"
                   :state="forms.register.states.lastName" />

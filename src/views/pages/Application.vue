@@ -566,7 +566,7 @@
                 <b-row>
                   <b-col md="6">
                     <b-form-group>
-                      <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                      <label>Senior School Course Completed or Upper Secondary</label>
                       <b-form-input
                           v-model="forms.education.fields.seniorSchoolCourse"
                           debounce="500"/>
@@ -1308,9 +1308,7 @@
             name="sync"
             class="mr-2"
             spin />
-            {{ forms.activeApplication.fields.applicationStepId !== ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id 
-                && forms.activeApplication.fields.applicationStepId !== ApplicationSteps.REQUEST_EVALUATION.id  ? 
-                  'Next' : 'Submit Application' }}
+            {{ getNextButtonCaption }}
         </b-button>
       </div>
     </div>
@@ -2786,7 +2784,7 @@ export default {
       if (levelId == null) {
         return
       }
-      if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
+      if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
         this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
           levelsOfCourses.items = data
         }) 
@@ -3018,6 +3016,19 @@ export default {
         return this.Semesters.getEnum(semesterId).name
       }
       return ''
+    },
+    getNextButtonCaption() {
+      if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
+        return 'Submit Application'
+      } else if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id ) {
+        return 'Submit Request'
+      }  else if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ) {
+        return 'Submit Payment'
+      }
+      else {
+        return 'Next'
+      }
+               
     }
   },
 };

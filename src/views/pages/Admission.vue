@@ -568,7 +568,7 @@
                   <b-row>
                     <b-col md="6">
                       <b-form-group>
-                        <label style="font-size: 12px">Senior School Course Completed or Upper Secondary</label>
+                        <label>Senior School Course Completed or Upper Secondary</label>
                         <b-form-input
                           v-model="forms.education.fields.seniorSchoolCourse" 
                           debounce="500"/>
@@ -1365,8 +1365,7 @@
               name="sync"
               class="mr-2"
               spin />
-              {{  forms.activeAdmission.fields.admissionStepId !== AdmissionSteps.REQUEST_EVALUATION.id  ? 
-                    'Next' : 'Submit Application'}}
+               {{ getNextButtonCaption }}
           </b-button>
         </div>
       </div>
@@ -2353,7 +2352,6 @@ export default {
           const { subjects } = this.tables
           const { subject } = this.paginations
 
-          console.log(student.evaluation)
 
           transcript.fields.levelId = student.evaluation.levelId
           transcript.fields.courseId = student.evaluation.courseId
@@ -2881,7 +2879,6 @@ export default {
           this.showPaymentFileModal = false
           this.paymentFiles.splice(index, 1);
         }).catch((error) => {
-          console.log(error)
           this.isFileDeleting = false
           selectedFile.isBusy = false
         });
@@ -2915,7 +2912,6 @@ export default {
           this.showAdmissionFileModal = false
           this.admissionFiles.splice(index, 1);
         }).catch((error) => {
-          console.log(error)
           this.isFileDeleting = false
           selectedFile.isBusy = false
         });
@@ -2932,7 +2928,7 @@ export default {
         if (levelId == null) {
           return
         }
-        if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
+        if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
           this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
             levelsOfCourses.items = data
           }) 
@@ -3189,6 +3185,18 @@ export default {
           return this.Semesters.getEnum(semesterId).name
         }
         return ''
+      },
+      getNextButtonCaption() {
+        if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id) {
+          return 'Submit Application'
+        } else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id ) {
+          return 'Submit Request'
+        }  else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ) {
+          return 'Submit Payment'
+        }
+        else {
+          return 'Next'
+        }      
       }
   }
 }
