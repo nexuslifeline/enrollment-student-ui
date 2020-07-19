@@ -3024,9 +3024,9 @@ export default {
     getSelectedEvaluationLevel() {
       const { levelId } = this.forms.transcript.fields
       if (levelId) {
-        const result = this.options.levels.items.find(level => level.id === levelId)
-        if (result) {
-          return result.name
+        const level = this.options.levels.items.find(level => level.id === levelId)
+        if (level) {
+          return level.name
         }
       }
       return ''
@@ -3034,9 +3034,9 @@ export default {
     getSelectedEvaluationCourse() {
       const { courseId } = this.forms.transcript.fields
       if (courseId) {
-        const result = this.options.courses.items.find(course => course.id === courseId)
-        if (result) {
-          return result.name
+        const course = this.options.courses.items.find(course => course.id === courseId)
+        if (course) {
+          return course.description + (course.major ? ' - ' + course.major : '')
         }
       }
       return ''
