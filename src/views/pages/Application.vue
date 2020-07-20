@@ -999,7 +999,7 @@
                 <b-row class="pb-2">
                   <b-col md="12">
                     <div>
-                      <span style="font-size: 1.5rem; font-weight: bold">{{percentage}}% </span>
+                      <span style="font-size: 1.5rem; font-weight: bold">{{ percentage }}% </span>
                       <span>
                         We are still reviewing your application. Please check your account from time to time
                       </span>
@@ -1009,7 +1009,7 @@
                 <div class="pb-5">
                   <ProgressIndicator
                     :barCount="6"
-                    :activeBar="percentage >= 30 ? 2 : percentage >= 60 ? 4 : 6"
+                    :activeBar="percentage === 30 ? 2 : percentage === 60 ? 4 : 6"
                   />
                 </div>
                 <div class="approval-container">
@@ -1140,7 +1140,7 @@
                             :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
                             :value="paymentMode.id"
                             :key="paymentMode.id">
-                            {{ paymentMode.name }}
+                            <strong> {{ paymentMode.name }} </strong>
                             <br>
                             <small> {{ paymentMode.description }} </small>
                           </b-form-radio>
@@ -1163,6 +1163,7 @@
                         <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. 
                         You can deposit/transfer your payment in any bank listed below.</span>
                         <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
+                        <span v-if="forms.payment.fields.paymentModeId === 5">Choose your preferred Pera Padala provider.</span>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 1"
                           :fields="tables.bankAccounts.fields"
@@ -1175,85 +1176,26 @@
                           :items.sync="tables.eWalletAccounts.items"
                           borderless small responsive>
                         </b-table>
+                        <b-table
+                          v-if="forms.payment.fields.paymentModeId === 5"
+                          :fields="tables.peraPadalaAccounts.fields"
+                          :items.sync="tables.peraPadalaAccounts.items"
+                          borderless small responsive>
+                        </b-table>
                       </div>
                       <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
                     </div>
                   </div>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md=12>
                   <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
                     <span class="payment-step__number">2</span>
                     <div class="payment-step-details-container">
                       <span>Confirmation of your payment.</span>
                       <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
                     </div>
-                  </div>
-                </b-col>
-              </b-row>
-              <b-row class="mt-3">
-                <b-col md=12>
-                  <div style="border:1px dashed gray; padding: 20px">
-                    <b-row>
-                      <b-col md=12>
-                        <b-row>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Enter amount you pay</label>
-                              <vue-autonumeric
-                                v-model="forms.payment.fields.amount"
-                                class="form-control text-right" 
-                                :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                                :state="forms.payment.states.amount"
-                                debounce="500">
-                              </vue-autonumeric>
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.amount }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Reference No</label>
-                              <b-form-input
-                                v-model="forms.payment.fields.referenceNo"
-                                :state="forms.payment.states.referenceNo"
-                                debounce="500"
-                              />
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.referenceNo }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                          <b-col md=4>
-                            <b-form-group>
-                              <label>Date Paid</label>
-                              <b-form-input
-                                type="date"
-                                v-model="forms.payment.fields.datePaid"
-                                :state="forms.payment.states.datePaid"
-                              />
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.datePaid }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col md=12>
-                            <b-form-group>
-                              <label>Add Notes</label>
-                              <b-form-textarea
-                                rows="4"
-                                v-model="forms.payment.fields.notes"
-                                :state="forms.payment.states.notes"
-                                debounce="500"
-                              ></b-form-textarea>
-                              <b-form-invalid-feedback>
-                                {{ forms.payment.errors.notes }}
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                      </b-col>
-                    </b-row>
                   </div>
                   <div class="file-uploader-container">
                     <FileUploader
@@ -1273,6 +1215,85 @@
                       @onFileItemPreview="previewPaymentFile"
                       :isBusy="item.isBusy"
                     />
+                  </div>
+                </b-col> 
+              </b-row>
+              <b-row class="mt-3">
+                <b-col md=12>
+                  <div class="payment-step-container mb-3">
+                    <span class="payment-step__number">{{ forms.payment.fields.paymentModeId === 3 ? 2 : 3 }}</span>
+                    <div class="payment-step-details-container">
+                      <span>Enter the details of your proof of payment or deposit slip.</span>
+                    </div>
+                  </div>
+                  <div style="border:1px dashed gray; padding: 20px">
+                    <b-row>
+                      <b-col md=12>
+                        <b-row>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Enter amount you pay</label>
+                              <vue-autonumeric
+                                v-model="forms.payment.fields.amount"
+                                class="form-control text-right" 
+                                :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
+                                :state="forms.payment.states.amount"
+                                debounce="500"
+                                :disabled="paymentFiles.length > 0 ? false : true">
+                              </vue-autonumeric>
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.amount }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Reference No</label>
+                              <b-form-input
+                                v-model="forms.payment.fields.referenceNo"
+                                :state="forms.payment.states.referenceNo"
+                                debounce="500"
+                                :disabled="paymentFiles.length > 0 ? false : true"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.referenceNo }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col md=4>
+                            <b-form-group>
+                              <label>Date Paid</label>
+                              <b-form-input
+                                type="date"
+                                v-model="forms.payment.fields.datePaid"
+                                :state="forms.payment.states.datePaid"
+                                :disabled="paymentFiles.length > 0 ? false : true"
+                              />
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.datePaid }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col md=12>
+                            <b-form-group>
+                              <label>Add Notes</label>
+                              <b-form-textarea
+                                rows="4"
+                                v-model="forms.payment.fields.notes"
+                                :state="forms.payment.states.notes"
+                                debounce="500"
+                                :disabled="paymentFiles.length > 0 ? false : true"
+                              ></b-form-textarea>
+                              <b-form-invalid-feedback>
+                                {{ forms.payment.errors.notes }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                      </b-col>
+                    </b-row>
                   </div>
                   <div class="mt-3">
                     <b-button variant="danger" @click="isPaying=false">
@@ -1602,6 +1623,7 @@ import {
   EvaluationFileApi,
   EvaluationApi,
   CurriculumApi,
+  PeraPadalaAccountApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import GroupStageIndicator from '../components/GroupStageIndicator';
@@ -1842,7 +1864,8 @@ export default {
     Tables,
     EvaluationFileApi,
     EvaluationApi,
-    CurriculumApi
+    CurriculumApi,
+    PeraPadalaAccountApi
   ],
   components: {
     ApprovalIndicator,
@@ -2080,6 +2103,30 @@ export default {
           ],
           items:  []
         },
+        peraPadalaAccounts: {
+          isBusy: false,
+          fields: [
+            {
+              key: "provider",
+              label: "Provider",
+              tdClass: "align-middle",
+              thStyle: { width: "25%" }
+            },
+            {
+              key: "receiverName",
+              label: "Receiver Name",
+              tdClass: "align-middle",
+              thStyle: { width: "auto" }
+            },
+            {
+              key: "receiverMobileNo",
+              label: "Receiver Mobile No",
+              tdClass: "align-middle",
+              thStyle: { width: "25%" }
+            },
+          ],
+          items:  []
+        },
         billings: {
           fields: [
             {
@@ -2161,6 +2208,7 @@ export default {
           items: [
             { id: 1, name: 'Bank Deposit/Transfer', description: 'With this payment mode, you can deposit or transfer your payment using your preferred Bank. You can just take a photo of the deposit slip or screenshot of the Bank Transfer transaction you made. Attach it here and we will just review it.' },
             { id: 4, name: 'E-Wallet', description: 'With this payment mode, you can send us the payment using the E-Wallet services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
+            { id: 5, name: 'Pera Padala', description: 'With this payment mode, you can send us the payment using the Pera Padala services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
             { id: 3, name: 'Others', description: 'If you are already enrolled, you can select this payment mode so should just attach your receipt here or any proof of your payment.'  }
           ]
         },
@@ -2343,6 +2391,7 @@ export default {
           })
         })
       })
+
     })
 
     this.getLevelList(params).then(response => {
@@ -2361,6 +2410,7 @@ export default {
 
     this.loadEWalletAccounts();
     this.loadBankAccounts();
+    this.loadPeraPadalaAccounts();
 
   },
   methods: {
@@ -2699,12 +2749,16 @@ export default {
       const { payment } = this.forms
 
       formData.append('file', file);
-
+      this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
+      let newFile = this.paymentFiles[this.paymentFiles.length - 1]
       this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
-        this.paymentFiles.push(
-          {id: data.id, name: data.name, notes: data.notes, isBusy: true}
-        );
-        setTimeout(() => this.paymentFiles[this.paymentFiles.length - 1].isBusy = false, 1000);
+        
+        setTimeout(() => {
+          newFile.id = data.id
+          newFile.name = data.name
+          newFile.isBusy = false
+        }
+          , 1000);
       })
     },
     onPaySelected(payTypeId) {
@@ -2755,6 +2809,13 @@ export default {
       const { bankAccounts } = this.tables
       this.getBankAccountList(params).then(({ data }) => {
         bankAccounts.items = data
+      })
+    },
+    loadPeraPadalaAccounts() {
+      const params = { paginate: false }
+      const { peraPadalaAccounts } = this.tables
+      this.getPeraPadalaAccountList(params).then(({ data }) => {
+        peraPadalaAccounts.items = data
       })
     },
     loadEWalletAccounts() {
@@ -2895,11 +2956,16 @@ export default {
 
       formData.append('file', file);
 
+      this.evaluationFiles.push({ id: null, name: null, notes: null, isBusy: true })
+      let newFile = this.evaluationFiles[this.evaluationFiles.length - 1]
+
       this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
-        this.evaluationFiles.push(
-          { id: data.id, name: data.name, notes: data.notes, isBusy: true }
-        );
-        setTimeout(() => this.evaluationFiles[this.evaluationFiles.length - 1].isBusy = false, 1000);
+        setTimeout(() => {
+          newFile.id = data.id
+          newFile.name = data.name
+          newFile.isBusy = false
+        }
+          , 1000);
       })
     },
     onDeleteEvaluationFile (index) {
@@ -3019,7 +3085,8 @@ export default {
         const subHeaders = [
           ...this.groupStages[0].children,
           ...this.groupStages[1].children,
-          ...this.groupStages[2].children
+          ...this.groupStages[2].children,
+          ...this.groupStages[3].children
         ]
         return subHeaders.find(({ id }) => id === fields.applicationStepId)
       }
@@ -3069,10 +3136,9 @@ export default {
       }
       else {
         return 'Next'
-      }
-               
+      }          
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
