@@ -3177,7 +3177,7 @@ export default {
     flex: 1;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    //align-items: center;
     justify-content: center;
   }
 
@@ -3223,7 +3223,7 @@ export default {
     width: 100%;
     max-width: 750px;
     border: 1px solid $brand-border-color;
-    margin: 25px 10px;
+    margin: 25px 10px 80px 10px;
     border-radius: 5px;
     background-color: $white;
 

@@ -1,7 +1,7 @@
 <template>
   <div class="c-app"
     :class="{ 'c-app__side-bar--active': !isOnboarding }">
-    <TheSidebar v-show="!isOnboarding" />
+    <TheSidebar v-if="!!$store.state.user && !isOnboarding" />
     <Loading 
       :active.sync="isLoading"
       loader="dots"
@@ -65,7 +65,7 @@ export default {
   computed: {
     isOnboarding() {
       const path = this.$route.path;
-      return this.$store.state.user && (path === '/admission' || path === '/application');
+      return path === '/admission' || path === '/application';
     }
   }
 }

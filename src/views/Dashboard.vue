@@ -1,5 +1,5 @@
 <template>
-  <div class="home-content">
+  <div v-show="isReady" class="home-content">
     <!--<div class="greetings">
       <h2 class="greetings__title">Welcome home!</h2>
       <p class="greetings__description">
@@ -17,6 +17,11 @@
     components: {
       Menus
     },
+    data() {
+      return {
+        isReady: false
+      }
+    },
     computed: {
       hasActiveAdmission() {
         return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
@@ -31,7 +36,10 @@
       } else if (this.hasActiveAdmission) {
         this.$router.push({ path: '/admission' });
       }
-    }
+    },
+    mounted() {
+      setTimeout(() => this.isReady = true, 1500)
+    },
   }
 </script>
 <style lang="scss" scoped>

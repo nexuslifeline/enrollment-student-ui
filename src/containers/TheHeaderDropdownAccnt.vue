@@ -41,10 +41,13 @@ export default {
   methods: {
     logout(){
       if(localStorage.accessToken) {
+        localStorage.clear();
         this.revokeAuthentication().then(response => {
-          localStorage.removeItem('accessToken')
           this.$store.commit('LOGOUT_USER')
-          this.$router.push({ name: 'Login' })
+          this.$store.commit('SET_USER', {})
+          setTimeout(() =>
+            this.$router.push({ name: 'Login' })
+          , 500)
         }).catch(err => {
           console.log(err)
         });

@@ -81,7 +81,7 @@
       </div>
       <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
         <div v-if="showConfirmation" class="signup__confirmation">
-          <button @click="showConfirmation = false" class="signup__confirmation-close">
+          <button @click="showConfirmation = false; step = 1" class="signup__confirmation-close">
             <v-icon
               name="times"
               class="signup__icon-close"
@@ -175,7 +175,7 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am a old student
+                  I am an old student
                   <span class="signup__confirmation-answer-notes">
                     (Student who already attended past school year in STC)
                   </span>
