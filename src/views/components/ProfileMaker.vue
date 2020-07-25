@@ -39,7 +39,7 @@ export default {
   computed: {
     colorFactory() {
       const colors = [
-        { bg: '#fcfcfc', font: '#7c7c7c' },
+        { bg: '#ef6c00', font: '#FFFFFF' },
         { bg: '#0080FF', font: '#FFFFFF' },
         { bg: '#00cc45', font: '#FFFFFF' },
         { bg: '#7908CF', font: '#FFFFFF' },
@@ -67,5 +67,7 @@ export default {
 
   .profile-maker__initials {
     font-weight: 700;
+    text-transform: uppercase;
+    margin-top: -1px;
   }
 </style>

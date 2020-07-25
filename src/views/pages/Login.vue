@@ -77,7 +77,7 @@
             </a>
           </li>
         </ul>
-        <CarouselProcedure />
+        <CarouselProcedure class="login__carousel" />
       </div>
       <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
         <div v-if="showConfirmation" class="signup__confirmation">
@@ -486,7 +486,6 @@ export default {
     //background-color: $brand-primary;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     width: 50vw;
 
@@ -581,6 +580,7 @@ export default {
     list-style: none;
     display: flex;
     margin-left: auto;
+    margin-top: 25px;
   }
 
   .login__top-link-item {
@@ -616,5 +616,9 @@ export default {
     font-size: 17px;
     font-weight: 400;
     color: $gray;
+  }
+
+  .login__carousel {
+    margin: auto;
   }
 </style>

@@ -1,15 +1,15 @@
 <template>
   <div class="c-app"
     :class="{ 'c-app__side-bar--active': !isOnboarding }">
-    <TheSidebar v-if="!!$store.state.user && !isOnboarding" />
-    <Loading 
+    <TheSidebar v-if="isMounted && !!$store.state.user && !isOnboarding" />
+    <Loading
       :active.sync="isLoading"
       loader="dots"
       color="#AB1B1E"
       :is-full-page="true"
     />
     <CWrapper v-if="!!$store.state.user">
-      <TheHeader/>
+      <TheHeader v-if="!!$store.state.user" />
       <div class="c-body">
         <main class="c-main">
           <CContainer class="c-container-fluid" fluid>
@@ -43,11 +43,15 @@ export default {
   },
   data() {
     return {
-      isLoading: true
+      isLoading: true,
+      isMounted: false
     }
   },
   created() {
     this.loadProfile();
+  },
+  mounted() {
+    setTimeout(() => this.isMounted = true, 1500);
   },
   methods: {
     loadProfile() {
