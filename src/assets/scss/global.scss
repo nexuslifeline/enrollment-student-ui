@@ -16,3 +16,7 @@ label {
 #app {
   background-color: $white !important;
 }
+
+.b-avatar .b-avatar-img img {
+  object-fit: cover;
+}

@@ -1,7 +1,15 @@
 <template>
   <div class="account__profile">
     <div class="account__photo-circle">
-      <ProfileMaker :initials="fullName.charAt(0)" :colorIndex="user.id % 8" :fontSize="22" />
+      <b-avatar
+        v-if="!!userPhoto"
+        :src="userPhoto"
+      />
+      <ProfileMaker
+        v-else
+        :initials="fullName.charAt(0)"
+        :colorIndex="user.id % 8" :fontSize="22"
+      />
     </div>
     <div class="account__details">
       <p v-if="!!fullName" class="account__name">{{fullName}}</p>
@@ -75,12 +83,13 @@ export default {
       isLoading: false
     }
   },
-  created() {
-    console.log(this.firstLetter)
-  },
   computed: {
     fullName() {
       return this.user && (this.user.fullName || `${this.user.firstName} ${this.user.lastName}`).trim();
+    },
+    userPhoto() {
+      const path = this.user && this.user.photo && this.user.photo.hashName || '';
+      return path ? `${process.env.VUE_APP_PUBLIC_PHOTO_URL}${path}` : '';
     },
     user() {
       return this.$store.state.user || {};
@@ -160,6 +169,7 @@ export default {
   .account__details {
     padding: 0 12px;
     text-align: left;
+    margin-right: 5px;
   }
 
   .account__dropdown-actions {
@@ -242,7 +252,7 @@ export default {
 
   .account__icon-down {
     margin-left: auto;
-    width: 15px;
+    width: 12px;
 
     svg {
       height: auto;
