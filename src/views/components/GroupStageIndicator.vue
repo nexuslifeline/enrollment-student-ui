@@ -96,7 +96,7 @@ export default {
 
   .indicator__header-text {
     margin-left: 15px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: $brand-primary;
     opacity: .4;
@@ -142,7 +142,7 @@ export default {
   }
 
   .indicator__sub-header {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     margin-top: 5px;
     display: flex;

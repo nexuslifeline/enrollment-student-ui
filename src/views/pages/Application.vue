@@ -3219,12 +3219,12 @@ export default {
   }
 
   .application__wizard-form {
-    padding: 30px 25px 50px 25px;
+    padding: 30px 15px 50px 15px;
     width: 100%;
     max-width: 750px;
-    border: 1px solid $brand-border-color;
+    //border: 1px solid $brand-border-color;
     margin: 25px 10px 80px 10px;
-    border-radius: 5px;
+    //border-radius: 5px;
     background-color: $white;
 
     @include for-size(tablet-portrait-down) {

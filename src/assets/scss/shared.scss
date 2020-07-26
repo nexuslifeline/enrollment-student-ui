@@ -13,16 +13,18 @@ $dark-gray-200: #7c7c7c;
 $dark-gray-300: #606060;
 
 $light-gray: #fcfcfc;
-$light-gray-100: #ebebeb;
+$light-gray-100: #f3f3f4;
 $light-gray-200: #e4e3e3;
 
 $maroon-100: #fff9f9;
 
 $side-bar-width: 60px;
 $header-height: 50px;
+$input-background-color: $light-gray-100;
 
 $brand-primary: $blue;
 $brand-border-color: $light-gray-100;
+
 
 @mixin for-size($size, $extra:0) {
   @if $size==small-phone-only {

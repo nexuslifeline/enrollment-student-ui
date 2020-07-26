@@ -3,14 +3,16 @@
 body {
   background-color: $white !important;
   color: $dark-gray-300;
+  font-family: 'Haas Grot Text R Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 label {
-  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .c-app, .c-body, .c-main {
-  background-color: $light-gray !important;
+  background-color: $white !important;
 }
 
 #app {
@@ -19,4 +21,19 @@ label {
 
 .b-avatar .b-avatar-img img {
   object-fit: cover;
+}
+
+.form-control, select {
+  height: 40px !important;
+  background-color: $input-background-color !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+
+  &:focus {
+    background-color: $white!important;
+    border-color: rgba(234,76,137,0.4)!important;
+    -webkit-box-shadow: 0 0 0 4px rgba(234,76,137,0.1)!important;
+    box-shadow: 0 0 0 4px rgba(234,76,137,0.1)!important;
+    border: 1px solid rgba(234,76,137,0.4)!important;
+  }
 }
