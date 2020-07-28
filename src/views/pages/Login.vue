@@ -106,9 +106,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  Yes, I am already enrolled.
+                  Yes, I am enrolled
                   <span class="signup__confirmation-answer-notes">
-                    (Student that are officially enrolled for the SY 2020-2021)
+                    (Choose this if you are Already ENROLLED this Academic Year 2020-2021 and you want to register for an STC student account)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -125,9 +125,9 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  No, I am not yet enrolled.
+                  Not yet enrolled
                   <span class="signup__confirmation-answer-notes">
-                    (Student that are not yet enrolled for the SY 2020-2021)
+                    (Choose this if you want to enroll and register for an STC student account)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -156,9 +156,11 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am a new student
+                 {{ questionaire[isEnrolled ? 0 : 1][0].header }}
                   <span class="signup__confirmation-answer-notes">
-                    (Student who has not previously attended STC, or a Student who are enrolling in STC for the first time)
+                    {{ questionaire[isEnrolled ? 0 : 1][0].description }}
+                    <br>
+                    <small>{{ questionaire[isEnrolled ? 0 : 1][0].notes }}</small>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -175,9 +177,11 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am an old student
+                  {{ questionaire[isEnrolled ? 0 : 1][1].header }}
                   <span class="signup__confirmation-answer-notes">
-                    (Student who already attended past school year in STC)
+                    {{ questionaire[isEnrolled ? 0 : 1][1].description }}
+                    <br>
+                    <small>{{ questionaire[isEnrolled ? 0 : 1][1].notes }}</small>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -194,9 +198,11 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  I am a transferee student
+                  {{ questionaire[isEnrolled ? 0 : 1][2].header }}
                   <span class="signup__confirmation-answer-notes">
-                    (Student who is moving to STC from other institution)
+                    {{ questionaire[isEnrolled ? 0 : 1][2].description }}
+                    <br>
+                    <small>{{ questionaire[isEnrolled ? 0 : 1][2].notes }}</small>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -214,9 +220,11 @@
                   scale="2"
                 />
                 <div class="signup__confirmation-answer-item">
-                  Go Back
+                  {{ questionaire[isEnrolled ? 0 : 1][3].header }}
                   <span class="signup__confirmation-answer-notes">
-                    (Go Back)
+                    {{ questionaire[isEnrolled ? 0 : 1][3].description }}
+                    <br>
+                    <small>{{ questionaire[isEnrolled ? 0 : 1][3].notes }}</small>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -260,7 +268,53 @@ export default {
           states: { ...fields },
           errors: { ...fields }
         }
-      }
+      },
+      questionaire: [
+        [
+          {
+            header: '1. I am a newly enrolled student',
+            description: '(Choose this if this Academic Year 2020-2021 is your first time in STC)',
+            notes: 'Note: for  newly enrolled transferees, please proceed to No. 3.'
+          },
+          {
+            header: '2. I am an old and currently enrolled student',
+            description: '(Choose this if you have attended STC before)',
+            notes: null
+          },
+          {
+            header: '3. I am a newly enrolled transferee student',
+            description: '(Choose this if you are a student who moved in to STC from other institution)',
+            notes: null
+          },
+          {
+            header: '4. Go Back',
+            description: '(Go Back)',
+            notes: null
+          }
+        ],
+        [
+          {
+            header: '1. I am a new student ',
+            description: 'Choose this if this is your first time to enroll in STC)',
+            notes: 'Note: for transferees, please proceed to No. 3.'
+          },
+          {
+            header: '2. I am a old student',
+            description: '(Choose this if you have attended STC before)',
+            notes: null
+          },
+          {
+            header: '3. I am a  transferee student',
+            description: '(Choose this if you are a student who wish to move in STC from other institution)',
+            notes: null
+          },
+          {
+            header: '4. Go Back',
+            description: '(Go Back)',
+            notes: null
+          }
+        ]
+      ]
     }
   },
   methods: {

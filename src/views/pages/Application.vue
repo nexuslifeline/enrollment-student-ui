@@ -664,7 +664,7 @@
             <b-row class="mb-2">
               <b-col md=12 >
                 <h5>
-                  1. Your previous academic year attended.
+                  1. Your previous academic details.
                 </h5>
               </b-col>
             </b-row>
@@ -721,7 +721,7 @@
             <b-row class="mb-2 mt-2">
               <b-col md=12>
                 <h5>
-                  2. Your current Academic Year Application.
+                  2. Your school level to enroll.
                 </h5>
               </b-col>
             </b-row>
@@ -789,11 +789,18 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row class="mb-2  mt-2">
+            <b-row class="mt-2">
               <b-col md=12>
                 <h5>
                   3. Attachment of supporting documents.
                 </h5>
+                <p class="ml-3">
+                  <small>
+                    Upon submitting this form, the details you provided in the system will be examined and are subject for approval by the registrar's office. <br>
+                    In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
+                    You can get full list of your complete enrollment requirements <a href="#">here</a>.
+                  </small>
+                </p>
               </b-col>
             </b-row>
             <b-row>
@@ -1311,6 +1318,7 @@
                   <b-alert variant="success" show>
                     <h5>CONGRATULATIONS!</h5>
                     <p> You are now officially enrolled. </p>
+                    <small>Please, click here to complete your enrollment.</small> <b-button variant="outline-primary" @click="onCompleteEnrollment"> Click Here</b-button>
                   </b-alert>
                 </div>
                 <div v-else>
@@ -2146,21 +2154,30 @@ export default {
               label: "Total Fees",
               tdClass: "align-middle text-right",
               thClass: "align-middle text-right",
-              thStyle: { width: "20%" }
+              thStyle: { width: "20%" },
+              formatter: (value) => {
+                return formatNumber(value)
+              }
             },
             {
               key: "totalAmount",
               label: "Initial Fee",
               tdClass: "align-middle text-right",
               thClass: "align-middle text-right",
-              thStyle: { width: "20%" }
+              thStyle: { width: "20%" },
+              formatter: (value) => {
+                return formatNumber(value)
+              }
             },
             {
               key: "previousBalance",
               label: "Previous Balance",
               tdClass: "align-middle text-right",
               thClass: "align-middle text-right",
-              thStyle: { width: "25%" }
+              thStyle: { width: "25%" },
+              formatter: (value) => {
+                return formatNumber(value)
+              }
             },
           ],
           items: []
@@ -2232,7 +2249,7 @@ export default {
         {
           header: 'Application & Evaluation',
           children: [
-            { id: 5, subHeader: 'Evaluation Request', description: 'Requsting for subject evaluation.' },
+            { id: 5, subHeader: 'Evaluation Request', description: 'Reqeusting for subject evaluation.' },
             { id: 6, subHeader: 'Status', description: 'Waiting for subject evaluation.' }
           ]
         },
@@ -3022,15 +3039,15 @@ export default {
       const selectedFile = this.evaluationFiles[index]
 
       this.getEvaluationFilePreview(evaluationId, selectedFile.id)
-        .then(response => {
-          this.file.type = response.headers.contentType
-          const file = new Blob([response.data], { type: response.headers.contentType })
-          const reader = new FileReader();
+      .then(response => {
+        this.file.type = response.headers.contentType
+        const file = new Blob([response.data], { type: response.headers.contentType })
+        const reader = new FileReader();
 
-          reader.onload = e => this.file.src = e.target.result
-          reader.readAsDataURL(file);
-          this.showModalPreview = true
-        })
+        reader.onload = e => this.file.src = e.target.result
+        reader.readAsDataURL(file);
+        this.showModalPreview = true
+      })
     },
     filterSubject() {
       const { subjects } = this.tables
@@ -3063,6 +3080,30 @@ export default {
 
           this.tables.levelSubjects.isBusy = false
       }
+    },
+    onCompleteEnrollment() {
+      const { student, activeApplication } = this.forms
+
+      const applicationStatusId = ApplicationStatuses.COMPLETED.id
+      
+      const data  = {
+        ...student.fields,
+        activeApplication: {
+          ...activeApplication.fields,
+          applicationStatusId
+        }
+      }
+
+      this.updateStudent(data, student.fields.id).then(({ data }) => {
+        this.getAuthenticatedUser().then(({ data: { userable } }) => {
+        if (userable) {
+          this.$store.commit('SET_USER', userable);
+          this.$router.push({path: '/dashboard'});
+        }
+        }).catch((error) => {
+          this.$router.push({ path: '/login' });
+        })
+      })
     }
   },
   computed: {
@@ -3306,4 +3347,5 @@ export default {
     flex-direction: row;
     width: 100%;
   }
+
 </style>
