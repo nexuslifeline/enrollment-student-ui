@@ -491,7 +491,7 @@
           </div>
           <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
-              <b-col md="6">
+              <b-col md="5">
                 <b-form-group>
                   <label>Last School Attended</label>
                   <b-form-input
@@ -499,11 +499,19 @@
                     debounce="500"/>
                 </b-form-group>
               </b-col>
-              <b-col md="3">
+              <b-col md="2">
                 <b-form-group>
-                  <label>Last School Yr Attended</label>
+                  <label>From</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolYearAttended" 
+                    v-model="forms.education.fields.lastSchoolYearFrom" 
+                    debounce="500"/>
+                </b-form-group>
+              </b-col>
+               <b-col md="2">
+                <b-form-group>
+                  <label>To</label>
+                  <b-form-input
+                    v-model="forms.education.fields.lastSchoolYearTo" 
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -529,19 +537,27 @@
             <b-row>
               <b-col md="12">
                 <b-row>
-                  <b-col md="6">
+                  <b-col md="5">
                     <b-form-group>
-                      <label>Elementary Course Completed or Primary</label>
+                      <label>Elementary or Primary</label>
                       <b-form-input
                           v-model="forms.education.fields.elementaryCourse" 
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
-                  <b-col md="3">
+                  <b-col md="2">
                     <b-form-group>
-                      <label>Year</label>
+                      <label>From</label>
                       <b-form-input
-                          v-model="forms.education.fields.elementaryCourseYear"
+                          v-model="forms.education.fields.elementaryCourseYearFrom"
+                          debounce="500" />
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label>To</label>
+                      <b-form-input
+                          v-model="forms.education.fields.elementaryCourseYearTo"
                           debounce="500" />
                     </b-form-group>
                   </b-col>
@@ -559,19 +575,27 @@
             <b-row>
               <b-col md="12">
                 <b-row>
-                  <b-col md="6">
+                  <b-col md="5">
                     <b-form-group>
-                      <label>High School Course Completed or Secondary</label>
+                      <label>High School or Secondary</label>
                       <b-form-input
                           v-model="forms.education.fields.highSchoolCourse"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
-                  <b-col md="3">
+                  <b-col md="2">
                     <b-form-group>
-                      <label>Year</label>
+                      <label>From</label>
                       <b-form-input
-                          v-model="forms.education.fields.highSchoolCourseYear"
+                          v-model="forms.education.fields.highSchoolCourseYearFrom"
+                          debounce="500"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label>To</label>
+                      <b-form-input
+                          v-model="forms.education.fields.highSchoolCourseYearTo"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
@@ -589,19 +613,27 @@
             <b-row>
               <b-col md="12">
                 <b-row>
-                  <b-col md="6">
+                  <b-col md="5">
                     <b-form-group>
-                      <label>Senior School Course Completed or Upper Secondary</label>
+                      <label>Senior School or Upper Secondary</label>
                       <b-form-input
                           v-model="forms.education.fields.seniorSchoolCourse"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
-                  <b-col md="3">
+                  <b-col md="2">
                     <b-form-group>
-                      <label>Year</label>
+                      <label>From</label>
                       <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourseYear"
+                          v-model="forms.education.fields.seniorSchoolCourseYearFrom"
+                          debounce="500"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label>To</label>
+                      <b-form-input
+                          v-model="forms.education.fields.seniorSchoolCourseYearTo"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
@@ -619,7 +651,7 @@
             <b-row>
               <b-col md="12">
                 <b-row>
-                  <b-col md="6">
+                  <b-col md="5">
                     <b-form-group>
                       <label >College Degree(if graduated) or Tertiary</label>
                       <b-form-input
@@ -627,11 +659,19 @@
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
-                  <b-col md="3">
+                  <b-col md="2">
                     <b-form-group>
-                      <label>Year</label>
+                      <label>From</label>
                       <b-form-input
-                          v-model="forms.education.fields.collegeDegreeYear"
+                          v-model="forms.education.fields.collegeDegreeYearFrom"
+                          debounce="500"/>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label>To</label>
+                      <b-form-input
+                          v-model="forms.education.fields.collegeDegreeYearTo"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
@@ -681,15 +721,27 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="4">
+              <b-col md="2">
                 <b-form-group>
-                  <label class="required">Last School Year Attended</label>
+                  <label class="required">From</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastYearAttended" 
-                    :state="forms.evaluation.states.evaluationLastYearAttended"
+                    v-model="forms.evaluation.fields.lastSchoolYearFrom" 
+                    :state="forms.evaluation.states.evaluationLastSchoolYearFrom"
                     debounce="500" />
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationLastYearAttended }}
+                    {{ forms.evaluation.errors.evaluationLastSchoolYearFrom }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md="2">
+                <b-form-group>
+                  <label class="required">To</label>
+                  <b-form-input
+                    v-model="forms.evaluation.fields.lastSchoolYearTo" 
+                    :state="forms.evaluation.states.evaluationLastSchoolYearTo"
+                    debounce="500" />
+                  <b-form-invalid-feedback>
+                    {{ forms.evaluation.errors.evaluationLastSchoolYearTo }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -1744,19 +1796,24 @@ const familyErrorFields = {
 const educationFields = {
   lastSchoolAttended: null,
   lastSchoolAddress: null,
-  lastSchoolYearAttended: null,
+  lastSchoolYearFrom: null,
+  lastSchoolYearTo: null,
   lastLevel: null,
   elementaryCourse: null,
-  elementaryCourseYear: null,
+  elementaryCourseYearFrom: null,
+  elementaryCourseYearTo: null,
   elementaryCourseHonors: null,
   highSchoolCourse: null,
-  highSchoolCourseYear: null,
+  highSchoolCourseYearFrom: null,
+  highSchoolCourseYearTo: null,
   highSchoolCourseHonors: null,
   seniorSchoolCourse: null,
-  seniorSchoolCourseYear: null,
+  seniorSchoolCourseYearFrom: null,
+  seniorSchoolCourseYearTo: null,
   seniorSchoolCourseHonors: null,
   collegeDegree: null,
-  collegeDegreeYear: null,
+  collegeDegreeYearFrom: null,
+  collegeDegreeYearTo: null,
   collegeDegreeHonors: null,
 }
 
@@ -1795,7 +1852,8 @@ const evaluationFields = {
   levelId: null,
   courseId: null,
   evaluationStatusId: null,
-  lastYearAttended: null,
+  lastSchoolYearFrom: null,
+  lastSchoolYearTo: null,
   lastSchoolAttended: null,
   enrolledYear: null,
   notes: null,
@@ -1809,7 +1867,8 @@ const evaluationFields = {
 const evaluationErrorFields = {
   evaluationLevelId: null,
   evaluationCourseId: null,
-  evaluationLastYearAttended: null,
+  evaluationLastSchoolYearFrom: null,
+  evaluationLastSchoolYearTo: null,
   evaluationLastSchoolAttended: null,
   evaluationEnrolledYear: null,
   evaluationSemesterId: null,
@@ -2528,7 +2587,8 @@ export default {
         //default to request evaluation with the same fields
         if (data.activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
           evaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
-          evaluation.fields.lastYearAttended =  data.education.lastSchoolYearAttended
+          evaluation.fields.lastSchoolYearFrom =  data.education.lastSchoolYearFrom
+          evaluation.fields.lastSchoolYearTo=  data.education.lastSchoolYearTo
         }
 
         this.isProcessing = false;
