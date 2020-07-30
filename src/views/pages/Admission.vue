@@ -970,7 +970,7 @@
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for approval by the registrar's office. <br>
                     In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#">here</a>.
+                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">here</a>.
                   </small>
                 </p>
                 </b-col>
@@ -1295,6 +1295,9 @@
                                 :items.sync="tables.billings.items"
                                 borderless small responsive
                               >
+                                <template v-slot:cell(action)>
+                                  <a href="#" @click="previewAssessmentForm()">View Details</a>
+                                </template>
                               </b-table>
                             </b-col>
                           </b-row>
@@ -1893,7 +1896,7 @@
 <script>
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, 
   PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi, 
-  SubjectApi, SectionApi, EvaluationFileApi, EvaluationApi, CurriculumApi, PeraPadalaAccountApi } from "../../mixins/api"
+  SubjectApi, SectionApi, EvaluationFileApi, EvaluationApi, CurriculumApi, PeraPadalaAccountApi, ReportApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, 
@@ -2132,7 +2135,8 @@ export default {
       EvaluationFileApi,
       EvaluationApi,
       CurriculumApi,
-      PeraPadalaAccountApi
+      PeraPadalaAccountApi,
+      ReportApi
     ],
     components: {
       GroupStageIndicator,
@@ -2406,7 +2410,7 @@ export default {
                 label: "Total Fees",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "18%" },
+                thStyle: { width: "15%" },
                 formatter: (value, key, item) => {
                   return formatNumber(value)
                 }
@@ -2416,7 +2420,7 @@ export default {
                 label: "Initial Fee",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "18%" },
+                thStyle: { width: "15%" },
                 formatter: (value, key, item) => {
                   return formatNumber(value)
                 }
@@ -2431,6 +2435,13 @@ export default {
                   return formatNumber(value)
                 }
               },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: { width: "100px" }
+              }
             ],
             items: []
           }
@@ -3425,6 +3436,23 @@ export default {
           }).catch((error) => {
             this.$router.push({ path: '/login' });
           })
+        })
+      },
+      previewAssessmentForm(){
+        const { id: transcriptId } = this.forms.transcript.fields
+        this.getAssessmentFormPreview(transcriptId)
+        .then(({ data }) => {
+          const file = new Blob([data], { type: "application/pdf" });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        })
+      },
+      previewRequirementList(){
+        this.getRequirementListPreview()
+        .then(({ data }) => {
+          const file = new Blob([data], { type: "application/pdf" });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
         })
       }
     },
