@@ -3,7 +3,7 @@
     <div class="group-stage__overview">
       <carousel :autoplay="false" :perPage="1">
         <template v-for="(stage, index) in stages">
-          <slide v-for="(item, index) in stage.children">
+          <slide v-for="(item, index) in stage.children" :key="item.id">
             <div class="group-stage__slide">
               <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
               <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
@@ -11,7 +11,7 @@
                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
                 eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
                 quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
+                Neque porro quisquam est.
               </p>
               <div class="group-stage__image">
                 <PersonDesktop />
@@ -117,17 +117,21 @@ export default {
     min-height: 550px;
     height: 100%;
     max-height: 100vh;
-    background-color: $light-gray;
+    background-color: $light-gray-100;
     display: flex;
     position: relative;
-    padding: 50px;
+    padding: 60px;
     display: flex;
     justify-content: center;
   }
 
   .group-stage__overview {
     width: 100%;
-    max-width: 600px;
+
+    @include for-size(big-desktop-up) {
+      max-width: 600px;
+    }
+
   }
 
   .group-stage__slide {
@@ -138,7 +142,11 @@ export default {
 
   .group-stage__image {
     margin: 30px 0 50px 0;
-    height: 280px;
+    height: 200px;
+
+    @include for-size(big-desktop-up) {
+      height: 280px;
+    }
 
     svg {
       height: 100%;
@@ -153,18 +161,27 @@ export default {
   }
 
   .group-stage__number {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: $dark-blue;
     text-align: center;
     margin: 0;
+
+    @include for-size(big-desktop-up) {
+      font-size: 16px;
+    }
   }
 
   .group-stage__title {
-    font-size: 26px;
+    font-size: 18px;
     font-weight: 500;
     text-align: center;
-    margin: 10px 0;
+    margin: 5px 0 10px 0;
+
+    @include for-size(big-desktop-up) {
+      font-size: 26px;
+      margin: 10px 0;
+    }
   }
 
   .indicator__container {

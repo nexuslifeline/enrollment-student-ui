@@ -13,7 +13,7 @@
         <div class="application__wizard-form">
           <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
           <p class="application__form-description">{{heading && heading.description}}</p>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
@@ -95,7 +95,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ADDRESS.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ADDRESS.id">
             <b-row>
               <b-col md=12>
                 <h5>Current Address</h5>
@@ -365,7 +365,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.FAMILY.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.FAMILY.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -490,7 +490,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
               <b-col md="5">
                 <b-form-group>
@@ -688,7 +688,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
             <b-row v-if="forms.evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -884,7 +884,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id">
             <div>
               <b-alert variant="success" show>
                 <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -915,7 +915,7 @@
                 </b-alert>
             </div>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -1060,7 +1060,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -1109,7 +1109,7 @@
               </b-col>
             </b-row>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
             <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -1382,7 +1382,7 @@
               </b-row>
             </div>
           </div>
-          <div v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
+          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
             <b-row>
               <b-col md="12">
                 <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
@@ -1420,30 +1420,30 @@
               </b-col>
             </b-row>
           </div>
+          <div class="application__action-bar">
+            <b-button
+              @click="forms.activeApplication.fields.applicationStepId--"
+              v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
+              variant="outline-secondary"
+              :disabled="forms.activeApplication.fields.applicationStepId === 1"
+              class="application__back-action">
+              Back
+            </b-button>
+            <b-button
+              @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
+              variant="primary"
+              class="application__main-action"
+              :disabled="isProcessing"
+              v-if="buttonNextShowHide(forms.activeApplication.fields.applicationStepId)">
+              <v-icon
+                v-if="isProcessing"
+                name="sync"
+                class="mr-2"
+                spin />
+                {{ getNextButtonCaption }}
+            </b-button>
+          </div>
         </div>
-      </div>
-      <div class="application__action-bar">
-        <b-button
-          @click="forms.activeApplication.fields.applicationStepId--"
-          v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
-          variant="outline-secondary"
-          :disabled="forms.activeApplication.fields.applicationStepId === 1"
-          class="application__back-action">
-          Back
-        </b-button>
-        <b-button
-          @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
-          variant="primary"
-          class="application__main-action"
-          :disabled="isProcessing"
-          v-if="buttonNextShowHide(forms.activeApplication.fields.applicationStepId)">
-          <v-icon
-            v-if="isProcessing"
-            name="sync"
-            class="mr-2"
-            spin />
-            {{ getNextButtonCaption }}
-        </b-button>
       </div>
     </div>
     <b-modal 
@@ -3314,8 +3314,6 @@ export default {
     flex: 0 1 35%;
 
     @include for-size(tablet-portrait-down) {
-      // for the meantime, we'll hide this
-      // planning to add nav dots for lower screen size in the future
       display: none;
     }
   }
@@ -3325,6 +3323,11 @@ export default {
     position: fixed;
     top: 0;
     z-index: 1031;
+    width: 35%;
+
+    @include for-size(tablet-portrait-down) {
+      display: none;
+    }
   }
 
   .application__main-pane {
@@ -3336,7 +3339,7 @@ export default {
   }
 
   .application__action-bar {
-    position: fixed;
+    position: sticky;
     height: 60px;
     background-color: $white;
     bottom: 0;
@@ -3346,13 +3349,8 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 30px;
     border-top: 1px solid $brand-border-color;
     z-index: 2;
-
-    @include for-size(phone-only) {
-      padding: 0 15px;
-    }
   }
 
   .application__back-action {
@@ -3376,14 +3374,17 @@ export default {
     padding: 30px 15px 50px 15px;
     width: 100%;
     max-width: 950px;
-    //border: 1px solid $brand-border-color;
-    margin: 25px 10px 80px 10px;
-    //border-radius: 5px;
+    margin: 25px 10px 20px 10px;
     background-color: $white;
+    margin-bottom: 100px;
 
     @include for-size(tablet-portrait-down) {
       margin: 0 0 50px 0;
       border: none;
+    }
+
+    @include for-size(desktop-up) {
+      padding: 20px 60px 60px 60px;
     }
   }
 
@@ -3459,6 +3460,10 @@ export default {
     display:flex;
     flex-direction: row;
     width: 100%;
+  }
+
+  .application__wizard-form-fields {
+    margin-bottom: 20px;
   }
 
 </style>

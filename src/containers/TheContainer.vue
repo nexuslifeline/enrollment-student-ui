@@ -81,6 +81,7 @@ export default {
 
   .c-main {
     padding: 0;
+    width: 100vw !important;
   }
 
   .c-container-fluid {
