@@ -848,7 +848,8 @@
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for approval by the registrar's office. <br>
                     In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">here</a>.
+                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">HERE</a>. <br>
+                    If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time You log in.
                   </small>
                 </p>
               </b-col>
@@ -885,11 +886,11 @@
             <div>
               <b-alert variant="success" show>
                 <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
-                <p> Thank you for submitting your application for this school year. 
-                <br> We will review your payment and once approved, we will
-                <br> notify you.
+                <p> Thank you for submitting your enrollment application for this school year.
+                <br> You'll be notified via email / sms about the result of you evaluation request.
+                <br> Once notified, log in again to continue your enrollment application.
                 <br>
-                <br>We will try to get back to you as soon as we can!</p>
+                <br> We will try to get back to you as soon as we can!</p>
               </b-alert>
               <div class="approval-container">
                 <ApprovalIndicator
@@ -984,19 +985,34 @@
                 </b-col>
             </b-row>
             <b-row>
-              <b-col md=4 offset-md="8">
-                <b-button
-                  block
-                  class="float-right"
-                  variant="outline-primary"
-                  @click="onAddSubject()">
-                  <v-icon
-                    name="plus-circle" />
-                  Add Subject</b-button>
-              </b-col>
-            </b-row>
-            <b-row>
               <b-col md=12>
+                <!-- <b-row>
+                  <b-col md=12>
+                    <small>
+                      Subjects for <strong>{{ getSelectedEvaluationLevel }}</strong> <strong>{{ forms.transcript.fields.semesterId ? ', ' + getSelectedEvaluationSemester + ' ' : ' ' }}</strong><strong>{{ forms.transcript.fields.courseId ? 'of ' + getSelectedEvaluationCourse : '' }}</strong>.
+                      <br>Note: You can add subjects by clicking the Add Subjects button below while removal of subject is by clicking the red delete button inline on each subject
+                    </small>
+                  </b-col> 
+                </b-row> -->
+                <b-row>
+                  <b-col md=9>
+                    <p>
+                      Subjects for <strong>{{ getSelectedEvaluationLevel }}</strong> <strong>{{ forms.transcript.fields.semesterId ? ', ' + getSelectedEvaluationSemester + ' ' : ' ' }}</strong><strong>{{ forms.transcript.fields.courseId ? 'of ' + getSelectedEvaluationCourse : '' }}</strong>.
+                      <!-- <br> Note: You can add subjects by clicking the Add Subjects button below while removal of subject is by clicking the red delete button inline on each subject. -->
+                    </p>
+                  </b-col> 
+                  <!-- offset-md=9 -->
+                  <b-col md=3 > 
+                    <b-button
+                      block
+                      class="float-right float-bottom"
+                      variant="outline-primary"
+                      @click="onAddSubject()">
+                      <v-icon
+                        name="plus-circle" />
+                      Add Subject</b-button>
+                  </b-col>
+                </b-row>
                 <b-form-group>
                   <b-form-input :state="forms.transcript.states.subjects" hidden/>
                   <b-form-invalid-feedback>
@@ -1034,11 +1050,11 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="9">
-                <h5 class="float-right">TOTAL UNITS</h5>
+              <b-col md="9">
+                <small>Note: You can add subjects by clicking the Add Subjects button below while removal of subject is by clicking the red delete button inline on each subject.</small> 
               </b-col>
-              <b-col sm="3">
-                <h5 class='text-center pl-3'>{{totalUnits}}</h5>
+              <b-col md="3">
+                <h5 >TOTAL UNITS : &emsp; {{ totalUnits}}</h5>
               </b-col>
             </b-row>
           </div>
@@ -1047,11 +1063,11 @@
               <b-col md="12">
                 <b-alert variant="success" show>
                   <h5>APPLICATION SUBMITTED!</h5>
-                  <p>Thank you for submitting your application for this school year. 
-                  <br> We will review your application and once approved, you will
-                  <br>be able to proceed to payment.
+                  <p>Thank you for submitting your enrollment application for this school year.
+                  <br> We will review your application and once approved, you will be able to proceed to payment.
                   <br>
-                  <br>We will try to get back to you as soon as we can!</p>
+                  <br>You'll be notified via email / sms about the result of your subject enlistment request.
+                  <br>Once notified, log in again to continue your enrollment application. </p>
                 </b-alert>
                 <b-row class="pb-2">
                   <b-col md="12">
@@ -1370,8 +1386,17 @@
                 <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
                   <b-alert variant="success" show>
                     <h5>CONGRATULATIONS!</h5>
-                    <p> You are now officially enrolled. </p>
-                    <small>Please, click here to complete your enrollment.</small> <b-button variant="outline-primary" @click="onCompleteEnrollment"> Click Here</b-button>
+                    <p> Your are now officially enrolled and a certified Theresian. <br><br>
+                      You can download your Certificate of Registration <a href="#">here</a>.<br>
+                      Note: Always bring it whenever you go within the school premises.<br><br>
+
+                      Accounting Department is now working for your Official Receipt.<br>
+                      Once available, you can download it <a href="#">here</a>. <br><br>
+
+                      Go to my <a href="#" @click="onCompleteEnrollment">Dashboard</a>. <br>
+                      View my <a href="#" @click="onCompleteEnrollment">Documents</a>. <br>
+                    </p>
+                    <!-- <small>Please, click here to complete your enrollment.</small> <b-button variant="outline-primary" @click="onCompleteEnrollment"> Click Here</b-button> -->
                   </b-alert>
                 </div>
                 <div v-else>
@@ -2065,7 +2090,7 @@ export default {
             },
             {
               key: "totalUnits",
-              label: "Total Units",
+              label: "TOTAL UNITS",
               tdClass: "align-middle text-right",
               thClass: "text-right",
               thStyle: {width: "8%"}
@@ -2110,7 +2135,7 @@ export default {
             },
             {
               key: "totalUnits",
-              label: "Total Units",
+              label: "TOTAL UNITS",
               tdClass: "align-middle text-right",
               thClass: "text-right",
               thStyle: {width: "8%"}
@@ -2318,22 +2343,22 @@ export default {
         {
           header: 'Application & Evaluation',
           children: [
-            { id: 5, subHeader: 'Evaluation Request', description: 'Reqeusting for subject evaluation.' },
-            { id: 6, subHeader: 'Status', description: 'Waiting for subject evaluation.' }
+            { id: 5, subHeader: 'Evaluation Request', description: 'Requesting for subject evaluation.' },
+            { id: 6, subHeader: 'Evaluation Status', description: 'Waiting for subject evaluation.' }
           ]
         },
         {
           header: 'Subject Enlistment',
           children: [
-            { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
-            { id: 8, subHeader: 'Status', description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.' }
+            { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are about to take. Please include all required(*) fields.' },
+            { id: 8, subHeader: 'Enlisment Status', description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.' }
           ]
         },
         {
           header: 'Enrollment',
           children: [
             { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
-            { id: 10, subHeader: 'Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
+            { id: 10, subHeader: 'Payment Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
           ]
         },
       ],
