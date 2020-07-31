@@ -664,7 +664,7 @@
             </div>
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
               <b-row>
-                <b-col md="6">
+                <b-col md="5">
                   <b-form-group>
                     <label>Last School Attended</label>
                     <b-form-input
@@ -672,11 +672,19 @@
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group>
-                    <label>Last School Yr Attended</label>
+                    <label>From</label>
                     <b-form-input
-                      v-model="forms.education.fields.lastSchoolYearAttended" 
+                      v-model="forms.education.fields.lastSchoolYearFrom" 
+                      debounce="500"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="2">
+                  <b-form-group>
+                    <label>To</label>
+                    <b-form-input
+                      v-model="forms.education.fields.lastSchoolYearTo" 
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -694,36 +702,44 @@
                   <b-form-group>
                     <label>Last School Address</label>
                     <b-form-input
-                      v-model="forms.education.fields.lastSchoolAddress" 
-                      debounce="500"/>
+                      v-model="forms.education.fields.lastSchoolAddress"
+                      debounce="500" />
                   </b-form-group>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md="12">
                   <b-row>
-                    <b-col md="6">
+                    <b-col md="5">
                       <b-form-group>
-                      <label>Elementary Course Completed or Primary</label>
-                      <b-form-input
-                        v-model="forms.education.fields.elementaryCourse" 
-                        debounce="500"/>
+                        <label>Elementary or Primary</label>
+                        <b-form-input
+                            v-model="forms.education.fields.elementaryCourse" 
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
-                    <b-col md="3">
+                    <b-col md="2">
                       <b-form-group>
-                        <label>Year</label>
+                        <label>From</label>
                         <b-form-input
-                          v-model="forms.education.fields.elementaryCourseYear" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.elementaryCourseYearFrom"
+                            debounce="500" />
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="2">
+                      <b-form-group>
+                        <label>To</label>
+                        <b-form-input
+                            v-model="forms.education.fields.elementaryCourseYearTo"
+                            debounce="500" />
                       </b-form-group>
                     </b-col>
                     <b-col md="3">
                       <b-form-group>
                         <label>Honor Received</label>
                         <b-form-input
-                          v-model="forms.education.fields.elementaryCourseHonors"
-                          debounce="500"/>
+                            v-model="forms.education.fields.elementaryCourseHonors"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -732,28 +748,36 @@
               <b-row>
                 <b-col md="12">
                   <b-row>
-                    <b-col md="6">
+                    <b-col md="5">
                       <b-form-group>
-                        <label>High School Course Completed or Secondary</label>
+                        <label>High School or Secondary</label>
                         <b-form-input
-                          v-model="forms.education.fields.highSchoolCourse" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.highSchoolCourse"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
-                    <b-col md="3">
+                    <b-col md="2">
                       <b-form-group>
-                        <label>Year</label>
+                        <label>From</label>
                         <b-form-input
-                          v-model="forms.education.fields.highSchoolCourseYear" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.highSchoolCourseYearFrom"
+                            debounce="500"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="2">
+                      <b-form-group>
+                        <label>To</label>
+                        <b-form-input
+                            v-model="forms.education.fields.highSchoolCourseYearTo"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                     <b-col md="3">
                       <b-form-group>
                         <label>Honor Received</label>
                         <b-form-input
-                          v-model="forms.education.fields.highSchoolCourseHonors" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.highSchoolCourseHonors"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -762,28 +786,36 @@
               <b-row>
                 <b-col md="12">
                   <b-row>
-                    <b-col md="6">
+                    <b-col md="5">
                       <b-form-group>
-                        <label>Senior School Course Completed or Upper Secondary</label>
+                        <label>Senior School or Upper Secondary</label>
                         <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourse" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.seniorSchoolCourse"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
-                    <b-col md="3">
+                    <b-col md="2">
                       <b-form-group>
-                        <label>Year</label>
+                        <label>From</label>
                         <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourseYear" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.seniorSchoolCourseYearFrom"
+                            debounce="500"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="2">
+                      <b-form-group>
+                        <label>To</label>
+                        <b-form-input
+                            v-model="forms.education.fields.seniorSchoolCourseYearTo"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                     <b-col md="3">
                       <b-form-group>
                         <label>Honor Received</label>
                         <b-form-input
-                          v-model="forms.education.fields.seniorSchoolCourseHonors" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.seniorSchoolCourseHonors"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -792,28 +824,36 @@
               <b-row>
                 <b-col md="12">
                   <b-row>
-                    <b-col md="6">
+                    <b-col md="5">
                       <b-form-group>
                         <label >College Degree(if graduated) or Tertiary</label>
                         <b-form-input
-                          v-model="forms.education.fields.collegeDegree" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.collegeDegree"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
-                    <b-col md="3">
+                    <b-col md="2">
                       <b-form-group>
-                        <label>Year</label>
+                        <label>From</label>
                         <b-form-input
-                          v-model="forms.education.fields.collegeDegreeYear" 
-                          debounce="500"/>
-                        </b-form-group>
+                            v-model="forms.education.fields.collegeDegreeYearFrom"
+                            debounce="500"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md="2">
+                      <b-form-group>
+                        <label>To</label>
+                        <b-form-input
+                            v-model="forms.education.fields.collegeDegreeYearTo"
+                            debounce="500"/>
+                      </b-form-group>
                     </b-col>
                     <b-col md="3">
                       <b-form-group>
                         <label>Honor Received</label>
                         <b-form-input
-                          v-model="forms.education.fields.collegeDegreeHonors" 
-                          debounce="500"/>
+                            v-model="forms.education.fields.collegeDegreeHonors"
+                            debounce="500"/>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -854,18 +894,30 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
-                <b-col md="4">
-                  <b-form-group>
-                    <label class="required">Last School Year Attended</label>
-                    <b-form-input
-                      v-model="forms.evaluation.fields.lastYearAttended" 
-                      :state="forms.evaluation.states.evaluationLastYearAttended"
-                      debounce="500" />
-                    <b-form-invalid-feedback>
-                      {{ forms.evaluation.errors.evaluationLastYearAttended }}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label class="required">From</label>
+                      <b-form-input
+                        v-model="forms.evaluation.fields.lastSchoolYearFrom" 
+                        :state="forms.evaluation.states.evaluationLastSchoolYearFrom"
+                        debounce="500" />
+                      <b-form-invalid-feedback>
+                        {{ forms.evaluation.errors.evaluationLastSchoolYearFrom }}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="2">
+                    <b-form-group>
+                      <label class="required">To</label>
+                      <b-form-input
+                        v-model="forms.evaluation.fields.lastSchoolYearTo" 
+                        :state="forms.evaluation.states.evaluationLastSchoolYearTo"
+                        debounce="500" />
+                      <b-form-invalid-feedback>
+                        {{ forms.evaluation.errors.evaluationLastSchoolYearTo }}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
                 <b-col md="3" v-if="forms.evaluation.fields.studentCategoryId === StudentCategories.OLD.id">
                   <b-form-group>
                     <label class="required">Enrolled Year</label>
@@ -970,7 +1022,7 @@
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for approval by the registrar's office. <br>
                     In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#">here</a>.
+                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">here</a>.
                   </small>
                 </p>
                 </b-col>
@@ -1295,6 +1347,9 @@
                                 :items.sync="tables.billings.items"
                                 borderless small responsive
                               >
+                                <template v-slot:cell(action)>
+                                  <a href="#" @click="previewAssessmentForm()">View Details</a>
+                                </template>
                               </b-table>
                             </b-col>
                           </b-row>
@@ -1893,7 +1948,7 @@
 <script>
 import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, 
   PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi, 
-  SubjectApi, SectionApi, EvaluationFileApi, EvaluationApi, CurriculumApi, PeraPadalaAccountApi } from "../../mixins/api"
+  SubjectApi, SectionApi, EvaluationFileApi, EvaluationApi, CurriculumApi, PeraPadalaAccountApi, ReportApi } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator';
 import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, 
@@ -1995,19 +2050,24 @@ const familyErrorFields = {
 const educationFields = {
   lastSchoolAttended: null,
   lastSchoolAddress: null,
-  lastSchoolYearAttended: null,
+  lastSchoolYearFrom: null,
+  lastSchoolYearTo: null,
   lastLevel: null,
   elementaryCourse: null,
-  elementaryCourseYear: null,
+  elementaryCourseYearFrom: null,
+  elementaryCourseYearTo: null,
   elementaryCourseHonors: null,
   highSchoolCourse: null,
-  highSchoolCourseYear: null,
+  highSchoolCourseYearFrom: null,
+  highSchoolCourseYearTo: null,
   highSchoolCourseHonors: null,
   seniorSchoolCourse: null,
-  seniorSchoolCourseYear: null,
+  seniorSchoolCourseYearFrom: null,
+  seniorSchoolCourseYearTo: null,
   seniorSchoolCourseHonors: null,
   collegeDegree: null,
-  collegeDegreeYear: null,
+  collegeDegreeYearFrom: null,
+  collegeDegreeYearTo: null,
   collegeDegreeHonors: null,
 }
 
@@ -2048,7 +2108,8 @@ const evaluationFields = {
   levelId: null,
   courseId: null,
   evaluationStatusId: null,
-  lastYearAttended: null,
+  lastSchoolYearFrom: null,
+  lastSchoolYearTo: null,
   lastSchoolAttended: null,
   enrolledYear: null,
   notes: null,
@@ -2062,7 +2123,8 @@ const evaluationFields = {
 const evaluationErrorFields = {
   evaluationLevelId: null,
   evaluationCourseId: null,
-  evaluationLastYearAttended: null,
+  evaluationLastSchoolYearFrom: null,
+  evaluationLastSchoolYearTo: null,
   evaluationLastSchoolAttended: null,
   evaluationEnrolledYear: null,
   evaluationSemesterId: null,
@@ -2132,7 +2194,8 @@ export default {
       EvaluationFileApi,
       EvaluationApi,
       CurriculumApi,
-      PeraPadalaAccountApi
+      PeraPadalaAccountApi,
+      ReportApi
     ],
     components: {
       GroupStageIndicator,
@@ -2406,7 +2469,7 @@ export default {
                 label: "Total Fees",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "18%" },
+                thStyle: { width: "15%" },
                 formatter: (value, key, item) => {
                   return formatNumber(value)
                 }
@@ -2416,7 +2479,7 @@ export default {
                 label: "Initial Fee",
                 tdClass: "align-middle text-right",
                 thClass: "align-middle text-right",
-                thStyle: { width: "18%" },
+                thStyle: { width: "15%" },
                 formatter: (value, key, item) => {
                   return formatNumber(value)
                 }
@@ -2431,6 +2494,13 @@ export default {
                   return formatNumber(value)
                 }
               },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: { width: "100px" }
+              }
             ],
             items: []
           }
@@ -2770,7 +2840,8 @@ export default {
           //default to request evaluation with the same fields
           if (data.activeAdmission.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id) {
             evaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
-            evaluation.fields.lastYearAttended =  data.education.lastSchoolYearAttended
+            evaluation.fields.lastSchoolYearFrom =  data.education.lastSchoolYearFrom
+            evaluation.fields.lastSchoolYearTo=  data.education.lastSchoolYearTo
           }
 
           this.isProcessing = false;
@@ -3425,6 +3496,23 @@ export default {
           }).catch((error) => {
             this.$router.push({ path: '/login' });
           })
+        })
+      },
+      previewAssessmentForm(){
+        const { id: transcriptId } = this.forms.transcript.fields
+        this.getAssessmentFormPreview(transcriptId)
+        .then(({ data }) => {
+          const file = new Blob([data], { type: "application/pdf" });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        })
+      },
+      previewRequirementList(){
+        this.getRequirementListPreview()
+        .then(({ data }) => {
+          const file = new Blob([data], { type: "application/pdf" });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
         })
       }
     },
