@@ -306,7 +306,6 @@
                     debounce="500" />
                 </b-form-group>
               </b-col>
-              
             </b-row>
             <b-row>
               <b-col md="4">
@@ -765,7 +764,7 @@
                   <label>Notes</label>
                   <b-form-textarea
                     rows="2"
-                    v-model="forms.evaluation.fields.notes" 
+                    v-model="forms.evaluation.fields.notes"
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -781,10 +780,10 @@
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Level</label>
-                  <b-form-select 
-                    @input="loadCourses()" 
+                  <b-form-select
+                    @input="loadCourses()"
                     v-model='forms.evaluation.fields.levelId'
-                    :state="forms.evaluation.states.evaluationLevelId">                   
+                    :state="forms.evaluation.states.evaluationLevelId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
@@ -803,8 +802,7 @@
                       forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
                         forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                   <label class="required">Course</label>
-                  <b-form-select 
-                   
+                  <b-form-select
                     v-model='forms.evaluation.fields.courseId'
                     :state="forms.evaluation.states.evaluationCourseId"
                     >
@@ -956,14 +954,14 @@
                             :disabled="sectionIsLoading"
                             v-model='forms.transcript.fields.sectionId'
                             :state="forms.transcript.states.transcriptSectionId">
-                            <template v-slot:first>               
+                            <template v-slot:first>
                               <b-form-select-option :value='null' disabled>
                                 -- Section --
                               </b-form-select-option>
                             </template>
-                            <b-form-select-option 
-                              v-for='section in options.sections.items' 
-                              :key='section.id' 
+                            <b-form-select-option
+                              v-for='section in options.sections.items'
+                              :key='section.id'
                               :value='section.id'>
                               {{ section.name }}
                             </b-form-select-option>
@@ -982,7 +980,7 @@
                         </b-form-group>
                       </b-col>
                     </b-row>
-                  </b-card>  
+                  </b-card>
                 </b-col>
             </b-row>
             <b-row>
@@ -2395,33 +2393,32 @@ export default {
       }
 
       //todo : review code for percentage and approval stage
-      this.percentage = 
-        student.activeApplication.applicationStatusId == 1 ?
-          100 :  student.transcript.transcriptStatusId == 2 ? 
-            60: 30
+      this.percentage = student.activeApplication.applicationStatusId == 1
+        ? 100
+        : student.transcript.transcriptStatusId == 2
+        ? 60
+        : 30;
 
-      this.selectedApprovalStage = 
-        student.activeApplication.applicationStatusId == 1 ?
-          3 : student.transcript.transcriptStatusId == 2 ? 
-            2 : 1
+      this.selectedApprovalStage = student.activeApplication.applicationStatusId == 1
+        ? 3
+        : student.transcript.transcriptStatusId == 2
+        ? 2
+        : 1;
 
-      this.selectedEvaluationApprovalStage = 
-        student.evaluation.evaluationStatusId == 3 ?
-          2 : 1
+      this.selectedEvaluationApprovalStage = student.evaluation.evaluationStatusId == 3
+        ? 2
+        : 1;
 
       if (student.activeApplication.applicationStepId >= ApplicationSteps.PAYMENTS.id) {
         this.loadBilling()
       }
 
       const { transcript } = this.forms
-    
       if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
-        
         //show countdown
         if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
           this.evaluationDismissCountDown = 5
         }
-        
 
         //set level, course, school cat of transcript
         const { subjects } = this.tables
@@ -2436,7 +2433,6 @@ export default {
         this.loadSections()
         //need to load subjects here
         this.getEvaluation(student.evaluation.id).then(({ data }) => {
-        
            const result = data.subjects.filter(subject => subject.pivot.isTaken === 0)
 
           //clear subjects
@@ -2463,7 +2459,7 @@ export default {
 
         this.updateStudent(data, studentId).then(({ data }) => {
           this.forms.activeApplication.fields.applicationStepId = data.activeApplication.applicationStepId
-        }) 
+        })
       }
 
 
@@ -2524,9 +2520,10 @@ export default {
 
       const currentStepIndex = activeApplication.applicationStepId - 1;
 
-      const evaluationStatusId = 
-        evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id || evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id ? 
-          EvaluationStatuses.SUBMITTED.id : evaluation.fields.evaluationStatusId
+      const evaluationStatusId = evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id ||
+        evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id
+        ? EvaluationStatuses.SUBMITTED.id
+        : evaluation.fields.evaluationStatusId;
 
       const payloads = [
          student.fields,
@@ -2548,20 +2545,19 @@ export default {
         null,
         transcript,
       ]
-      
-      const applicationStepId =
-          ApplicationSteps.STATUS.id === activeApplication.applicationStepId && activeApplication.applicationStatusId !==1
-            ? ApplicationSteps.STATUS.id
-              : activeApplication.applicationStepId + 1;
 
-      const applicationStatusId =
-          ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-            ? ApplicationStatuses.SUBMITTED.id
-              : ApplicationSteps.STATUS.id === activeApplication.applicationStepId 
-                ? ApplicationStatuses.APPROVED_ASSESMENT.id
-                  : ApplicationSteps.WAITING.id === activeApplication.applicationStepId 
-                    ? ApplicationStatuses.COMPLETED.id 
-                      : activeApplication.applicationStatusId
+      const applicationStepId = ApplicationSteps.STATUS.id === activeApplication.applicationStepId &&
+        activeApplication.applicationStatusId !==1
+          ? ApplicationSteps.STATUS.id
+          : activeApplication.applicationStepId + 1;
+
+      const applicationStatusId = ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+        ? ApplicationStatuses.SUBMITTED.id
+        : ApplicationSteps.STATUS.id === activeApplication.applicationStepId
+        ? ApplicationStatuses.APPROVED_ASSESMENT.id
+        : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
+        ? ApplicationStatuses.COMPLETED.id
+        : activeApplication.applicationStatusId
 
       const data = {
         ...payloads[currentStepIndex],
@@ -2645,18 +2641,18 @@ export default {
       }
     },
     loadCourses() {
-      
+
       // const { fields } = this.forms.transcript;
       const { fields } = this.forms.evaluation;
       const { items } = this.options.levels
 
-      
+
       // console.log(fields.levelId)
       const level = items.find(i => i.id == fields.levelId)
       if (level) {
         fields.schoolCategoryId = level.schoolCategoryId
       }
-      
+
       fields.courseId = null
       fields.semesterId = null
       // fields.semesterId = null
@@ -2764,12 +2760,12 @@ export default {
         transcript: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
       } = this.forms;
 
-      const params = { 
-          studentId: studentId, 
-            schoolYearId: schoolYearId, 
-              semesterId: semesterId, 
-                billingTypeId: BillingTypes.INITIAL.id, 
-                  paginate: false 
+      const params = {
+        studentId: studentId,
+        schoolYearId: schoolYearId,
+        semesterId: semesterId,
+        billingTypeId: BillingTypes.INITIAL.id,
+        paginate: false
       }
 
       this.getBillingList(params).then(({ data }) => {
@@ -2783,9 +2779,9 @@ export default {
           copyValue(data[0].payments[0], this.forms.payment.fields)
 
           //set payment approval stage
-          this.selectedPaymentApprovalStage = 
-            payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id ?
-              2 : 1
+          this.selectedPaymentApprovalStage = payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id
+            ? 2
+            : 1;
 
           this.getPaymentFiles(payment.fields.id).then(({ data }) => {
             data.data.forEach(file => {
@@ -2841,13 +2837,11 @@ export default {
       this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
       let newFile = this.paymentFiles[this.paymentFiles.length - 1]
       this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
-        
         setTimeout(() => {
           newFile.id = data.id
           newFile.name = data.name
           newFile.isBusy = false
-        }
-          , 1000);
+        }, 1000);
       })
     },
     onPaySelected(payTypeId) {
@@ -2855,7 +2849,6 @@ export default {
       // if payment is null add payment
       if (payTypeId === PayTypes.ATTACHMENT.id) {
         this.forms.payment.fields.paymentModeId = 3
-
       }
       else {
         this.forms.payment.fields.paymentModeId = 1
@@ -2925,8 +2918,7 @@ export default {
       this.showPaymentFileModal = true
     },
     onUpdatePaymentFile () {
-      const { payment: { fields:{ id: paymentId } },
-              paymentFile } = this.forms
+      const { payment: { fields:{ id: paymentId } }, paymentFile } = this.forms
 
       const selectedFile = this.paymentFiles[this.selectedPaymentFileIndex]
       this.isFileUpdating = true
@@ -2973,7 +2965,7 @@ export default {
       if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
         this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
           levelsOfCourses.items = data
-        }) 
+        })
       }
 
       this.filterSubject()
@@ -3142,14 +3134,14 @@ export default {
     prePopulateStudentSubjects() {
       const { evaluation, transcript } = this.forms
       const { subjects } = this.tables
-      if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id || 
+      if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id ||
         (evaluation.fields.studentCurriculumId === evaluation.fields.curriculumId )) {
           this.tables.levelSubjects.isBusy = true
-          this.tables.levelSubjects.items = subjects.filteredItems.filter(subject => 
+          this.tables.levelSubjects.items = subjects.filteredItems.filter(subject =>
             subject.pivot.isTaken === 0 &&
-                subject.pivot.levelId === transcript.fields.levelId && 
-                  subject.pivot.semesterId === transcript.fields.semesterId)
-
+            subject.pivot.levelId === transcript.fields.levelId &&
+            subject.pivot.semesterId === transcript.fields.semesterId
+          );
           this.tables.levelSubjects.isBusy = false
       }
     },
@@ -3263,10 +3255,9 @@ export default {
         return 'Submit Request'
       }  else if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ) {
         return 'Submit Payment'
-      }
-      else {
+      } else {
         return 'Next'
-      }          
+      }
     }
   }
 };

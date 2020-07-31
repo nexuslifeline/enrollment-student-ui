@@ -178,12 +178,14 @@ export default {
       }
     }
   },
-  created(){
-    const pathParams = this.$route.params;
-    this.forms.register.fields.studentCategoryId = Number(pathParams.studentCategoryId)
-    this.isEnrolled = (pathParams.isEnrolled === 'y' || pathParams.isEnrolled === 'Y')
-     console.log('isEnrolled --> ' + this.isEnrolled)
-
+  mounted() {
+    // there seems to be a race-condition happening here causing an intermittent bug in the backend
+    // what happens is when newly enrolled student(new/enrolled) created an account, the student number sometimes is not inserted in backend
+    setTimeout(() => {
+      const pathParams = this.$route.params;
+      this.forms.register.fields.studentCategoryId = Number(pathParams.studentCategoryId);
+      this.isEnrolled = (pathParams.isEnrolled === 'y' || pathParams.isEnrolled === 'Y');
+    }, 250);
   },
   methods: {
     onGetStarted() {
@@ -214,43 +216,22 @@ export default {
     createAccount() {
       const { register, register: { fields: { username, password } } } = this.forms;
       const data = {
-        isEnrolled : this.isEnrolled,
+        isEnrolled: this.isEnrolled,
         ...register.fields
       }
-      register.isProcessing = true  
+      register.isProcessing = true;
       reset(register);
       this.registerStudent(data).then(({ data }) => {
         this.authenticate({ username, password }).then(({ data }) => {
           localStorage.setItem('accessToken', data.accessToken)
           this.$store.commit('LOGIN_USER');
-          //localStorage.removeItem('studentCategoryId')
-          //localStorage.removeItem('isEnrolled')
-          this.$router.push({ path: '/dashboard' });
           register.isProcessing = false;
-          // this.getAuthenticatedUser().then(({ data }) => {
-          //   register.isProcessing = false;
-          //   localStorage.setItem('studentId', data.userable.id);
-
-          //   // const routeName =
-          //   //   StudentCategories.NEW.id === data.userable.transcript.studentCategoryId
-          //   //     ? 'Admission'
-          //   //     : 'Application';
-
-          //     const routeName =
-          //       this.isEnrolled === true ? 
-          //         'Application' : 
-          //           StudentCategories.OLD.id === data.userable.transcript.studentCategoryId ? 'Application' 
-          //             : 'Admission'
-
-
-          //   localStorage.removeItem('studentCategoryId')
-          //   localStorage.removeItem('isEnrolled')
-          //   this.$router.push({ name: routeName });
-          // })
+          setTimeout(() => {
+            this.$router.push({ path: '/dashboard' });
+          }, 250);
         })
       })
       .catch(error => {
-        console.log(error)
         register.isProcessing = false;
         const { errors } = error.response.data;
         const errorKeys = Object.keys(errors);
@@ -262,16 +243,6 @@ export default {
         }
         validate(register, errors);
       })
-        // this.$http.post('api/v1/register', this.forms.register.fields)
-        //   .then(response => {
-        //     const res = response.data
-        //     this.$store.commit('LOGIN_USER')
-        //     localStorage.setItem('accessToken', res.token.accessToken)
-        //     this.$router.push({ name: 'Student Info'})
-        //   })
-        //   .catch(response => {
-        //     console.log(response)
-        //   })
     }
   }
 }
