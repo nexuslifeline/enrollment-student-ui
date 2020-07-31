@@ -9,7 +9,7 @@
       :is-full-page="true"
     />
     <CWrapper v-if="!!$store.state.user">
-      <TheHeader v-if="!!$store.state.user" />
+      <TheHeader v-if="!!$store.state.user" :isOnboarding="isOnboarding" />
       <div class="c-body">
         <main class="c-main">
           <CContainer class="c-container-fluid" fluid>

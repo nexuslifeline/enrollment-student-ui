@@ -1,6 +1,6 @@
 <template>
-  <CHeader fixed with-subheader light>
-    <CToggler
+  <CHeader :class="{ 'header-on-boarding': isOnboarding }" fixed with-subheader light>
+    <!--<CToggler
       in-header
       class="d-lg-none"
       @click="$store.commit('TOGGLE_SIDEBAR_MOBILE')"
@@ -9,7 +9,7 @@
       in-header
       class="d-md-down-none"
       @click="$store.commit('TOGGLE_SIDEBAR_DESKTOP')"
-    />
+    />-->
     <TheHeaderDropdownAccnt/>
   </CHeader>
 </template>
@@ -21,6 +21,12 @@ export default {
   name: 'TheHeader',
   components: {
     TheHeaderDropdownAccnt
+  },
+  props: {
+    isOnboarding: {
+      type: [Boolean],
+      default: false
+    }
   }
 }
 </script>
@@ -34,5 +40,9 @@ export default {
 
   .c-header {
     min-height: $header-height !important;
+  }
+
+  .header-on-boarding {
+    border-bottom: 0 !important;
   }
 </style>

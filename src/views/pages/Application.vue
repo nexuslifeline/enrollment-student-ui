@@ -2,10 +2,12 @@
   <div class="application__container">
     <div class="application__pane">
       <div class="application__left-pane">
-        <GroupStageIndicator
-          :stages="groupStages"
-          :activeId="forms.activeApplication.fields.applicationStepId"
-        />
+        <div class="application__group-stage-container">
+          <GroupStageIndicator
+            :stages="groupStages"
+            :activeId="forms.activeApplication.fields.applicationStepId"
+          />
+        </div>
       </div>
       <div class="application__main-pane">
         <div class="application__wizard-form">
@@ -1688,7 +1690,7 @@ import {
   ReportApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
-import GroupStageIndicator from '../components/GroupStageIndicator';
+import GroupStageIndicator from '../components/GroupStageIndicatorV2';
 import ApprovalIndicator from '../components/ApprovalIndicator';
 import {
   Semesters,
@@ -3279,19 +3281,25 @@ export default {
     flex-direction: row;
     width: 100%;
     height: 100%;
-    max-width: 1200px;
+    //max-width: 1200px;
   }
 
   .application__left-pane {
     height: 100%;
-    padding: 25px 20px;
-    flex: 0 1 280px;
+    flex: 0 1 35%;
 
     @include for-size(tablet-portrait-down) {
       // for the meantime, we'll hide this
       // planning to add nav dots for lower screen size in the future
       display: none;
     }
+  }
+
+  .application__group-stage-container {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1031;
   }
 
   .application__main-pane {
@@ -3342,7 +3350,7 @@ export default {
   .application__wizard-form {
     padding: 30px 15px 50px 15px;
     width: 100%;
-    max-width: 750px;
+    max-width: 950px;
     //border: 1px solid $brand-border-color;
     margin: 25px 10px 80px 10px;
     //border-radius: 5px;

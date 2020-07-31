@@ -1,0 +1,287 @@
+<template>
+  <div class="group-stage__container">
+    <div class="group-stage__overview">
+      <carousel :autoplay="false" :perPage="1">
+        <template v-for="(stage, index) in stages">
+          <slide v-for="(item, index) in stage.children">
+            <div class="group-stage__slide">
+              <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
+              <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
+              <p  class="group-stage__description">
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+                eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
+                quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
+              </p>
+              <div class="group-stage__image">
+                <PersonDesktop />
+              </div>
+            </div>
+          </slide>
+        </template>
+      </carousel>
+    </div>
+    <div class="indicator__container">
+      <ul class="indicator">
+        <li
+          v-for="(stage, index) in stages"
+          class="indicator__item"
+          :class="{
+            'completed': index < activeHeaderIndex,
+            'active': index === activeHeaderIndex
+          }">
+          <div class="indicator__line"></div>
+          <div class="indicator__header">
+            <span class="indicator__circle">
+              <span class="indicator__inner-circle">
+                <transition name="bounce" mode="out-in">
+                  <v-icon
+                    v-if="index < activeHeaderIndex"
+                    name="check"
+                    scale="1.1"
+                    class="indicator__check-icon"
+                  ></v-icon>
+                  <span v-else class="indicator__number">
+                    {{index + 1}}
+                  </span>
+                </transition>
+              </span>
+            </span>
+            <!--<span class="indicator__header-text">{{stage.header}}</span>-->
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Carousel, Slide } from 'vue-carousel';
+import PersonDesktop from '../../assets/svg/my-profile.svg';
+export default {
+  components: {
+    Carousel,
+    Slide,
+    PersonDesktop
+  },
+  props: {
+    stages: {
+      type: [Array]
+    },
+    activeId: {
+      type: [Number]
+    }
+  },
+  computed: {
+    activeHeaderIndex() {
+      //return 1;
+      return this.stages.findIndex((item) => {
+        return item.children.map(({ id }) => id).includes(this.activeId);
+      });
+    }
+  },
+  mounted() {
+    console.log(this.activeHeaderIndex);
+  }
+}
+</script>
+<style lang="scss">
+  @import "../../assets/scss/shared.scss";
+
+  .VueCarousel-dot {
+    background-color: $dark-blue !important;
+    padding: 3px !important;
+    height: 10px !important;
+    opacity: .4;
+  }
+
+  .VueCarousel-dot--active {
+    background-color: $dark-blue !important;
+    width: 35px !important;
+    border-radius: 10px !important;
+    opacity: 1;
+  }
+
+  .VueCarousel-pagination {
+    margin-top: 50px;
+  }
+</style>
+<style lang="scss" scoped>
+  @import "../../assets/scss/shared.scss";
+  @import "../../assets/scss/animations.scss";
+
+  $size: 37px;
+
+  .group-stage__container {
+    width: 100%;
+    min-height: 550px;
+    height: 100%;
+    max-height: 100vh;
+    background-color: $light-gray;
+    display: flex;
+    position: relative;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .group-stage__overview {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .group-stage__slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .group-stage__image {
+    margin: 30px 0 50px 0;
+    height: 280px;
+
+    svg {
+      height: 100%;
+      width: auto;
+    }
+  }
+
+  .group-stage__description {
+    text-align: center;
+    font-size: 14px;
+    margin: 30px 0 50px 0;
+  }
+
+  .group-stage__number {
+    font-size: 16px;
+    font-weight: 600;
+    color: $dark-blue;
+    text-align: center;
+    margin: 0;
+  }
+
+  .group-stage__title {
+    font-size: 26px;
+    font-weight: 500;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .indicator__container {
+    position: absolute;
+    right: calc(37px / 2 * -1);
+    width: $size;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+  }
+
+  .indicator__line {
+    position: absolute;
+    width: 2px;
+    border-left: 1.5px dashed $green;
+    top: 50%;
+  }
+
+  .indicator {
+    list-style: none;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    & .indicator__item:last-child {
+      .indicator__line {
+        display:  none;
+      }
+    }
+  }
+
+  .indicator__circle {
+    height: $size;
+    width: $size;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: $white;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+   .indicator__inner-circle {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 50%;
+      background-color: $gray;
+    }
+
+  .indicator__number {
+    color: $white;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .indicator__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+
+    &.active {
+      .indicator__line {
+        height: 50%;
+      }
+
+      .indicator__circle {
+        border: 1px dashed $green;
+      }
+
+      .indicator__inner-circle {
+        border: 1px solid $green;
+        background-color: $green;
+      }
+    }
+
+    &.completed {
+      .indicator__line {
+        height: 100%;
+      }
+
+      .indicator__circle {
+        border: 0;
+        background-color: $white;
+      }
+
+      .indicator__inner-circle {
+        border: 1px solid $green;
+        background-color: $green;
+      }
+    }
+  }
+
+  .indicator__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin: 40px 0;
+    z-index: 1;
+  }
+
+  .indicator__check-icon {
+    color: $white;
+  }
+</style>

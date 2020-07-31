@@ -31,8 +31,7 @@
         :activeId="selectedId"
         @selectedIdChange="onSelectIdChange"
       />
-      <br />
-      <hr />
+      
     </div>
     <div class="right-pane">
       <div class="approval-container">
@@ -57,6 +56,14 @@
       <div class="file-uploader-container">
         <FileUploader @onFileChange="onFileChange" @onFileDrop="onFileDrop" />
       </div>
+      <br />
+      <h1>Group Stage V2</h1>
+      <hr />
+      <GroupStageIndicatorV2
+        :stages="groupStagesV2"
+        :activeId="2"
+        @selectedIdChange="onSelectIdChange"
+      />
       <div class="file-item-container">
         <button @click="makeFirstFileBusy">Make First File Item Busy</button>
         <button @click="makeFirstFileNotBusy">Make First File Item Not Busy</button>
@@ -107,6 +114,7 @@
 <script>
 import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator'
+import GroupStageIndicatorV2 from '../components/GroupStageIndicatorV2'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import PhotoViewer from '../components/PhotoViewer'
 import FileUploader from '../components/FileUploader'
@@ -121,6 +129,7 @@ export default {
     StageIndicator,
     ApprovalIndicator,
     GroupStageIndicator,
+    GroupStageIndicatorV2,
     PhotoViewer,
     FileUploader,
     FileItem,
@@ -187,6 +196,37 @@ export default {
           children: [
             { id: 4, subHeader: 'Academic Year' },
             { id: 5, subHeader: 'Requirements' }
+          ]
+        },
+        {
+          header: 'Payment',
+          children: [
+            { id: 6, subHeader: 'Academic Year' },
+            { id: 7, subHeader: 'Requirements' }
+          ]
+        },
+      ],
+      groupStagesV2: [
+        {
+          header: 'Proflie Information',
+          children: [
+            { id: 1, subHeader: 'Profile' },
+            { id: 2, subHeader: 'Family Background' },
+            { id: 3, subHeader: 'Previous Education' }
+          ]
+        },
+        {
+          header: 'Admission',
+          children: [
+            { id: 4, subHeader: 'Academic Year' },
+            { id: 5, subHeader: 'Requirements' }
+          ]
+        },
+        {
+          header: 'Payment',
+          children: [
+            { id: 6, subHeader: 'Academic Year' },
+            { id: 7, subHeader: 'Requirements' }
           ]
         },
       ]
