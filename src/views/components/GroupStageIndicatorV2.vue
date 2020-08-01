@@ -1,23 +1,25 @@
 <template>
   <div class="group-stage__container">
     <div class="group-stage__overview">
-      <carousel :autoplay="false" :perPage="1">
-        <template v-for="(stage, index) in stages">
-          <slide v-for="(item, index) in stage.children" :key="item.id">
-            <div class="group-stage__slide">
-              <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
-              <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
-              <p  class="group-stage__description">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-                eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
-                quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                Neque porro quisquam est.
-              </p>
-              <div class="group-stage__image">
-                <PersonDesktop />
+      <carousel :navigateTo="activeSubHeaderIndex" :autoplay="false" :perPage="1">
+        <template v-for="(stage, idx) in stages">
+          <template v-if="idx === activeHeaderIndex">
+            <slide v-for="(item, index) in stage.children" :key="item.id">
+              <div class="group-stage__slide">
+                <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
+                <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
+                <p  class="group-stage__description">
+                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+                  eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
+                  quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                  Neque porro quisquam est.
+                </p>
+                <div class="group-stage__image">
+                  <PersonDesktop />
+                </div>
               </div>
-            </div>
-          </slide>
+            </slide>
+          </template>
         </template>
       </carousel>
     </div>
@@ -74,10 +76,16 @@ export default {
   },
   computed: {
     activeHeaderIndex() {
-      //return 1;
       return this.stages.findIndex((item) => {
         return item.children.map(({ id }) => id).includes(this.activeId);
       });
+    },
+    activeSubHeaderIndex() {
+      const header = this.stages[this.activeHeaderIndex];
+      if (!header) return 0;
+      return header.children.findIndex(
+        (item) => item.id === this.activeId
+      )
     }
   },
   mounted() {
@@ -93,6 +101,7 @@ export default {
     padding: 3px !important;
     height: 10px !important;
     opacity: .4;
+    pointer-events: none;
   }
 
   .VueCarousel-dot--active {

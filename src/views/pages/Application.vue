@@ -4,7 +4,7 @@
       <div class="application__left-pane">
         <div class="application__group-stage-container">
           <GroupStageIndicator
-            :stages="groupStages"
+            :stages="$options.groupStages"
             :activeId="forms.activeApplication.fields.applicationStepId"
           />
         </div>
@@ -1738,6 +1738,7 @@ import PhotoViewer from '../components/PhotoViewer'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
 import ProgressIndicator from '../components/ProgressIndicator';
+import { groupStages } from '../../content/application';
 
 const studentFields = {
   id: null,
@@ -1972,6 +1973,7 @@ export default {
     FileItem,
     ProgressIndicator
   },
+  groupStages,
   data() {
     return {
       showPaymentFileModal: false,
@@ -2332,48 +2334,6 @@ export default {
       selectedApprovalStage: 1,
       selectedPaymentApprovalStage: 1,
       selectedEvaluationApprovalStage: 1,
-      groupStages: [
-        {
-          header: 'Personal Information',
-          children: [
-            { id: 1, subHeader: 'Profile', description: 'Officially registering you is just few steps away. First, tell us a bit about yourself.' },
-            { id: 2, subHeader: 'Address', description: 'Let us know your address. Please include all required(*) fields.' },
-            { id: 3, subHeader: 'Family', description: 'Details about your family. Please include all required(*) fields.' },
-            { id: 4, subHeader: 'Education', description: 'Details about your previous educational background. Please include all required(*) fields.' }
-          ]
-        },
-        {
-          header: 'Application & Evaluation',
-          children: [
-            { id: 5, subHeader: 'Evaluation Request', description: 'Requesting for subject evaluation.' },
-            { id: 6, subHeader: 'Evaluation Status', description: 'Waiting for subject evaluation.' }
-          ]
-        },
-        {
-          header: 'Subject Enlistment',
-          children: [
-            { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are about to take. Please include all required(*) fields.' },
-            { id: 8, subHeader: 'Enlisment Status', description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.' }
-          ]
-        },
-        {
-          header: 'Enrollment',
-          children: [
-            { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially registered. You will just need to pay the following.' },
-            { id: 10, subHeader: 'Payment Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
-          ]
-        },
-      ],
-      // stages: [
-      //   'Lorem ipsum dolor amet',
-      //   'Lorem ipsum dolor amet',
-      //   'Lorem ipsum dolor amet',
-      //   'Lorem ipsum dolor amet',
-      //   'Lorem ipsum dolor amet'
-      // ].map((description, idx) => {
-      //   const { name } = ApplicationSteps.values[idx];
-      //   return { name, description }
-      // }) || [],
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
@@ -3176,7 +3136,7 @@ export default {
       const { student, activeApplication } = this.forms
 
       const applicationStatusId = ApplicationStatuses.COMPLETED.id
-      
+
       const data  = {
         ...student.fields,
         activeApplication: {
@@ -3232,10 +3192,10 @@ export default {
       const { fields } = this.forms.activeApplication
       if (fields.applicationStepId) {
         const subHeaders = [
-          ...this.groupStages[0].children,
-          ...this.groupStages[1].children,
-          ...this.groupStages[2].children,
-          ...this.groupStages[3].children
+          ...this.$options.groupStages[0].children,
+          ...this.$options.groupStages[1].children,
+          ...this.$options.groupStages[2].children,
+          ...this.$options.groupStages[3].children
         ]
         return subHeaders.find(({ id }) => id === fields.applicationStepId)
       }
