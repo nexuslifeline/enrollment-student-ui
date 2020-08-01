@@ -1051,7 +1051,7 @@
             </b-row>
             <b-row>
               <b-col md="9">
-                <small>Note: You can add subjects by clicking the Add Subjects button below while removal of subject is by clicking the red delete button inline on each subject.</small> 
+                <small>Note: You can add subjects by clicking the Add Subjects button while removal of subject is by clicking the red delete button inline on each subject.</small> 
               </b-col>
               <b-col md="3">
                 <h5 >TOTAL UNITS : &emsp; {{ totalUnits}}</h5>
