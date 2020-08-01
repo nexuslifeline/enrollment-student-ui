@@ -22,13 +22,11 @@
 </template>
 
 <script>
-  import MyDocuments from '../../../assets/svg/my-documents.svg'
   import ArrowRight from '../../../assets/svg/arrow-right.svg'
 
   export default {
     name: 'MenuItem',
     components: {
-      MyDocuments,
       ArrowRight
     },
     props: {
@@ -70,7 +68,7 @@
     align-items: center;
     justify-content: center;
 
-    svg {
+    img {
       height: 100%;
       width: auto;
     }

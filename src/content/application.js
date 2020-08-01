@@ -45,7 +45,7 @@ export const groupStages = [
       {
         id: 6,
         subHeader: 'Evaluation Status',
-        image: '/img/svg/group-project.svg',
+        image: '/img/svg/my-documents.svg',
         description: 'Waiting for subject evaluation.',
         overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
       }
@@ -76,7 +76,7 @@ export const groupStages = [
       {
         id: 9,
         subHeader: 'Payments',
-        image: '/img/svg/webinar-group.svg',
+        image: '/img/svg/my-applications.svg',
         description:
         'You\'re just one step away to be officially registered. You will just need to pay the following.',
         overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'

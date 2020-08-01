@@ -1,5 +1,5 @@
 <template>
-  <div id="group-slider-stage" class="group-stage__container">
+  <div class="group-stage__container">
     <div class="group-stage__overview">
       <carousel :navigateTo="activeSubHeaderIndex" :autoplay="false" :perPage="1">
         <template v-for="(stage, idx) in stages">
@@ -92,7 +92,7 @@ export default {
 <style lang="scss">
   @import "../../assets/scss/shared.scss";
 
-  #group-slider-stage .VueCarousel-dot {
+  .group-stage__container .VueCarousel-dot {
     background-color: $dark-blue !important;
     padding: 3px !important;
     height: 10px !important;
@@ -100,14 +100,14 @@ export default {
     pointer-events: none;
   }
 
-  #group-slider-stage .VueCarousel-dot--active {
+  .group-stage__container .VueCarousel-dot--active {
     background-color: $dark-blue !important;
     width: 35px !important;
     border-radius: 10px !important;
     opacity: 1;
   }
 
-  #group-slider-stage .VueCarousel-pagination {
+  .group-stage__container .VueCarousel-pagination {
     margin-top: 50px;
   }
 </style>

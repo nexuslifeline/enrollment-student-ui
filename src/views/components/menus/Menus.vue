@@ -5,29 +5,19 @@
       :description="item.description"
       :key="idx">
       <template v-slot:image>
-        <component :is="item.image" />
+        <img :src="item.image" />
       </template>
     </MenuItem>
   </div>
 </template>
 
 <script>
-  import MyDocuments from '../../../assets/svg/my-documents.svg';
-  import MyStatements from '../../../assets/svg/my-statements.svg';
-  import MyPayments from '../../../assets/svg/my-payments.svg';
-  import MyProfile from '../../../assets/svg/my-profile.svg';
-  import MyApplications from '../../../assets/svg/my-applications.svg';
   import ArrowRight from '../../../assets/svg/arrow-right.svg';
   import MenuItem from './MenuItem';
 
   export default {
     name: 'Menus',
     components: {
-      MyDocuments,
-      MyStatements,
-      MyPayments,
-      MyProfile,
-      MyApplications,
       ArrowRight,
       MenuItem
     },
@@ -36,32 +26,32 @@
         menus: [
           {
             title: 'My Documents',
-            image: 'MyDocuments',
+            image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           },
           {
             title: 'My Statements',
-            image: 'MyStatements',
+            image: '/img/svg/my-statements.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           },
           {
             title: 'My Payments',
-            image: 'MyPayments',
+            image: '/img/svg/my-payments.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           },
           {
             title: 'My Grades',
-            image: 'MyDocuments',
+            image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           },
           {
             title: 'My Profile',
-            image: 'MyProfile',
+            image: '/img/svg/my-profile.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           },
           {
             title: 'My Applications',
-            image: 'MyApplications',
+            image: '/img/svg/my-applications.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
           }
         ]

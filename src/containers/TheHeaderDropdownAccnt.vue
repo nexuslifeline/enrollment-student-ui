@@ -20,7 +20,7 @@
     </div>
     <div class="account__dropdown-actions">
       <div class="account__intro">
-        <MyAccountSettings />
+        <img src="/img/svg/my-profile.svg" />
       </div>
       <span class="triangle-top"></span>
       <ul class="account__dropdown-action-items">
@@ -63,7 +63,6 @@
 import { AuthApi } from '../mixins/api';
 import ProfileMaker from '../views/components/ProfileMaker';
 import MyProfile from '../assets/svg/my-profile-nav.svg';
-import MyAccountSettings from '../assets/svg/my-profile.svg';
 import MyPreferences from '../assets/svg/my-preferences-nav.svg';
 import DownArrow from '../assets/svg/down-arrow.svg';
 
@@ -73,7 +72,6 @@ export default {
     ProfileMaker,
     MyProfile,
     MyPreferences,
-    MyAccountSettings,
     DownArrow
   },
   mixins: [AuthApi],
@@ -238,7 +236,7 @@ export default {
     padding: 10px 15px;
     margin-top: 15px;
 
-    svg {
+    img {
       height: 100%;
       width: auto;
     }
