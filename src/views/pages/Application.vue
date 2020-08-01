@@ -848,7 +848,7 @@
                 </h5>
                 <p class="ml-3">
                   <small>
-                    Upon submitting this form, the details you provided in the system will be examined and are subject for approval by the registrar's office. <br>
+                    Upon submitting this form, the details you provided in the system will be examined and are subject for the approval of the registrar's office. <br>
                     In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
                     You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">HERE</a>. <br>
                     If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time You log in.
@@ -1129,8 +1129,7 @@
                     <b-col md=12>
                       <b-alert show variant="primary">
                         <p style="font-weight: bold">
-                          The initial fees should be paid in order to secure the registration of the student. The student will not
-                          be officially registered until payment is complete.
+                          The initial fee should be paid to secure you registration. You will not be officially registered unless payment procedure is completed.
                           <br>
                           <br>
                           <span v-if="forms.studentFee.fields.approvalNotes">
@@ -1166,9 +1165,9 @@
                               <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
                                 @click="onPaySelected(PayTypes.INITIAL.id)">
                                 <div class="mr-4" style="color:black">
-                                  <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} ONLY</h5>
+                                  <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} PESOS ONLY</h5>
                                   <p class="mb-2">
-                                    Make a payment for initial fee only to be officially registered.
+                                    Make a payment for the initial fee only to be officially enrolled.
                                   </p>
                                 </div>
                                 <v-icon name="greater-than" style="color:darkblue"></v-icon>
@@ -1178,7 +1177,7 @@
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
                                   <p class="mb-2">
-                                    Make a full payment or partial payment not less than initial fee to be officially registered.
+                                    Make a full or partial payment not less than the initial fee to be officially enrolled.
                                   </p>
                                 </div>
                                 <v-icon name="greater-than" style="color:darkblue"></v-icon>
@@ -1188,9 +1187,7 @@
                                 <div class="mr-4" style="color:black">
                                   <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
                                   <p class="mb-2">
-                                    For those students that are already been enrolled for the SY 2020-2021 you will be
-                                    needing to attached your official receipt or or any
-                                    proof of payment to be confirmed and enrolled in the system.
+                                    If you are already enrolled and have an Official Receipt or any Proof of Payment, or if you have a scholarship voucher, please attach them here, and once verified, you will be registered in the system.
                                   </p>
                                 </div>
                                 <v-icon name="greater-than" style="color:darkblue"></v-icon>
@@ -2334,6 +2331,16 @@ export default {
       selectedApprovalStage: 1,
       selectedPaymentApprovalStage: 1,
       selectedEvaluationApprovalStage: 1,
+      // stages: [
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet',
+      //   'Lorem ipsum dolor amet'
+      // ].map((description, idx) => {
+      //   const { name } = ApplicationSteps.values[idx];
+      //   return { name, description }
+      // }) || [],
       approvalStages: [
         { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
         { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
