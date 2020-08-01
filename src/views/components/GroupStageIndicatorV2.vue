@@ -155,6 +155,7 @@ export default {
 
     img {
       height: 100%;
+      max-width: 100%;
       width: auto;
     }
   }
