@@ -9,10 +9,7 @@
                 <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
                 <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
                 <p  class="group-stage__description">
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-                  eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
-                  quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                  Neque porro quisquam est.
+                  {{item.overview || item.description}}
                 </p>
                 <div class="group-stage__image">
                   <img :src="item.image" />
