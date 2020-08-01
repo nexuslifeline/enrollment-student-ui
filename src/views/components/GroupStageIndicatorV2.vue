@@ -125,9 +125,13 @@ export default {
     background-color: $light-gray-50;
     display: flex;
     position: relative;
-    padding: 60px;
+    padding: 30px;
     display: flex;
     justify-content: center;
+
+    @include for-size(desktop-up) {
+      padding: 60px;
+    }
   }
 
   .group-stage__overview {

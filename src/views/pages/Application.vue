@@ -3273,7 +3273,7 @@ export default {
     height: 100%;
     flex: 0 1 35%;
 
-    @include for-size(tablet-portrait-down) {
+    @include for-size(tablet-landscape-down) {
       display: none;
     }
   }
@@ -3285,7 +3285,7 @@ export default {
     z-index: 1031;
     width: 35%;
 
-    @include for-size(tablet-portrait-down) {
+    @include for-size(tablet-landscape-down) {
       display: none;
     }
   }
