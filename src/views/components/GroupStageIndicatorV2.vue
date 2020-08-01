@@ -15,7 +15,7 @@
                   Neque porro quisquam est.
                 </p>
                 <div class="group-stage__image">
-                  <PersonDesktop />
+                  <img :src="item.image" />
                 </div>
               </div>
             </slide>
@@ -59,12 +59,11 @@
 
 <script>
 import { Carousel, Slide } from 'vue-carousel';
-import PersonDesktop from '../../assets/svg/my-profile.svg';
+
 export default {
   components: {
     Carousel,
-    Slide,
-    PersonDesktop
+    Slide
   },
   props: {
     stages: {
@@ -126,7 +125,7 @@ export default {
     min-height: 550px;
     height: 100%;
     max-height: 100vh;
-    background-color: $light-gray-100;
+    background-color: $light-gray-50;
     display: flex;
     position: relative;
     padding: 60px;
@@ -157,7 +156,7 @@ export default {
       height: 280px;
     }
 
-    svg {
+    img {
       height: 100%;
       width: auto;
     }
@@ -167,6 +166,7 @@ export default {
     text-align: center;
     font-size: 14px;
     margin: 30px 0 50px 0;
+    color: $black;
   }
 
   .group-stage__number {
@@ -186,6 +186,7 @@ export default {
     font-weight: 500;
     text-align: center;
     margin: 5px 0 10px 0;
+    color: $black;
 
     @include for-size(big-desktop-up) {
       font-size: 26px;
