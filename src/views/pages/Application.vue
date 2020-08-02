@@ -746,7 +746,7 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
-              <b-col md="3" v-if="forms.evaluation.fields.studentCategoryId === StudentCategories.OLD.id">
+              <!-- <b-col md="3" v-if="forms.evaluation.fields.studentCategoryId === StudentCategories.OLD.id">
                 <b-form-group>
                   <label class="required">Enrolled Year</label>
                   <b-form-input
@@ -758,7 +758,25 @@
                     {{ forms.evaluation.errors.evaluationEnrolledYear }}
                   </b-form-invalid-feedback>
                 </b-form-group>
-              </b-col>
+              </b-col> -->
+              <b-col md=3>
+                  <b-form-group>
+                    <label class="required">School Level</label>
+                    <b-form-select
+                      v-model='forms.evaluation.fields.lastSchoolLevelId'
+                      :state="forms.evaluation.states.evaluationLastSchoolLevelId">
+                      <template v-slot:first>
+                        <b-form-select-option :value='null' disabled>-- School Level --</b-form-select-option>
+                      </template>
+                      <b-form-select-option v-for='level in options.levels.items' :key='level.id' :value='level.id'>
+                        {{level.name}}
+                      </b-form-select-option>
+                    </b-form-select>
+                    <b-form-invalid-feedback>
+                      {{ forms.evaluation.errors.evaluationLastSchoolLevelId }}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                </b-col>
             </b-row>
             <b-row>
               <b-col md="12">
@@ -1888,7 +1906,8 @@ const evaluationFields = {
   lastSchoolYearFrom: null,
   lastSchoolYearTo: null,
   lastSchoolAttended: null,
-  enrolledYear: null,
+  // enrolledYear: null,
+  lastSchoolLevelId: null,
   notes: null,
   approvalNotes: null,
   disapprovalNotes: null,
@@ -1903,7 +1922,8 @@ const evaluationErrorFields = {
   evaluationLastSchoolYearFrom: null,
   evaluationLastSchoolYearTo: null,
   evaluationLastSchoolAttended: null,
-  evaluationEnrolledYear: null,
+  // evaluationEnrolledYear: null,
+  evaluationLastSchoolLevelId: null,
   evaluationSemesterId: null,
 }
 
