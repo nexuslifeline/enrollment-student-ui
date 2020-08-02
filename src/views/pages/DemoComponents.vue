@@ -114,7 +114,7 @@
 <script>
 import StageIndicator from '../components/StageIndicator'
 import GroupStageIndicator from '../components/GroupStageIndicator'
-import GroupStageIndicatorV2 from '../components/GroupStageIndicatorV2'
+import GroupStageIndicatorV2 from '../components/SlideStageIndicator'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import PhotoViewer from '../components/PhotoViewer'
 import FileUploader from '../components/FileUploader'

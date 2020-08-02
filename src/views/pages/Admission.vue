@@ -3,22 +3,24 @@
     <div class="admission__container">
       <div class="admission__pane">
         <div class="admission__left-pane">
-          <GroupStageIndicator
-            :stages="groupStages"
-            :activeId="forms.activeAdmission.fields.admissionStepId"
-          />
+          <div class="admission__group-stage-container">
+            <SlideStageIndicator
+              :stages="$options.groupStages"
+              :activeId="forms.activeAdmission.fields.admissionStepId"
+            />
+          </div>
         </div>
         <div class="admission__main-pane">
           <div class="admission__wizard-form">
             <h4 class="admission__form-title">{{heading && heading.subHeader}}</h4>
             <p class="admission__form-description">{{heading && heading.description}}</p>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PROFILE.id">
               <b-row class="mt-4">
                 <b-col md="6">
                   <b-form-group>
                     <label class="required">Firstname</label>
                     <b-form-input
-                      v-model="forms.student.fields.firstName" 
+                      v-model="forms.student.fields.firstName"
                       :state="forms.student.states.firstName"
                       debounce="500" />
                     <b-form-invalid-feedback>
@@ -28,14 +30,14 @@
                   <b-form-group>
                     <label>Middlename</label>
                     <b-form-input
-                      v-model="forms.student.fields.middleName" 
+                      v-model="forms.student.fields.middleName"
                       debounce="500"/>
                   </b-form-group>
                   <b-form-group>
                     <label class="required">Lastname</label>
                     <b-form-input
-                      v-model="forms.student.fields.lastName" 
-                      :state="forms.student.states.lastName" 
+                      v-model="forms.student.fields.lastName"
+                      :state="forms.student.states.lastName"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.student.errors.lastName}}
@@ -96,7 +98,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ADDRESS.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ADDRESS.id">
               <b-row>
                 <b-col md=12>
                   <h5>Current Address</h5>
@@ -367,7 +369,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
               <b-row>
                 <b-col md="6">
                   <b-form-group>
@@ -492,7 +494,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.EDUCATION.id">
               <b-row>
                 <b-col md="5">
                   <b-form-group>
@@ -690,7 +692,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id">
               <b-row v-if="forms.evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -904,7 +906,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING_EVALUATION.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING_EVALUATION.id">
               <div>
                 <b-alert variant="success" show>
                   <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -916,7 +918,7 @@
                 </b-alert>
                 <div class="approval-container">
                   <ApprovalIndicator
-                    :stages="evaluationApprovalStages"
+                    :stages="$options.evaluationApprovalStages"
                     :currentStage="selectedEvaluationApprovalStage"
                   />
                 </div>
@@ -935,7 +937,7 @@
                   </b-alert>
               </div>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id">
               <b-row>
                 <b-col md=12>
                   <b-card border-variant="primary">
@@ -1059,43 +1061,7 @@
                 </b-col>
               </b-row>
             </div>
-            <!-- <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUIREMENTS.id">
-              <b-row v-if="forms.activeAdmission.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
-                <b-col md=12>
-                  <b-alert variant="danger" show>
-                    <p style="font-weight:bold">
-                      Sorry, your admission is rejected with the ffg. reasons : <br>
-                      {{ forms.activeAdmission.fields.disapprovalNotes }} <br><br>
-                      <small>Please be inform that you can modify your admission and resubmit for evaluation.</small>
-                    </p>
-                  </b-alert>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col md=12>
-                  <div class="file-uploader-container">
-                      <FileUploader
-                        @onFileChange="onAdmissionFileUpload" 
-                        @onFileDrop="onAdmissionFileUpload"
-                      />
-                    </div>
-                    <div class="file-item-container">
-                      <FileItem
-                        v-for="(item, index) of admissionFiles"
-                        :key="index"
-                        :title="item.name"
-                        :description="item.notes"
-                        :fileIndex="index"
-                        @onFileItemSelect="onAdmissionFileItemSelect"
-                        @onFileItemRemove="onDeleteAdmissionFile"
-                        @onFileItemPreview="previewAdmissionFile"
-                        :isBusy="item.isBusy"
-                      />
-                    </div>
-                </b-col>
-              </b-row>
-            </div> -->
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.STATUS.id">
               <b-row>
                 <b-col md="12">
                   <b-alert variant="success" show>
@@ -1138,7 +1104,7 @@
                   </div>
                   <div class="approval-container">
                     <ApprovalIndicator
-                      :stages="approvalStages"
+                      :stages="$options.approvalStages"
                       :currentStage="selectedApprovalStage"
                     />
                   </div>
@@ -1158,7 +1124,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id">
               <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -1431,7 +1397,7 @@
                 </b-row>
               </div>
             </div>
-            <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
+            <div class="admission__wizard-form-fields" v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.WAITING.id">
               <b-row>
                 <b-col md="12">
                   <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
@@ -1460,7 +1426,7 @@
                     </b-alert>
                     <div class="approval-container">
                       <ApprovalIndicator
-                        :stages="paymentApprovalStages"
+                        :stages="$options.paymentApprovalStages"
                         :currentStage="selectedPaymentApprovalStage"
                       />
                     </div>
@@ -1481,29 +1447,29 @@
                 </b-col>
               </b-row>
             </div>
+            <div class="admission__action-bar">
+              <b-button
+                @click="forms.activeAdmission.fields.admissionStepId--"
+                v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
+                variant="outline-secondary"
+                class="admission__back-action">
+                Back
+              </b-button>
+              <b-button
+                @click="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
+                variant="primary"
+                class="admission__main-action"
+                :disabled="isProcessing"
+                v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
+                <v-icon
+                  v-if="isProcessing"
+                  name="sync"
+                  class="mr-2"
+                  spin />
+                  {{ getNextButtonCaption }}
+              </b-button>
+            </div>
           </div>
-        </div>
-        <div class="admission__action-bar">
-          <b-button
-            @click="forms.activeAdmission.fields.admissionStepId--"
-            v-if="buttonBackShowHide(forms.activeAdmission.fields.admissionStepId)"
-            variant="outline-secondary"
-            class="admission__back-action">
-            Back
-          </b-button>
-          <b-button
-            @click="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
-            variant="primary"
-            class="admission__main-action"
-            :disabled="isProcessing"
-            v-if="buttonNextShowHide(forms.activeAdmission.fields.admissionStepId)">
-            <v-icon
-              v-if="isProcessing"
-              name="sync"
-              class="mr-2"
-              spin />
-               {{ getNextButtonCaption }}
-          </b-button>
         </div>
       </div>
     </div>
@@ -1703,8 +1669,8 @@
 				</b-col>
 			</b-row> <!-- modal body -->
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
-        class="float-right" 
+				<b-button
+        class="float-right"
         variant="outline-danger"
         @click="showModalSubjects=false">
         Close
@@ -1713,7 +1679,7 @@
 		</b-modal>
     <!-- Modal Subject -->
     <!-- Modal Preview -->
-    <b-modal 
+    <b-modal
 			v-model="showModalPreview"
 			size="xl"
 			header-bg-variant="success"
@@ -1728,7 +1694,7 @@
           <div v-if="file.src">
             <center>
               <b-img
-                fluid 
+                fluid
                 v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'" 
                 :src="file.src" />
               <b-embed
@@ -1743,7 +1709,7 @@
 				</b-col>
 			</b-row> <!-- modal body -->
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
+				<b-button
           class="float-right"
           variant="outline-danger"
           @click="showModalPreview=false">
@@ -1752,7 +1718,7 @@
 			</div> <!-- modal footer buttons -->
 		</b-modal>
     <!-- Modal Preview -->
-    <b-modal 
+    <b-modal
       v-model="showEvaluationFileModal"
       centered
       header-bg-variant="success"
@@ -1766,7 +1732,7 @@
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
-          <b-textarea 
+          <b-textarea
             v-model="forms.evaluationFile.fields.notes"
             :state="forms.evaluationFile.states.notes"
             rows=7
@@ -1777,8 +1743,8 @@
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-        <b-button 
-          class="float-left" 
+        <b-button
+          class="float-left"
           @click="onDeleteEvaluationFile(selectedEvaluationFileIndex)"
           variant="outline-danger">
           <v-icon
@@ -1789,9 +1755,9 @@
           />
           Delete
         </b-button>
-        <b-button 
+        <b-button
           @click="onUpdateEvaluationFile()"
-          class="float-right" 
+          class="float-right"
           variant="outline-primary">
           <v-icon
             v-if="isFileUpdating"
@@ -1802,19 +1768,46 @@
           Update
         </b-button>
       </div> <!-- modal footer buttons -->
-    </b-modal>  
+    </b-modal>
   </div>
   <!-- main container -->
 </template>
 <script>
-import { StudentApi, LevelApi, AuthApi, SchoolYearApi, AdmissionFileApi, 
-  PaymentApi, PaymentFileApi, BillingApi, EWalletAccountApi, BankAccountApi, 
-  SubjectApi, SectionApi, EvaluationFileApi, EvaluationApi, CurriculumApi, PeraPadalaAccountApi, ReportApi } from "../../mixins/api"
+import {
+  StudentApi,
+  LevelApi,
+  AuthApi,
+  SchoolYearApi,
+  AdmissionFileApi,
+  PaymentApi,
+  PaymentFileApi,
+  BillingApi,
+  EWalletAccountApi,
+  BankAccountApi,
+  SubjectApi,
+  SectionApi,
+  EvaluationFileApi,
+  EvaluationApi,
+  CurriculumApi,
+  PeraPadalaAccountApi,
+  ReportApi
+} from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
-import GroupStageIndicator from '../components/GroupStageIndicator';
-import { Semesters, AdmissionSteps, CivilStatuses, Countries, ApplicationStatuses, 
-    BillingTypes, PaymentStatuses, PayTypes, TranscriptStatuses,
-    EvaluationStatuses, StudentCategories, SchoolCategories } from '../../helpers/enum'
+import SlideStageIndicator from '../components/SlideStageIndicator';
+import {
+  Semesters,
+  AdmissionSteps,
+  CivilStatuses,
+  Countries,
+  ApplicationStatuses,
+  BillingTypes,
+  PaymentStatuses,
+  PayTypes,
+  TranscriptStatuses,
+  EvaluationStatuses,
+  StudentCategories,
+  SchoolCategories
+} from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
@@ -1825,6 +1818,13 @@ import PhotoViewer from '../components/PhotoViewer';
 import ProgressIndicator from '../components/ProgressIndicator';
 import RegisterVue from './Register.vue';
 import Semester from '../../mixins/api/Semester';
+import {
+  admissionGroupStages as groupStages,
+  paymentMethods,
+  approvalStages,
+  evaluationApprovalStages,
+  paymentApprovalStages
+} from '../../content';
 
 const studentFields = {
   id: null,
@@ -2039,7 +2039,12 @@ const studentFeeFields = {
 }
 
 export default {
-    name : "Admission",
+    name: "Admission",
+    groupStages,
+    paymentMethods,
+    approvalStages,
+    evaluationApprovalStages,
+    paymentApprovalStages,
     mixins: [
       StudentApi,
       LevelApi,
@@ -2061,7 +2066,7 @@ export default {
       ReportApi
     ],
     components: {
-      GroupStageIndicator,
+      SlideStageIndicator,
       ApprovalIndicator,
       PhotoViewer,
       FileUploader,
@@ -2422,65 +2427,13 @@ export default {
           },
           paymentModes: {
             items: [
-              { id: 1, name: 'Bank Deposit/Transfer', description: 'With this payment mode, you can deposit or transfer your payment using your preferred Bank. You can just take a photo of the deposit slip or screenshot of the Bank Transfer transaction you made. Attach it here and we will just review it.' },
-              { id: 4, name: 'E-Wallet', description: 'With this payment mode, you can send us the payment using the E-Wallet services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
-              { id: 5, name: 'Pera Padala', description: 'With this payment mode, you can send us the payment using the Pera Padala services. You will just need to screenshot the transaction you made. Attach it here and we will just review it.'  },
-              { id: 3, name: 'Others', description: 'If you are already enrolled, you can select this payment mode so should just attach your receipt here or any proof of your payment.'  }
+              ...paymentMethods
             ]
           }
         },
         selectedApprovalStage: 1,
         selectedPaymentApprovalStage: 1,
         selectedEvaluationApprovalStage: 1,
-        groupStages: [
-          {
-            header: 'Personal Information',
-            children: [
-              { id: 1, subHeader: 'Profile', description: 'Officially registering you is just few steps away. First, tell us a bit about yourself.' },
-              { id: 2, subHeader: 'Address', description: 'Let us know your address. Please include all required(*) fields.' },
-              { id: 3, subHeader: 'Family', description: 'Details about your family. Please include all required(*) fields.' },
-              { id: 4, subHeader: 'Education', description: 'Details about your previous educational background. Please include all required(*) fields.' }
-            ]
-          },
-          {
-            header: 'Admission & Evaluation',
-            children: [
-              { id: 5, subHeader: 'Evaluation Request', description: 'Requesting for subject evaluation.' },
-              { id: 6, subHeader: 'Evaluation Status', description: 'Waiting for subject evaluation.' }
-            ]
-          },
-          {
-            header: 'Subject Enlistment',
-            children: [
-              { id: 7, subHeader: 'Subjects', description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.' },
-              { id: 8, subHeader: 'Enlistment Status', description: 'A few more steps and you\'re done. We will just need to validate your requirements and your application for the current academic year.' }
-            ]
-          },
-          {
-            header: 'Enrollment',
-            children: [
-              { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.' },
-              { id: 10, subHeader: 'Payment Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
-            ]
-          },
-        ],
-        approvalStages: [
-          { approvedLabel: 'Application Submitted', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Approved by Finance', waitingLabel: 'Waiting for Finance' },
-          { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
-        ],
-        paymentApprovalStages: [
-          { approvedLabel: 'Payment Submitted', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Approved by Accounting', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
-        ],
-        evaluationApprovalStages: [
-          { approvedLabel: 'Request For Evaluation Submitted', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Approved by Registrar', waitingLabel: 'Waiting for Approval' },
-          { approvedLabel: 'Done', waitingLabel: 'Waiting for Completion' }
-        ],
-
         payTypeId: null,
         sectionIsLoading: false
       }
@@ -3150,7 +3103,7 @@ export default {
         if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
           this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
             levelsOfCourses.items = data
-          }) 
+          })
         }
 
         this.filterSubject()
@@ -3335,7 +3288,7 @@ export default {
             s.pivot.semesterId === semesterId && s.pivot.isTaken === 0
           )
         } else {
-          subjects.filteredItems = subjects.items.filter(s => 
+          subjects.filteredItems = subjects.items.filter(s =>
             s.pivot.isTaken === 0
           )
         }
@@ -3366,7 +3319,7 @@ export default {
         const { student, activeAdmission } = this.forms
 
         const applicationStatusId = ApplicationStatuses.COMPLETED.id
-        
+
         const data  = {
           ...student.fields,
           activeAdmission: {
@@ -3426,10 +3379,10 @@ export default {
         const { fields } = this.forms.activeAdmission
         if (fields.admissionStepId) {
           const subHeaders = [
-            ...this.groupStages[0].children,
-            ...this.groupStages[1].children,
-            ...this.groupStages[2].children,
-            ...this.groupStages[3].children
+            ...this.$options.groupStages[0].children,
+            ...this.$options.groupStages[1].children,
+            ...this.$options.groupStages[2].children,
+            ...this.$options.groupStages[3].children
           ]
           return subHeaders.find(({ id }) => id === fields.admissionStepId)
         }
@@ -3500,17 +3453,26 @@ export default {
     flex-direction: row;
     width: 100%;
     height: 100%;
-    max-width: 1200px;
+    //max-width: 1200px;
   }
 
   .admission__left-pane {
     height: 100%;
-    padding: 25px 20px;
-    flex: 0 1 280px;
+    flex: 0 1 35%;
 
-    @include for-size(tablet-portrait-down) {
-      // for the meantime, we'll hide this
-      // planning to add nav dots for lower screen size in the future
+    @include for-size(tablet-landscape-down) {
+      display: none;
+    }
+  }
+
+  .admission__group-stage-container {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1031;
+    width: 35%;
+
+    @include for-size(tablet-landscape-down) {
       display: none;
     }
   }
@@ -3524,7 +3486,7 @@ export default {
   }
 
   .admission__action-bar {
-    position: fixed;
+    position: sticky;
     height: 60px;
     background-color: $white;
     bottom: 0;
@@ -3541,26 +3503,36 @@ export default {
 
   .admission__back-action {
     min-width: 140px;
+
+    @include for-size(phone-only) {
+      min-width: 80px;
+    }
   }
 
   .admission__main-action {
     margin-left: auto;
     min-width: 160px;
+
+    @include for-size(phone-only) {
+      min-width: 80px;
+    }
   }
 
   .admission__wizard-form {
-    padding: 30px 25px 50px 25px;
+    padding: 30px 15px 50px 15px;
     width: 100%;
-    max-width: 750px;
-    border: 1px solid $brand-border-color;
-    margin: 25px 10px 80px 10px;
-    border-radius: 5px;
+    max-width: 950px;
+    margin: 25px 10px 20px 10px;
     background-color: $white;
-    margin-bottom: 80px;
+    margin-bottom: 100px;
 
     @include for-size(tablet-portrait-down) {
       margin: 0 0 50px 0;
       border: none;
+    }
+
+    @include for-size(desktop-up) {
+      padding: 20px 60px 60px 60px;
     }
   }
 
@@ -3622,20 +3594,24 @@ export default {
   }
 
   .payment-step-header-container {
-    display:flex; 
+    display:flex;
     align-items: center;
   }
 
   .payment-step-details-container {
-    display:flex; 
-    flex-direction: column; 
+    display:flex;
+    flex-direction: column;
     width: 100%;
   }
 
   .payment-step-container {
-    display:flex; 
+    display:flex;
     flex-direction: row;
     width: 100%;
+  }
+
+  .admission__wizard-form-fields {
+    margin-bottom: 20px;
   }
 
 </style>

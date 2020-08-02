@@ -3,7 +3,7 @@
     <div class="application__pane">
       <div class="application__left-pane">
         <div class="application__group-stage-container">
-          <GroupStageIndicator
+          <SlideStageIndicator
             :stages="$options.groupStages"
             :activeId="forms.activeApplication.fields.applicationStepId"
           />
@@ -19,8 +19,8 @@
                 <b-form-group>
                   <label class="required">Firstname</label>
                   <b-form-input
-                    v-model="forms.student.fields.firstName" 
-                    :state="forms.student.states.firstName" 
+                    v-model="forms.student.fields.firstName"
+                    :state="forms.student.states.firstName"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.student.errors.firstName}}
@@ -29,14 +29,14 @@
                 <b-form-group>
                   <label>Middlename</label>
                   <b-form-input
-                    v-model="forms.student.fields.middleName" 
+                    v-model="forms.student.fields.middleName"
                     debounce="500"/>
                 </b-form-group>
                 <b-form-group>
                   <label class="required">Lastname</label>
                   <b-form-input
-                    v-model="forms.student.fields.lastName" 
-                    :state="forms.student.states.lastName" 
+                    v-model="forms.student.fields.lastName"
+                    :state="forms.student.states.lastName"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.student.errors.lastName}}
@@ -1730,7 +1730,7 @@ import {
   ReportApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
-import GroupStageIndicator from '../components/GroupStageIndicatorV2';
+import SlideStageIndicator from '../components/SlideStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
 import {
   Semesters,
@@ -1994,7 +1994,7 @@ export default {
   ],
   components: {
     ApprovalIndicator,
-    GroupStageIndicator,
+    SlideStageIndicator,
     PhotoViewer,
     FileUploader,
     FileItem,
