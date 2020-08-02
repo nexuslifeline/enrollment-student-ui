@@ -366,176 +366,6 @@
                   </b-form-group>
                 </b-col>
               </b-row>
-                <b-col md="6">
-                  <b-form-group>
-                    <label class="required">Country</label>
-                      <b-form-select 
-                        v-model="forms.address.fields.currentCountryId"
-                        :state="forms.address.states.addressCurrentCountryId">
-                      <template v-slot:first>
-                        <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
-                      </template>
-                      <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
-                        {{country.name}}
-                      </b-form-select-option>
-                    </b-form-select>
-                    <b-form-invalid-feedback>
-                      {{forms.address.errors.addressCurrentCountryId}}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
-                <b-col md="6">
-                  <b-form-group>
-                    <label class="required">Home Landline/Mobile No.</label>
-                    <b-form-input
-                      v-model="forms.address.fields.currentHomeLandlineMobileNo"
-                      :state="forms.address.states.addressCurrentHomeLandlineMobileNo"
-                      debounce="500" />
-                    <b-form-invalid-feedback>
-                      {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
-                    </b-form-invalid-feedback>
-                  </b-form-group>
-                </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="12">
-                    <b-form-group>
-                      <label>Complete Address</label>
-                      <b-form-textarea
-                        rows="3"
-                        v-model="forms.address.fields.currentCompleteAddress"
-                        :state="forms.address.states.addressCurrentCompleteAddress"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressCurrentCompleteAddress}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-                <hr>
-                <b-row>
-                  <b-col md=6>
-                    <h5>Permanent Address</h5>
-                  </b-col>
-                  <b-col md=6 class="text-right">
-                    <b-form-checkbox @input="onSameAddress($event)">Same as Current Address</b-form-checkbox>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label class="required">House No/Street</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentHouseNoStreet"
-                        :state="forms.address.states.addressPermanentHouseNoStreet"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentHouseNoStreet}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label class="required">City/Town</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentCityTown"
-                        :state="forms.address.states.addressPermanentCityTown"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentCityTown}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label class="required">Province</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentProvince"
-                        :state="forms.address.states.addressPermanentProvince"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentProvince}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label class="required">Postal Code</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentPostalCode"
-                        :state="forms.address.states.addressPermanentPostalCode"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentPostalCode}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label>District</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentDistrict"
-                        debounce="500" />
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="4">
-                    <b-form-group>
-                      <label>Region</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentRegion"
-                        debounce="500" />
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Country</label>
-                      <b-form-select
-                        v-model="forms.address.fields.permanentCountryId"
-                        :state="forms.address.states.addressPermanentCountryId" >
-                        <template v-slot:first>
-                          <b-form-select-option :value='null' disabled>--Select Contry --</b-form-select-option>
-                        </template>
-                        <b-form-select-option v-for='country in options.countries.items.values' :key='country.id' :value='country.id'>
-                          {{country.name}}
-                        </b-form-select-option>
-                      </b-form-select>
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentCountryId}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md="6">
-                    <b-form-group>
-                      <label class="required">Home Landline/Mobile No.</label>
-                      <b-form-input
-                        v-model="forms.address.fields.permanentHomeLandlineMobileNo"
-                        :state="forms.address.states.addressPermanentHomeLandlineMobileNo"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentHomeLandlineMobileNo}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="12">
-                    <b-form-group>
-                      <label>Complete Address</label>
-                      <b-form-textarea
-                        rows="3"
-                        v-model="forms.address.fields.permanentCompleteAddress"
-                        :state="forms.address.states.addressPermanentCompleteAddress"
-                        debounce="500" />
-                      <b-form-invalid-feedback>
-                        {{forms.address.errors.addressPermanentCompleteAddress}}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
             </div>
             <div v-show="forms.activeAdmission.fields.admissionStepId === AdmissionSteps.FAMILY.id">
               <b-row>
@@ -1204,7 +1034,7 @@
               </b-row>
               <b-row>
                 <b-col md="9">
-                  <small>Note: You can add subjects by clicking the Add Subjects button below while removal of subject is by clicking the red delete button inline on each subject.</small>
+                  <small>Note: You can add subjects by clicking the Add Subjects button while removal of subject is by clicking the red delete button inline on each subject.</small>
                 </b-col>
                 <b-col md="3">
                   <h5 >TOTAL UNITS : &emsp; {{ totalUnits}}</h5>
@@ -2609,6 +2439,7 @@ export default {
           {
             header: 'Enrollment',
             children: [
+              { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.' },
               { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.' },
               { id: 10, subHeader: 'Payment Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
             ]
