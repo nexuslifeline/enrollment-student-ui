@@ -91,7 +91,7 @@ export default {
 
   .c-app__side-bar--active {
     .c-main {
-      width: calc(100% - $side-bar-width) !important;
+      width: calc(100% - #{$side-bar-width}) !important;
       margin-left: $side-bar-width !important;
     }
   }
