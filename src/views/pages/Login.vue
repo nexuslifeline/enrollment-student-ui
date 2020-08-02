@@ -1,11 +1,14 @@
 <template>
   <transition name="slide-fade" appear>
     <div class="login__container">
-      <div class="login__left-pane">
+      <div class="login__main-pane">
         <div class="login__form">
           <div class="login__intro">
             <h4 class="login__intro-title">
-              Welcome to <b>St. Theresa College of Tandag</b>
+              Welcome to
+            </h4>
+            <h4 class="login__intro-title">
+              <b>STC Student App</b>
             </h4>
             <p class="login__intro-description">
               To keep connected with us please login with your personal information by email address and password.
@@ -50,34 +53,10 @@
               </b-button>
           </div>
         </div>
-        <!--<div class="login__new-account-options">
-          <div class="login__create-account">
-            <div class="login__create-account-line"></div>
-            <span class="login__center-text">Create an Account</span>
-          </div>
-          <div class="login__register-actions">
-            <b-button
-              variant="primary"
-              @click="register(studentCategories.OLD.id)"> Signup Old Student
-            </b-button>
-          </div>
-        </div>-->
+        <div class="login__overview">
+          <img src="/img/svg/child-lesson.svg" />
+        </div>
         <span class="login__version">Version: {{version}}</span>
-      </div>
-      <div class="login__right-pane">
-        <ul class="login__top-links">
-          <li class="login__top-link-item">
-            <a href="https://lms.stctandag.edu.ph/">LMS</a>
-          </li>
-          <li class="login__top-link-item">
-            <a
-              href="https://www.stctandag.edu.ph/"
-              class="login__top-link-item--active">
-              Visit our Website
-            </a>
-          </li>
-        </ul>
-        <CarouselProcedure class="login__carousel" />
       </div>
       <transition name="slide-fade" :duration="{ enter: 800, leave: 500 }">
         <div v-if="showConfirmation" class="signup__confirmation">
@@ -473,7 +452,7 @@ export default {
     position: absolute;
     background-color: $white;
     z-index: 2;
-    opacity: .97;
+    opacity: .9;
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -485,41 +464,48 @@ export default {
     display: flex;
     overflow: hidden;
     position: relative;
+    align-items: center;
+    justify-content: center;
     // background-image: url('../../assets/png/clouds.png');
     // background-repeat: no-repeat;
     // background-size: 60% 84%;
     //background: rgb(99,177,255);
     //background-color: linear-gradient(193deg, rgba(99,177,255,1) 0%, rgba(221,238,255,1) 8%, rgba(235,245,255,1) 26%, rgba(255,255,255,1) 100%);
 
-    background: url('../../assets/png/clouds.png') top left no-repeat,
-    linear-gradient(210deg, rgba(170,212,255,1) 0%, rgba(200,227,255,1) 12%, rgba(235,245,255,1) 24%, rgba(255,255,255,1) 42%, rgba(255,255,255,1) 100%) top left no-repeat;
-    background-size: 55%, cover;
+    //background: url('../../assets/png/clouds.png') top left no-repeat,
+    //linear-gradient(210deg, rgba(170,212,255,1) 0%, rgba(200,227,255,1) 12%, rgba(235,245,255,1) 24%, rgba(255,255,255,1) 42%, rgba(255,255,255,1) 100%) top left no-repeat;
+    //background-size: 55%, cover;
+
+    background-color: #d7d9d9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cdefs%3E%3CradialGradient id='a' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%23d7d9d9'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='0' y1='750' x2='1550' y2='750'%3E%3Cstop offset='0' stop-color='%23eceded'/%3E%3Cstop offset='1' stop-color='%23d7d9d9'/%3E%3C/linearGradient%3E%3Cpath id='s' fill='url(%23b)' d='M1549.2 51.6c-5.4 99.1-20.2 197.6-44.2 293.6c-24.1 96-57.4 189.4-99.3 278.6c-41.9 89.2-92.4 174.1-150.3 253.3c-58 79.2-123.4 152.6-195.1 219c-71.7 66.4-149.6 125.8-232.2 177.2c-82.7 51.4-170.1 94.7-260.7 129.1c-90.6 34.4-184.4 60-279.5 76.3C192.6 1495 96.1 1502 0 1500c96.1-2.1 191.8-13.3 285.4-33.6c93.6-20.2 185-49.5 272.5-87.2c87.6-37.7 171.3-83.8 249.6-137.3c78.4-53.5 151.5-114.5 217.9-181.7c66.5-67.2 126.4-140.7 178.6-218.9c52.3-78.3 96.9-161.4 133-247.9c36.1-86.5 63.8-176.2 82.6-267.6c18.8-91.4 28.6-184.4 29.6-277.4c0.3-27.6 23.2-48.7 50.8-48.4s49.5 21.8 49.2 49.5c0 0.7 0 1.3-0.1 2L1549.2 51.6z'/%3E%3Cg id='g'%3E%3Cuse href='%23s' transform='scale(0.12) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.2) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.25) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(0.3) rotate(-20)'/%3E%3Cuse href='%23s' transform='scale(0.4) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(0.5) rotate(20)'/%3E%3Cuse href='%23s' transform='scale(0.6) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.7) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.835) rotate(-40)'/%3E%3Cuse href='%23s' transform='scale(0.9) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(1.05) rotate(25)'/%3E%3Cuse href='%23s' transform='scale(1.2) rotate(8)'/%3E%3Cuse href='%23s' transform='scale(1.333) rotate(-60)'/%3E%3Cuse href='%23s' transform='scale(1.45) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(1.6) rotate(10)'/%3E%3C/g%3E%3C/defs%3E%3Cg %3E%3Cg transform='translate(0 465)'%3E%3Ccircle fill='url(%23a)' r='3000'/%3E%3Cg opacity='0.5'%3E%3Ccircle fill='url(%23a)' r='2000'/%3E%3Ccircle fill='url(%23a)' r='1800'/%3E%3Ccircle fill='url(%23a)' r='1700'/%3E%3Ccircle fill='url(%23a)' r='1651'/%3E%3Ccircle fill='url(%23a)' r='1450'/%3E%3Ccircle fill='url(%23a)' r='1250'/%3E%3Ccircle fill='url(%23a)' r='1175'/%3E%3Ccircle fill='url(%23a)' r='900'/%3E%3Ccircle fill='url(%23a)' r='750'/%3E%3Ccircle fill='url(%23a)' r='500'/%3E%3Ccircle fill='url(%23a)' r='380'/%3E%3Ccircle fill='url(%23a)' r='250'/%3E%3C/g%3E%3Cg transform='rotate(-28.8 0 0)'%3E%3Cuse href='%23g' transform='rotate(10)'/%3E%3Cuse href='%23g' transform='rotate(120)'/%3E%3Cuse href='%23g' transform='rotate(240)'/%3E%3C/g%3E%3Ccircle fill-opacity='0.48' fill='url(%23a)' r='3000'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: cover;
+
+    //background-color: $light-gray-100;
+    //background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cpolygon fill='%23cc0000' points='957 450 539 900 1396 900'/%3E%3Cpolygon fill='%23ab1b1e' points='957 450 872.9 900 1396 900'/%3E%3Cpolygon fill='%23d6002b' points='-60 900 398 662 816 900'/%3E%3Cpolygon fill='%23af0032' points='337 900 398 662 816 900'/%3E%3Cpolygon fill='%23d9004b' points='1203 546 1552 900 876 900'/%3E%3Cpolygon fill='%23ae0047' points='1203 546 1552 900 1162 900'/%3E%3Cpolygon fill='%23d3006c' points='641 695 886 900 367 900'/%3E%3Cpolygon fill='%23a8005d' points='587 900 641 695 886 900'/%3E%3Cpolygon fill='%23c4008c' points='1710 900 1401 632 1096 900'/%3E%3Cpolygon fill='%239c0073' points='1710 900 1401 632 1365 900'/%3E%3Cpolygon fill='%23aa00aa' points='1210 900 971 687 725 900'/%3E%3Cpolygon fill='%23880088' points='943 900 1210 900 971 687'/%3E%3C/svg%3E");
+    //background-attachment: fixed;
+    //background-size: cover;
 
     @include for-size(tablet-landscape-down, 250px) {
       background: none;
     }
   }
 
-  .login__left-pane {
-    flex: 1;
+  .login__main-pane {
+    width: 100%;
+    max-width: 1100px;
+    height: 600px;
     //background-color: $white;
     display: flex;
-    flex-direction: column;
+    //flex-direction: column;
     align-items: center;
-    justify-content: center;
+    //justify-content: center;
     padding: 25px;
-    width: 50vw;
     position: relative;
-  }
-
-  .login__form {
-    padding: 50px 40px;
-    width: 100%;
-    max-width: 460px;
-    display: flex;
-    flex-direction: column;
     background-color: $white;
-    border-radius: 10px;
+    border-radius: 5px;
+    opacity: .85;
+
     -webkit-box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
     -moz-box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
     box-shadow: -1px 0px 6px 1px rgba(194,194,194,1);
@@ -529,6 +515,14 @@ export default {
       -moz-box-shadow: none;
       box-shadow: none;
     }
+  }
+
+  .login__form {
+    padding: 50px 40px;
+    width: 460px;
+    display: flex;
+    flex-direction: column;
+    background-color: $white;
 
     @include for-size(phone-only) {
       padding: 10px;
@@ -557,11 +551,16 @@ export default {
   }
 
   .login__intro-description {
-    color: $dark-gray-100;
+    color: $dark-gray-300;
   }
 
   .login__intro {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+  }
+
+  .login__intro-title {
+    font-size: 26px;
+    color: $black;
   }
 
   .login__or-label {
@@ -627,7 +626,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
   .login__top-links {
@@ -674,5 +673,19 @@ export default {
 
   .login__carousel {
     margin: auto;
+  }
+
+  .login__overview {
+    flex: 1;
+    padding: 30px 0 30px 30px;
+
+    @include for-size(tablet-landscape-down) {
+      display: none;
+    }
+
+    img {
+      height: 100%;
+      width: auto;
+    }
   }
 </style>
