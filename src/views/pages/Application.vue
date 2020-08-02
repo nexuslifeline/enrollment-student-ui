@@ -2857,7 +2857,7 @@ export default {
 
       if (!payment.fields.id) {
         // NOTE! all string messages should be move to contents
-        showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `)
+        showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')
         return;
       }
 
@@ -2870,7 +2870,7 @@ export default {
         newFile.isBusy = false
       }).catch((error) => {
         // NOTE! all string messages should be move to contents
-        showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`)
+        showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`, 'Error')
         this.paymentFiles = this.paymentFiles.filter(({ id }) => !!id); // remove items with null values
       });
     },
