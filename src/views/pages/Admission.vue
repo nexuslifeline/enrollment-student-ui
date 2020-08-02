@@ -2440,7 +2440,6 @@ export default {
             header: 'Enrollment',
             children: [
               { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.' },
-              { id: 9, subHeader: 'Payments', description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.' },
               { id: 10, subHeader: 'Payment Status', description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.' }
             ]
           },
@@ -2933,16 +2932,24 @@ export default {
         const formData = new FormData();
         const { payment } = this.forms
 
+      if (!payment.fields.id) {
+        // NOTE! all string messages should be move to contents
+        showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')
+        return;
+      }
+
         formData.append('file', file);
         this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
         let newFile = this.paymentFiles[this.paymentFiles.length - 1]
         this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
-          setTimeout(() => {
-            newFile.id = data.id
-            newFile.name = data.name
-            newFile.isBusy = false
-          }, 1000);
-        })
+          newFile.id = data.id
+          newFile.name = data.name
+          newFile.isBusy = false
+        }).catch((error) => {
+          // NOTE! all string messages should be move to contents
+          showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`)
+          this.paymentFiles = this.paymentFiles.filter(({ id }) => !!id); // remove items with null values
+      });
       },
       onAdmissionFileUpload(file) {
         if (file) {

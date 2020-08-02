@@ -20,11 +20,11 @@ export const formatNumber = (value, decimal = 2) => {
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
-export const showNotification = (instance, variant, msg) => {
+export const showNotification = (instance, variant, msg, title) => {
   instance.$bvToast.toast(msg, {
-    title: "Notification",
+    title: title || "Notification",
     variant: variant,
     solid: true,
-    autoHideDelay: 2000,
+    autoHideDelay: 4000,
   })
 }

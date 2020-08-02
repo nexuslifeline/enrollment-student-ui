@@ -2807,16 +2807,24 @@ export default {
       const formData = new FormData();
       const { payment } = this.forms
 
+      if (!payment.fields.id) {
+        // NOTE! all string messages should be move to contents
+        showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')
+        return;
+      }
+
       formData.append('file', file);
       this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
       let newFile = this.paymentFiles[this.paymentFiles.length - 1]
       this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
-        setTimeout(() => {
-          newFile.id = data.id
-          newFile.name = data.name
-          newFile.isBusy = false
-        }, 1000);
-      })
+        newFile.id = data.id
+        newFile.name = data.name
+        newFile.isBusy = false
+      }).catch((error) => {
+        // NOTE! all string messages should be move to contents
+        showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`, 'Error')
+        this.paymentFiles = this.paymentFiles.filter(({ id }) => !!id); // remove items with null values
+      });
     },
     onPaySelected(payTypeId) {
       this.payTypeId = payTypeId
