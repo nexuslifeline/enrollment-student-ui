@@ -6,29 +6,33 @@ export const groupStages = [
         id: 1,
         subHeader: 'Profile',
         image: '/img/svg/analyst-group.svg',
-        description: 'Officially registering you is just few steps away. First, tell us a bit about yourself.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        description: 'Please enter your information and proceed to the next step.',
+        slideTitle: 'Share your Personal Information with us!',
+        overview: 'Officially registering you is just few steps away. First, tell us a bit about yourself. This includes your basic information, changing your profile picture and your mobile number.'
       },
       {
         id: 2,
         subHeader: 'Address',
         image: '/img/svg/couple-professionals-analyzing-graphs.svg',
-        description: 'Let us know your address. Please include all required(*) fields.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        description: 'Please enter your address information and proceed to the next step.',
+        slideTitle: 'Share your Address Information with us!',
+        overview: 'It\'s important for us to know your address so we could quickly locate and contact you in case of emergency or other matters. Ensure that you provide us your correct address.'
       },
       {
         id: 3,
-        subHeader: 'Family',
+        subHeader: 'Family Background',
         image: '/img/svg/developers-testing-software.svg',
-        description: 'Details about your family. Please include all required(*) fields.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        description: 'Please enter your family information and proceed to the next step.',
+        slideTitle: 'Help us know your Family a bit more!',
+        overview: 'Families affect children’s learning behaviors and academic achievement in important ways, as they are the primary and most significant environments that the children are exposed to. And so, we want to know more about your family.'
       },
       {
         id: 4,
-        subHeader: 'Education',
+        subHeader: 'Educational Background',
         image: '/img/svg/employee-analyzing.svg',
-        description: 'Details about your previous educational background. Please include all required(*) fields.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        description: 'Please enter your previous educational background and proceed to the next step.',
+        slideTitle: 'Share your Educational Background with us!',
+        overview: 'Your educational background refers to all of the education you have undergone. By providing this details with us, we can have a good insight of your previous eduation and will greatly help us in doing things.'
       }
     ]
   },
@@ -39,7 +43,8 @@ export const groupStages = [
         id: 5,
         subHeader: 'Evaluation Request',
         image: '/img/svg/employee-messaging.svg',
-        description: 'Requesting for subject evaluation.',
+        description: 'Please provide the all the required fields and submit your request.',
+        slideTitle: 'Submit your Evaluation Request to us!',
         overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
       },
       {

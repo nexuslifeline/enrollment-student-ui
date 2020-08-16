@@ -6,8 +6,8 @@
           <template v-if="idx === activeHeaderIndex">
             <slide v-for="(item, index) in stage.children" :key="item.id">
               <div class="group-stage__slide">
-                <h4 class="group-stage__number">Stage {{activeHeaderIndex + 1}}</h4>
-                <h4 class="group-stage__title">{{stage.header}} - {{item.subHeader}}</h4>
+                <h4 class="group-stage__number">Stage {{idx + 1}} - {{stage.header}}</h4>
+                <h4 class="group-stage__title">{{item.slideTitle || item.subHeader}}</h4>
                 <p  class="group-stage__description">
                   {{item.overview || item.description}}
                 </p>
@@ -184,7 +184,7 @@ export default {
   }
 
   .group-stage__title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     text-align: center;
     margin: 5px 0 10px 0;
