@@ -20,6 +20,10 @@ const Billing = () => import('@/views/pages/Billing')
 const Grade = () => import('@/views/pages/Grade')
 const Profile = () => import('@/views/pages/Profile')
 const Payment = () => import('@/views/pages/Payment')
+const MyDocuments = () => import('@/views/pages/MyDocuments')
+const MyDocumentsHome = () => import('@/views/pages/MyDocumentsHome')
+const AssesmentForm = () => import('@/views/pages/AssesmentForm')
+const RegistrationForm = () => import('@/views/pages/RegistrationForm')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -100,6 +104,26 @@ function configRoutes () {
           name: 'Payment',
           component: Payment,
           meta: {requiresAuth: true}
+        },
+        {
+          path: '/mydocuments',
+          name: 'MyDocuments',
+          component: MyDocuments,
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: '/',
+              component: MyDocumentsHome  
+            },
+            {
+              path: 'assesment-form',
+              component: AssesmentForm  
+            },
+            {
+              path: 'registration-form',
+              component: RegistrationForm  
+            }
+          ]
         },
       ]
     },

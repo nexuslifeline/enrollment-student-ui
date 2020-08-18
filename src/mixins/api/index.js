@@ -18,3 +18,4 @@ export { default as EvaluationApi } from './Evaluation';
 export { default as CurriculumApi } from './Curriculum';
 export { default as PeraPadalaAccountApi } from './PeraPadalaAccount';
 export { default as ReportApi } from './Report';
+export { default as TranscriptApi } from './Transcript';

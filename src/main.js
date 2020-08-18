@@ -30,6 +30,7 @@ import 'vue-awesome/icons/trash'
 import 'vue-awesome/icons/chevron-right'
 import 'vue-awesome/icons/times'
 import 'vue-awesome/icons/check-circle'
+import 'vue-awesome/icons/print'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 
