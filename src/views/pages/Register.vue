@@ -183,6 +183,11 @@ export default {
     // what happens is when newly enrolled student(new/enrolled) created an account, the student number sometimes is not inserted in backend
     setTimeout(() => {
       const pathParams = this.$route.params;
+      const studentCategoryIds = StudentCategories.values.map(s => { return s.id })
+      const isEnrolled = ['Y', 'y', 'N', 'n']
+      if (!(studentCategoryIds.includes(Number(pathParams.studentCategoryId)) && isEnrolled.includes(pathParams.isEnrolled)) ) {
+        this.$router.push({ name: 'Login' })
+      }
       this.forms.register.fields.studentCategoryId = Number(pathParams.studentCategoryId);
       this.isEnrolled = (pathParams.isEnrolled === 'y' || pathParams.isEnrolled === 'Y');
     }, 250);
@@ -214,7 +219,12 @@ export default {
       return valid;
     },
     createAccount() {
-      const { register, register: { fields: { username, password } } } = this.forms;
+      const { register, register: { fields: { username, password, studentCategoryId } } } = this.forms;
+
+      if (this.isEnrolled === null || studentCategoryId === null) {
+        this.$router.push({ name: 'Login' })
+      }
+
       const data = {
         isEnrolled: this.isEnrolled,
         ...register.fields
