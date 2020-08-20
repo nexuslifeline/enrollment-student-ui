@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
     <div class="left-pane">
-        <router-link class="link" to="/mydocuments/assesment-form" >Assesment Forms</router-link>
-        <router-link class="link" to="/mydocuments/registration-form">Registration Forms</router-link>
+        <router-link class="link" to="/my-documents/assesment-form" >Assesment Forms</router-link>
+        <router-link class="link" to="/my-documents/registration-form">Registration Forms</router-link>
     </div>
     <div class="right-pane">  
       <router-view></router-view>

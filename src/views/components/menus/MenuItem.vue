@@ -1,5 +1,5 @@
 <template>
-  <div class="home__menu-action">
+  <div class="home__menu-action" @click="onMenuClick(path)">
     <div class="home__menu-image">
       <slot name="image"></slot>
     </div>
@@ -10,7 +10,7 @@
       <p class="home__menu-description">
         {{description}}
       </p>
-      <button class="home__menu-more">
+      <button class="home__menu-more" @click="onMenuClick(path)">
         <span class="home__menu-more-count">2</span>
         new recent documents
         <div class="home__menu-icon-right">
@@ -35,6 +35,18 @@
       },
       description: {
         type: [String]
+      },
+      path: {
+        type: [String]
+      }
+    },
+    methods: {
+      onMenuClick(path) {
+        if (path) {
+          this.$router.push({ path: path})
+          return
+        }
+        this.$router.push({ path: 'menu404'})
       }
     }
   }

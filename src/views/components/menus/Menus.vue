@@ -3,6 +3,7 @@
     <MenuItem v-for="(item, idx) in menus"
       :title="item.title"
       :description="item.description"
+      :path="item.path"
       :key="idx">
       <template v-slot:image>
         <img :src="item.image" />
@@ -27,32 +28,38 @@
           {
             title: 'My Documents',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'my-documents'
           },
           {
             title: 'My Statements',
             image: '/img/svg/my-statements.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            
           },
           {
             title: 'My Payments',
             image: '/img/svg/my-payments.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            
           },
           {
             title: 'My Grades',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            
           },
           {
             title: 'My Profile',
             image: '/img/svg/my-profile.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            
           },
           {
             title: 'My Applications',
             image: '/img/svg/my-applications.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua."
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            
           }
         ]
       }

@@ -24,6 +24,7 @@ const MyDocuments = () => import('@/views/pages/MyDocuments')
 const MyDocumentsHome = () => import('@/views/pages/MyDocumentsHome')
 const AssesmentForm = () => import('@/views/pages/AssesmentForm')
 const RegistrationForm = () => import('@/views/pages/RegistrationForm')
+const Menu404 = () => import('@/views/pages/Menu404')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -106,7 +107,7 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: '/mydocuments',
+          path: '/my-documents',
           name: 'MyDocuments',
           component: MyDocuments,
           meta: {requiresAuth: true},
@@ -124,6 +125,12 @@ function configRoutes () {
               component: RegistrationForm  
             }
           ]
+        },
+        {
+          path: 'menu404',
+          name: 'Menu404',
+          component: Menu404,
+          meta: {requiresAuth: true}
         },
       ]
     },
