@@ -114,7 +114,7 @@ function configRoutes () {
           children: [
             {
               path: '/',
-              component: MyDocumentsHome  
+              redirect: 'assesment-form',
             },
             {
               path: 'assesment-form',
