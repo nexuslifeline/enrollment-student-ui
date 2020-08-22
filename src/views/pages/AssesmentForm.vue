@@ -1,19 +1,26 @@
 <template>
-  <div class="assesment_main-container">
-    <h5>Assesment Forms</h5>
+  <div class="assesment__main-container">
+    <h4 class="c-app__page-title">All Assessments ({{tables.assesment.items.length}})</h4>
+    <p class="c-app__page-description">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </p>
     <b-table
-       head-variant="light"
-      responsive small hover outlined show-empty
+      class="c-app__table"
       :fields="tables.assesment.fields"
       :items.sync="tables.assesment.items"
-      :busy="tables.assesment.isBusy">
+      :busy="tables.assesment.isBusy"
+      responsive
+      small
+      hover
+      outlined
+      show-empty>
       <template v-slot:cell(action) = "row">
         <b-button @click="onPrintAssesment(row.item.id)" variant="outline-warning"><v-icon name="print"></v-icon></b-button>
       </template>
       <template v-slot:table-busy>
         <div class="text-center my-2">
-          <v-icon 
-            name="spinner" 
+          <v-icon
+            name="spinner"
             spin
             class="mr-2" />
           <strong>Loading...</strong>
@@ -52,7 +59,7 @@ export default {
                   item.student.middleName = ""
                 }
                 return item.student.firstName + " " + item.student.middleName + " " + item.student.lastName
-              } 
+              }
             },
             {
               key: "schoolYear.name",
@@ -128,7 +135,7 @@ export default {
 </script>
 
 <style>
-  .assesment_main-container {
+  .assesment__main-container {
     width: 100%;
     height: 100%;
   }

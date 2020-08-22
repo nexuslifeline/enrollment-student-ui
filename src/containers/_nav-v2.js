@@ -2,36 +2,36 @@ export default [
   {
     name: 'My Dashboard',
     to: '/dashboard',
-    icon: 'my-home'
+    icon: 'th-large'
   },
   {
     name: 'My Documents',
     to: '/documents',
-    icon: 'my-documents'
+    icon: 'folder'
   },
   {
     name: 'My Statements',
     to: '/statements',
-    icon: 'my-statements'
+    icon: 'receipt'
   },
   {
     name: 'My Payments',
     to: '/payments',
-    icon: 'my-documents'
+    icon: 'credit-card'
   },
   {
     name: 'My Grades',
     to: '/payments',
-    icon: 'my-grades'
+    icon: 'list-ol'
   },
   {
     name: 'My Profile',
     to: '/profile',
-    icon: 'my-profile'
+    icon: 'address-card'
   },
   {
     name: 'My Applications',
     to: '/profile',
-    icon: 'my-documents'
+    icon: 'bookmark'
   }
 ]

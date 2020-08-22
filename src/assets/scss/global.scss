@@ -37,3 +37,20 @@ label {
     border: 1px solid rgba(234,76,137,0.4)!important;
   }
 }
+
+.c-app__page-title {
+  font-size: 22px;
+}
+
+.c-app__page-description {
+  color: $gray;
+  margin-bottom: 30px;
+}
+
+.c-app__table {
+  thead {
+    th, td {
+      padding: 10px;
+    }
+  }
+}

@@ -107,7 +107,7 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: '/my-documents',
+          path: '/documents',
           name: 'MyDocuments',
           component: MyDocuments,
           meta: {requiresAuth: true},
@@ -118,11 +118,11 @@ function configRoutes () {
             },
             {
               path: 'assesment-form',
-              component: AssesmentForm  
+              component: AssesmentForm
             },
             {
               path: 'registration-form',
-              component: RegistrationForm  
+              component: RegistrationForm
             }
           ]
         },

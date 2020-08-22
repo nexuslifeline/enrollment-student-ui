@@ -4,9 +4,9 @@
       <li v-for="(item, idx) in $options.nav"
         :key="idx"
         class="side-bar__menu-item"
-        :class="{ 'active': $route.path === item.to }">
+        :class="{ 'active': $route.path.includes(item.to) }">
         <a :href="`#${item.to}`" class="side-bar__menu-link">
-          <component :is="item.icon" />
+          <v-icon :name="item.icon" />
         </a>
       </li>
     </ul>
@@ -15,25 +15,9 @@
 
 <script>
   import nav from './_nav-v2';
-  import MyHome from '../assets/svg/my-home-nav.svg';
-  import MyDocuments from '../assets/svg/my-documents-nav.svg';
-  import MyStatements from '../assets/svg/my-statements-nav.svg';
-  import MyGrades from '../assets/svg/my-grades-nav.svg';
-  import MyPayments from '../assets/svg/my-payments-nav.svg';
-  import MyProfile from '../assets/svg/my-profile-nav.svg';
-  //import MyApplications from '../../../assets/svg/my-applications-nav.svg';
-
   export default {
     name: 'TheSidebarV2',
-    nav,
-    components: {
-      MyHome,
-      MyDocuments,
-      MyStatements,
-      MyGrades,
-      MyPayments,
-      MyProfile
-    }
+    nav
   }
 </script>
 <style lang="scss" scoped>
@@ -44,14 +28,15 @@
     left: 0;
     bottom: 0;
     height: 100%;
-    width: 60px;
+    width: $side-bar-width;
     border-right: 1px solid $light-gray-200;
-    background-color: $white;
+    background-color: $dark-gray-600;
+    z-index: 1031;
   }
 
   .side-bar__menus {
     margin: 0;
-    margin-top: 60px !important;
+    margin-top: 30px !important;
     list-style: none;
     padding: 0;
     display: flex;
@@ -66,7 +51,10 @@
     align-items: center;
 
      &.active {
-      background-color: $maroon-100;
+      .side-bar__menu-link {
+        background-color: $brand-primary;
+        border-radius: 3px;
+      }
 
       svg * {
         color: $maroon !important;
@@ -76,15 +64,25 @@
   }
 
   .side-bar__menu-link {
-    height: 28px;
-    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    padding: 10px;
     margin: 7px 0;
-    padding: 3px 0;
+    transition: border-radius 250ms cubic-bezier(.215,.61,.355,1),background-color 300ms cubic-bezier(.39,.575,.565,1);
+
+    &:hover {
+      background-color: $brand-primary;
+      border-radius: 3px;
+    }
 
     svg {
       height: 100%;
       width: auto;
       max-width: 100%;
+      color: $white;
     }
   }
 </style>

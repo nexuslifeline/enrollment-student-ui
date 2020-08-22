@@ -29,37 +29,32 @@
             title: 'My Documents',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'my-documents'
+            path: 'documents'
           },
           {
             title: 'My Statements',
             image: '/img/svg/my-statements.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            
           },
           {
             title: 'My Payments',
             image: '/img/svg/my-payments.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            
           },
           {
             title: 'My Grades',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            
           },
           {
             title: 'My Profile',
             image: '/img/svg/my-profile.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            
           },
           {
             title: 'My Applications',
             image: '/img/svg/my-applications.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            
           }
         ]
       }
