@@ -1,20 +1,17 @@
 <template>
   <div class="main-container">
     <div class="left-pane">
-      <p class="sub-nav__title">MY DOCUMENTS</p>
+      <p class="sub-nav__title">{{$options.subNav.title}}</p>
       <ul class="sub-nav">
-        <li class="sub-nav__item" :class="{ active: $route.path.includes('/assesment-form')}">
+        <li
+          v-for="(item, idx) in $options.subNav.items"
+          :key="idx"
+          class="sub-nav__item"
+          :class="{ active: $route.path.includes(item.to)}">
           <router-link
             class="sub-nav__link"
-            to="/documents/assesment-form">
-            Assesment Forms
-          </router-link>
-        </li>
-        <li class="sub-nav__item" :class="{ active: $route.path.includes('/registration-form')}">
-          <router-link
-            class="sub-nav__link"
-            to="/documents/registration-form">
-            Registration Forms
+            :to="item.to">
+            {{item.label}}
           </router-link>
         </li>
       </ul>
@@ -28,7 +25,9 @@
 </template>
 
 <script>
+import subNav from './data/subNav';
 export default {
+  subNav,
   data() {
     return {
 
@@ -39,7 +38,7 @@ export default {
 
 <style lang="scss" scoped>
 
-  @import "../../assets/scss/shared.scss";
+  @import "../../../assets/scss/shared.scss";
 
   .main-container {
     height: 100%;
@@ -73,6 +72,7 @@ export default {
   .sub-nav__title {
     font-size: 16px;
     font-weight: 600;
+    text-transform: uppercase;
   }
 
   .left-pane {

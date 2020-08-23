@@ -20,10 +20,9 @@ const Billing = () => import('@/views/pages/Billing')
 const Grade = () => import('@/views/pages/Grade')
 const Profile = () => import('@/views/pages/Profile')
 const Payment = () => import('@/views/pages/Payment')
-const MyDocuments = () => import('@/views/pages/MyDocuments')
-const MyDocumentsHome = () => import('@/views/pages/MyDocumentsHome')
-const AssesmentForm = () => import('@/views/pages/AssesmentForm')
-const RegistrationForm = () => import('@/views/pages/RegistrationForm')
+const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
+const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
+const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
 const Menu404 = () => import('@/views/pages/Menu404')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
@@ -114,15 +113,15 @@ function configRoutes () {
           children: [
             {
               path: '/',
-              redirect: 'assesment-form',
+              redirect: 'assessment-list',
             },
             {
-              path: 'assesment-form',
-              component: AssesmentForm
+              path: 'assessment-list',
+              component: AssessmentList
             },
             {
-              path: 'registration-form',
-              component: RegistrationForm
+              path: 'registration-list',
+              component: RegistrationList
             }
           ]
         },

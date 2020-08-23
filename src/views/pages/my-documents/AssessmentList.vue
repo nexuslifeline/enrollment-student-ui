@@ -31,10 +31,9 @@
 </template>
 
 <script>
-import { TranscriptApi, ReportApi } from "../../mixins/api";
-import { TranscriptStatuses } from "../../helpers/enum";
+import { TranscriptApi, ReportApi } from "../../../mixins/api";
+import { TranscriptStatuses } from "../../../helpers/enum";
 export default {
-  name: "AssesmentForm",
   mixins: [ TranscriptApi, ReportApi ],
   data() {
     return {
