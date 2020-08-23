@@ -1,8 +1,13 @@
 <template>
   <div class="registration_main-container">
-    <h5>Registration Forms</h5>
+    <h4 class="c-app__page-title">
+      {{$options.headline.title}} ({{tables.registration.items.length}})
+    </h4>
+    <p class="c-app__page-description">
+      {{$options.headline.description}}
+    </p>
     <b-table
-       head-variant="light"
+      class="c-app__table"
       responsive small hover outlined show-empty
       :fields="tables.registration.fields"
       :items.sync="tables.registration.items"
@@ -12,8 +17,8 @@
       </template>
       <template v-slot:table-busy>
         <div class="text-center my-2">
-          <v-icon 
-            name="spinner" 
+          <v-icon
+            name="spinner"
             spin
             class="mr-2" />
           <strong>Loading...</strong>
@@ -24,7 +29,9 @@
 </template>
 
 <script>
+import headline from './data/registration';
 export default {
+  headline,
   data() {
     return {
       tables: {

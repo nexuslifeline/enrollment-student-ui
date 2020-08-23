@@ -1,21 +1,27 @@
 <template>
   <div class="assesment__main-container">
-    <h4 class="c-app__page-title">All Assessments ({{tables.assesment.items.length}})</h4>
+    <h4 class="c-app__page-title">
+      {{$options.headline.title}} ({{tables.assessment.items.length}})
+    </h4>
     <p class="c-app__page-description">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      {{$options.headline.description}}
     </p>
     <b-table
       class="c-app__table"
-      :fields="tables.assesment.fields"
-      :items.sync="tables.assesment.items"
-      :busy="tables.assesment.isBusy"
+      :fields="tables.assessment.fields"
+      :items.sync="tables.assessment.items"
+      :busy="tables.assessment.isBusy"
       responsive
       small
       hover
       outlined
       show-empty>
       <template v-slot:cell(action) = "row">
-        <b-button @click="onPrintAssesment(row.item.id)" variant="outline-warning"><v-icon name="print"></v-icon></b-button>
+        <b-button
+          @click="onPrintAssesment(row.item.id)"
+          variant="primary">
+          <v-icon name="print" />
+        </b-button>
       </template>
       <template v-slot:table-busy>
         <div class="text-center my-2">
@@ -33,13 +39,16 @@
 <script>
 import { TranscriptApi, ReportApi } from "../../../mixins/api";
 import { TranscriptStatuses } from "../../../helpers/enum";
+import headline from './data/assessment';
+
 export default {
   mixins: [ TranscriptApi, ReportApi ],
+  headline,
   data() {
     return {
       TranscriptStatuses: TranscriptStatuses,
       tables: {
-        assesment: {
+        assessment: {
           isBusy: false,
           fields: [
             {
@@ -111,13 +120,13 @@ export default {
   created() {
     const studentId = this.$store.state.user.id;
     const transcriptStatusId = TranscriptStatuses.ENROLLED.id
-    const { assesment } = this.tables
+    const { assessment } = this.tables
     const params = { studentId, transcriptStatusId, paginate: false }
-    assesment.isBusy = true
+    assessment.isBusy = true
 
     this.getTranscriptList(params).then(({ data }) => {
-      assesment.items = data
-      assesment.isBusy = false
+      assessment.items = data
+      assessment.isBusy = false
     })
   },
   methods: {
