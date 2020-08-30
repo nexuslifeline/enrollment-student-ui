@@ -1177,7 +1177,7 @@
                           <b-row>
                             <b-col md=12>
                               <b-list-group  >
-                                <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
+                                <b-list-group-item v-if="forms.billing.fields.totalAmount > 0" style="border:none;" href="#" class="d-flex justify-content-between align-items-center" 
                                   @click="onPaySelected(PayTypes.INITIAL.id)">
                                   <div class="mr-4" style="color:black">
                                     <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} PESOS ONLY</h5>
