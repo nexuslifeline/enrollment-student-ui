@@ -1404,14 +1404,14 @@
                     <b-alert variant="success" show>
                       <h5>CONGRATULATIONS!</h5>
                       <p> Your are now officially enrolled and a certified Theresian. <br><br>
-                        You can download your Certificate of Registration <a href="#">here</a>.<br>
+                        You can download your Certificate of Registration <a href="#" @click.prevent="onCompleteEnrollment('/documents/registration-list')">here</a>.<br>
                         Note: Always bring it whenever you go within the school premises.<br><br>
 
                         Accounting Department is now working for your Official Receipt.<br>
                         Once available, you can download it <a href="#">here</a>. <br><br>
 
-                        Go to my <a href="#" @click="onCompleteEnrollment">Dashboard</a>. <br>
-                        View my <a href="#" @click="onCompleteEnrollment">Documents</a>. <br>
+                        Go to my <a href="#" @click="onCompleteEnrollment('/dashboard')">Dashboard</a>. <br>
+                        View my <a href="#" @click="onCompleteEnrollment('/documents/assessment-list')">Documents</a>. <br>
                       </p>
                     </b-alert>
                   </div>
@@ -3315,7 +3315,7 @@ export default {
             this.tables.levelSubjects.isBusy = false;
         }
       },
-      onCompleteEnrollment() {
+      onCompleteEnrollment(routePath) {
         const { student, activeAdmission } = this.forms
 
         const applicationStatusId = ApplicationStatuses.COMPLETED.id
@@ -3332,7 +3332,7 @@ export default {
           this.getAuthenticatedUser().then(({ data: { userable } }) => {
           if (userable) {
             this.$store.commit('SET_USER', userable);
-            this.$router.push({path: '/dashboard'});
+            this.$router.push({path: routePath});
           }
           }).catch((error) => {
             this.$router.push({ path: '/login' });
