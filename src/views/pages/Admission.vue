@@ -2219,7 +2219,7 @@ const evaluationFields = {
   notes: null,
   approvalNotes: null,
   disapprovalNotes: null,
-  school_category_id: null,
+  schoolCategoryId: null,
   studentCurriculumId: null,
   semesterId: null,
 }
@@ -2923,16 +2923,7 @@ export default {
             subject.totalRows = data.length
             subjects.isBusy = false
             this.recordDetails(subject)
-
-            //if true pre populate subject enlistment
-            if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
-              (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
-
-              this.tables.enlistedSubjects.items = result.filter(subject =>
-                subject.pivot.levelId === transcript.fields.levelId &&
-                subject.pivot.semesterId === transcript.fields.semesterId
-              )
-            }
+            this.prePopulateStudentSubjects()
 
           })
         } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {

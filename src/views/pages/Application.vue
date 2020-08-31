@@ -2136,7 +2136,7 @@ const evaluationFields = {
   notes: null,
   approvalNotes: null,
   disapprovalNotes: null,
-  school_category_id: null,
+  schoolCategoryId: null,
   studentCurriculumId: null,
   semesterId: null,
 }
