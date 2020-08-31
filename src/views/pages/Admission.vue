@@ -1615,7 +1615,7 @@
                         :disabled="options.courses.scheduledLoading"
                         v-model="filters.scheduledSubject.courseId">
                         <b-form-select-option v-for='course in options.courses.scheduledItems' :key='course.id' :value='course.id'>
-                          {{ course.name + (course.major ? ' - ' + course.major : '') }}
+                          {{ course.description }} {{ course.major ? `(${ course.major })` : ''}}
                         </b-form-select-option>
                       </b-form-select>
                     </b-form-group>

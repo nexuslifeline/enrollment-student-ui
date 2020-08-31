@@ -1576,7 +1576,7 @@
                   </b-col>
                   <b-col  md="3"
                      v-if="filters.scheduledSubject.schoolCategoryId === SchoolCategories.COLLEGE.id
-                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
                       || filters.scheduledSubject.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
                     <b-form-group >
                       <label>Course</label>
@@ -1585,13 +1585,13 @@
                         :disabled="options.courses.scheduledLoading"
                         v-model="filters.scheduledSubject.courseId">
                         <b-form-select-option v-for='course in options.courses.scheduledItems' :key='course.id' :value='course.id'>
-                          {{ course.name + (course.major ? ' - ' + course.major : '') }}
+                          {{ course.description }} {{ course.major ? `(${ course.major })` : ''}}
                         </b-form-select-option>
                       </b-form-select>
                     </b-form-group>
                   </b-col>
                   <b-col  md="3" v-if="filters.scheduledSubject.schoolCategoryId === SchoolCategories.COLLEGE.id
-                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
                       || filters.scheduledSubject.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
                     <b-form-group >
                       <label>Semester</label>
