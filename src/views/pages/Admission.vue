@@ -43,22 +43,6 @@
                       {{forms.student.errors.lastName}}
                     </b-form-invalid-feedback>
                   </b-form-group>
-                </b-col>
-                <b-col md="6">
-                  <div class="profile-photo-container">
-                    <div class="profile-photo">
-                      <PhotoViewer
-                        @onPhotoChange="onPhotoChange"
-                        @onPhotoRemove="onPhotoRemove"
-                        :isBusy="isProfilePhotoBusy"
-                        :imageUrl="studentPhotoUrl"
-                      />
-                    </div>
-                  </div>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col md="4">
                   <b-form-group>
                     <label class="required">Birthdate</label>
                     <b-form-input type="date" 
@@ -69,17 +53,13 @@
                       {{forms.student.errors.birthDate}}
                     </b-form-invalid-feedback>
                   </b-form-group>
-                </b-col>
-                <b-col md="4">
                   <b-form-group>
                     <label>Mobile No.</label>
                     <b-form-input
                       v-model="forms.student.fields.mobileNo" 
                       debounce="500"/>
                   </b-form-group>
-                </b-col>
-                <b-col md="4">
-                  <b-form-group>
+                   <b-form-group>
                     <label class="required">Civil Status</label>
                     <b-form-select 
                       v-model="forms.student.fields.civilStatusId"
@@ -95,6 +75,18 @@
                       {{forms.student.errors.civilStatusId}}
                     </b-form-invalid-feedback>
                   </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <div class="profile-photo-container">
+                    <div class="profile-photo">
+                      <PhotoViewer
+                        @onPhotoChange="onPhotoChange"
+                        @onPhotoRemove="onPhotoRemove"
+                        :isBusy="isProfilePhotoBusy"
+                        :imageUrl="studentPhotoUrl"
+                      />
+                    </div>
+                  </div>
                 </b-col>
               </b-row>
             </div>
@@ -1026,9 +1018,9 @@
                     sticky-header="300px"
                     head-variant="light"
                     responsive small hover outlined show-empty
-                    :fields="tables.levelSubjects.fields"
-                    :items.sync="tables.levelSubjects.items"
-                    :busy="tables.levelSubjects.isBusy">
+                    :fields="tables.enlistedSubjects.fields"
+                    :items.sync="tables.enlistedSubjects.items"
+                    :busy="tables.enlistedSubjects.isBusy">
                     <template v-slot:cell(name)="data">
                       <span>{{ data.item.name }}</span><br>
                       <small>{{ data.item.description }}</small>
@@ -1041,14 +1033,20 @@
                           class="mr-2" />
                         <strong>Loading...</strong>
                       </div>
+                      </template>
+                      <template v-slot:cell(action)="row">
+                      <b-button 
+                        @click="removeSubject(row)" 
+                        size="sm" variant="danger">
+                        <v-icon name="trash" />
+                      </b-button>
                     </template>
-                    <template v-slot:cell(action)="row">
-                    <b-button 
-                      @click="removeSubject(row)" 
-                      size="sm" variant="danger">
-                      <v-icon name="trash" />
-                    </b-button>
-                  </template>
+                    <template v-slot:cell(section)="row">
+                      <span>{{ row.item.section ? row.item.section.name : '' }}</span>
+                      <a class="float-right" href="#" @click.prevent="onShowModalSection(row)">[Change]</a>
+                      <br>
+                      <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a> 
+                    </template>
                   </b-table>
                 </b-col>
               </b-row>
@@ -1576,105 +1574,274 @@
       </div> <!-- modal footer buttons -->
     </b-modal>
     <!-- Modal Subject -->
-    <b-modal
+    <b-modal 
 			v-model="showModalSubjects"
 			:noCloseOnEsc="true"
 			:noCloseOnBackdrop="true"
 			size="xl">
-			<div slot="modal-title"> <!-- modal title -->
-					Subjects
-			</div> <!-- modal title -->
-			<b-row> <!-- modal body -->
-				<b-col md=12>
-          <b-row class="mb-2">
-            <b-col md="3">
-              <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
-                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
-                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
-                <label>Level</label>
-                <b-form-select
-                  @change="filterSubject()"
-                  v-model="filters.subject.levelId"
-                >
-                  <template v-slot:first>
-                    <b-form-select-option :value='null' >-- All Levels --</b-form-select-option>
+      <b-tabs content-class="mt-4" pills v-model="selectedSubjectListIndex">
+        <b-tab title="Scheduled List"/>
+        <b-tab title="Unscheduled List" active/>
+      </b-tabs>
+        <div slot="modal-title"> <!-- modal title -->
+          Subjects
+        </div> <!-- modal title -->
+
+        <div v-if="selectedSubjectListIndex === 0">
+          <b-card>
+            <b-row> <!-- modal body -->
+              <b-col xl=12>
+                <b-row class="mb-2">
+                  <b-col md="3">
+                    <b-form-group>
+                      <label>Level</label>
+                      <b-form-select
+                        @change="loadScheduledViewCourses()"
+                        v-model="filters.scheduledSubject.levelId">
+                        <b-form-select-option v-for='level in options.levels.scheduledItems' :key='level.id' :value='level.id'>
+                          {{ level.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col  md="3"
+                     v-if="filters.scheduledSubject.schoolCategoryId === SchoolCategories.COLLEGE.id
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                    <b-form-group >
+                      <label>Course</label>
+                      <b-form-select
+                        @change="loadScheduledViewSections()"
+                        :disabled="options.courses.scheduledLoading"
+                        v-model="filters.scheduledSubject.courseId">
+                        <b-form-select-option v-for='course in options.courses.scheduledItems' :key='course.id' :value='course.id'>
+                          {{ course.name + (course.major ? ' - ' + course.major : '') }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col  md="3" v-if="filters.scheduledSubject.schoolCategoryId === SchoolCategories.COLLEGE.id
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                      || filters.scheduledSubject.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                    <b-form-group >
+                      <label>Semester</label>
+                      <b-form-select
+                        @change="loadScheduledViewSections()"
+                        v-model="filters.scheduledSubject.semesterId" >
+                        <b-form-select-option v-for='semester in options.semesters.scheduledItems.values' :key='semester.id' :value='semester.id'>
+                          {{ semester.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="3">
+                    <b-form-group >
+                      <label>Section</label>
+                      <b-form-select
+                        @change="loadScheduledSubjects()"
+                        :disabled="options.sections.scheduledLoading"
+                        v-model="filters.scheduledSubject.sectionId"
+                      >
+                        <b-form-select-option v-for='section in options.sections.scheduledItems' :key='section.id' :value='section.id'>
+                          {{ section.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                
+
+                <!-- @filtered="onFiltered($event, paginations.subject)" -->
+                <b-table
+                  class="c-app__table"
+                  small hover outlined show-empty responsive
+                  :items.sync="tables.scheduledSubjects.items"
+                  :fields="tables.scheduledSubjects.fields"
+                  :filter="filters.scheduledSubject.criteria"
+                  :busy="tables.scheduledSubjects.isBusy"
+                  :current-page="paginations.scheduledSubject.page"
+                  :per-page="paginations.scheduledSubject.perPage"
+                  >
+
+                  <template v-slot:table-busy>
+                    <div class="text-center my-2">
+                      <v-icon 
+                        name="spinner" 
+                        spin
+                        class="mr-2" />
+                      <strong>Loading...</strong>
+                    </div>
                   </template>
-                  <b-form-select-option v-for='level in options.levelsOfCourses.items' :key='level.id' :value='level.id'>
-                    {{ level.name }}
-                  </b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-             <b-col  md="3">
-              <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
-                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
-                    || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
-                <label>Semester</label>
-                <b-form-select
-                  @change="filterSubject()"
-                  v-model="filters.subject.semesterId"
-                >
-                  <template v-slot:first>
-                    <b-form-select-option :value='null' >-- All Semester --</b-form-select-option>
+
+                  <template v-slot:cell(isAllowed)="row">
+                    <!-- <v-icon :name="row.item.isAllowed ? 'check' : 'times'" :color="row.item.isAllowed ? 'green' : 'red'"/> -->
+                    <v-icon name="check" color ="green"/>
                   </template>
-                  <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
-                    {{ semester.name }}
-                  </b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-            <b-col offset-md="2" md="4">
-              <b-form-group>
-                <label>Search</label>
-                <b-form-input
-                  v-model="filters.subject.criteria"
-                  type="text"
-                  debounce="500"> 
-                </b-form-input>
-              </b-form-group>
-            </b-col>
-          </b-row>
-					<b-table
-						small hover outlined show-empty
-						:items.sync="tables.subjects.filteredItems"
-						:fields="tables.subjects.fields"
-            :filter="filters.subject.criteria"
-						:busy="tables.subjects.isBusy"
-            :current-page="paginations.subject.page"
-            :per-page="paginations.subject.perPage"
-            @filtered="onFiltered($event, paginations.subject)">
-						<template v-slot:cell(action)="row">
-							<b-button
-                @click="addSubject(row)"
-                size="sm" variant="success">
-                <v-icon name="plus" />
-              </b-button>
-						</template>
-					</b-table>
-          <b-row>
-            <b-col md=6>
-              Showing {{paginations.subject.from}} to {{paginations.subject.to}} of {{paginations.subject.totalRows}} records.
-            </b-col>
-            <b-col md=6>
-              <b-pagination
-                v-model="paginations.subject.page"
-                :total-rows="paginations.subject.totalRows"
-                :per-page="paginations.subject.perPage"
-                size="sm"
-                align="end"
-                @input="recordDetails(paginations.subject)"
-              />
-            </b-col>
-          </b-row>
-				</b-col>
-			</b-row> <!-- modal body -->
+
+                   <template v-slot:cell(subject)="row">
+                    <span> {{ row.item.name }}</span>
+                    <br>
+                    <span> {{ row.item.description }}</span>
+                  </template>
+
+                  <template v-slot:cell(schedule)="row">
+                    <span>
+                      {{ row.item.schedules[0] ? row.item.schedules[0].personnel.firstName + ' ' + row.item.schedules[0].personnel.lastName : '' }}
+                    </span>
+                    <br>
+                    <span v-for="schedule in row.item.schedules" :key="schedule.id" class="item">
+                      <small>{{ Days.getEnum(schedule.dayId).abbrev + ' - Time: ' + schedule.startTime + ' - ' + schedule.endTime  }}</small>
+                    </span>
+                  </template> 
+
+                  <template v-slot:cell(action)="row">
+                    <b-button
+        
+                      @click="addScheduledSubject(row)" 
+                      size="sm" variant="success">
+                      <v-icon name="plus" />
+                    </b-button>
+                  </template>
+                </b-table>
+                <b-row>
+                  <b-col md=6>
+                    Showing {{paginations.scheduledSubject.from}} to {{paginations.scheduledSubject.to}} of {{paginations.scheduledSubject.totalRows}} records.
+                  </b-col>
+                  <b-col md=6>
+                    <b-pagination
+                      v-model="paginations.scheduledSubject.page"
+                      :total-rows="paginations.scheduledSubject.totalRows"
+                      :per-page="paginations.scheduledSubject.perPage"
+                      size="sm"
+                      align="end"
+                      @input="recordDetails(paginations.scheduledSubject)"
+                    />
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row> <!-- modal body -->
+          </b-card>
+        </div>
+        <div v-if="selectedSubjectListIndex === 1">
+          <b-card>
+            <b-row> <!-- modal body -->
+              <b-col md=12>
+                <b-row class="mb-2">
+                  <b-col md="3">
+                    <b-form-group 
+                          v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                      <label>Level</label>
+                      <b-form-select
+                        @change="filterSubject()"
+                        v-model="filters.subject.levelId"
+                      >
+                        <template v-slot:first>
+                          <b-form-select-option :value='null' >-- All Levels --</b-form-select-option>
+                        </template>
+                        <b-form-select-option v-for='level in options.levelsOfCourses.items' :key='level.id' :value='level.id'>
+                          {{ level.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col  md="3">
+                    <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                      <label>Semester</label>
+                      <b-form-select
+                        @change="filterSubject()"
+                        v-model="filters.subject.semesterId"
+                      >
+                        <template v-slot:first>
+                          <b-form-select-option :value='null' >-- All Semester --</b-form-select-option>
+                        </template>
+                        <b-form-select-option v-for='semester in options.semesters.items.values' :key='semester.id' :value='semester.id'>
+                          {{ semester.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col offset-md="2" md="4">
+                    <b-form-group>
+                      <label>Search</label>
+                      <b-form-input
+                        v-model="filters.subject.criteria"
+                        type="text"
+                        debounce="500"> 
+                      </b-form-input>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                
+                <b-table
+                  class="c-app__table"
+                  small hover outlined show-empty
+                  :items.sync="tables.subjects.filteredItems"
+                  :fields="tables.subjects.fields"
+                  :filter="filters.subject.criteria"
+                  :busy="tables.subjects.isBusy"
+                  :current-page="paginations.subject.page"
+                  :per-page="paginations.subject.perPage"
+                  @filtered="onFiltered($event, paginations.subject)">
+                  <template v-slot:table-busy>
+                    <div class="text-center my-2">
+                      <v-icon 
+                        name="spinner" 
+                        spin
+                        class="mr-2" />
+                      <strong>Loading...</strong>
+                    </div>
+                  </template>
+
+                  <template v-slot:cell(isAllowed)="row">
+                    <v-icon :name="row.item.isAllowed ? 'check' : 'times'" :color="row.item.isAllowed ? 'green' : 'red'"/>
+                  </template>
+
+                  <template v-slot:cell(action)="row">
+                    <b-button
+                      v-if="row.item.isAllowed"
+                      @click="addSubject(row)" 
+                      size="sm" variant="success">
+                      <v-icon name="plus" />
+                    </b-button>
+                  </template>
+
+                  <template v-slot:cell(subject)="row">
+                    <span> {{ row.item.name }}</span>
+                    <br>
+                    <span> {{ row.item.description }}</span>
+                  </template>
+
+                </b-table>
+                <b-row>
+                  <b-col md=6>
+                    Showing {{paginations.subject.from}} to {{paginations.subject.to}} of {{paginations.subject.totalRows}} records.
+                  </b-col>
+                  <b-col md=6>
+                    <b-pagination
+                      v-model="paginations.subject.page"
+                      :total-rows="paginations.subject.totalRows"
+                      :per-page="paginations.subject.perPage"
+                      size="sm"
+                      align="end"
+                      @input="recordDetails(paginations.subject)"
+                    />
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row> <!-- modal body -->
+          </b-card>
+        </div>
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button
-        class="float-right"
-        variant="outline-danger"
-        @click="showModalSubjects=false">
-        Close
-      </b-button>
+				<b-button 
+          class="float-right" 
+          variant="outline-danger"
+          @click="showModalSubjects=false">
+          Close
+        </b-button>
 			</div> <!-- modal footer buttons -->
 		</b-modal>
     <!-- Modal Subject -->
@@ -1769,6 +1936,80 @@
         </b-button>
       </div> <!-- modal footer buttons -->
     </b-modal>
+    <b-modal
+      v-model="showModalSection"
+			size="xl"
+			header-bg-variant="success"
+			header-text-variant="light"
+			:noCloseOnEsc="true"
+			:noCloseOnBackdrop="true">
+      <div slot="modal-title"> <!-- modal title -->
+					Select Section
+			</div> <!-- modal title -->
+			<b-row class="justify-content-md-center"> <!-- modal body -->
+				<b-col md=12>
+          <b-table
+            class="c-app__table"
+            small hover outlined show-empty
+            :items.sync="tables.sectionsOfSubjects.items"
+            :fields="tables.sectionsOfSubjects.fields"
+            :busy="tables.sectionsOfSubjects.isBusy"
+            :current-page="paginations.sectionsOfSubject.page"
+            :per-page="paginations.sectionsOfSubject.perPage"
+           >
+           <template v-slot:table-busy>
+              <div class="text-center my-2">
+                <v-icon 
+                  name="spinner" 
+                  spin
+                  class="mr-2" />
+                <strong>Loading...</strong>
+              </div>
+            </template>
+           <template v-slot:cell(schedule)="row">
+             <span>
+               {{ row.item.schedules[0].personnel.firstName + ' ' + row.item.schedules[0].personnel.lastName }}
+             </span>
+             <br>
+             <span v-for="schedule in row.item.schedules" :key="schedule.id" class="item">
+              <small>{{ Days.getEnum(schedule.dayId).abbrev + ' - Time: ' + schedule.startTime + ' - ' + schedule.endTime  }}</small>
+             </span>
+           </template>
+           <template v-slot:cell(action) = "row">
+              <b-button
+                @click="onChangeSection(row)"
+                variant="success">
+                <v-icon name="check" />
+              </b-button>
+            </template>
+           
+          </b-table>
+          <b-row>
+              <b-col md=6>
+                Showing {{paginations.sectionsOfSubject.from}} to {{paginations.sectionsOfSubject.to}} of {{paginations.sectionsOfSubject.totalRows}} records.
+              </b-col>
+              <b-col md=6>
+                <b-pagination
+                  v-model="paginations.sectionsOfSubject.page"
+                  :total-rows="paginations.sectionsOfSubject.totalRows"
+                  :per-page="paginations.sectionsOfSubject.perPage"
+                  size="sm"
+                  align="end"
+                  @input="recordDetails(paginations.sectionsOfSubject)"
+                />
+              </b-col>
+            </b-row>
+				</b-col>
+			</b-row> <!-- modal body -->
+			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+				<b-button 
+          class="float-right"
+          variant="outline-danger"
+          @click="showModalSection=false">
+          Close
+        </b-button>
+			</div> <!-- modal footer buttons -->
+    </b-modal>
   </div>
   <!-- main container -->
 </template>
@@ -1806,7 +2047,8 @@ import {
   TranscriptStatuses,
   EvaluationStatuses,
   StudentCategories,
-  SchoolCategories
+  SchoolCategories,
+  Days
 } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
 import  FileUploader from '../components/FileUploader'
@@ -2075,6 +2317,7 @@ export default {
     },
     data(){
       return{
+        showModalSection: false,
         showPaymentFileModal: false,
         showAdmissionFileModal: false,
         showEvaluationFileModal: false,
@@ -2107,6 +2350,9 @@ export default {
         SchoolCategories: SchoolCategories,
         isPaying: false,
         Semesters: Semesters,
+        Days: Days,
+        selectedLevelSubject: null,
+        selectedSubjectListIndex: 0,
         file: {
           src: null,
           type: null
@@ -2175,14 +2421,14 @@ export default {
           }
         },
         tables: {
-          levelSubjects: {
+          enlistedSubjects: {
             isBusy: false,
             fields: [
               {
                 key: "name",
                 label: "SUBJECTS",
                 tdClass: "align-middle",
-                thStyle: { width: "50%" }
+                thStyle: { width: "auto" }
               },
               {
                 key: "units",
@@ -2206,6 +2452,13 @@ export default {
                 thStyle: {width: "15%"}
               },
               {
+                key: "section",
+                label: "SECTION",
+                tdClass: "align-middle",
+                thClass: "align-middle",
+                thStyle: {width: "20%"}
+              },
+              {
                 key: "action",
                 label: "",
                 tdClass: "align-middle text-center",
@@ -2218,36 +2471,38 @@ export default {
             isBusy: false,
             fields: [
               {
-                key: "name",
-                label: "Subject Code",
-                tdClass: "align-middle",
-                thStyle: {width: "12%"}
+                key: "isAllowed",
+                label: "Allowed",
+                tdClass: "align-middle text-center",
+                thClass: "align-middle",
+                thStyle: {width: "25px"}
               },
               {
-                key: "description",
-                label: "Description",
+                key: "subject",
+                label: "Subject",
                 tdClass: "align-middle",
+                thClass: "align-middle",
                 thStyle: {width: "auto"}
               },
               {
                 key: "units",
                 label: "Lec Units",
                 tdClass: "align-middle text-right",
-                thClass: "text-right",
+                thClass: "align-middle text-right",
                 thStyle: {width: "8%"}
               },
               {
                 key: "labs",
                 label: "Lab Units",
                 tdClass: "align-middle text-right",
-                thClass: "text-right",
+                thClass: "align-middle text-right",
                 thStyle: {width: "8%"}
               },
               {
                 key: "totalUnits",
                 label: "TOTAL UNITS",
                 tdClass: "align-middle text-right",
-                thClass: "text-right",
+                thClass: "align-middle text-right",
                 thStyle: {width: "8%"}
               },
               {
@@ -2385,6 +2640,107 @@ export default {
               }
             ],
             items: []
+          },
+          sectionsOfSubjects: {
+            isBusy: false,
+            fields: [
+              {
+                key: "name",
+                label: "SECTION",
+                tdClass: "align-middle ",
+                thClass: "align-middle",
+                thStyle: { width: "15%" }
+              },
+              {
+                key: "level.name",
+                label: "LEVEL",
+                tdClass: "align-middle ",
+                thClass: "align-middle",
+                thStyle: { width: "15%" }
+              },
+              {
+                key: "course.name",
+                label: "COURSE",
+                tdClass: "align-middle ",
+                thClass: "align-middle",
+                thStyle: { width: "15%" }
+              },
+              {
+                key: "semester.name",
+                label: "SEMESTER",
+                tdClass: "align-middle ",
+                thClass: "align-middle",
+                thStyle: {width: "15%"}
+              },
+              {
+                key: "schedule",
+                label: "SCHEDULE",
+                tdClass: "align-middle",
+                thClass: "align-middle",
+                thStyle: {width: "AUTO"}
+              },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-center",
+                thStyle: {width: "5%"}
+              }
+            ],
+            items: []
+          },
+          scheduledSubjects: {
+            isBusy: false,
+            fields: [
+              {
+                key: "isAllowed",
+                label: "Allowed",
+                thClass: "align-middle",
+                tdClass: "align-middle text-center",
+                thStyle: { width: "25px" }
+              },
+              {
+                key: "subject",
+                label: "SUBJECT",
+                tdClass: "align-middle ",
+                thClass: "align-middle",
+                thStyle: { width: "20%" }
+              },
+              {
+                key: "schedule",
+                label: "SCHEDULE",
+                tdClass: "align-middle",
+                thClass: "align-middle",
+                thStyle: { width: "auto", minWidth: "500px"}
+              },
+              {
+                key: "units",
+                label: "Lec Units",
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: {width: "8%"}
+              },
+              {
+                key: "labs",
+                label: "Lab Units",
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: {width: "8%"}
+              },
+              {
+                key: "totalUnits",
+                label: "TOTAL UNITS",
+                tdClass: "align-middle text-right",
+                thClass: "text-right",
+                thStyle: {width: "8%"}
+              },
+              {
+                key: "action",
+                label: "",
+                tdClass: "align-middle text-center",
+                thStyle: {width: "5%"}
+              }
+            ],
+            items: []
           }
         },
         paginations: {
@@ -2394,27 +2750,58 @@ export default {
             totalRows: 0,
             page: 1,
             perPage: 10,
-          }
+          },
+          scheduledSubject: {
+            from: 0,
+            to: 0,
+            totalRows: 0,
+            page: 1,
+            perPage: 10,
+          },
+          sectionsOfSubject: {
+            from: 0,
+            to: 0,
+            totalRows: 0,
+            page: 1,
+            perPage: 10,
+          },
         },
         filters: {
           subject: {
             criteria: null,
             levelId: null,
             courseId: null
+          },
+          scheduledSubject: {
+            criteria: null,
+            levelId: null,
+            courseId: null,
+            semesterId: null,
+            sectionId: null,
+            schoolCategory: null
+          },
+          sectionsOfSubject: {
+            criteria: null,
           }
         },
         options: {
           levels: {
-            items: []
+            items: [],
+            scheduledItems: []
           },
           courses: {
-            items:[]
+            items:[],
+            scheduledItems: [],
+            scheduledLoading: false
           },
           semesters: {
-            items: Semesters
+            items: Semesters,
+            scheduledItems: Semesters
           },
           sections: {
-            items: []
+            items: [],
+            scheduledItems: [],
+            scheduledLoading: false
           },
           civilStatuses: {
             items: CivilStatuses
@@ -2471,6 +2858,10 @@ export default {
           })
         })
 
+        if (!student.civilStatusId) {
+          this.forms.student.fields.civilStatusId = CivilStatuses.SINGLE.id
+        }
+
         //student photo
         if (student.photo) {
           this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL +  student.photo.hashName
@@ -2519,17 +2910,17 @@ export default {
           subjects.isBusy = true
           this.loadSections()
           //need to load subjects here
-          this.getEvaluation(student.evaluation.id).then(({ data }) => {
-
-            const result = data.subjects.filter(subject => subject.pivot.isTaken === 0)
+          const params = { paginate: false }
+          this.getUnscheduledSubjects(student.evaluation.id, params).then(({ data }) => {
+            const result = data.filter(subject => subject.isAllowed == true)
 
             //clear subjects
             subjects.items = []
 
             //init new subjects base on evaluation subjects
-            subjects.items = data.subjects
+            subjects.items = data
             subjects.filteredItems = result
-            subject.totalRows = data.subjects.length
+            subject.totalRows = data.length
             subjects.isBusy = false
             this.recordDetails(subject)
 
@@ -2537,7 +2928,7 @@ export default {
             if (student.evaluation.studentCategoryId === StudentCategories.NEW.id || 
               (student.evaluation.studentCurriculumId === student.evaluation.curriculumId )) {
 
-              this.tables.levelSubjects.items = result.filter(subject =>
+              this.tables.enlistedSubjects.items = result.filter(subject =>
                 subject.pivot.levelId === transcript.fields.levelId &&
                 subject.pivot.semesterId === transcript.fields.semesterId
               )
@@ -2568,6 +2959,7 @@ export default {
 
       this.getLevelList(params).then(response => {
         const res = response.data
+        this.options.levels.scheduledItems = res
         this.options.levels.items = res
       })
 
@@ -2586,11 +2978,11 @@ export default {
         } = this.forms;
         ///const { subjects : { items: subjects } } = this.tables
 
-        const { items } = this.tables.levelSubjects
+        const { items } = this.tables.enlistedSubjects
 
         let subjects = []
         items.forEach(subject => {
-          subjects.push(subject.id)
+          subjects.push({ subjectId: subject.id, sectionId: subject.sectionId})
         })
 
         const currentStepIndex = activeAdmission.admissionStepId - 1;
@@ -2676,10 +3068,10 @@ export default {
             evaluation.fields.lastSchoolYearFrom =  data.education.lastSchoolYearFrom
             evaluation.fields.lastSchoolYearTo=  data.education.lastSchoolYearTo
           }
-
           this.isProcessing = false;
         }).catch((error) => {
           const { errors } = error.response.data;
+          if (formsToValidate[currentStepIndex])
           validate(formsToValidate[currentStepIndex], errors);
           this.isProcessing = false;
         });
@@ -2736,19 +3128,50 @@ export default {
             this.loadSections()
             return
           }
-          //this.tables.levelSubjects.items = []
+          //this.tables.enlistedSubjects.items = []
         });
+      },
+      loadScheduledViewCourses() {
+        this.tables.scheduledSubjects.items = []
+        let { levelId, courseId, semesterId, sectionId }  = this.filters.scheduledSubject
+        const { scheduledItems } = this.options.levels
+
+        // console.log(fields.levelId)
+        const level = scheduledItems.find(i => i.id == levelId)
+        const params = { paginate: false }
+        if (level) {
+          this.filters.scheduledSubject.schoolCategoryId = level.schoolCategoryId
+        }
+
+        
+        this.options.courses.scheduledLoading = true
+        this.getCoursesOfLevelList(levelId, params).then(({ data }) => {
+          this.options.courses.scheduledItems = data
+          this.options.semesters.scheduledItems = Semesters
+          if (data.length === 0) {
+            this.options.semesters.scheduledItems = []
+            this.filters.scheduledSubject.courseId = null
+            this.filters.scheduledSubject.semesterId = null
+          }
+          this.options.courses.scheduledLoading = false
+          this.loadScheduledViewSections()
+
+        });
+
+        // if (level) {
+        //   courseId = this.forms.evaluation.courseId
+        // }
       },
       loadSubjectsOfLevel() {
         const { courseId, semesterId, levelId } = this.forms.transcript.fields;
-        const { levelSubjects } = this.tables;
+        const { enlistedSubjects } = this.tables;
         if (this.options.courses.items.length > 0) {
           if (courseId === null || semesterId === null) {
-            this.tables.levelSubjects.items = []
+            this.tables.enlistedSubjects.items = []
             return
           }
         }
-        levelSubjects.isBusy = true
+        enlistedSubjects.isBusy = true
         const params = {
           courseId,
           semesterId,
@@ -2756,8 +3179,8 @@ export default {
         }
         this.getSubjectsOfLevelList(levelId, params)
           .then(({ data }) => {
-            levelSubjects.items = data
-            levelSubjects.isBusy = false
+            enlistedSubjects.items = data
+            enlistedSubjects.isBusy = false
         });
 
         this.loadSections()
@@ -3094,12 +3517,22 @@ export default {
         const { subjects } = this.tables
         const { subject } = this.paginations
         this.filters.subject.levelId = levelId
+        this.filters.scheduledSubject.levelId = levelId
+
+        if (levelId) {
+          this.loadScheduledViewCourses()
+        }
+
+        this.filters.scheduledSubject.courseId = courseId
+        this.filters.scheduledSubject.semesterId = semesterId
+
         this.filters.subject.semesterId = semesterId
 
         levelsOfCourses.items = []
         if (levelId == null) {
           return
         }
+
         if (schoolCategoryId === SchoolCategories.COLLEGE.id || schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id) {
           this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
             levelsOfCourses.items = data
@@ -3107,6 +3540,7 @@ export default {
         }
 
         this.filterSubject()
+        this.loadScheduledSubjects();
         this.showModalSubjects = true
       },
       loadSubjectList(){
@@ -3128,13 +3562,29 @@ export default {
       },
       addSubject(row) {
         const { item } = row
-        const { items } = this.tables.levelSubjects
+        const { items } = this.tables.enlistedSubjects
         // check if subject exist in the table
         const result = items.find(subject => subject.id === item.id)
         if (result) {
           showNotification(this, 'danger', item.name + ' is already added.')
           return
         }
+        this.$set(row.item, 'sectionId', null)
+        this.$set(row.item, 'section', null)
+        items.push(row.item)
+      },
+      addScheduledSubject(row) {
+        const { item } = row
+        const { items } = this.tables.enlistedSubjects
+
+        const result = items.find(subject => subject.id === item.id)
+        if (result) {
+          showNotification(this, 'danger', item.name + ' is already added.')
+          return
+        }
+        this.$set(row.item, 'sectionId', (item.schedules[0].sectionId ? item.schedules[0].sectionId : null))
+        this.$set(row.item, 'section', (item.schedules[0].section ? item.schedules[0].section : null) )
+        
         items.push(row.item)
       },
       previewPaymentFile(index) {
@@ -3185,8 +3635,30 @@ export default {
           this.sectionIsLoading = false
         });
       },
+      loadScheduledViewSections() {
+        this.options.sections.scheduledItems = []
+        const { semesters, courses, sections } = this.options
+        const { schoolYearId } = this.forms.transcript.fields
+        const { levelId, courseId, semesterId } = this.filters.scheduledSubject
+
+      
+        if (courses.scheduledItems.length !==0 || courses.scheduledItems.length !==0) {
+          if (!courseId || !semesterId) {
+            return
+          }
+        }
+
+        sections.scheduledLoading = true
+        let params = { paginate: false, schoolYearId, levelId, courseId, semesterId };
+        this.getSectionList(params).then(({ data }) => {
+          this.options.sections.scheduledItems = data;
+          this.filters.scheduledSubject.sectionId = null
+          this.loadScheduledSubjects()
+          sections.scheduledLoading = false
+        });
+      },
       removeSubject(row){
-        this.tables.levelSubjects.items.splice(row.index, 1);
+        this.tables.enlistedSubjects.items.splice(row.index, 1);
       },
       onEvaluationFileUpload(file) {
         const formData = new FormData();
@@ -3276,21 +3748,20 @@ export default {
         const { levelId, semesterId } = this.filters.subject
 
         if (levelId !== null && semesterId !== null) {
-          subjects.filteredItems = subjects.items.filter(s =>
-            s.pivot.levelId === levelId && s.pivot.semesterId === semesterId && s.pivot.isTaken === 0
-          )
+            subjects.filteredItems = subjects.items.filter(
+              s => s.pivot.levelId === levelId && s.pivot.semesterId === semesterId
+            )
         } else if (levelId !== null && semesterId === null) {
-          subjects.filteredItems = subjects.items.filter(s =>
-            s.pivot.levelId === levelId && s.pivot.isTaken === 0
+          subjects.filteredItems = subjects.items.filter(
+            s => s.pivot.levelId === levelId
           )
+
         } else if (semesterId !== null && levelId === null) {
-          subjects.filteredItems = subjects.items.filter(s =>
-            s.pivot.semesterId === semesterId && s.pivot.isTaken === 0
+          subjects.filteredItems = subjects.items.filter(
+            s => s.pivot.semesterId === semesterId
           )
         } else {
-          subjects.filteredItems = subjects.items.filter(s =>
-            s.pivot.isTaken === 0
-          )
+          subjects.filteredItems = subjects.items
         }
 
         // if (levelId !== null || semesterId !== null) {
@@ -3303,17 +3774,26 @@ export default {
       },
       prePopulateStudentSubjects() {
         const { evaluation, transcript } = this.forms
-        const { subjects } = this.tables
-        if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id || 
+        const { subjects, enlistedSubjects } = this.tables
+
+       
+        if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id ||
           (evaluation.fields.studentCurriculumId === evaluation.fields.curriculumId )) {
-            this.tables.levelSubjects.isBusy = true;
-            this.tables.levelSubjects.items = subjects.filteredItems.filter(subject =>
-              subject.pivot.isTaken === 0 &&
+            enlistedSubjects.isBusy = true
+
+            enlistedSubjects.items = subjects.filteredItems.filter(subject =>
+              subject.isAllowed === true &&
               subject.pivot.levelId === transcript.fields.levelId &&
               subject.pivot.semesterId === transcript.fields.semesterId
             );
-            this.tables.levelSubjects.isBusy = false;
+
+            enlistedSubjects.items.forEach(item => {
+              this.$set(item, 'sectionId', null)
+              this.$set(item, 'section', null)
+            });
+            enlistedSubjects.isBusy = false
         }
+
       },
       onCompleteEnrollment(routePath) {
         const { student, activeAdmission } = this.forms
@@ -3355,7 +3835,52 @@ export default {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL);
         })
-      }
+      },
+      onShowModalSection(row) {
+        this.showModalSection = true
+        const { sectionsOfSubjects } = this.tables
+        const { sectionsOfSubject } = this.paginations
+        const { id: subjectId } = row.item
+        const { schoolYearId } = this.forms.transcript
+
+        this.selectedLevelSubject = null
+        this.selectedLevelSubject = row.item
+
+        const params = { paginate: false, perPage: sectionsOfSubject.perPage, subjectId, schoolYearId }
+        sectionsOfSubjects.isBusy = true
+
+        this.getSectionsOfSubject(params, subjectId).then(({ data }) => {
+          sectionsOfSubjects.items = data
+          sectionsOfSubject.totalRows = data.length
+          this.recordDetails(sectionsOfSubject)
+          sectionsOfSubjects.isBusy = false
+        }).catch((error) => {
+          sectionsOfSubjects.isBusy = false
+        })
+      },
+      onSectionSubjectClear(row) {
+        this.$set(row.item, 'sectionId', null)
+        this.$set(row.item, 'section', null)
+      },
+      onChangeSection(row) {
+        const { enlistedSubjects } = this.tables
+        this.$set(this.selectedLevelSubject, 'sectionId', row.item.id)
+        this.$set(this.selectedLevelSubject, 'section', { id: row.item.id, name: row.item.name })
+        this.showModalSection = false
+      },
+      loadScheduledSubjects() {
+        const params = { paginate: false }
+        const { scheduledSubjects } = this.tables
+        const { scheduledSubject } = this.paginations
+        const { sectionId } = this.filters.scheduledSubject
+        scheduledSubjects.isBusy = true
+        this.getSectionScheduledSubjects(params, sectionId).then(({ data }) => {
+          scheduledSubjects.items = data
+          scheduledSubject.totalRows = data.length
+          scheduledSubjects.isBusy = false
+          this.recordDetails(scheduledSubject)
+        })
+      },
     },
     computed: {
       hasActiveAdmission() {
@@ -3370,7 +3895,7 @@ export default {
       },
       totalUnits() {
         let totalUnits = 0
-        this.tables.levelSubjects.items.forEach(i => {
+        this.tables.enlistedSubjects.items.forEach(i => {
           totalUnits += i.totalUnits
         })
         return totalUnits
@@ -3611,6 +4136,10 @@ export default {
 
   .admission__wizard-form-fields {
     margin-bottom: 20px;
+  }
+
+  .item + .item:before {
+    content: " | ";
   }
 
 </style>

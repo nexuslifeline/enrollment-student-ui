@@ -39,6 +39,8 @@ import 'vue-awesome/icons/list-ol'
 import 'vue-awesome/icons/address-card'
 import 'vue-awesome/icons/bookmark'
 import 'vue-awesome/icons/file'
+import 'vue-awesome/icons/check'
+import 'vue-awesome/icons/times'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 

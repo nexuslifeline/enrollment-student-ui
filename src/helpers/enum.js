@@ -394,3 +394,14 @@ export const EvaluationStatuses = new Enum({
   REJECTED: { id: 4, name: 'Rejected' }
 });
 
+export const Days = new Enum({
+  MONDAY: { id: 1, name: 'Monday', abbrev: 'Mon' },
+  TUESDAY: { id: 2, name: 'Tuesday', abbrev: 'Tue' },
+  WEDNESDAY: { id: 3, name: 'Wednesday', abbrev: 'Wed' },
+  THURSDAY: { id: 4, name: 'Thursday', abbrev: 'Thu' },
+  FRIDAY: { id: 4, name: 'Friday', abbrev: 'Fri' },
+  SATURDAY: { id: 4, name: 'Saturday', abbrev: 'Sat' },
+  SUNDAY: { id: 4, name: 'Sunday', abbrev: 'Sun' }
+});
+
+
