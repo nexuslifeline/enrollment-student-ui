@@ -196,8 +196,8 @@
                 <b-form-group>
                   <label class="required">Home Landline/Mobile No.</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentHomeLandlineMobileNo" 
-                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo" 
+                    v-model="forms.address.fields.currentHomeLandlineMobileNo"
+                    :state="forms.address.states.addressCurrentHomeLandlineMobileNo"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
@@ -212,7 +212,7 @@
                   <b-form-textarea
                     rows="3"
                     v-model="forms.address.fields.currentCompleteAddress"
-                    :state="forms.address.states.addressCurrentCompleteAddress" 
+                    :state="forms.address.states.addressCurrentCompleteAddress"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentCompleteAddress}}
@@ -234,8 +234,8 @@
                 <b-form-group>
                   <label class="required">House No/Street</label>
                   <b-form-input
-                    v-model="forms.address.fields.permanentHouseNoStreet" 
-                    :state="forms.address.states.addressPermanentHouseNoStreet" 
+                    v-model="forms.address.fields.permanentHouseNoStreet"
+                    :state="forms.address.states.addressPermanentHouseNoStreet"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentHouseNoStreet}}
@@ -246,8 +246,8 @@
                 <b-form-group>
                   <label class="required">Barangay</label>
                   <b-form-input
-                    v-model="forms.address.fields.permanentBarangay" 
-                    :state="forms.address.states.addressPermanentBarangay" 
+                    v-model="forms.address.fields.permanentBarangay"
+                    :state="forms.address.states.addressPermanentBarangay"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentBarangay}}
@@ -258,8 +258,8 @@
                 <b-form-group>
                   <label class="required">City/Town</label>
                   <b-form-input
-                    v-model="forms.address.fields.permanentCityTown" 
-                    :state="forms.address.states.addressPermanentCityTown" 
+                    v-model="forms.address.fields.permanentCityTown"
+                    :state="forms.address.states.addressPermanentCityTown"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressPermanentCityTown}}
@@ -313,7 +313,7 @@
               <b-col md="4">
                 <b-form-group>
                   <label class="required">Country</label>
-                  <b-form-select 
+                  <b-form-select
                     v-model="forms.address.fields.permanentCountryId"
                     :state="forms.address.states.addressPermanentCountryId">
                     <template v-slot:first>
@@ -1021,16 +1021,16 @@
                   </template>
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
-                      <v-icon 
-                        name="spinner" 
+                      <v-icon
+                        name="spinner"
                         spin
                         class="mr-2" />
                       <strong>Loading...</strong>
                     </div>
                   </template>
                   <template v-slot:cell(action)="row">
-                    <b-button 
-                      @click="removeSubject(row)" 
+                    <b-button
+                      @click="removeSubject(row)"
                       size="sm" variant="danger">
                       <v-icon name="trash" />
                     </b-button>
@@ -1039,19 +1039,14 @@
                     <span>{{ row.item.section ? row.item.section.name : '' }}</span>
                     <a class="float-right" href="#" @click.prevent="onShowModalSection(row)">[Change]</a>
                     <br>
-                    <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a> 
-                    <!-- <b-form-select>
-                      <b-form-select-option v-for='sectionSubject in options.sectionSubjects.items' :key='sectionSubject.id' :value='sectionSubject.id'>
-                        
-                      </b-form-select-option>
-                    </b-form-select> -->
+                    <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a>
                   </template>
                 </b-table>
               </b-col>
             </b-row>
             <b-row>
               <b-col md="9">
-                <small>Note: You can add subjects by clicking the Add Subjects button while removal of subject is by clicking the red delete button inline on each subject.</small> 
+                <small>Note: You can add subjects by clicking the Add Subjects button while removal of subject is by clicking the red delete button inline on each subject.</small>
               </b-col>
               <b-col md="3">
                 <h5 >TOTAL UNITS : &emsp; {{ totalUnits}}</h5>
@@ -1150,7 +1145,16 @@
                               :fields="tables.billings.fields"
                               :items.sync="tables.billings.items"
                               borderless small responsive
-                            >
+                              :busy="tables.billings.isBusy" >
+                              <template v-slot:table-busy>
+                                <div class="text-center my-2">
+                                  <v-icon
+                                    name="spinner"
+                                    spin
+                                    class="mr-2" />
+                                  <strong>Loading...</strong>
+                                </div>
+                              </template>
                               <template v-slot:cell(action)>
                                 <a href="#" @click="previewAssessmentForm()">View Details</a>
                               </template>
@@ -1222,7 +1226,7 @@
                     </b-alert>
                   </b-card>
                   <h6>
-                    You have until {{ forms.billing.fields.dueDate }} to make the payment. 
+                    You have until {{ forms.billing.fields.dueDate }} to make the payment.
                     This reference number will not be valid until that.
                   </h6>
                 </b-col>
@@ -1233,7 +1237,7 @@
                     <span class="payment-step__number">1</span>
                     <div class="payment-step-details-container">
                       <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                        <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank. 
+                        <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank.
                         You can deposit/transfer your payment in any bank listed below.</span>
                         <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
                         <span v-if="forms.payment.fields.paymentModeId === 5">Choose your preferred Pera Padala provider.</span>
@@ -1241,19 +1245,49 @@
                           v-if="forms.payment.fields.paymentModeId === 1"
                           :fields="tables.bankAccounts.fields"
                           :items.sync="tables.bankAccounts.items"
-                          borderless small responsive>
+                          borderless small responsive
+                          :busy="tables.bankAccounts.isBusy">
+                          <template v-slot:table-busy>
+                            <div class="text-center my-2">
+                              <v-icon
+                                name="spinner"
+                                spin
+                                class="mr-2" />
+                              <strong>Loading...</strong>
+                            </div>
+                          </template>
                         </b-table>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 4"
                           :fields="tables.eWalletAccounts.fields"
                           :items.sync="tables.eWalletAccounts.items"
-                          borderless small responsive>
+                          borderless small responsive
+                          :busy="tables.bankAccounts.isBusy">
+                          <template v-slot:table-busy>
+                            <div class="text-center my-2">
+                              <v-icon
+                                name="spinner"
+                                spin
+                                class="mr-2" />
+                              <strong>Loading...</strong>
+                            </div>
+                          </template>
                         </b-table>
                         <b-table
                           v-if="forms.payment.fields.paymentModeId === 5"
                           :fields="tables.peraPadalaAccounts.fields"
                           :items.sync="tables.peraPadalaAccounts.items"
-                          borderless small responsive>
+                          borderless small responsive
+                          :busy="tables.bankAccounts.isBusy">
+                          <template v-slot:table-busy>
+                            <div class="text-center my-2">
+                              <v-icon
+                                name="spinner"
+                                spin
+                                class="mr-2" />
+                              <strong>Loading...</strong>
+                            </div>
+                          </template>
                         </b-table>
                       </div>
                       <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
@@ -1272,7 +1306,7 @@
                   </div>
                   <div class="file-uploader-container">
                     <FileUploader
-                      @onFileChange="onPaymentFileUpload" 
+                      @onFileChange="onPaymentFileUpload"
                       @onFileDrop="onPaymentFileUpload"
                     />
                   </div>
@@ -1289,7 +1323,7 @@
                       :isBusy="item.isBusy"
                     />
                   </div>
-                </b-col> 
+                </b-col>
               </b-row>
               <b-row class="mt-3">
                 <b-col md=12>
@@ -1308,7 +1342,7 @@
                               <label>Enter amount you pay</label>
                               <vue-autonumeric
                                 v-model="forms.payment.fields.amount"
-                                class="form-control text-right" 
+                                class="form-control text-right"
                                 :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
                                 :state="forms.payment.states.amount"
                                 debounce="500"
@@ -1399,7 +1433,7 @@
                 <div v-else>
                   <b-alert variant="success" show>
                     <h5>PAYMENT SUBMITTED !</h5>
-                    <p> Thank you for submitting your application for this school year. 
+                    <p> Thank you for submitting your application for this school year.
                     <br> We will review your payment and once approved, we will
                     <br> notify you.
                     <br>
@@ -1441,7 +1475,7 @@
         </div>
       </div>
     </div>
-    <b-modal 
+    <b-modal
       v-model="showPaymentFileModal"
       centered
       header-bg-variant="success"
@@ -1455,7 +1489,7 @@
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
-          <b-textarea 
+          <b-textarea
             v-model="forms.paymentFile.fields.notes"
             :state="forms.paymentFile.states.notes"
             rows=7
@@ -1466,7 +1500,7 @@
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-        <b-button 
+        <b-button
           class="float-left" 
           @click="onDeletePaymentFile(selectedPaymentFileIndex)"
           variant="outline-danger">
@@ -1478,9 +1512,9 @@
           />
           Delete
         </b-button>
-        <b-button 
+        <b-button
           @click="onUpdatePaymentFile()"
-          class="float-right" 
+          class="float-right"
           variant="outline-primary">
           <v-icon
             v-if="isFileUpdating"
@@ -1491,9 +1525,9 @@
           Update
         </b-button>
       </div> <!-- modal footer buttons -->
-    </b-modal>  
+    </b-modal>
 
-    <b-modal 
+    <b-modal
       v-model="showEvaluationFileModal"
       centered
       header-bg-variant="success"
@@ -1506,7 +1540,7 @@
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
-          <b-textarea 
+          <b-textarea
             v-model="forms.evaluationFile.fields.notes"
             :state="forms.evaluationFile.states.notes"
             rows=7
@@ -1517,8 +1551,8 @@
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-        <b-button 
-          class="float-left" 
+        <b-button
+          class="float-left"
           @click="onDeleteEvaluationFile(selectedEvaluationFileIndex)"
           variant="outline-danger">
           <v-icon
@@ -1529,9 +1563,9 @@
           />
           Delete
         </b-button>
-        <b-button 
+        <b-button
           @click="onUpdateEvaluationFile()"
-          class="float-right" 
+          class="float-right"
           variant="outline-primary">
           <v-icon
             v-if="isFileUpdating"
@@ -1542,9 +1576,9 @@
           Update
         </b-button>
       </div> <!-- modal footer buttons -->
-    </b-modal>  
+    </b-modal>
     <!-- Modal Subject -->
-    <b-modal 
+    <b-modal
 			v-model="showModalSubjects"
 			:noCloseOnEsc="true"
 			:noCloseOnBackdrop="true"
@@ -1619,7 +1653,6 @@
                     </b-form-group>
                   </b-col>
                 </b-row>
-                
 
                 <!-- @filtered="onFiltered($event, paginations.subject)" -->
                 <b-table
@@ -1635,8 +1668,8 @@
 
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
-                      <v-icon 
-                        name="spinner" 
+                      <v-icon
+                        name="spinner"
                         spin
                         class="mr-2" />
                       <strong>Loading...</strong>
@@ -1662,12 +1695,11 @@
                     <span v-for="schedule in row.item.schedules" :key="schedule.id" class="item">
                       <small>{{ Days.getEnum(schedule.dayId).abbrev + ' - Time: ' + schedule.startTime + ' - ' + schedule.endTime  }}</small>
                     </span>
-                  </template> 
+                  </template>
 
                   <template v-slot:cell(action)="row">
                     <b-button
-        
-                      @click="addScheduledSubject(row)" 
+                      @click="addScheduledSubject(row)"
                       size="sm" variant="success">
                       <v-icon name="plus" />
                     </b-button>
@@ -1806,18 +1838,17 @@
           </b-card>
         </div>
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
-        class="float-right" 
+				<b-button
+        class="float-right"
         variant="outline-danger"
         @click="showModalSubjects=false">
         Close
       </b-button>
 			</div> <!-- modal footer buttons -->
 		</b-modal>
-
     <!-- Modal Subject -->
     <!-- Modal Preview -->
-    <b-modal 
+    <b-modal
 			v-model="showModalPreview"
 			size="xl"
 			header-bg-variant="success"
@@ -1832,8 +1863,8 @@
           <div v-if="file.src">
             <center>
               <b-img
-                fluid 
-                v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'" 
+                fluid
+                v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'"
                 :src="file.src" />
               <b-embed
                 v-else
@@ -1847,7 +1878,7 @@
 				</b-col>
 			</b-row> <!-- modal body -->
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
+				<b-button
           class="float-right"
           variant="outline-danger"
           @click="showModalPreview=false">
@@ -1880,8 +1911,8 @@
            >
           <template v-slot:table-busy>
             <div class="text-center my-2">
-              <v-icon 
-                name="spinner" 
+              <v-icon
+                name="spinner"
                 spin
                 class="mr-2" />
               <strong>Loading...</strong>
@@ -1903,7 +1934,6 @@
                 <v-icon name="check" />
               </b-button>
             </template>
-           
           </b-table>
           <b-row>
               <b-col md=6>
@@ -1923,7 +1953,7 @@
 				</b-col>
 			</b-row> <!-- modal body -->
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
+				<b-button
           class="float-right"
           variant="outline-danger"
           @click="showModalSection=false">
@@ -2491,6 +2521,7 @@ export default {
           items:  []
         },
         billings: {
+          isBusy: false,
           fields: [
             {
               key: "billingNo",
@@ -2870,6 +2901,7 @@ export default {
   },
   methods: {
     onUpdateStudent() {
+      this.isProcessing = true;
 
       const {
         student: { fields: { id: studentId } },
@@ -2906,7 +2938,7 @@ export default {
         { transcript: transcript.fields, subjects }
       ];
 
-      // added null to skip waiting for evaluation step 
+      // added null to skip waiting for evaluation step
       const formsToValidate = [
         student,
         address,
@@ -2946,7 +2978,6 @@ export default {
         reset(form)
       })
 
-      this.isProcessing = true;
       this.updateStudent(data, studentId).then(({ data }) => {
 
         //load billing when on payment stage after update
@@ -2980,6 +3011,7 @@ export default {
       });
     },
     onUpdatePayment() {
+      this.isProcessing = true;
       const { payment, billing: { fields: { totalAmount, id: billingId }} } = this.forms
 
       reset(payment)
@@ -3004,6 +3036,7 @@ export default {
         this.updatePayment(dataPayment, payment.fields.id).then(({ data }) =>{
           copyValue(data, payment)
           this.onUpdateStudent()
+          this.isProcessing = false;
         }).catch((error) => {
           const { errors } = error.response.data;
           validate(payment, errors)
@@ -3050,7 +3083,6 @@ export default {
         this.filters.scheduledSubject.schoolCategoryId = level.schoolCategoryId
       }
 
-      
       this.options.courses.scheduledLoading = true
       this.getCoursesOfLevelList(levelId, params).then(({ data }) => {
         this.options.courses.scheduledItems = data
@@ -3157,6 +3189,7 @@ export default {
       const { billings } = this.tables
       const { payment } = this.forms
 
+      billings.isBusy = true
       const {
         student: { fields: { id: studentId } },
         transcript: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
@@ -3229,6 +3262,9 @@ export default {
             })
           }
         }
+        billings.isBusy = false
+      }).catch((error) => {
+        billings.isBusy = false
       })
     },
     onPaymentFileUpload(file) {
@@ -3299,22 +3335,32 @@ export default {
     loadBankAccounts() {
       const params = { paginate: false }
       const { bankAccounts } = this.tables
+      bankAccounts.isBusy = true
       this.getBankAccountList(params).then(({ data }) => {
         bankAccounts.items = data
+        bankAccounts.isBusy = false
+      }).catch((error) =>{
+        bankAccounts.isBusy = false
       })
     },
     loadPeraPadalaAccounts() {
       const params = { paginate: false }
       const { peraPadalaAccounts } = this.tables
+      peraPadalaAccounts.isBusy = true
       this.getPeraPadalaAccountList(params).then(({ data }) => {
         peraPadalaAccounts.items = data
+      }).catch((error) =>{
+        peraPadalaAccounts.isBusy = false
       })
     },
     loadEWalletAccounts() {
       const params = { paginate: false }
       const { eWalletAccounts } = this.tables
+      eWalletAccounts.isBusy = true
       this.getEWalletAccountList(params).then(({ data }) => {
         eWalletAccounts.items = data
+      }).catch((error) =>{
+        eWalletAccounts.isBusy = false
       })
     },
     onPaymentFileItemSelect(idx) {

@@ -1033,7 +1033,7 @@
                           class="mr-2" />
                         <strong>Loading...</strong>
                       </div>
-                      </template>
+                    </template>
                       <template v-slot:cell(action)="row">
                       <b-button 
                         @click="removeSubject(row)" 
@@ -1165,7 +1165,16 @@
                                 :fields="tables.billings.fields"
                                 :items.sync="tables.billings.items"
                                 borderless small responsive
-                              >
+                                :busy="tables.billings.isBusy" >
+                                <template v-slot:table-busy>
+                                  <div class="text-center my-2">
+                                    <v-icon
+                                      name="spinner"
+                                      spin
+                                      class="mr-2" />
+                                    <strong>Loading...</strong>
+                                  </div>
+                                </template>
                                 <template v-slot:cell(action)>
                                   <a href="#" @click="previewAssessmentForm()">View Details</a>
                                 </template>
@@ -1257,19 +1266,49 @@
                             v-if="forms.payment.fields.paymentModeId === 1"
                             :fields="tables.bankAccounts.fields"
                             :items.sync="tables.bankAccounts.items"
-                            borderless small responsive>
+                            borderless small responsive
+                            :busy="tables.bankAccounts.isBusy">
+                            <template v-slot:table-busy>
+                              <div class="text-center my-2">
+                                <v-icon
+                                  name="spinner"
+                                  spin
+                                  class="mr-2" />
+                                <strong>Loading...</strong>
+                              </div>
+                            </template>
                           </b-table>
                           <b-table
                             v-if="forms.payment.fields.paymentModeId === 4"
                             :fields="tables.eWalletAccounts.fields"
                             :items.sync="tables.eWalletAccounts.items"
-                            borderless small responsive>
+                            borderless small responsive
+                            :busy="tables.eWalletAccounts.isBusy">
+                            <template v-slot:table-busy>
+                              <div class="text-center my-2">
+                                <v-icon
+                                  name="spinner"
+                                  spin
+                                  class="mr-2" />
+                                <strong>Loading...</strong>
+                              </div>
+                            </template>
                           </b-table>
                           <b-table
                             v-if="forms.payment.fields.paymentModeId === 5"
                             :fields="tables.peraPadalaAccounts.fields"
                             :items.sync="tables.peraPadalaAccounts.items"
-                            borderless small responsive>
+                            borderless small responsive
+                            :busy="tables.peraPadalaAccounts.isBusy">
+                            <template v-slot:table-busy>
+                              <div class="text-center my-2">
+                                <v-icon
+                                  name="spinner"
+                                  spin
+                                  class="mr-2" />
+                                <strong>Loading...</strong>
+                              </div>
+                            </template>
                           </b-table>
                         </div>
                         <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">
@@ -1290,7 +1329,7 @@
                     </div>
                     <div class="file-uploader-container">
                       <FileUploader
-                        @onFileChange="onPaymentFileUpload" 
+                        @onFileChange="onPaymentFileUpload"
                         @onFileDrop="onPaymentFileUpload"
                       />
                     </div>
@@ -1307,7 +1346,7 @@
                         :isBusy="item.isBusy"
                       />
                     </div>
-                  </b-col> 
+                  </b-col>
                 </b-row>
                 <b-row class="mt-3">
                   <b-col md=12>
@@ -1326,7 +1365,7 @@
                                 <label>Enter amount you pay</label>
                                 <vue-autonumeric
                                   v-model="forms.payment.fields.amount"
-                                  class="form-control text-right" 
+                                  class="form-control text-right"
                                   :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
                                   :state="forms.payment.states.amount"
                                   debounce="500"
@@ -1416,7 +1455,7 @@
                   <div v-else>
                     <b-alert variant="success" show>
                       <h5>PAYMENT SUBMITTED !</h5>
-                      <p> Thank you for submitting your application for this school year. 
+                      <p> Thank you for submitting your application for this school year.
                       <br> We will review your payment and once approved, we will
                       <br> notify you.
                       <br>
@@ -1574,7 +1613,7 @@
       </div> <!-- modal footer buttons -->
     </b-modal>
     <!-- Modal Subject -->
-    <b-modal 
+    <b-modal
 			v-model="showModalSubjects"
 			:noCloseOnEsc="true"
 			:noCloseOnBackdrop="true"
@@ -1649,7 +1688,6 @@
                     </b-form-group>
                   </b-col>
                 </b-row>
-                
 
                 <!-- @filtered="onFiltered($event, paginations.subject)" -->
                 <b-table
@@ -1836,8 +1874,8 @@
           </b-card>
         </div>
 			<div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
-				<b-button 
-          class="float-right" 
+				<b-button
+          class="float-right"
           variant="outline-danger"
           @click="showModalSubjects=false">
           Close
@@ -2588,6 +2626,7 @@ export default {
             items:  []
           },
           billings: {
+            isBusy: false,
             fields: [
               {
                 key: "billingNo",
@@ -2957,6 +2996,8 @@ export default {
     },
     methods: {
       onUpdateStudent() {
+
+        this.isProcessing = true
         const {
           student: { fields: { id: studentId } },
           student,
@@ -3033,9 +3074,7 @@ export default {
           if (form)
           reset(form)
         })
-
-        this.isProcessing = true
-
+z
         this.updateStudent(data, studentId).then(({ data }) => {
           // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
           //   this.$router.push({ name: 'Dashboard' })
@@ -3068,6 +3107,7 @@ export default {
         });
       },
       onUpdatePayment() {
+        this.isProcessing = true;
         const { payment, billing: { fields: { totalAmount, id: billingId }} } = this.forms
 
         reset(payment)
@@ -3092,6 +3132,7 @@ export default {
           this.updatePayment(dataPayment, payment.fields.id).then(({ data }) =>{
             copyValue(data, payment)
             this.onUpdateStudent()
+            this.isProcessing = false;
           }).catch((error) => {
             const { errors } = error.response.data;
             validate(payment, errors)
@@ -3241,6 +3282,7 @@ export default {
         const { billings } = this.tables
         const { payment } = this.forms
 
+        billings.isBusy = true
         const {
           student: { fields: { id: studentId } },
           transcript: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
@@ -3311,8 +3353,10 @@ export default {
               copyValue(data.transcript, transcript.fields)
             })
           }
-
+            billings.isBusy = false
           }
+        }).catch((error) => {
+          billings.isBusy = false
         })
       },
       onPaymentFileUpload(file) {
@@ -3397,22 +3441,34 @@ export default {
       loadBankAccounts() {
         const params = { paginate: false }
         const { bankAccounts } = this.tables
+        bankAccounts.isBusy = true
         this.getBankAccountList(params).then(({ data }) => {
           bankAccounts.items = data
+          bankAccounts.isBusy = false
+        }).catch((error) =>{
+          bankAccounts.isBusy = false
         })
       },
       loadPeraPadalaAccounts() {
         const params = { paginate: false }
         const { peraPadalaAccounts } = this.tables
+        peraPadalaAccounts.isBusy = true
         this.getPeraPadalaAccountList(params).then(({ data }) => {
           peraPadalaAccounts.items = data
+          peraPadalaAccounts.isBusy = false
+        }).catch((error) =>{
+          peraPadalaAccounts.isBusy = false
         })
       },
       loadEWalletAccounts() {
         const params = { paginate: false }
         const { eWalletAccounts } = this.tables
+        eWalletAccounts.isBusy = true
         this.getEWalletAccountList(params).then(({ data }) => {
           eWalletAccounts.items = data
+          eWalletAccounts.isBusy = false
+        }).catch((error) =>{
+          eWalletAccounts.isBusy = false
         })
       },
       onPaymentFileItemSelect(idx) {
