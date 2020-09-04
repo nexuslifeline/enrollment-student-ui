@@ -18,7 +18,8 @@
             <b-form-input
               v-model="forms.auth.fields.username"
               placeholder="Username"
-              :state="forms.auth.states.username"/>
+              :state="forms.auth.states.username"
+              @keyup.enter="login()"/>
             <b-form-invalid-feedback>
               {{forms.auth.errors.username}}
             </b-form-invalid-feedback>
@@ -28,7 +29,8 @@
               v-model="forms.auth.fields.password"
               type="password"
               placeholder="Password"
-              :state="forms.auth.states.password"/>
+              :state="forms.auth.states.password"
+              @keyup.enter="login()"/>
               <b-form-invalid-feedback>
                 {{forms.auth.errors.password}}
               </b-form-invalid-feedback>
