@@ -3074,7 +3074,7 @@ export default {
           if (form)
           reset(form)
         })
-z
+
         this.updateStudent(data, studentId).then(({ data }) => {
           // if (applicationStatusId === ApplicationStatuses.COMPLETED.id) {
           //   this.$router.push({ name: 'Dashboard' })
