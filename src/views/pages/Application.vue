@@ -98,8 +98,8 @@
                 <b-form-group>
                   <label class="required">House No/Street</label>
                   <b-form-input
-                    v-model="forms.address.fields.currentHouseNoStreet" 
-                    :state="forms.address.states.addressCurrentHouseNoStreet" 
+                    v-model="forms.address.fields.currentHouseNoStreet"
+                    :state="forms.address.states.addressCurrentHouseNoStreet"
                     debounce="500"/>
                   <b-form-invalid-feedback>
                     {{forms.address.errors.addressCurrentHouseNoStreet}}
@@ -953,7 +953,8 @@
                           <b-form-select
                             :disabled="sectionIsLoading"
                             v-model='forms.transcript.fields.sectionId'
-                            :state="forms.transcript.states.transcriptSectionId">
+                            :state="forms.transcript.states.transcriptSectionId"
+                            @change="prePopulateStudentSubjects()">
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>
                                 -- Section --
@@ -1677,8 +1678,8 @@
                   </template>
 
                   <template v-slot:cell(isAllowed)="row">
-                    <!-- <v-icon :name="row.item.isAllowed ? 'check' : 'times'" :color="row.item.isAllowed ? 'green' : 'red'"/> -->
-                    <v-icon name="check" color ="green"/>
+                    <v-icon :name="row.item.isAllowed ? 'check' : 'times'" :color="row.item.isAllowed ? 'green' : 'red'"/>
+                    <!-- <v-icon name="check" color ="green"/> -->
                   </template>
 
                    <template v-slot:cell(subject)="row">
@@ -1730,9 +1731,9 @@
               <b-col md=12>
                 <b-row class="mb-2">
                   <b-col md="3">
-                    <b-form-group 
+                    <b-form-group
                           v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
-                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
                           || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
                       <label>Level</label>
                       <b-form-select
@@ -1772,12 +1773,11 @@
                       <b-form-input
                         v-model="filters.subject.criteria"
                         type="text"
-                        debounce="500"> 
+                        debounce="500">
                       </b-form-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
-                
                 <b-table
                   class="c-app__table"
                   small hover outlined show-empty
@@ -1790,8 +1790,8 @@
                   @filtered="onFiltered($event, paginations.subject)">
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
-                      <v-icon 
-                        name="spinner" 
+                      <v-icon
+                        name="spinner"
                         spin
                         class="mr-2" />
                       <strong>Loading...</strong>
@@ -1805,7 +1805,7 @@
                   <template v-slot:cell(action)="row">
                     <b-button
                       v-if="row.item.isAllowed"
-                      @click="addSubject(row)" 
+                      @click="addSubject(row)"
                       size="sm" variant="success">
                       <v-icon name="plus" />
                     </b-button>
@@ -2270,7 +2270,6 @@ export default {
       selectedEvaluationFileIndex: null,
       isFileUpdating: false,
       isFileDeleting: false,
-      isLoading: false,
       isApplied: false,
       dismissCountDown: 0,
       evaluationDismissCountDown: 0,
@@ -2768,7 +2767,6 @@ export default {
       return;
     }
 
-    this.isLoading = true;
     let params = { paginate: false }
     const studentId = this.$store.state.user.id;
     this.getStudent(studentId).then(({ data: student }) => {
@@ -2832,8 +2830,9 @@ export default {
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
-        const params = { paginate: false }
-        this.getUnscheduledSubjects(student.evaluation.id, params).then(({ data }) => {
+        const { id: evaluationId,  curriculumId } = student.evaluation
+        const params = { paginate: false , curriculumId }
+        this.getUnscheduledSubjects(evaluationId, params).then(({ data }) => {
           const result = data.filter(subject => subject.isAllowed == true)
 
           //clear subjects
@@ -2845,7 +2844,6 @@ export default {
           subject.totalRows = data.length
           subjects.isBusy = false
           this.recordDetails(subject)
-          this.prePopulateStudentSubjects()
         })
       } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
         //if rejected move 1 step back
@@ -2989,9 +2987,9 @@ export default {
         this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
 
         //pre populate enlistedsubjects of student
-        if (data.activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
-          this.prePopulateStudentSubjects()
-        }
+        // if (data.activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
+        //   this.prePopulateStudentSubjects()
+        // }
 
         //make education last school attended and year
         //default to request evaluation with the same fields
@@ -3479,7 +3477,7 @@ export default {
       }
       this.$set(row.item, 'sectionId', (item.schedules[0].sectionId ? item.schedules[0].sectionId : null))
       this.$set(row.item, 'section', (item.schedules[0].section ? item.schedules[0].section : null) )
-      
+
       items.push(row.item)
     },
     previewPaymentFile(index) {
@@ -3518,7 +3516,6 @@ export default {
       const { schoolYearId } = this.forms.transcript.fields
       const { levelId, courseId, semesterId } = this.filters.scheduledSubject
 
-    
       if (courses.scheduledItems.length !==0 || courses.scheduledItems.length !==0) {
         if (!courseId || !semesterId) {
           return
@@ -3638,24 +3635,29 @@ export default {
       this.onFiltered(subjects.filteredItems, subject)
     },
     prePopulateStudentSubjects() {
-      const { evaluation, transcript } = this.forms
-      const { subjects, enlistedSubjects } = this.tables
-      if (evaluation.fields.studentCategoryId === StudentCategories.NEW.id ||
-        (evaluation.fields.studentCurriculumId === evaluation.fields.curriculumId )) {
-          enlistedSubjects.isBusy = true
 
-          enlistedSubjects.items = subjects.filteredItems.filter(subject =>
-            subject.isAllowed === true &&
-            subject.pivot.levelId === transcript.fields.levelId &&
-            subject.pivot.semesterId === transcript.fields.semesterId
-          );
+      const { sectionId } = this.forms.transcript.fields
+      const { curriculumId } = this.forms.evaluation.fields
+      const { enlistedSubjects } = this.tables
+      const params = { paginate: false, curriculumId }
+      enlistedSubjects.isBusy = true
 
-          enlistedSubjects.items.forEach(item => {
-            this.$set(item, 'sectionId', null)
-            this.$set(item, 'section', null)
-          });
-          enlistedSubjects.isBusy = false
+      if (!sectionId) {
+        enlistedSubjects.items = []
+        enlistedSubjects.isBusy = false
+        return
       }
+
+      this.getSectionScheduledSubjectsWithStatus(params, sectionId).then(({ data }) => {
+        const allowedSubjects = data.filter(s => s.isAllowed === true)
+        enlistedSubjects.items  = allowedSubjects
+        const section = this.options.sections.items.find(s => s.id === sectionId )
+        enlistedSubjects.items.forEach(item => {
+          this.$set(item, 'sectionId', section ? section.id : null)
+          this.$set(item, 'section', section ? section : null)
+        });
+        enlistedSubjects.isBusy = false
+      })
     },
     onCompleteEnrollment(routePath) {
       const { student, activeApplication } = this.forms
@@ -3731,16 +3733,26 @@ export default {
       this.showModalSection = false
     },
     loadScheduledSubjects() {
-      const params = { paginate: false }
       const { scheduledSubjects } = this.tables
       const { scheduledSubject } = this.paginations
       const { sectionId } = this.filters.scheduledSubject
+      const { curriculumId } = this.forms.evaluation.fields
+      const params = { paginate: false, curriculumId }
       scheduledSubjects.isBusy = true
-      this.getSectionScheduledSubjects(params, sectionId).then(({ data }) => {
+
+      if (!sectionId) {
+        scheduledSubjects.items = []
+        scheduledSubjects.isBusy = false
+        return
+      }
+
+      this.getSectionScheduledSubjectsWithStatus(params, sectionId).then(({ data }) => {
         scheduledSubjects.items = data
         scheduledSubject.totalRows = data.length
         scheduledSubjects.isBusy = false
         this.recordDetails(scheduledSubject)
+      }).catch((error) => {
+        scheduledSubjects.isBusy = false
       })
     },
   },
