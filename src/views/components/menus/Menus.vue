@@ -35,26 +35,43 @@
             title: 'My Statements',
             image: '/img/svg/my-statements.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'statements'
           },
           {
             title: 'My Payments',
             image: '/img/svg/my-payments.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'payments'
           },
           {
             title: 'My Grades',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'grades'
           },
           {
             title: 'My Profile',
             image: '/img/svg/my-profile.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'profile'
           },
           {
             title: 'My Applications',
             image: '/img/svg/my-applications.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'applications'
+          },
+          {
+            title: 'My Requirements',
+            image: '/img/svg/my-documents.svg',
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'requirements'
+          },
+          {
+            title: 'My Schedule',
+            image: '/img/svg/my-documents.svg',
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: 'schedules'
           }
         ]
       }

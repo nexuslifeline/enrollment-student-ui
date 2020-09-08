@@ -16,10 +16,13 @@ const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
 const Application = () => import('@/views/pages/Application')
 const Admission = () => import('@/views/pages/Admission')
-const Billing = () => import('@/views/pages/Billing')
-const Grade = () => import('@/views/pages/Grade')
-const Profile = () => import('@/views/pages/Profile')
-const Payment = () => import('@/views/pages/Payment')
+const MyStatements = () => import('@/views/pages/MyStatements')
+const MyGrades = () => import('@/views/pages/MyGrades')
+const MyProfile = () => import('@/views/pages/MyProfile')
+const MyPayments = () => import('@/views/pages/MyPayments')
+const MyApplications = () => import('@/views/pages/MyApplications')
+const MyRequirements = () => import('@/views/pages/MyRequirements')
+const MySchedules = () => import('@/views/pages/MySchedules')
 const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
 const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
 const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
@@ -82,27 +85,45 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'billing',
-          name: 'Billing',
-          component: Billing,
+          path: 'statements',
+          name: 'MyStatements',
+          component: MyStatements,
           meta: {requiresAuth: true}
         },
         {
-          path: 'grade',
-          name: 'Grade',
-          component: Grade,
+          path: 'grades',
+          name: 'MyGrades',
+          component: MyGrades,
           meta: {requiresAuth: true}
         },
         {
           path: 'profile',
-          name: 'Profile',
-          component: Profile,
+          name: 'MyProfile',
+          component: MyProfile,
           meta: {requiresAuth: true}
         },
         {
-          path: 'payment',
-          name: 'Payment',
-          component: Payment,
+          path: 'payments',
+          name: 'MyPayments',
+          component: MyPayments,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'applications',
+          name: 'MyApplications',
+          component: MyApplications,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'requirements',
+          name: 'MyRequirements',
+          component: MyRequirements,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'schedules',
+          name: 'MySchedules',
+          component: MySchedules,
           meta: {requiresAuth: true}
         },
         {

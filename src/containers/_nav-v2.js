@@ -21,7 +21,7 @@ export default [
   },
   {
     name: 'My Grades',
-    to: '/payments',
+    to: '/grades',
     icon: 'list-ol'
   },
   {
@@ -31,7 +31,17 @@ export default [
   },
   {
     name: 'My Applications',
-    to: '/profile',
+    to: '/applications',
     icon: 'bookmark'
+  },
+  {
+    name: 'My Requirements',
+    to: '/requirements',
+    icon: 'list-ol'
+  },
+  {
+    name: 'My Schedules',
+    to: '/schedules',
+    icon: 'folder'
   }
 ]
