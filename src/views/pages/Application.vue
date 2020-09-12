@@ -2009,7 +2009,7 @@ import {
   Days
 } from '../../helpers/enum';
 import { copyValue } from '../../helpers/extractor';
-import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
+import { validate, reset, formatNumber, showNotification, getCurrentDateTime } from '../../helpers/forms';
 import Tables from '../../helpers/tables'
 import PhotoViewer from '../components/PhotoViewer'
 import  FileUploader from '../components/FileUploader'
@@ -2177,6 +2177,7 @@ const evaluationFields = {
   schoolCategoryId: null,
   studentCurriculumId: null,
   semesterId: null,
+  submittedDate: null
 }
 
 const evaluationErrorFields = {
@@ -2938,6 +2939,10 @@ export default {
         ? EvaluationStatuses.SUBMITTED.id
         : evaluation.fields.evaluationStatusId;
 
+      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
+        evaluation.fields.submittedDate =  getCurrentDateTime()
+      }
+
       const payloads = [
          student.fields,
         { address: address.fields },
@@ -3607,7 +3612,7 @@ export default {
         setTimeout(() => selectedFile.isBusy = false, 1000);
       }).catch((error) => {
         const { errors } = error.response.data;
-        validate(paymentFile, errors);
+        validate(evaluationFile, errors);
         this.isFileUpdating = false
         selectedFile.isBusy = false
       });

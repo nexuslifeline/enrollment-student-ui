@@ -2097,7 +2097,7 @@ import FileViewer  from "../components/FileViewer";
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
 import { copyValue } from '../../helpers/extractor';
-import { validate, reset, formatNumber, showNotification } from '../../helpers/forms';
+import { validate, reset, formatNumber, showNotification, getCurrentDateTime } from '../../helpers/forms';
 import Tables from '../../helpers/tables';
 import PhotoViewer from '../components/PhotoViewer';
 import ProgressIndicator from '../components/ProgressIndicator';
@@ -3034,6 +3034,10 @@ export default {
             ? EvaluationStatuses.SUBMITTED.id
             : evaluation.fields.evaluationStatusId;
 
+        if (activeAdmission.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id) {
+          evaluation.fields.submittedDate =  getCurrentDateTime()
+        }
+
 
         const payloads = [
           student.fields,
@@ -3185,7 +3189,6 @@ export default {
           this.filters.scheduledSubject.schoolCategoryId = level.schoolCategoryId
         }
 
-        
         this.options.courses.scheduledLoading = true
         this.getCoursesOfLevelList(levelId, params).then(({ data }) => {
           this.options.courses.scheduledItems = data
@@ -3777,7 +3780,7 @@ export default {
           setTimeout(() => selectedFile.isBusy = false, 1000);
         }).catch((error) => {
           const { errors } = error.response.data;
-          validate(paymentFile, errors);
+          validate(evaluationFile, errors);
           this.isFileUpdating = false
           selectedFile.isBusy = false
         });
