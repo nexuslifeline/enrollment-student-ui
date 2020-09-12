@@ -33,20 +33,36 @@
         </div>
       </template>
     </b-table>
+    <FileViewer
+      :show="showModalPreview"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="showModalPreview = false"/>
   </div>
 </template>
 
 <script>
 import { TranscriptApi, ReportApi } from "../../../mixins/api";
 import { TranscriptStatuses } from "../../../helpers/enum";
+import FileViewer from "../../components/FileViewer";
 import headline from './data/assessment';
 
 export default {
   mixins: [ TranscriptApi, ReportApi ],
   headline,
+  components: { FileViewer },
   data() {
     return {
       TranscriptStatuses: TranscriptStatuses,
+      showModalPreview : false,
+      file: {
+        type: null,
+        src: null,
+        name: null,
+        notes: null,
+        isLoading: false
+      },
       tables: {
         assessment: {
           isBusy: false,
@@ -131,11 +147,30 @@ export default {
   },
   methods: {
     onPrintAssesment(transcriptId) {
+      // this.getAssessmentFormPreview(transcriptId)
+      // .then(({ data }) => {
+      //   const file = new Blob([data], { type: "application/pdf" });
+      //   const fileURL = URL.createObjectURL(file);
+      //   window.open(fileURL);
+      // })
+
+      this.file.type = null
+      this.file.src = null
+      this.file.notes = null
+      this.file.isLoading = true
+      this.file.owner = null;
+      this.file.name = 'Assesment Form'
+
+      this.showModalPreview = true
       this.getAssessmentFormPreview(transcriptId)
-      .then(({ data }) => {
-        const file = new Blob([data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
+        .then(response => {
+          console.log(response)
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: "application/pdf" } )
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
       })
     }
   }

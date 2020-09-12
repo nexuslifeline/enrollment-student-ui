@@ -1,45 +1,12 @@
 <template>
-  <div class="my-payments__main-container">
-    <div class="my-payments__announcement-container">
-      <p>Thank you for being patient. We are still doing some work on this feature. </p>
-      <p class="team-text">- Nexus Team</p>
-    </div>
-  </div>
+  <Maintenance />
 </template>
 
 <script>
+import Maintenance from '../components/Maintenance';
 export default {
-
+  components: {
+    Maintenance
+  }
 }
 </script>
-
-<style lang="scss">
-  @import "../../assets/scss/shared.scss";
-
-  .my-payments__main-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    padding: 60px;
-
-    @include for-size(phone-only) {
-      padding: 10px;
-    }
-  }
-
-  .my-payments__announcement-container {
-    height: auto;
-    width: 100%;
-    padding: 40px;
-    font-size: 20pt;
-    text-align: center;
-
-    .team-text {
-      text-align: end;
-    }
-  }
-
-</style>

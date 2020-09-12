@@ -1884,7 +1884,6 @@
     <!-- Modal Subject -->
     <!-- Modal Preview -->
     <b-modal
-			v-model="showModalPreview"
 			size="xl"
 			header-bg-variant="success"
 			header-text-variant="light"
@@ -1899,7 +1898,7 @@
             <center>
               <b-img
                 fluid
-                v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'" 
+                v-if="file.type.substr(0, file.type.indexOf('/')) == 'image'"
                 :src="file.src" />
               <b-embed
                 v-else
@@ -1996,8 +1995,8 @@
            >
            <template v-slot:table-busy>
               <div class="text-center my-2">
-                <v-icon 
-                  name="spinner" 
+                <v-icon
+                  name="spinner"
                   spin
                   class="mr-2" />
                 <strong>Loading...</strong>
@@ -2019,7 +2018,6 @@
                 <v-icon name="check" />
               </b-button>
             </template>
-           
           </b-table>
           <b-row>
               <b-col md=6>
@@ -2047,6 +2045,13 @@
         </b-button>
 			</div> <!-- modal footer buttons -->
     </b-modal>
+    <FileViewer
+      :show="showModalPreview"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="showModalPreview = false"
+    />
   </div>
   <!-- main container -->
 </template>
@@ -2088,6 +2093,7 @@ import {
   Days
 } from '../../helpers/enum'
 import ApprovalIndicator from '../components/ApprovalIndicator'
+import FileViewer  from "../components/FileViewer";
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
 import { copyValue } from '../../helpers/extractor';
@@ -2112,7 +2118,8 @@ const studentFields = {
   lastName: null,
   mobileNo: null,
   birthDate: null,
-  civilStatusId: null
+  civilStatusId: null,
+  name: null
 }
 
 const addressFields = {
@@ -2350,7 +2357,8 @@ export default {
       PhotoViewer,
       FileUploader,
       FileItem,
-      ProgressIndicator
+      ProgressIndicator,
+      FileViewer
     },
     data(){
       return{
@@ -2392,7 +2400,10 @@ export default {
         selectedSubjectListIndex: 0,
         file: {
           src: null,
-          type: null
+          type: null,
+          name: null,
+          notes: null,
+          isLoading: false
         },
         forms:  {
           student: {
@@ -3336,24 +3347,24 @@ export default {
             }
 
             if (payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id) {
-            const { activeAdmission, transcript, student } = this.forms
-            const admission = {
-              activeAdmission: {
-                id: activeAdmission.fields.id
-              },
-              transcript: {
-                id: transcript.fields.id,
-                transcriptStatusId: TranscriptStatuses.ENROLLED.id
+              const { activeAdmission, transcript, student } = this.forms
+              const admission = {
+                activeAdmission: {
+                  id: activeAdmission.fields.id
+                },
+                transcript: {
+                  id: transcript.fields.id,
+                  transcriptStatusId: TranscriptStatuses.ENROLLED.id
+                }
               }
-            }
 
-            this.updateStudent(admission, student.fields.id).then(({ data }) =>{
-              copyValue(data.activeAdmission, activeAdmission.fields);
-              copyValue(data.transcript, transcript.fields)
-            })
+              this.updateStudent(admission, student.fields.id).then(({ data }) =>{
+                copyValue(data.activeAdmission, activeAdmission.fields);
+                copyValue(data.transcript, transcript.fields)
+              })
+            }
           }
-            billings.isBusy = false
-          }
+          billings.isBusy = false
         }).catch((error) => {
           billings.isBusy = false
         })
@@ -3370,11 +3381,13 @@ export default {
 
         formData.append('file', file);
         this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
-        let newFile = this.paymentFiles[this.paymentFiles.length - 1]
+        let newFileIndex = this.paymentFiles.length - 1
+        let newFile = this.paymentFiles[newFileIndex]
         this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
           newFile.id = data.id
           newFile.name = data.name
           newFile.isBusy = false
+          this.onPaymentFileItemSelect(newFileIndex)
         }).catch((error) => {
           // NOTE! all string messages should be move to contents
           showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`)
@@ -3633,12 +3646,15 @@ export default {
         items.push(row.item)
       },
       previewPaymentFile(index) {
+        const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
+        const selectedFile = this.paymentFiles[index]
         this.file.type = null
         this.file.src = null
-
-        const { payment: { fields:{ id: paymentId } } } = this.forms
-
-        const selectedFile = this.paymentFiles[index]
+        this.file.name = selectedFile?.name
+        this.file.notes = selectedFile?.notes
+        this.file.isLoading = true
+        this.file.owner = student
+        this.showModalPreview = true
 
         this.getPaymentFilePreview(paymentId, selectedFile.id)
           .then(response => {
@@ -3648,7 +3664,7 @@ export default {
 
             reader.onload = e => this.file.src = e.target.result
             reader.readAsDataURL(file);
-            this.showModalPreview = true
+            this.file.isLoading = false
           })
       },
       previewAdmissionFile(index) {
@@ -3711,15 +3727,14 @@ export default {
         formData.append('file', file);
 
         this.evaluationFiles.push({ id: null, name: null, notes: null, isBusy: true })
-        let newFile = this.evaluationFiles[this.evaluationFiles.length - 1]
+        let newFileIndex = this.evaluationFiles.length - 1
+        let newFile = this.evaluationFiles[newFileIndex]
 
         this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
-          setTimeout(() => {
             newFile.id = data.id
             newFile.name = data.name
             newFile.isBusy = false
-          }
-            , 1000);
+            this.onEvaluationFileItemSelect(newFileIndex)
         })
       },
       onDeleteEvaluationFile (index) {
@@ -3768,12 +3783,16 @@ export default {
         });
       },
       previewEvaluationFile(index) {
+        const { evaluation: { fields:{ id: evaluationId } }, student: { fields: student } } = this.forms
+        const selectedFile = this.evaluationFiles[index]
+
         this.file.type = null
         this.file.src = null
-
-        const { evaluation: { fields:{ id: evaluationId } } } = this.forms
-
-        const selectedFile = this.evaluationFiles[index]
+        this.file.name = selectedFile?.name
+        this.file.notes = selectedFile?.notes
+        this.file.isLoading = true
+        this.file.owner = student;
+        this.showModalPreview = true
 
         this.getEvaluationFilePreview(evaluationId, selectedFile.id)
           .then(response => {
@@ -3783,7 +3802,7 @@ export default {
 
             reader.onload = e => this.file.src = e.target.result
             reader.readAsDataURL(file);
-            this.showModalPreview = true
+            this.file.isLoading = false
           })
       },
       filterSubject() {
@@ -3886,20 +3905,51 @@ export default {
         })
       },
       previewAssessmentForm(){
+        // const { id: transcriptId } = this.forms.transcript.fields
+        // this.getAssessmentFormPreview(transcriptId)
+        // .then(({ data }) => {
+        //   const file = new Blob([data], { type: "application/pdf" });
+        //   const fileURL = URL.createObjectURL(file);
+        //   window.open(fileURL);
+        // })
+
         const { id: transcriptId } = this.forms.transcript.fields
+        this.file.type = null
+        this.file.src = null
+        this.file.notes = null
+        this.file.isLoading = true
+        this.file.owner = null;
+        this.file.name = 'Assesment Form'
+
+        this.showModalPreview = true
         this.getAssessmentFormPreview(transcriptId)
-        .then(({ data }) => {
-          const file = new Blob([data], { type: "application/pdf" });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
+          .then(response => {
+            console.log(response)
+            this.file.type = response.headers.contentType
+            const file = new Blob([response.data], { type: "application/pdf" } )
+            const reader = new FileReader();
+            reader.onload = e => this.file.src = e.target.result
+            reader.readAsDataURL(file);
+            this.file.isLoading = false
         })
       },
       previewRequirementList(){
+        this.file.type = null
+        this.file.src = null
+        this.file.notes = null
+        this.file.isLoading = true
+        this.file.owner = null;
+        this.file.name = 'Requirements List'
+
+        this.showModalPreview = true
         this.getRequirementListPreview()
-        .then(({ data }) => {
-          const file = new Blob([data], { type: "application/pdf" });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
+          .then(response => {
+            this.file.type = response.headers.contentType
+            const file = new Blob([response.data], { type: "application/pdf" } )
+            const reader = new FileReader();
+            reader.onload = e => this.file.src = e.target.result
+            reader.readAsDataURL(file);
+            this.file.isLoading = false
         })
       },
       onShowModalSection(row) {

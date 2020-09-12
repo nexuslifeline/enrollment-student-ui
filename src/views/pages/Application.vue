@@ -847,7 +847,7 @@
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for the approval of the registrar's office. <br>
                     In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">HERE</a>. <br>
+                    You can get full list of your complete enrollment requirements <a href="#" @click.prevent="previewRequirementList()">HERE</a>. <br>
                     If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time You log in.
                   </small>
                 </p>
@@ -1157,7 +1157,7 @@
                                 </div>
                               </template>
                               <template v-slot:cell(action)>
-                                <a href="#" @click="previewAssessmentForm()">View Details</a>
+                                <a href="#" @click.prevent="previewAssessmentForm()">View Details</a>
                               </template>
                             </b-table>
                           </b-col>
@@ -1476,6 +1476,7 @@
         </div>
       </div>
     </div>
+
     <b-modal
       v-model="showPaymentFileModal"
       centered
@@ -1502,7 +1503,7 @@
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
         <b-button
-          class="float-left" 
+          class="float-left"
           @click="onDeletePaymentFile(selectedPaymentFileIndex)"
           variant="outline-danger">
           <v-icon
@@ -1849,7 +1850,6 @@
     <!-- Modal Subject -->
     <!-- Modal Preview -->
     <b-modal
-			v-model="showModalPreview"
 			size="xl"
 			header-bg-variant="success"
 			header-text-variant="light"
@@ -1887,7 +1887,13 @@
 			</div> <!-- modal footer buttons -->
 		</b-modal>
     <!-- Modal Preview -->
-
+    <FileViewer
+      :show="showModalPreview"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="showModalPreview = false"
+    />
     <b-modal
       v-model="showModalSection"
 			size="xl"
@@ -1986,6 +1992,7 @@ import {
 //import StageIndicator from '../components/StageIndicator';
 import SlideStageIndicator from '../components/SlideStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
+import FileViewer  from "../components/FileViewer";
 import {
   Semesters,
   ApplicationSteps,
@@ -2025,6 +2032,7 @@ const studentFields = {
   mobileNo: null,
   birthDate: null,
   civilStatusId: null,
+  name: null,
 }
 
 const addressFields = {
@@ -2253,7 +2261,8 @@ export default {
     PhotoViewer,
     FileUploader,
     FileItem,
-    ProgressIndicator
+    ProgressIndicator,
+    FileViewer
   },
   data() {
     return {
@@ -2291,8 +2300,11 @@ export default {
       selectedLevelSubject: null,
       selectedSubjectListIndex: 0,
       file: {
+        type: null,
         src: null,
-        type: null
+        name: null,
+        notes: null,
+        isLoading: false
       },
       forms: {
         student: {
@@ -3277,11 +3289,13 @@ export default {
 
       formData.append('file', file);
       this.paymentFiles.push({ id: null, name: null, notes: null, isBusy: true })
-      let newFile = this.paymentFiles[this.paymentFiles.length - 1]
+      let newFileIndex = this.paymentFiles.length - 1
+      let newFile = this.paymentFiles[newFileIndex]
       this.addPaymentFile(formData, payment.fields.id).then(({ data }) =>{
         newFile.id = data.id
         newFile.name = data.name
         newFile.isBusy = false
+        this.onPaymentFileItemSelect(newFileIndex)
       }).catch((error) => {
         // NOTE! all string messages should be move to contents
         showNotification(this, 'danger', `Error occured while uploadig file. Brace yourself till we fix this issue or you may try again.`, 'Error')
@@ -3481,22 +3495,24 @@ export default {
       items.push(row.item)
     },
     previewPaymentFile(index) {
+      const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
+      const selectedFile = this.paymentFiles[index]
       this.file.type = null
       this.file.src = null
-
-      const { payment: { fields:{ id: paymentId } } } = this.forms
-
-      const selectedFile = this.paymentFiles[index]
+      this.file.name = selectedFile?.name
+      this.file.notes = selectedFile?.notes
+      this.file.isLoading = true
+      this.file.owner = student
+      this.showModalPreview = true
 
       this.getPaymentFilePreview(paymentId, selectedFile.id)
         .then(response => {
           this.file.type = response.headers.contentType
           const file = new Blob([response.data], { type: response.headers.contentType })
           const reader = new FileReader();
-
           reader.onload = e => this.file.src = e.target.result
           reader.readAsDataURL(file);
-          this.showModalPreview = true
+          this.file.isLoading = false
         })
     },
     loadSections () {
@@ -3541,15 +3557,14 @@ export default {
       formData.append('file', file);
 
       this.evaluationFiles.push({ id: null, name: null, notes: null, isBusy: true })
-      let newFile = this.evaluationFiles[this.evaluationFiles.length - 1]
+      let newFileIndex = this.evaluationFiles.length - 1
+      let newFile = this.evaluationFiles[newFileIndex]
 
       this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
-        setTimeout(() => {
           newFile.id = data.id
           newFile.name = data.name
           newFile.isBusy = false
-        }
-          , 1000);
+          this.onEvaluationFileItemSelect(newFileIndex)
       })
     },
     onDeleteEvaluationFile (index) {
@@ -3596,24 +3611,30 @@ export default {
         this.isFileUpdating = false
         selectedFile.isBusy = false
       });
+
     },
     previewEvaluationFile(index) {
+      const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
+      const selectedFile = this.evaluationFiles[index]
+
       this.file.type = null
       this.file.src = null
+      this.file.name = selectedFile?.name
+      this.file.notes = selectedFile?.notes
+      this.file.isLoading = true
+      this.file.owner = student;
 
-      const { evaluation: { fields:{ id: evaluationId } } } = this.forms
-
-      const selectedFile = this.evaluationFiles[index]
+      this.showModalPreview = true
 
       this.getEvaluationFilePreview(evaluationId, selectedFile.id)
       .then(response => {
         this.file.type = response.headers.contentType
         const file = new Blob([response.data], { type: response.headers.contentType })
         const reader = new FileReader();
-
         reader.onload = e => this.file.src = e.target.result
         reader.readAsDataURL(file);
-        this.showModalPreview = true
+        this.file.isLoading = false
+
       })
     },
     filterSubject() {
@@ -3685,19 +3706,43 @@ export default {
     },
     previewAssessmentForm(){
       const { id: transcriptId } = this.forms.transcript.fields
+      this.file.type = null
+      this.file.src = null
+      this.file.notes = null
+      this.file.isLoading = true
+      this.file.owner = null;
+      this.file.name = 'Assesment Form'
+
+      this.showModalPreview = true
       this.getAssessmentFormPreview(transcriptId)
-      .then(({ data }) => {
-        const file = new Blob([data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
+        .then(response => {
+          console.log(response)
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: "application/pdf" } )
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
       })
     },
     previewRequirementList(){
+
+      this.file.type = null
+      this.file.src = null
+      this.file.notes = null
+      this.file.isLoading = true
+      this.file.owner = null;
+      this.file.name = 'Requirements List'
+
+      this.showModalPreview = true
       this.getRequirementListPreview()
-      .then(({ data }) => {
-        const file = new Blob([data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: "application/pdf" } )
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
       })
     },
     onShowModalSection(row) {

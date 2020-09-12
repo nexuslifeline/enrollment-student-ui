@@ -12,7 +12,6 @@ export default {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${id}`)
     },
     addStudent(data) {
-      
     },
     updateStudent(data, id) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/students/${id}`, data)
