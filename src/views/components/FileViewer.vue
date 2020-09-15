@@ -6,27 +6,41 @@
       :noCloseOnEsc="true"
       @hidden="$emit('close')"
       :noCloseOnBackdrop="true">
-      <div slot="modal-title" class="preview-file__header">
-        <div class="preview-file__owner">
-          <b-avatar
-            rounded
-            blank
-            size="56"
-            :text="avatarText"
-            :src="avatarSource"
-          />
-          <div v-if="!!owner && !!Object.keys(owner).length" class="preview-file__details">
-            <div class="preview-file__file-name">{{file.name}}</div>
-            <div class="preview-file__uploader">Uploaded by
-              <span class="ml-1 font-weight-bold">{{owner.name}}</span>
+      <template v-if="!!owner && !!Object.keys(owner).length" slot="modal-title">
+        <div class="preview-file__header">
+          <div class="preview-file__owner">
+            <b-avatar
+              rounded
+              blank
+              size="56"
+              :text="avatarText"
+              :src="avatarSource"
+            />
+            <div class="preview-file__details">
+              <div class="preview-file__file-name">{{file.name || 'Untitled'}}</div>
+              <div class="preview-file__uploader">Uploaded by
+                <span class="ml-1 font-weight-bold">{{owner.name || 'No name'}}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
+      <template v-else slot="modal-title">
+        {{title || file.name || 'Preview File'}}
+      </template>
       <b-overlay :show="isBusy">
         <div v-if="!isBusy && !!file.src"
           class="file-container"
           :class="{ fullscreen: isFullScreen }">
+          <template v-if="enableArrowNav">
+            <button @click="$emit('onNavLeft')" class="preview-file__navs preview-file__nav-left">
+              <v-icon name="chevron-left" scale="1.7" />
+            </button>
+            <button @click="$emit('onNavRight')" class="preview-file__navs preview-file__nav-right">
+              <v-icon name="chevron-right" scale="1.7" />
+            </button>
+          </template>
+
           <div v-if="isFullScreen" class="file-container__header">
             <h4 class="file-container__header-title">
               {{file.name}}
@@ -59,12 +73,22 @@
               allowfullscreen
               :src="file.src"
               class="preview-file__embed"
-            ></b-embed>
+            />
           </div>
         </div>
         <div v-else class="file-container" />
       </b-overlay>
-      <div slot="modal-footer" class="w-100">
+      <div slot="modal-footer" class="w-100 preview-file__footer">
+        <div v-if="!isFullScreen && !!navCount" class="nav-dots__container">
+          <ul class="nav-dots">
+            <li
+              v-for="(v, idx) in Array.from({ length: navCount })"
+              :key="idx"
+              class="nav-dots__item"
+              :class="{ active: idx === navActiveIndex}"
+            />
+          </ul>
+        </div>
         <p class="font-weight-bold">{{file.notes}}</p>
       </div>
     </b-modal>
@@ -76,7 +100,17 @@ export default {
     show: Boolean,
     file: Object,
     owner: Object,
-    isBusy: Boolean
+    isBusy: Boolean,
+    enableArrowNav: {
+      type: Boolean,
+      default: false
+    },
+    title: String,
+    navCount: {
+      type: Number,
+      default: 0
+    },
+    navActiveIndex: Number
   },
   data() {
     return {
@@ -128,7 +162,7 @@ export default {
 
   .preview-file__header {
     margin: -1rem; // offset modal body padding
-    padding: 15px;
+    padding: 10px;
   }
 
   .preview-file__image {
@@ -147,11 +181,22 @@ export default {
     flex-direction: row;
   }
 
+  .preview-file__title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .preview-file__title {
+    font-size: 18px;
+    margin: 0;
+  }
+
   .preview-file__details {
     padding: 0 15px;
   }
   .preview-file__file-name {
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 600;
   }
 
@@ -170,6 +215,10 @@ export default {
     &.scrollable {
       overflow: auto;
     }
+
+    .embed-responsive {
+      height: 100%;
+    }
   }
 
   .file-container {
@@ -177,10 +226,7 @@ export default {
     margin: -1rem; // offset modal body padding
     display: flex;
     flex-direction: column;
-
-    @include for-size(tablet-landscape-down) {
-      height: calc(100vh - 50px);
-    }
+    position: relative;
 
     &.fullscreen {
       position: fixed;
@@ -239,7 +285,65 @@ export default {
 
   .file-container__header-title {
     color: $white;
-    font-size: 22px;
+    font-size: 20px;
+
+    @include for-size(phone-only) {
+      font-size: 18px;
+    }
+  }
+
+  .preview-file__navs  {
+    position: absolute;
+    border: 0;
+    outline: 0;
+    top: 30%;
+    background: none;
+    color: $white;
+  }
+
+  .preview-file__nav-left {
+    left: -40px;
+  }
+
+  .preview-file__nav-right {
+    right: -40px;
+  }
+
+  .nav-dots__container {
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -35px;
+    height: 20px;
+  }
+
+  .nav-dots {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .nav-dots__item {
+    height: 9px;
+    width: 9px;
+    border-radius: 50%;
+    background-color: $gray;
+    margin: 0 4px;
+    opacity: .8;
+
+    &.active {
+      width: 33px;
+      border-radius: 5px;
+      background-color: $dark-blue;
+    }
+  }
+
+  .preview-file__footer {
+    position: relative;
   }
 
 </style>

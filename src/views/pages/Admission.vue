@@ -2052,6 +2052,30 @@
       :isBusy="file.isLoading"
       @close="showModalPreview = false"
     />
+    <FileViewer
+      :show="fileViewer.evaluation.show"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="fileViewer.evaluation.show = false"
+      @onNavLeft="onEvaluationFileNavLeft"
+      @onNavRight="onEvaluationFileNavRight"
+      :navCount="fileViewer.evaluation.activeNavCount"
+      :navActiveIndex="fileViewer.evaluation.activeNavIndex"
+      :enableArrowNav="fileViewer.evaluation.isActiveNavEnabled"
+    />
+    <FileViewer
+      :show="fileViewer.payment.show"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="fileViewer.payment.show = false"
+      @onNavLeft="onPaymentFileNavLeft"
+      @onNavRight="onPaymentFileNavRight"
+      :navCount="fileViewer.payment.activeNavCount"
+      :navActiveIndex="fileViewer.payment.activeNavIndex"
+      :enableArrowNav="fileViewer.payment.isActiveNavEnabled"
+    />
   </div>
   <!-- main container -->
 </template>
@@ -2295,6 +2319,7 @@ const paymentFields = {
   notes: null,
   paymentStatusId: PaymentStatuses.PENDING.id,
   disapprovalNotes: null,
+  submittedDate: null
 }
 
 const paymentErrorFields = {
@@ -2360,8 +2385,23 @@ export default {
       ProgressIndicator,
       FileViewer
     },
-    data(){
-      return{
+    data() {
+      return {
+        fileViewer: {
+        evaluation: {
+          isActiveNavEnabled: false,
+          activeNavCount: 0,
+          activeNavIndex: 0,
+          show: false,
+        },
+        payment: {
+          isActiveNavEnabled: false,
+          activeNavCount: 0,
+          activeNavIndex: 0,
+          show: false,
+        }
+      },
+      lastActiveFile: null,
         showModalSection: false,
         showPaymentFileModal: false,
         showAdmissionFileModal: false,
@@ -2991,6 +3031,17 @@ export default {
           })
         }
 
+        this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
+          //this.tables.files.items = data
+          data.forEach(file => {
+            this.evaluationFiles.push({
+              id: file.id,
+              name: file.name,
+              notes: file.notes,
+              isBusy: false
+            })
+          })
+        })
       })
 
       this.loadEWalletAccounts();
@@ -3038,6 +3089,9 @@ export default {
           evaluation.fields.submittedDate =  getCurrentDateTime()
         }
 
+        if (activeAdmission.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id) {
+          activeAdmission.appliedDate = getCurrentDateTime()
+        }
 
         const payloads = [
           student.fields,
@@ -3139,6 +3193,7 @@ export default {
         const dataPayment = {
           ...payment.fields,
           paymentStatusId: PaymentStatuses.SUBMITTED.id, //set payment status to pending for approval
+          submittedDate: getCurrentDateTime(),
           billingId
         }
 
@@ -3648,28 +3703,6 @@ export default {
         this.$set(row.item, 'section', (item.schedules[0].section ? item.schedules[0].section : null) )
         items.push(row.item)
       },
-      previewPaymentFile(index) {
-        const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
-        const selectedFile = this.paymentFiles[index]
-        this.file.type = null
-        this.file.src = null
-        this.file.name = selectedFile?.name
-        this.file.notes = selectedFile?.notes
-        this.file.isLoading = true
-        this.file.owner = student
-        this.showModalPreview = true
-
-        this.getPaymentFilePreview(paymentId, selectedFile.id)
-          .then(response => {
-            this.file.type = response.headers.contentType
-            const file = new Blob([response.data], { type: response.headers.contentType })
-            const reader = new FileReader();
-
-            reader.onload = e => this.file.src = e.target.result
-            reader.readAsDataURL(file);
-            this.file.isLoading = false
-          })
-      },
       previewAdmissionFile(index) {
         this.file.type = null
         this.file.src = null
@@ -3784,29 +3817,6 @@ export default {
           this.isFileUpdating = false
           selectedFile.isBusy = false
         });
-      },
-      previewEvaluationFile(index) {
-        const { evaluation: { fields:{ id: evaluationId } }, student: { fields: student } } = this.forms
-        const selectedFile = this.evaluationFiles[index]
-
-        this.file.type = null
-        this.file.src = null
-        this.file.name = selectedFile?.name
-        this.file.notes = selectedFile?.notes
-        this.file.isLoading = true
-        this.file.owner = student;
-        this.showModalPreview = true
-
-        this.getEvaluationFilePreview(evaluationId, selectedFile.id)
-          .then(response => {
-            this.file.type = response.headers.contentType
-            const file = new Blob([response.data], { type: response.headers.contentType })
-            const reader = new FileReader();
-
-            reader.onload = e => this.file.src = e.target.result
-            reader.readAsDataURL(file);
-            this.file.isLoading = false
-          })
       },
       filterSubject() {
         const { subjects } = this.tables
@@ -4010,83 +4020,193 @@ export default {
           scheduledSubjects.isBusy = false
         })
       },
-    },
-    computed: {
-      hasActiveAdmission() {
-        return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+      setupEvaluationActiveFileViewer(index) {
+      this.lastActiveFile = this.evaluationFiles[index]
+      this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
+      this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
+      this.fileViewer.evaluation.activeNavIndex =  index
       },
-      hasActiveApplication() {
-        return !!(this.$store.state.user && this.$store.state.user.activeApplication);
-      },
-      studentId() {
-        const { user } = this.$store.state;
-        return (user && user.id) || null;
-      },
-      totalUnits() {
-        let totalUnits = 0
-        this.tables.enlistedSubjects.items.forEach(i => {
-          totalUnits += i.totalUnits
+      previewEvaluationFile(index) {
+        this.setupEvaluationActiveFileViewer(index)
+        const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
+        const selectedFile = this.evaluationFiles[index]
+
+        this.file.type = null
+        this.file.src = null
+        this.file.name = selectedFile?.name
+        this.file.notes = selectedFile?.notes
+        this.file.isLoading = true
+        this.file.owner = student;
+        this.fileViewer.evaluation.show = true
+
+        this.getEvaluationFilePreview(evaluationId, selectedFile.id)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: response.headers.contentType })
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
+
         })
-        return totalUnits
       },
-      heading() {
-        const { fields } = this.forms.activeAdmission
-        if (fields.admissionStepId) {
-          const subHeaders = [
-            ...this.$options.groupStages[0].children,
-            ...this.$options.groupStages[1].children,
-            ...this.$options.groupStages[2].children,
-            ...this.$options.groupStages[3].children
-          ]
-          return subHeaders.find(({ id }) => id === fields.admissionStepId)
-        }
-        return {};
+      onEvaluationFileNavLeft() {
+        const files = this.evaluationFiles;
+        let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+        const isFirst = currentIdx === 0;
+        currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
+        const file = files[currentIdx];
+        const currentFileItem = {
+          ...this.lastActiveFile,
+          index: currentIdx,
+          item: file
+        };
+        this.previewEvaluationFile(currentIdx);
       },
-      formattedInitialFeeValue() {
-        const { totalAmount } = this.forms.billing.fields
-        if (totalAmount) {
-          return formatNumber(totalAmount)
-        }
-        return "0.00"
+      onEvaluationFileNavRight() {
+        const files = this.evaluationFiles;
+        let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+        const isLast = currentIdx === files.length - 1;
+        currentIdx = isLast ? 0 : currentIdx + 1;
+        const file = files[currentIdx];
+        const currentFileItem = {
+          ...this.lastActiveFile,
+          index: currentIdx,
+          item: file
+        };
+        this.previewEvaluationFile(currentIdx);
       },
-      getSelectedEvaluationLevel() {
-        const { levelId } = this.forms.transcript.fields
-        if (levelId) {
-          const level = this.options.levels.items.find(level => level.id === levelId)
-          if (level) {
-            return level.name
-          }
-        }
-        return ''
+      setupPaymentActiveFileViewer(index) {
+        this.lastActiveFile = this.paymentFiles[index]
+        this.fileViewer.payment.isActiveNavEnabled = this.paymentFiles?.length > 1;
+        this.fileViewer.payment.activeNavCount = this.paymentFiles?.length;
+        this.fileViewer.payment.activeNavIndex =  index
       },
-      getSelectedEvaluationCourse() {
-        const { courseId } = this.forms.transcript.fields
-        if (courseId) {
-          const course = this.options.courses.items.find(course => course.id === courseId)
-          if (course) {
-            return course.description + (course.major ? ' - ' + course.major : '')
-          }
-        }
-        return ''
+      previewPaymentFile(index) {
+        this.setupPaymentActiveFileViewer(index)
+        const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
+        const selectedFile = this.paymentFiles[index]
+        this.file.type = null
+        this.file.src = null
+        this.file.name = selectedFile?.name
+        this.file.notes = selectedFile?.notes
+        this.file.isLoading = true
+        this.file.owner = student
+        this.fileViewer.payment.show = true
+
+        this.getPaymentFilePreview(paymentId, selectedFile.id)
+          .then(response => {
+            this.file.type = response.headers.contentType
+            const file = new Blob([response.data], { type: response.headers.contentType })
+            const reader = new FileReader();
+            reader.onload = e => this.file.src = e.target.result
+            reader.readAsDataURL(file);
+            this.file.isLoading = false
+          })
       },
-      getSelectedEvaluationSemester() {
-        const { semesterId } = this.forms.transcript.fields
-        if (semesterId) {
-          return this.Semesters.getEnum(semesterId).name
-        }
-        return ''
+      onPaymentFileNavLeft() {
+        const files = this.paymentFiles;
+        let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
+        const isFirst = currentIdx === 0;
+        currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
+        const file = files[currentIdx];
+        const currentFileItem = {
+          ...this.lastActiveFile,
+          index: currentIdx,
+          item: file
+        };
+        this.previewPaymentFile(currentIdx);
       },
-      getNextButtonCaption() {
-        if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id) {
-          return 'Submit Application'
-        } else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id ) {
-          return 'Submit Request'
-        }  else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ) {
-          return 'Submit Payment'
-        } else {
-          return 'Next'
+      onPaymentFileNavRight() {
+      const files = this.paymentFiles;
+      let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
+      const isLast = currentIdx === files.length - 1;
+      currentIdx = isLast ? 0 : currentIdx + 1;
+      const file = files[currentIdx];
+      const currentFileItem = {
+        ...this.lastActiveFile,
+        index: currentIdx,
+        item: file
+      };
+      this.previewPaymentFile(currentIdx);
+    }
+  },
+  computed: {
+    hasActiveAdmission() {
+      return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+    },
+    hasActiveApplication() {
+      return !!(this.$store.state.user && this.$store.state.user.activeApplication);
+    },
+    studentId() {
+      const { user } = this.$store.state;
+      return (user && user.id) || null;
+    },
+    totalUnits() {
+      let totalUnits = 0
+      this.tables.enlistedSubjects.items.forEach(i => {
+        totalUnits += i.totalUnits
+      })
+      return totalUnits
+    },
+    heading() {
+      const { fields } = this.forms.activeAdmission
+      if (fields.admissionStepId) {
+        const subHeaders = [
+          ...this.$options.groupStages[0].children,
+          ...this.$options.groupStages[1].children,
+          ...this.$options.groupStages[2].children,
+          ...this.$options.groupStages[3].children
+        ]
+        return subHeaders.find(({ id }) => id === fields.admissionStepId)
+      }
+      return {};
+    },
+    formattedInitialFeeValue() {
+      const { totalAmount } = this.forms.billing.fields
+      if (totalAmount) {
+        return formatNumber(totalAmount)
+      }
+      return "0.00"
+    },
+    getSelectedEvaluationLevel() {
+      const { levelId } = this.forms.transcript.fields
+      if (levelId) {
+        const level = this.options.levels.items.find(level => level.id === levelId)
+        if (level) {
+          return level.name
         }
       }
+      return ''
+    },
+    getSelectedEvaluationCourse() {
+      const { courseId } = this.forms.transcript.fields
+      if (courseId) {
+        const course = this.options.courses.items.find(course => course.id === courseId)
+        if (course) {
+          return course.description + (course.major ? ' - ' + course.major : '')
+        }
+      }
+      return ''
+    },
+    getSelectedEvaluationSemester() {
+      const { semesterId } = this.forms.transcript.fields
+      if (semesterId) {
+        return this.Semesters.getEnum(semesterId).name
+      }
+      return ''
+    },
+    getNextButtonCaption() {
+      if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.ACADEMIC_YEAR_ADMISSION.id) {
+        return 'Submit Application'
+      } else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id ) {
+        return 'Submit Request'
+      }  else if (this.forms.activeAdmission.fields.admissionStepId === AdmissionSteps.PAYMENTS.id ) {
+        return 'Submit Payment'
+      } else {
+        return 'Next'
+      }
+    }
   }
 }
 </script>

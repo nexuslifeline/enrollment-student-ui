@@ -16,6 +16,16 @@
           <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
+                 <b-form-group>
+                  <label class="required">Student No.</label>
+                  <b-form-input
+                    v-model="forms.student.fields.studentNo"
+                    :state="forms.student.states.studentNo"
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.studentNo}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
                 <b-form-group>
                   <label class="required">Firstname</label>
                   <b-form-input
@@ -44,8 +54,8 @@
                 </b-form-group>
                 <b-form-group>
                   <label class="required">Birthdate</label>
-                  <b-form-input type="date" 
-                    v-model="forms.student.fields.birthDate" 
+                  <b-form-input type="date"
+                    v-model="forms.student.fields.birthDate"
                     :state="forms.student.states.birthDate" />
                   <b-form-invalid-feedback>
                     {{forms.student.errors.birthDate}}
@@ -857,7 +867,7 @@
               <b-col md=12>
                 <div class="file-uploader-container">
                   <FileUploader
-                    @onFileChange="onEvaluationFileUpload" 
+                    @onFileChange="onEvaluationFileUpload"
                     @onFileDrop="onEvaluationFileUpload"
                   />
                 </div>
@@ -1894,6 +1904,30 @@
       :isBusy="file.isLoading"
       @close="showModalPreview = false"
     />
+    <FileViewer
+      :show="fileViewer.evaluation.show"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="fileViewer.evaluation.show = false"
+      @onNavLeft="onEvaluationFileNavLeft"
+      @onNavRight="onEvaluationFileNavRight"
+      :navCount="fileViewer.evaluation.activeNavCount"
+      :navActiveIndex="fileViewer.evaluation.activeNavIndex"
+      :enableArrowNav="fileViewer.evaluation.isActiveNavEnabled"
+    />
+    <FileViewer
+      :show="fileViewer.payment.show"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="fileViewer.payment.show = false"
+      @onNavLeft="onPaymentFileNavLeft"
+      @onNavRight="onPaymentFileNavRight"
+      :navCount="fileViewer.payment.activeNavCount"
+      :navActiveIndex="fileViewer.payment.activeNavIndex"
+      :enableArrowNav="fileViewer.payment.isActiveNavEnabled"
+    />
     <b-modal
       v-model="showModalSection"
 			size="xl"
@@ -2207,6 +2241,7 @@ const paymentFields = {
   notes: null,
   paymentStatusId: PaymentStatuses.PENDING.id,
   disapprovalNotes: null,
+  submittedDate: null,
 }
 
 const paymentErrorFields = {
@@ -2267,6 +2302,21 @@ export default {
   },
   data() {
     return {
+      fileViewer: {
+        evaluation: {
+          isActiveNavEnabled: false,
+          activeNavCount: 0,
+          activeNavIndex: 0,
+          show: false,
+        },
+        payment: {
+          isActiveNavEnabled: false,
+          activeNavCount: 0,
+          activeNavIndex: 0,
+          show: false,
+        }
+      },
+      lastActiveFile: null,
       showModalSection: false,
       showPaymentFileModal: false,
       showEvaluationFileModal: false,
@@ -2874,7 +2924,6 @@ export default {
         })
       }
 
-
       //load evaluation files
       this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
         //this.tables.files.items = data
@@ -2941,6 +2990,10 @@ export default {
 
       if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
         evaluation.fields.submittedDate =  getCurrentDateTime()
+      }
+
+      if (activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
+        activeApplication.appliedDate = getCurrentDateTime()
       }
 
       const payloads = [
@@ -3044,6 +3097,7 @@ export default {
       const dataPayment = {
         ...payment.fields,
         paymentStatusId: PaymentStatuses.SUBMITTED.id, //set payment status to pending for approval
+        submittedDate: getCurrentDateTime(),
         billingId
       }
 
@@ -3499,27 +3553,6 @@ export default {
 
       items.push(row.item)
     },
-    previewPaymentFile(index) {
-      const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
-      const selectedFile = this.paymentFiles[index]
-      this.file.type = null
-      this.file.src = null
-      this.file.name = selectedFile?.name
-      this.file.notes = selectedFile?.notes
-      this.file.isLoading = true
-      this.file.owner = student
-      this.showModalPreview = true
-
-      this.getPaymentFilePreview(paymentId, selectedFile.id)
-        .then(response => {
-          this.file.type = response.headers.contentType
-          const file = new Blob([response.data], { type: response.headers.contentType })
-          const reader = new FileReader();
-          reader.onload = e => this.file.src = e.target.result
-          reader.readAsDataURL(file);
-          this.file.isLoading = false
-        })
-    },
     loadSections () {
       this.sectionIsLoading = true
       this.forms.transcript.fields.sectionId = null
@@ -3617,30 +3650,6 @@ export default {
         selectedFile.isBusy = false
       });
 
-    },
-    previewEvaluationFile(index) {
-      const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
-      const selectedFile = this.evaluationFiles[index]
-
-      this.file.type = null
-      this.file.src = null
-      this.file.name = selectedFile?.name
-      this.file.notes = selectedFile?.notes
-      this.file.isLoading = true
-      this.file.owner = student;
-
-      this.showModalPreview = true
-
-      this.getEvaluationFilePreview(evaluationId, selectedFile.id)
-      .then(response => {
-        this.file.type = response.headers.contentType
-        const file = new Blob([response.data], { type: response.headers.contentType })
-        const reader = new FileReader();
-        reader.onload = e => this.file.src = e.target.result
-        reader.readAsDataURL(file);
-        this.file.isLoading = false
-
-      })
     },
     filterSubject() {
       const { subjects } = this.tables
@@ -3805,6 +3814,116 @@ export default {
         scheduledSubjects.isBusy = false
       })
     },
+    setupEvaluationActiveFileViewer(index) {
+      this.lastActiveFile = this.evaluationFiles[index]
+      this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
+      this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
+      this.fileViewer.evaluation.activeNavIndex =  index
+    },
+    previewEvaluationFile(index) {
+      this.setupEvaluationActiveFileViewer(index)
+      const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
+      const selectedFile = this.evaluationFiles[index]
+
+      this.file.type = null
+      this.file.src = null
+      this.file.name = selectedFile?.name
+      this.file.notes = selectedFile?.notes
+      this.file.isLoading = true
+      this.file.owner = student;
+      this.fileViewer.evaluation.show = true
+
+      this.getEvaluationFilePreview(evaluationId, selectedFile.id)
+      .then(response => {
+        this.file.type = response.headers.contentType
+        const file = new Blob([response.data], { type: response.headers.contentType })
+        const reader = new FileReader();
+        reader.onload = e => this.file.src = e.target.result
+        reader.readAsDataURL(file);
+        this.file.isLoading = false
+
+      })
+    },
+    onEvaluationFileNavLeft() {
+      const files = this.evaluationFiles;
+      let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+      const isFirst = currentIdx === 0;
+      currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
+      const file = files[currentIdx];
+      const currentFileItem = {
+        ...this.lastActiveFile,
+        index: currentIdx,
+        item: file
+      };
+      this.previewEvaluationFile(currentIdx);
+    },
+    onEvaluationFileNavRight() {
+      const files = this.evaluationFiles;
+      let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+      const isLast = currentIdx === files.length - 1;
+      currentIdx = isLast ? 0 : currentIdx + 1;
+      const file = files[currentIdx];
+      const currentFileItem = {
+        ...this.lastActiveFile,
+        index: currentIdx,
+        item: file
+      };
+      this.previewEvaluationFile(currentIdx);
+    },
+    setupPaymentActiveFileViewer(index) {
+      this.lastActiveFile = this.paymentFiles[index]
+      this.fileViewer.payment.isActiveNavEnabled = this.paymentFiles?.length > 1;
+      this.fileViewer.payment.activeNavCount = this.paymentFiles?.length;
+      this.fileViewer.payment.activeNavIndex =  index
+    },
+    previewPaymentFile(index) {
+      this.setupPaymentActiveFileViewer(index)
+      const { payment: { fields:{ id: paymentId } }, student: { fields: student  } } = this.forms
+      const selectedFile = this.paymentFiles[index]
+      this.file.type = null
+      this.file.src = null
+      this.file.name = selectedFile?.name
+      this.file.notes = selectedFile?.notes
+      this.file.isLoading = true
+      this.file.owner = student
+      this.fileViewer.payment.show = true
+
+      this.getPaymentFilePreview(paymentId, selectedFile.id)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: response.headers.contentType })
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
+        })
+    },
+    onPaymentFileNavLeft() {
+      const files = this.paymentFiles;
+      let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
+      const isFirst = currentIdx === 0;
+      currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
+      const file = files[currentIdx];
+      const currentFileItem = {
+        ...this.lastActiveFile,
+        index: currentIdx,
+        item: file
+      };
+      this.previewPaymentFile(currentIdx);
+    },
+    onPaymentFileNavRight() {
+      const files = this.paymentFiles;
+      let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
+      const isLast = currentIdx === files.length - 1;
+      currentIdx = isLast ? 0 : currentIdx + 1;
+      const file = files[currentIdx];
+      const currentFileItem = {
+        ...this.lastActiveFile,
+        index: currentIdx,
+        item: file
+      };
+      this.previewPaymentFile(currentIdx);
+    }
   },
   computed: {
     hasActiveAdmission() {
@@ -3879,7 +3998,7 @@ export default {
       }
     },
   }
-};
+}
 </script>
 <style lang="scss" scoped>
   @import "../../assets/scss/shared.scss";
