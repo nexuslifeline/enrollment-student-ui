@@ -815,7 +815,7 @@
                     v-model='forms.evaluation.fields.courseId'
                     :state="forms.evaluation.states.evaluationCourseId"
                     >
-                    <!-- :state="forms.transcript.states.transcriptCourseId" -->
+                    <!-- :state="forms.academicRecord.states.transcriptCourseId" -->
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                     </template>
@@ -962,8 +962,8 @@
                           <label>Section</label>
                           <b-form-select
                             :disabled="sectionIsLoading"
-                            v-model='forms.transcript.fields.sectionId'
-                            :state="forms.transcript.states.transcriptSectionId"
+                            v-model='forms.academicRecord.fields.sectionId'
+                            :state="forms.academicRecord.states.academicRecordSectionId"
                             @change="prePopulateStudentSubjects()">
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>
@@ -978,7 +978,7 @@
                             </b-form-select-option>
                           </b-form-select>
                           <b-form-invalid-feedback>
-                            {{forms.transcript.errors.transcriptSectionId}}
+                            {{forms.academicRecord.errors.academicRecordSectionId}}
                           </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
@@ -999,7 +999,7 @@
                 <b-row>
                   <b-col md=9>
                     <p>
-                      Subjects for <strong>{{ getSelectedEvaluationLevel }}</strong> <strong>{{ forms.transcript.fields.semesterId ? ', ' + getSelectedEvaluationSemester + ' ' : ' ' }}</strong><strong>{{ forms.transcript.fields.courseId ? 'of ' + getSelectedEvaluationCourse : '' }}</strong>.
+                      Subjects for <strong>{{ getSelectedEvaluationLevel }}</strong> <strong>{{ forms.academicRecord.fields.semesterId ? ', ' + getSelectedEvaluationSemester + ' ' : ' ' }}</strong><strong>{{ forms.academicRecord.fields.courseId ? 'of ' + getSelectedEvaluationCourse : '' }}</strong>.
                     </p>
                   </b-col> 
                   <b-col md=3 > 
@@ -1014,9 +1014,9 @@
                   </b-col>
                 </b-row>
                 <b-form-group>
-                  <b-form-input :state="forms.transcript.states.subjects" hidden/>
+                  <b-form-input :state="forms.academicRecord.states.subjects" hidden/>
                   <b-form-invalid-feedback>
-                    {{ forms.transcript.errors.subjects }}
+                    {{ forms.academicRecord.errors.subjects }}
                   </b-form-invalid-feedback>
                 </b-form-group>
                 <b-table
@@ -1425,7 +1425,7 @@
           <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
             <b-row>
               <b-col md="12">
-                <div v-if="forms.transcript.fields.transcriptStatusId === TranscriptStatuses.ENROLLED.id">
+                <div v-if="forms.academicRecord.fields.academicRecordStatusId === AcademicRecordStatuses.ENROLLED.id">
                   <b-alert variant="success" show>
                     <h5>CONGRATULATIONS!</h5>
                     <p> Your are now officially enrolled and a certified Theresian. <br><br>
@@ -1743,9 +1743,9 @@
                 <b-row class="mb-2">
                   <b-col md="3">
                     <b-form-group
-                          v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
-                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
-                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                          v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                          || forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
+                          || forms.academicRecord.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
                       <label>Level</label>
                       <b-form-select
                         @change="filterSubject()"
@@ -1761,9 +1761,9 @@
                     </b-form-group>
                   </b-col>
                   <b-col  md="3">
-                    <b-form-group v-if="forms.transcript.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
-                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
-                          || forms.transcript.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
+                    <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id
+                          || forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id 
+                          || forms.academicRecord.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id">
                       <label>Semester</label>
                       <b-form-select
                         @change="filterSubject()"
@@ -2036,7 +2036,7 @@ import {
   PaymentStatuses,
   BillingTypes,
   PayTypes,
-  TranscriptStatuses,
+  AcademicRecordStatuses,
   EvaluationStatuses,
   StudentCategories,
   SchoolCategories,
@@ -2174,22 +2174,22 @@ const activeApplicationFields = {
   disapprovalNotes: null
 }
 
-const transcriptFields = {
+const academicRecordFields = {
   id: null,
   semesterId: null,
   levelId: null,
   courseId: null,
   schoolYearId: null,
   schoolCategoryId: null,
-  transcriptStatusId: null,
+  academicRecordStatusId: null,
   sectionId: null,
   studentCategoryId: null,
   curriculumId: null,
 }
 
-const transcriptErrorFields = {
-  transcriptLevelId: null,
-  transcriptSectionId: null,
+const academicRecordErrorFields = {
+  academicRecordLevelId: null,
+  academicRecordSectionId: null,
   subjects: null
 }
 
@@ -2339,7 +2339,7 @@ export default {
       ApplicationStatuses: ApplicationStatuses,
       ApplicationSteps: ApplicationSteps,
       PaymentStatuses: PaymentStatuses,
-      TranscriptStatuses: TranscriptStatuses,
+      AcademicRecordStatuses: AcademicRecordStatuses,
       BillingTypes: BillingTypes,
       PayTypes: PayTypes,
       EvaluationStatuses: EvaluationStatuses,
@@ -2381,10 +2381,10 @@ export default {
         activeApplication : {
           fields: { ...activeApplicationFields }
         },
-        transcript: {
-          fields: { ...transcriptFields },
-          states: { ...transcriptErrorFields },
-          errors: { ...transcriptErrorFields }
+        academicRecord: {
+          fields: { ...academicRecordFields },
+          states: { ...academicRecordErrorFields },
+          errors: { ...academicRecordErrorFields }
         },
         evaluation: {
           fields: { ...evaluationFields },
@@ -2856,13 +2856,13 @@ export default {
       //todo : review code for percentage and approval stage
       this.percentage = student.activeApplication.applicationStatusId == 1
         ? 100
-        : student.transcript.transcriptStatusId == 2
+        : student.academicRecord.academicRecordStatusId == 2
         ? 60
         : 30;
 
       this.selectedApprovalStage = student.activeApplication.applicationStatusId == 1
         ? 3
-        : student.transcript.transcriptStatusId == 2
+        : student.academicRecord.academicRecordStatusId == 2
         ? 2
         : 1;
 
@@ -2874,22 +2874,22 @@ export default {
         this.loadBilling()
       }
 
-      const { transcript } = this.forms
+      const { academicRecord } = this.forms
       if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
         //show countdown
         if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
           this.evaluationDismissCountDown = 5
         }
 
-        //set level, course, school cat of transcript
+        //set level, course, school cat of academicRecord
         const { subjects } = this.tables
         const { subject } = this.paginations
 
-        transcript.fields.levelId = student.evaluation.levelId
-        transcript.fields.courseId = student.evaluation.courseId
-        transcript.fields.semesterId = student.evaluation.semesterId
-        transcript.fields.schoolCategoryId = student.evaluation.schoolCategoryId
-        transcript.fields.curriculumId = student.evaluation.studentCurriculumId
+        academicRecord.fields.levelId = student.evaluation.levelId
+        academicRecord.fields.courseId = student.evaluation.courseId
+        academicRecord.fields.semesterId = student.evaluation.semesterId
+        academicRecord.fields.schoolCategoryId = student.evaluation.schoolCategoryId
+        academicRecord.fields.curriculumId = student.evaluation.studentCurriculumId
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
@@ -2969,7 +2969,7 @@ export default {
         address,
         family,
         education,
-        transcript,
+        academicRecord,
         evaluation,
         activeApplication: { fields: activeApplication }
       } = this.forms;
@@ -3003,7 +3003,7 @@ export default {
         { education: education.fields },
         { evaluation: { ...evaluation.fields, evaluationStatusId } },
         null,
-        { transcript: transcript.fields, subjects }
+        { academicRecord: academicRecord.fields, subjects }
       ];
 
       // added null to skip waiting for evaluation step
@@ -3014,7 +3014,7 @@ export default {
         education,
         evaluation,
         null,
-        transcript,
+        academicRecord,
       ]
 
       const applicationStepId = ApplicationSteps.STATUS.id === activeApplication.applicationStepId &&
@@ -3115,7 +3115,7 @@ export default {
     },
     loadCourses() {
 
-      // const { fields } = this.forms.transcript;
+      // const { fields } = this.forms.academicRecord;
       const { fields } = this.forms.evaluation;
       const { items } = this.options.levels
 
@@ -3171,7 +3171,7 @@ export default {
       // }
     },
     loadSubjectsOfLevel() {
-      const { courseId, semesterId, levelId } = this.forms.transcript.fields;
+      const { courseId, semesterId, levelId } = this.forms.academicRecord.fields;
       const { enlistedSubjects } = this.tables;
 
       if (this.options.courses.items.length > 0) {
@@ -3261,7 +3261,7 @@ export default {
       billings.isBusy = true
       const {
         student: { fields: { id: studentId } },
-        transcript: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
+        academicRecord: { fields: { semesterId: semesterId, schoolYearId: schoolYearId } }
       } = this.forms;
 
       const params = {
@@ -3314,20 +3314,20 @@ export default {
           }
 
           if (payment.fields.paymentStatusId === PaymentStatuses.APPROVED.id) {
-            const { activeApplication, transcript, student } = this.forms
+            const { activeApplication, academicRecord, student } = this.forms
             const application = {
               activeApplication: {
                 id: activeApplication.fields.id
               },
-              transcript: {
-                id: transcript.fields.id,
-                transcriptStatusId: TranscriptStatuses.ENROLLED.id
+              academicRecord: {
+                id: academicRecord.fields.id,
+                academicRecordStatusId: AcademicRecordStatuses.ENROLLED.id
               }
             }
 
             this.updateStudent(application, student.fields.id).then(({ data }) =>{
               copyValue(data.activeApplication, activeApplication.fields);
-              copyValue(data.transcript, transcript.fields)
+              copyValue(data.academicRecord, academicRecord.fields)
             })
           }
         }
@@ -3478,7 +3478,7 @@ export default {
       });
     },
     onAddSubject(){
-      const { levelId, schoolCategoryId, courseId, semesterId } = this.forms.transcript.fields
+      const { levelId, schoolCategoryId, courseId, semesterId } = this.forms.academicRecord.fields
       const { levelsOfCourses } = this.options
       const { subjects } = this.tables
       const { subject } = this.paginations
@@ -3512,7 +3512,7 @@ export default {
     loadSubjectList(){
       // const { subjects } = this.tables
       // const { subject } = this.paginations
-      // const { schoolCategoryId } = this.forms.transcript.fields
+      // const { schoolCategoryId } = this.forms.academicRecord.fields
       // subjects.items = []
 
       // subjects.isBusy = true
@@ -3555,8 +3555,8 @@ export default {
     },
     loadSections () {
       this.sectionIsLoading = true
-      this.forms.transcript.fields.sectionId = null
-      const { schoolYearId, levelId, courseId, semesterId } = this.forms.transcript.fields
+      this.forms.academicRecord.fields.sectionId = null
+      const { schoolYearId, levelId, courseId, semesterId } = this.forms.academicRecord.fields
       let params = { paginate: false, schoolYearId, levelId, courseId, semesterId };
       this.getSectionList(params).then(({ data }) => {
         this.options.sections.items = data;
@@ -3567,7 +3567,7 @@ export default {
       //add loading section state
       this.options.sections.scheduledItems = []
       const { semesters, courses, sections } = this.options
-      const { schoolYearId } = this.forms.transcript.fields
+      const { schoolYearId } = this.forms.academicRecord.fields
       const { levelId, courseId, semesterId } = this.filters.scheduledSubject
 
       if (courses.scheduledItems.length !==0 || courses.scheduledItems.length !==0) {
@@ -3671,7 +3671,7 @@ export default {
     },
     prePopulateStudentSubjects() {
 
-      const { sectionId } = this.forms.transcript.fields
+      const { sectionId } = this.forms.academicRecord.fields
       const { curriculumId } = this.forms.evaluation.fields
       const { enlistedSubjects } = this.tables
       const params = { paginate: false, curriculumId }
@@ -3719,7 +3719,7 @@ export default {
       })
     },
     previewAssessmentForm(){
-      const { id: transcriptId } = this.forms.transcript.fields
+      const { id: academicRecordId } = this.forms.academicRecord.fields
       this.file.type = null
       this.file.src = null
       this.file.notes = null
@@ -3728,7 +3728,7 @@ export default {
       this.file.name = 'Assesment Form'
 
       this.showModalPreview = true
-      this.getAssessmentFormPreview(transcriptId)
+      this.getAssessmentFormPreview(academicRecordId)
         .then(response => {
           console.log(response)
           this.file.type = response.headers.contentType
@@ -3764,7 +3764,7 @@ export default {
       const { sectionsOfSubjects } = this.tables
       const { sectionsOfSubject } = this.paginations
       const { id: subjectId } = row.item
-      const { schoolYearId } = this.forms.transcript
+      const { schoolYearId } = this.forms.academicRecord
 
       this.selectedLevelSubject = null
       this.selectedLevelSubject = row.item
@@ -3960,7 +3960,7 @@ export default {
       return "0.00"
     },
     getSelectedEvaluationLevel() {
-      const { levelId } = this.forms.transcript.fields
+      const { levelId } = this.forms.academicRecord.fields
       if (levelId) {
         const level = this.options.levels.items.find(level => level.id === levelId)
         if (level) {
@@ -3970,7 +3970,7 @@ export default {
       return ''
     },
     getSelectedEvaluationCourse() {
-      const { courseId } = this.forms.transcript.fields
+      const { courseId } = this.forms.academicRecord.fields
       if (courseId) {
         const course = this.options.courses.items.find(course => course.id === courseId)
         if (course) {
@@ -3980,7 +3980,7 @@ export default {
       return ''
     },
     getSelectedEvaluationSemester() {
-      const { semesterId } = this.forms.transcript.fields
+      const { semesterId } = this.forms.academicRecord.fields
       if (semesterId) {
         return this.Semesters.getEnum(semesterId).name
       }

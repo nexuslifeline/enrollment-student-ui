@@ -43,18 +43,18 @@
 </template>
 
 <script>
-import { TranscriptApi, ReportApi } from "../../../mixins/api";
-import { TranscriptStatuses } from "../../../helpers/enum";
+import { AcademicRecordApi, ReportApi } from "../../../mixins/api";
+import { AcademicRecordStatuses } from "../../../helpers/enum";
 import FileViewer from "../../components/FileViewer";
 import headline from './data/assessment';
 
 export default {
-  mixins: [ TranscriptApi, ReportApi ],
+  mixins: [ AcademicRecordApi, ReportApi ],
   headline,
   components: { FileViewer },
   data() {
     return {
-      TranscriptStatuses: TranscriptStatuses,
+      AcademicRecordStatuses: AcademicRecordStatuses,
       showModalPreview : false,
       file: {
         type: null,
@@ -135,19 +135,19 @@ export default {
   },
   created() {
     const studentId = this.$store.state.user.id;
-    const transcriptStatusId = TranscriptStatuses.ENROLLED.id
+    const academicRecordStatusId = AcademicRecordStatuses.ENROLLED.id
     const { assessment } = this.tables
-    const params = { studentId, transcriptStatusId, paginate: false }
+    const params = { studentId, academicRecordStatusId, paginate: false }
     assessment.isBusy = true
 
-    this.getTranscriptList(params).then(({ data }) => {
+    this.getAcademicRecordList(params).then(({ data }) => {
       assessment.items = data
       assessment.isBusy = false
     })
   },
   methods: {
-    onPrintAssesment(transcriptId) {
-      // this.getAssessmentFormPreview(transcriptId)
+    onPrintAssesment(academicRecordId) {
+      // this.getAssessmentFormPreview(academicRecordId)
       // .then(({ data }) => {
       //   const file = new Blob([data], { type: "application/pdf" });
       //   const fileURL = URL.createObjectURL(file);
@@ -162,7 +162,7 @@ export default {
       this.file.name = 'Assesment Form'
 
       this.showModalPreview = true
-      this.getAssessmentFormPreview(transcriptId)
+      this.getAssessmentFormPreview(academicRecordId)
         .then(response => {
           console.log(response)
           this.file.type = response.headers.contentType
