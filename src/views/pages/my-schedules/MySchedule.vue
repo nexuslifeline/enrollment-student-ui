@@ -97,6 +97,12 @@ export default {
   },
   created() {
     this.isLoading = true
+
+    if (this.$route.params.academicRecordId && isNaN(this.$route.params.academicRecordId)) {
+      this.$router.push('/schedules/history')
+      return
+    }
+
     this.tables.unScheduledSubjects.isBusy = true
     this.tables.unScheduledSubjects.items = []
     this.selectedSchedules = []
