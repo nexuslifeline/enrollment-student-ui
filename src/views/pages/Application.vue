@@ -16,7 +16,7 @@
           <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
-                 <b-form-group>
+                <b-form-group>
                   <label class="required">Student No.</label>
                   <b-form-input
                     v-model="forms.student.fields.studentNo"
@@ -3730,7 +3730,6 @@ export default {
       this.showModalPreview = true
       this.getAssessmentFormPreview(academicRecordId)
         .then(response => {
-          console.log(response)
           this.file.type = response.headers.contentType
           const file = new Blob([response.data], { type: "application/pdf" } )
           const reader = new FileReader();

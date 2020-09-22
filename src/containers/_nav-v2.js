@@ -41,7 +41,7 @@ export default [
   },
   {
     name: 'My Schedules',
-    to: '/schedules',
+    to: `/schedules`,
     icon: 'folder'
   }
 ]

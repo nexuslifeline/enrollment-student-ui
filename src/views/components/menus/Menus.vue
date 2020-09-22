@@ -20,10 +20,11 @@
     name: 'Menus',
     components: {
       ArrowRight,
-      MenuItem
+      MenuItem,
     },
     data() {
       return {
+        academicRecordId: null,
         menus: [
           {
             title: 'My Documents',
@@ -71,11 +72,11 @@
             title: 'My Schedule',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'schedules'
+            path: `schedules/${this.$store?.state?.user?.academicRecord.id}`
           }
         ]
       }
-    }
+    },
   }
 </script>
 <style lang="scss" scoped>

@@ -46,6 +46,8 @@ import 'vue-awesome/icons/caret-down'
 import 'vue-awesome/icons/chevron-down'
 import 'vue-awesome/icons/chevron-left'
 import 'vue-awesome/icons/chevron-right'
+import 'vue-awesome/icons/ellipsis-v'
+import 'vue-awesome/icons/clock'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 

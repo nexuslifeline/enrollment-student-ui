@@ -22,7 +22,8 @@ const MyProfile = () => import('@/views/pages/MyProfile')
 const MyPayments = () => import('@/views/pages/MyPayments')
 const MyApplications = () => import('@/views/pages/MyApplications')
 const MyRequirements = () => import('@/views/pages/MyRequirements')
-const MySchedules = () => import('@/views/pages/MySchedules')
+const MyScheduleList = () => import('@/views/pages/my-schedules/MyScheduleList')
+const MySchedule = () => import('@/views/pages/my-schedules/MySchedule')
 const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
 const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
 const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
@@ -121,10 +122,23 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'schedules',
-          name: 'MySchedules',
-          component: MySchedules,
-          meta: {requiresAuth: true}
+          path: '/schedules',
+          component: { render(c) { return c('router-view') } },
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: '/',
+              redirect: 'history',
+            },
+            {
+              path: 'history',
+              component: MyScheduleList
+            },
+            {
+              path: ':academicRecordId',
+              component: MySchedule
+            },
+          ]
         },
         {
           path: '/documents',

@@ -1,16 +1,16 @@
 <template>
-  <div class="assesment__main-container">
+  <div class="schedule__main-container">
     <h4 class="c-app__page-title">
-      {{$options.headline.title}} ({{tables.assessment.items.length}})
+      {{$options.headline.title}} ({{tables.academicRecords.items.length}})
     </h4>
     <p class="c-app__page-description">
       {{$options.headline.description}}
     </p>
     <b-table
       class="c-app__table"
-      :fields="tables.assessment.fields"
-      :items.sync="tables.assessment.items"
-      :busy="tables.assessment.isBusy"
+      :fields="tables.academicRecords.fields"
+      :items.sync="tables.academicRecords.items"
+      :busy="tables.academicRecords.isBusy"
       responsive
       small
       hover
@@ -18,9 +18,9 @@
       show-empty>
       <template v-slot:cell(action) = "row">
         <b-button
-          @click="onPrintAssesment(row.item.id)"
+          :to="`/schedules/${row.item.id}`"
           variant="primary">
-          <v-icon name="print" />
+          <v-icon name="search" />
         </b-button>
       </template>
       <template v-slot:table-busy>
@@ -33,63 +33,40 @@
         </div>
       </template>
     </b-table>
-    <FileViewer
-      :show="showModalPreview"
-      :file="file"
-      :owner="file.owner"
-      :isBusy="file.isLoading"
-      @close="showModalPreview = false"/>
   </div>
 </template>
 
 <script>
 import { AcademicRecordApi, ReportApi } from "../../../mixins/api";
 import { AcademicRecordStatuses } from "../../../helpers/enum";
-import FileViewer from "../../components/FileViewer";
-import headline from './data/assessment';
+import headline from './data/schedule';
 
 export default {
   mixins: [ AcademicRecordApi, ReportApi ],
   headline,
-  components: { FileViewer },
   data() {
     return {
-      AcademicRecordStatuses: AcademicRecordStatuses,
-      showModalPreview : false,
-      file: {
-        type: null,
-        src: null,
-        name: null,
-        notes: null,
-        isLoading: false
-      },
       tables: {
-        assessment: {
+        academicRecords: {
           isBusy: false,
           fields: [
             {
               key: "student.studentNo",
-							label: "Student No",
-							tdClass: "align-middle",
-							thStyle: { width: '10%'},
+              label: "Student No",
+              tdClass: "align-middle",
+              thStyle: { width: '10%'},
             },
             {
               key: "student.name",
-							label: "Name",
-							tdClass: "align-middle",
+              label: "Name",
+              tdClass: "align-middle",
               thStyle: { width: "auto"},
-              formatter: (value, key, item) => {
-                if(!item.student.middleName){
-                  item.student.middleName = ""
-                }
-                return item.student.firstName + " " + item.student.middleName + " " + item.student.lastName
-              }
             },
             {
               key: "schoolYear.name",
-							label: "School Year",
-							tdClass: "align-middle",
-							thStyle: { width: "10%"},
+              label: "School Year",
+              tdClass: "align-middle",
+              thStyle: { width: "10%"},
             },
             {
               key: "level.name",
@@ -136,49 +113,22 @@ export default {
   created() {
     const studentId = this.$store.state.user.id;
     const academicRecordStatusId = AcademicRecordStatuses.ENROLLED.id
-    const { assessment } = this.tables
+    const { academicRecords } = this.tables
     const params = { studentId, academicRecordStatusId, paginate: false }
-    assessment.isBusy = true
+    academicRecords.isBusy = true
 
     this.getAcademicRecordList(params).then(({ data }) => {
-      assessment.items = data
-      assessment.isBusy = false
+      academicRecords.items = data
+      academicRecords.isBusy = false
     })
   },
-  methods: {
-    onPrintAssesment(academicRecordId) {
-      // this.getAssessmentFormPreview(academicRecordId)
-      // .then(({ data }) => {
-      //   const file = new Blob([data], { type: "application/pdf" });
-      //   const fileURL = URL.createObjectURL(file);
-      //   window.open(fileURL);
-      // })
-
-      this.file.type = null
-      this.file.src = null
-      this.file.notes = null
-      this.file.isLoading = true
-      this.file.owner = null;
-      this.file.name = 'Assesment Form'
-
-      this.showModalPreview = true
-      this.getAssessmentFormPreview(academicRecordId)
-        .then(response => {
-          this.file.type = response.headers.contentType
-          const file = new Blob([response.data], { type: "application/pdf" } )
-          const reader = new FileReader();
-          reader.onload = e => this.file.src = e.target.result
-          reader.readAsDataURL(file);
-          this.file.isLoading = false
-      })
-    }
-  }
 }
 </script>
 
 <style>
-  .assesment__main-container {
-    width: 100%;
+  .schedule__main-container {
     height: 100%;
+    width: 100%;
+    padding: 20px;
   }
 </style>
