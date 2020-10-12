@@ -1379,15 +1379,15 @@
                             </b-col>
                             <b-col md=4>
                               <b-form-group>
-                                <label>Reference No</label>
+                                <label>Transction No</label>
                                 <b-form-input
-                                  v-model="forms.payment.fields.referenceNo"
-                                  :state="forms.payment.states.referenceNo"
+                                  v-model="forms.payment.fields.transactionNo"
+                                  :state="forms.payment.states.transactionNo"
                                   debounce="500"
                                   :disabled="paymentFiles.length > 0 ? false : true"
                                 />
                                 <b-form-invalid-feedback>
-                                  {{ forms.payment.errors.referenceNo }}
+                                  {{ forms.payment.errors.transactionNo }}
                                 </b-form-invalid-feedback>
                               </b-form-group>
                             </b-col>
@@ -2312,7 +2312,7 @@ const billingFields = {
 
 const paymentFields = {
   id: null,
-  referenceNo: null,
+  transactionNo: null,
   amount: 0,
   datePaid: null,
   paymentModeId: 1,
@@ -2323,7 +2323,7 @@ const paymentFields = {
 }
 
 const paymentErrorFields = {
-  referenceNo: null,
+  transactionNo: null,
   amount: null,
   datePaid: null,
   paymentModeId: 1,
@@ -3484,8 +3484,12 @@ export default {
 
         reset(payment)
 
+        const { transactionNo, amount, datePaid } = this.forms.payment
         const data = {
           ...payment.fields,
+          transactionNo,
+          amount,
+          datePaid,
           billingId,
           studentId
         }

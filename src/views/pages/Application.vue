@@ -1354,6 +1354,7 @@
                               <vue-autonumeric
                                 v-model="forms.payment.fields.amount"
                                 class="form-control text-right"
+                                :class="forms.payment.states.amount === false ? 'is-invalid' : ''"
                                 :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
                                 :state="forms.payment.states.amount"
                                 debounce="500"
@@ -1366,15 +1367,15 @@
                           </b-col>
                           <b-col md=4>
                             <b-form-group>
-                              <label>Reference No</label>
+                              <label>Transaction No</label>
                               <b-form-input
-                                v-model="forms.payment.fields.referenceNo"
-                                :state="forms.payment.states.referenceNo"
+                                v-model="forms.payment.fields.transactionNo"
+                                :state="forms.payment.states.transactionNo"
                                 debounce="500"
                                 :disabled="paymentFiles.length > 0 ? false : true"
                               />
                               <b-form-invalid-feedback>
-                                {{ forms.payment.errors.referenceNo }}
+                                {{ forms.payment.errors.transactionNo }}
                               </b-form-invalid-feedback>
                             </b-form-group>
                           </b-col>
@@ -2234,7 +2235,7 @@ const billingFields = {
 
 const paymentFields = {
   id: null,
-  referenceNo: null,
+  transactionNo: null,
   amount: 0,
   datePaid: null,
   paymentModeId: 1,
@@ -2245,7 +2246,7 @@ const paymentFields = {
 }
 
 const paymentErrorFields = {
-  referenceNo: null,
+  transactionNo: null,
   amount: null,
   datePaid: null,
   paymentModeId: 1,
@@ -3339,7 +3340,7 @@ export default {
     onPaymentFileUpload(file) {
       const formData = new FormData();
       const { payment } = this.forms
-
+      console.log(payment.fields.id)
       if (!payment.fields.id) {
         // NOTE! all string messages should be move to contents
         showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')
@@ -3380,8 +3381,12 @@ export default {
 
       reset(payment)
 
+      const { transactionNo, amount, datePaid } = this.forms.payment
       const data = {
         ...payment.fields,
+        transactionNo,
+        amount,
+        datePaid,
         billingId,
         studentId
       }
