@@ -716,7 +716,7 @@
                 <b-form-group>
                   <label class="required">Last School Attended</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolAttended" 
+                    v-model="forms.evaluation.fields.lastSchoolAttended"
                     :state="forms.evaluation.states.evaluationLastSchoolAttended"
                     debounce="500"/>
                   <b-form-invalid-feedback>
@@ -728,7 +728,7 @@
                 <b-form-group>
                   <label class="required">From</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolYearFrom" 
+                    v-model="forms.evaluation.fields.lastSchoolYearFrom"
                     :state="forms.evaluation.states.evaluationLastSchoolYearFrom"
                     debounce="500" />
                   <b-form-invalid-feedback>
@@ -740,7 +740,7 @@
                 <b-form-group>
                   <label class="required">To</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolYearTo" 
+                    v-model="forms.evaluation.fields.lastSchoolYearTo"
                     :state="forms.evaluation.states.evaluationLastSchoolYearTo"
                     debounce="500" />
                   <b-form-invalid-feedback>
@@ -3340,7 +3340,7 @@ export default {
     onPaymentFileUpload(file) {
       const formData = new FormData();
       const { payment } = this.forms
-      console.log(payment.fields.id)
+
       if (!payment.fields.id) {
         // NOTE! all string messages should be move to contents
         showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')

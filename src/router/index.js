@@ -16,7 +16,7 @@ const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
 const Application = () => import('@/views/pages/Application')
 const Admission = () => import('@/views/pages/Admission')
-const MyStatements = () => import('@/views/pages/MyStatements')
+const MyStatements = () => import('@/views/pages/my-statements/MyStatements')
 const MyGrades = () => import('@/views/pages/MyGrades')
 const MyProfile = () => import('@/views/pages/MyProfile')
 const MyPayments = () => import('@/views/pages/MyPayments')
@@ -28,6 +28,7 @@ const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
 const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
 const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
 const Menu404 = () => import('@/views/pages/Menu404')
+const Payment = () => import('@/views/pages/my-payments/Payment')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -159,6 +160,12 @@ function configRoutes () {
               component: RegistrationList
             }
           ]
+        },
+        {
+          path: '/payment/:billingId',
+          name: 'Payment',
+          component: Payment,
+          meta: {requiresAuth: true},
         },
         {
           path: 'menu404',

@@ -22,3 +22,17 @@ label.required:after {
   content: ' *';
   color: red;
 }
+
+.btn-invisible {
+  border: 0;
+  background: none;
+  outline: 0;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:active {
+    outline: 0;
+  }
+}

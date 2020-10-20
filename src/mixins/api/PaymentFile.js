@@ -8,6 +8,9 @@ export default {
     addPaymentFile(data, paymentId) {
         return this.$authHttp.post(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files`, data)
     },
+    addPaymentFileMultiple(paymentId, data) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/payments/${paymentId}/multiple-files`, data)
+  },
     updatePaymentFile(data, paymentId, fileId) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/payments/${paymentId}/files/${fileId}`, data)
     },

@@ -21,6 +21,9 @@ export default {
     },
     deletePhoto(id){
       return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/students/${id}/photos`)
-    }
+    },
+    getBillingsOfStudent(studentId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/billings`);
+    },
   }
 }
