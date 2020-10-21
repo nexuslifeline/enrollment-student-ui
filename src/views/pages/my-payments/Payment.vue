@@ -1,8 +1,6 @@
 <template>
     <div class="payment__main-container">
-      <div class="left-pane">
-      </div>
-      <div class="right-pane">
+      <div class="payment-container">
         <div class="billing-container">
           <h5 class="mb-4 mt-2">BILLING INFORMATION</h5>
           <b-row>
@@ -25,37 +23,45 @@
             <b-col md=6>
                <b-row>
                 <b-col md=12>
-                   <b-form-group
-                      label="Previous Balance">
-                     <vue-autonumeric
-                      v-model="forms.billing.fields.previousBalance"
-                      class="form-control text-right"
-                      :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                      :state="forms.payment.states.amount"
-                      debounce="500"
-                      disabled/>
-                  </b-form-group>
+                  <b-row>
+                    <b-col md=6>
+                      <b-form-group
+                        label="Previous Balance">
+                          <b-form-input
+                            v-model="getSignedPreviousBalance"
+                            class="text-right"/>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md=6>
+                      <b-form-group
+                        label="Current Due">
+                        <vue-autonumeric
+                          v-model="forms.billing.fields.totalAmount"
+                          class="form-control text-right"
+                          :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0, }]"
+                          :state="forms.payment.states.amount"
+                          debounce="500"
+                          disabled/>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
                 </b-col>
                 <b-col md=12>
-                    <b-form-group
-                      label="Current Due">
+                  <b-form-group
+                      label="Less: Total Paid">
                     <vue-autonumeric
-                      v-model="forms.billing.fields.totalAmount"
+                      v-model="forms.billing.fields.totalPaid"
                       class="form-control text-right"
                       :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                      :state="forms.payment.states.amount"
+                      :state="forms.payment.states.totalPaid"
                       debounce="500"
                       disabled/>
                   </b-form-group>
                   <b-form-group
                       label="Remaining Balance">
-                    <vue-autonumeric
-                      :value="getRemainingBalance"
-                      class="form-control text-right"
-                      :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                      :state="forms.payment.states.amount"
-                      debounce="500"
-                      disabled/>
+                    <b-form-input
+                      v-model="getSignedRemainingBalance"
+                      class="text-right"/>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -82,10 +88,10 @@
               </b-form-group>
             </b-alert>
           </b-card>
-          <h6>
-            You have until [ due date here ] to make the payment.
+          <p>
+            You have until <strong>{{ getFormattedDueDate }}</strong> to make the payment.
             This reference number will not be valid until that.
-          </h6>
+          </p>
         </div>
         <div class="payment-step-container">
           <span class="payment-step__number">1</span>
@@ -685,18 +691,39 @@ export default {
 
   },
   computed: {
-    getRemainingBalance() {
+    getSignedRemainingBalance() {
       const { totalPaid, previousBalance, totalAmount } = this.forms.billing.fields
       const remainingBalance = (parseFloat(previousBalance) + parseFloat(totalAmount)) - parseFloat(totalPaid);
       if (isNaN(remainingBalance)) {
         return 0
       }
 
-      return remainingBalance
+      if (Math.sign(remainingBalance) === -1){
+        return `(${formatNumber(Math.abs(remainingBalance),2)})`
+      }
+
+      return formatNumber(remainingBalance,2)
+    },
+    getSignedPreviousBalance() {
+      const { previousBalance } = this.forms.billing.fields
+      if (isNaN(previousBalance)) {
+        return 0
+      }
+
+      if (Math.sign(previousBalance) === -1){
+        return `(${formatNumber(Math.abs(previousBalance),2)})`
+      }
+
+      return formatNumber(previousBalance,2);
+    },
+    getFormattedDueDate() {
+      const { dueDate } = this.forms.billing.fields
+      if(dueDate) {
+        return format(new Date(dueDate), 'MMMM dd, yyyy')
+      }
+      return null
     }
   }
-
-
 }
 </script>
 
@@ -707,22 +734,20 @@ export default {
     width: 100%;
     padding: 20px;
     display: flex;
+    justify-content: center;
+    align-items: center;
 
-    .left-pane {
-      width: 30%;
-    }
-
-    .right-pane {
+    .payment-container {
       border: solid 1px whitesmoke;
-      width: 70%;
+      width: 700px;
       display: flex;
       flex-direction: column;
       padding: 0 30px;
     }
 
     @include for-size(phone-only) {
-      .left-pane {
-       display:none;
+      .payment-container {
+        width: 100%;
       }
     }
 
