@@ -29,7 +29,8 @@
                         label="Previous Balance">
                           <b-form-input
                             v-model="getSignedPreviousBalance"
-                            class="text-right"/>
+                            class="text-right"
+                            disabled/>
                       </b-form-group>
                     </b-col>
                     <b-col md=6>
@@ -61,7 +62,8 @@
                       label="Remaining Balance">
                     <b-form-input
                       v-model="getSignedRemainingBalance"
-                      class="text-right"/>
+                      class="text-right"
+                      disabled/>
                   </b-form-group>
                 </b-col>
               </b-row>
