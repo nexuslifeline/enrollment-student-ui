@@ -613,8 +613,15 @@ export default {
       this.file.isLoading = false
     },
     onSavePayment() {
-      console.log('save payment')
+
+      if(!this.activeSchoolYear)
+      {
+        //if not active sy, cant proceed to payment
+        showNotification(this,'danger','Opps! No active school year is set, please contact school administrator.')
+        return
+      }
       const { payment, billing } = this.forms
+      payment.fields.schoolYearId = this.activeSchoolYear?.id
 
       const formData = new FormData();
       this.paymentFiles.forEach(paymentFile => {
@@ -681,15 +688,14 @@ export default {
     const billingId = this.$route?.params?.billingId
     const { payment, billing } = this.forms
 
+    this.getActiveSchoolYear()
     this.getStudentBilling(billingId)
     this.loadBankAccounts()
     this.loadEWalletAccounts()
     this.loadPeraPadalaAccounts()
 
-
     payment.fields.billingId = billingId
     payment.fields.studentId = studentId
-    payment.fields.schoolYearId = this.activeSchoolYear?.id
 
   },
   computed: {
