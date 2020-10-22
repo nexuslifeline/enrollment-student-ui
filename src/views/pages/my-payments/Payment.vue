@@ -347,7 +347,7 @@ const paymentFields = {
   datePaid: null,
   paymentModeId: 1,
   notes: null,
-  paymentStatusId: PaymentStatuses.PENDING.id,
+  paymentStatusId: PaymentStatuses.SUBMITTED.id,
   disapprovalNotes: null,
   submittedDate: format(new Date(), 'yyyy-MM-dd'),
   billingId: null,
