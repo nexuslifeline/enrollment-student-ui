@@ -2243,6 +2243,7 @@ const paymentFields = {
   paymentStatusId: PaymentStatuses.PENDING.id,
   disapprovalNotes: null,
   submittedDate: null,
+  schoolYearId: null,
 }
 
 const paymentErrorFields = {
@@ -2317,6 +2318,7 @@ export default {
           show: false,
         }
       },
+      activeSchoolYear: null,
       lastActiveFile: null,
       showModalSection: false,
       showPaymentFileModal: false,
@@ -2958,6 +2960,7 @@ export default {
     this.loadEWalletAccounts();
     this.loadBankAccounts();
     this.loadPeraPadalaAccounts();
+    this.getActiveSchoolYear();
 
   },
   methods: {
@@ -3094,6 +3097,8 @@ export default {
         showNotification(this, 'danger', 'You should attach atleast one or more proof of payment.')
         return
       }
+
+      payment.fields.schoolYearId = this.activeSchoolYear?.id
 
       const dataPayment = {
         ...payment.fields,
@@ -3381,6 +3386,7 @@ export default {
 
       reset(payment)
 
+      payment.fields.schoolYearId = this.activeSchoolYear?.id
       const { transactionNo, amount, datePaid } = this.forms.payment
       const data = {
         ...payment.fields,
@@ -3388,7 +3394,7 @@ export default {
         amount,
         datePaid,
         billingId,
-        studentId
+        studentId,
       }
       this.isPaying = true
 
@@ -3927,7 +3933,15 @@ export default {
         item: file
       };
       this.previewPaymentFile(currentIdx);
-    }
+    },
+    getActiveSchoolYear() {
+      const params = { paginate: false, isActive: 1 }
+      this.getSchoolYearList(params).then(({ data }) => {
+        if (data.length > 0) {
+          this.activeSchoolYear = data[0]
+        }
+      })
+    },
   },
   computed: {
     hasActiveAdmission() {

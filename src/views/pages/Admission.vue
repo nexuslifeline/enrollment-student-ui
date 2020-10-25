@@ -2319,7 +2319,8 @@ const paymentFields = {
   notes: null,
   paymentStatusId: PaymentStatuses.PENDING.id,
   disapprovalNotes: null,
-  submittedDate: null
+  submittedDate: null,
+  schoolYearId: null,
 }
 
 const paymentErrorFields = {
@@ -2388,21 +2389,22 @@ export default {
     data() {
       return {
         fileViewer: {
-        evaluation: {
-          isActiveNavEnabled: false,
-          activeNavCount: 0,
-          activeNavIndex: 0,
-          show: false,
-        },
-        payment: {
-          isActiveNavEnabled: false,
-          activeNavCount: 0,
-          activeNavIndex: 0,
-          show: false,
-        }
+          evaluation: {
+            isActiveNavEnabled: false,
+            activeNavCount: 0,
+            activeNavIndex: 0,
+            show: false,
+          },
+          payment: {
+            isActiveNavEnabled: false,
+            activeNavCount: 0,
+            activeNavIndex: 0,
+            show: false,
+          }
       },
+      activeSchoolYear: null,
       lastActiveFile: null,
-        showModalSection: false,
+      showModalSection: false,
         showPaymentFileModal: false,
         showAdmissionFileModal: false,
         showEvaluationFileModal: false,
@@ -3047,6 +3049,7 @@ export default {
       this.loadEWalletAccounts();
       this.loadBankAccounts();
       this.loadPeraPadalaAccounts();
+      this.getActiveSchoolYear();
 
       this.getLevelList(params).then(response => {
         const res = response.data
@@ -3189,6 +3192,8 @@ export default {
           showNotification(this, 'danger', 'You should attach one or more proof of payment.')
           return
         }
+
+        payment.fields.schoolYearId = this.activeSchoolYear?.id
 
         const dataPayment = {
           ...payment.fields,
@@ -3483,6 +3488,7 @@ export default {
         } = this.forms
 
         reset(payment)
+        payment.fields.schoolYearId = this.activeSchoolYear?.id
 
         const { transactionNo, amount, datePaid } = this.forms.payment
         const data = {
@@ -4025,10 +4031,10 @@ export default {
         })
       },
       setupEvaluationActiveFileViewer(index) {
-      this.lastActiveFile = this.evaluationFiles[index]
-      this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
-      this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
-      this.fileViewer.evaluation.activeNavIndex =  index
+        this.lastActiveFile = this.evaluationFiles[index]
+        this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
+        this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
+        this.fileViewer.evaluation.activeNavIndex =  index
       },
       previewEvaluationFile(index) {
         this.setupEvaluationActiveFileViewer(index)
@@ -4122,18 +4128,26 @@ export default {
         this.previewPaymentFile(currentIdx);
       },
       onPaymentFileNavRight() {
-      const files = this.paymentFiles;
-      let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
-      const isLast = currentIdx === files.length - 1;
-      currentIdx = isLast ? 0 : currentIdx + 1;
-      const file = files[currentIdx];
-      const currentFileItem = {
-        ...this.lastActiveFile,
-        index: currentIdx,
-        item: file
-      };
-      this.previewPaymentFile(currentIdx);
-    }
+        const files = this.paymentFiles;
+        let currentIdx = this.paymentFiles.indexOf(this.lastActiveFile)
+        const isLast = currentIdx === files.length - 1;
+        currentIdx = isLast ? 0 : currentIdx + 1;
+        const file = files[currentIdx];
+        const currentFileItem = {
+          ...this.lastActiveFile,
+          index: currentIdx,
+          item: file
+        };
+        this.previewPaymentFile(currentIdx);
+    },
+    getActiveSchoolYear() {
+      const params = { paginate: false, isActive: 1 }
+      this.getSchoolYearList(params).then(({ data }) => {
+        if (data.length > 0) {
+          this.activeSchoolYear = data[0]
+        }
+      })
+    },
   },
   computed: {
     hasActiveAdmission() {
