@@ -1,19 +1,19 @@
 <template>
   <div class="registration_main-container">
     <h4 class="c-app__page-title">
-      {{$options.headline.title}} ({{tables.registration.items.length}})
+      {{$options.headline.title}} ({{ tables.registrations.items.length }})
     </h4>
     <p class="c-app__page-description">
       {{$options.headline.description}}
     </p>
     <b-table
       class="c-app__table"
-      responsive small hover outlined show-empty
-      :fields="tables.registration.fields"
-      :items.sync="tables.registration.items"
-      :busy="tables.registration.isBusy">
+      responsive small outlined show-empty
+      :fields="tables.registrations.fields"
+      :items.sync="tables.registrations.items"
+      :busy="tables.registrations.isBusy">
       <template v-slot:cell(action) = "row">
-        <b-button @click="onPrintRegistration" variant="outline-warning"><v-icon name="print"></v-icon></b-button>
+        <b-button @click="onPrintRegistration(row.item.id)" variant="outline-warning"><v-icon name="print"></v-icon></b-button>
       </template>
       <template v-slot:table-busy>
         <div class="text-center my-2">
@@ -25,17 +25,38 @@
         </div>
       </template>
     </b-table>
+    <FileViewer
+      :show="showModalPreview"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="showModalPreview = false"/>
   </div>
 </template>
 
 <script>
 import headline from './data/registration';
+import { AcademicRecordApi, ReportApi } from "../../../mixins/api";
+import { AcademicRecordStatuses } from "../../../helpers/enum";
+import FileViewer from "../../components/FileViewer";
+
 export default {
   headline,
+  components: { FileViewer },
+  mixins: [ AcademicRecordApi, ReportApi  ],
   data() {
     return {
+      AcademicRecordStatuses: AcademicRecordStatuses,
+      showModalPreview : false,
+      file: {
+        type: null,
+        src: null,
+        name: null,
+        notes: null,
+        isLoading: false
+      },
       tables: {
-        registration: {
+        registrations: {
           isBusy: false,
           fields: [
             {
@@ -49,12 +70,6 @@ export default {
 							label: "Name",
 							tdClass: "align-middle",
               thStyle: { width: "auto"},
-              formatter: (value, key, item) => {
-                if(!item.student.middleName){
-                  item.student.middleName = ""
-                }
-                return item.student.firstName + " " + item.student.middleName + " " + item.student.lastName
-              } 
             },
             {
               key: "schoolYear.name",
@@ -105,11 +120,37 @@ export default {
     }
   },
   created() {
+    const studentId = this.$store.state.user.id;
+    const academicRecordStatusId = AcademicRecordStatuses.ENROLLED.id
+    const { registrations } = this.tables
+    const params = { studentId, academicRecordStatusId, paginate: false }
+    registrations.isBusy = true
 
+    this.getAcademicRecordList(params).then(({ data }) => {
+      registrations.items = data
+      registrations.isBusy = false
+    })
   },
   methods: {
-    onPrintRegistration() {
+    onPrintRegistration(academicRecordId) {
 
+      this.file.type = null
+      this.file.src = null
+      this.file.notes = null
+      this.file.isLoading = true
+      this.file.owner = null;
+      this.file.name = 'Registration Form'
+
+      this.showModalPreview = true
+      this.getRegistrationFormPreview(academicRecordId)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: "application/pdf" } )
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
+      })
     }
   }
 }
