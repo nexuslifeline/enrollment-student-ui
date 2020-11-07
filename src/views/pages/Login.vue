@@ -125,7 +125,7 @@
               or you may contact us at <a href='#'>{{fbPageUrl}}</a>)
             </span>
             <ul class="signup__confirmation-answers">
-              <li @click="register(studentCategories.NEW.id)" class="signup__answer-item">
+              <li @click="register(isEnrolled ? studentCategories.OLD.id : studentCategories.NEW.id)" class="signup__answer-item">
                 <v-icon
                   name="check"
                   class="signup__answer-icon"
@@ -167,7 +167,7 @@
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
-              <li @click="register(studentCategories.TRANSFEREE.id)" class="signup__answer-item">
+              <li @click="register(isEnrolled ? studentCategories.OLD.id : studentCategories.TRANSFEREE.id)" class="signup__answer-item">
                 <v-icon
                   name="check"
                   class="signup__answer-icon"

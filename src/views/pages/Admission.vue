@@ -3185,11 +3185,13 @@ export default {
 
         if (payment.fields.amount < totalAmount) {
           showNotification(this, 'danger', `The amount shouldn't be less than the initial fee: ${formatNumber(totalAmount)}.`)
+          this.isProcessing = false;
           return
         }
 
-        if (this.paymentFiles.length === 0) {
-          showNotification(this, 'danger', 'You should attach one or more proof of payment.')
+        if (this.paymentFiles.length == 0) {
+          showNotification(this, 'danger', 'You should attach atleast one or more proof of payment.')
+          this.isProcessing = false;
           return
         }
 
