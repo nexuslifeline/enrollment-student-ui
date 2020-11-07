@@ -15,7 +15,7 @@
     <b-table
       ref="billings"
       class="c-app__table"
-      small hover outlined show-empty
+      small outlined show-empty
       :fields="tables.billings.fields"
       :busy="tables.billings.isBusy"
       :items="tables.billings.items">
@@ -27,6 +27,9 @@
             class="mr-2" />
           <strong>Loading...</strong>
         </div>
+      </template>
+      <template v-slot:cell(billingNo)="row">
+        <div><span class="link" @click="loadDetails(row)">{{ row.item.billingNo }}</span></div>
       </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
@@ -62,7 +65,7 @@
           <div class="row-details-container">
             <div v-if="data.item.termBillings && data.item.termBillings.length > 0">
                 <b-table
-                  small hover outlined show-empty
+                  small outlined show-empty
                   :fields="tables.soaBillings.fields"
                   :busy="tables.soaBillings.isBusy"
                   :items="data.item.termBillings">
@@ -79,7 +82,7 @@
             </div>
             <div v-if="data.item.otherBillings && data.item.otherBillings.length > 0">
               <b-table
-                  small hover outlined show-empty
+                  small outlined show-empty
                   :fields="tables.otherBillings.fields"
                   :busy="tables.otherBillings.isBusy"
                   :items="data.item.otherBillings">
@@ -363,10 +366,18 @@ export default {
 
   .add-button-container {
      margin-bottom: 10px;
-     
      .pay-button {
        width: 100px;
      }
+  }
+
+  .link {
+    color: rgb(45, 164, 204);
+    cursor: pointer;
+
+    &:hover {
+      color: lightblue;
+    }
   }
 
 </style>

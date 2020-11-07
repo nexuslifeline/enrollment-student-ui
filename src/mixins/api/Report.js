@@ -11,6 +11,11 @@ export default {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/requirement-list`, {
         responseType: 'blob'
       });
-    }
+    },
+    getRegistrationFormPreview(academicRecordId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/registration-form/${academicRecordId}`, {
+        responseType: 'blob'
+      });
+    },
   }
 }

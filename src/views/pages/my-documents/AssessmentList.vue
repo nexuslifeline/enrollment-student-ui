@@ -78,12 +78,6 @@ export default {
 							label: "Name",
 							tdClass: "align-middle",
               thStyle: { width: "auto"},
-              formatter: (value, key, item) => {
-                if(!item.student.middleName){
-                  item.student.middleName = ""
-                }
-                return item.student.firstName + " " + item.student.middleName + " " + item.student.lastName
-              }
             },
             {
               key: "schoolYear.name",
