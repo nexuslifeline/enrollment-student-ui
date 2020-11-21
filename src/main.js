@@ -48,6 +48,7 @@ import 'vue-awesome/icons/chevron-left'
 import 'vue-awesome/icons/chevron-right'
 import 'vue-awesome/icons/ellipsis-v'
 import 'vue-awesome/icons/clock'
+import 'vue-awesome/icons/info'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 

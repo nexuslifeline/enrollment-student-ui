@@ -867,8 +867,8 @@
               <b-col md=12>
                 <div class="file-uploader-container">
                   <FileUploader
-                    @onFileChange="onEvaluationFileUpload"
-                    @onFileDrop="onEvaluationFileUpload"
+                    @onFileChange="onStudentFileUpload"
+                    @onFileDrop="onStudentFileUpload"
                   />
                 </div>
               </b-col>
@@ -877,14 +877,14 @@
               <b-col md=12>
                 <div class="file-item-container">
                   <FileItem
-                    v-for="(item, index) of evaluationFiles"
+                    v-for="(item, index) of studentFiles"
                     :key="index"
                     :title="item.name"
                     :description="item.notes"
                     :fileIndex="index"
-                    @onFileItemSelect="onEvaluationFileItemSelect"
-                    @onFileItemRemove="onDeleteEvaluationFile"
-                    @onFileItemPreview="previewEvaluationFile"
+                    @onFileItemSelect="onStudentFileItemSelect"
+                    @onFileItemRemove="onDeleteStudentFile"
+                    @onFileItemPreview="previewStudentFile"
                     :isBusy="item.isBusy"
                   />
                 </div>
@@ -1541,32 +1541,33 @@
     </b-modal>
 
     <b-modal
-      v-model="showEvaluationFileModal"
+      v-model="showStudentFileModal"
       centered
       header-bg-variant="success"
       header-text-variant="light"
       :noCloseOnEsc="true"
       :noCloseOnBackdrop="true">
       <div slot="modal-title"> <!-- modal title -->
-        Evaluation File
+        Student File
       </div> <!-- modal title -->
       <b-row> <!-- modal body -->
+      
         <b-col md=12>
           <label>Notes</label>
           <b-textarea
-            v-model="forms.evaluationFile.fields.notes"
-            :state="forms.evaluationFile.states.notes"
+            v-model="forms.studentFile.fields.notes"
+            :state="forms.studentFile.states.notes"
             rows=7
             debounce="500" />
           <b-form-invalid-feedback>
-            {{ forms.evaluationFile.errors.notes }}
+            {{ forms.studentFile.errors.notes }}
           </b-form-invalid-feedback>
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
         <b-button
           class="float-left"
-          @click="onDeleteEvaluationFile(selectedEvaluationFileIndex)"
+          @click="onDeleteStudentFile(selectedStudentFileIndex)"
           variant="outline-danger">
           <v-icon
             v-if="isFileDeleting"
@@ -1577,7 +1578,7 @@
           Delete
         </b-button>
         <b-button
-          @click="onUpdateEvaluationFile()"
+          @click="onUpdateStudentFile()"
           class="float-right"
           variant="outline-primary">
           <v-icon
@@ -1906,16 +1907,16 @@
       @close="showModalPreview = false"
     />
     <FileViewer
-      :show="fileViewer.evaluation.show"
+      :show="fileViewer.student.show"
       :file="file"
       :owner="file.owner"
       :isBusy="file.isLoading"
-      @close="fileViewer.evaluation.show = false"
-      @onNavLeft="onEvaluationFileNavLeft"
-      @onNavRight="onEvaluationFileNavRight"
-      :navCount="fileViewer.evaluation.activeNavCount"
-      :navActiveIndex="fileViewer.evaluation.activeNavIndex"
-      :enableArrowNav="fileViewer.evaluation.isActiveNavEnabled"
+      @close="fileViewer.student.show = false"
+      @onNavLeft="onStudentFileNavLeft"
+      @onNavRight="onStudentFileNavRight"
+      :navCount="fileViewer.student.activeNavCount"
+      :navActiveIndex="fileViewer.student.activeNavIndex"
+      :enableArrowNav="fileViewer.student.isActiveNavEnabled"
     />
     <FileViewer
       :show="fileViewer.payment.show"
@@ -2018,11 +2019,12 @@ import {
   BankAccountApi,
   SubjectApi,
   SectionApi,
-  EvaluationFileApi,
+  StudentFileApi,
   EvaluationApi,
   CurriculumApi,
   PeraPadalaAccountApi,
   ReportApi,
+  TranscriptRecordApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import SlideStageIndicator from '../components/SlideStageIndicator';
@@ -2212,7 +2214,19 @@ const evaluationFields = {
   schoolCategoryId: null,
   studentCurriculumId: null,
   semesterId: null,
-  submittedDate: null
+  submittedDate: null,
+  transcriptRecordId: null
+}
+
+const activeTranscriptRecordFields = {
+  id : null,
+  curriculumId: null,
+  schoolCategoryId: null,
+  levelId: null,
+  courseId: null,
+  transcriptRecordStatusId: null,
+  schoolCategoryId: null,
+  studentCurriculumId: null,
 }
 
 const evaluationErrorFields = {
@@ -2259,8 +2273,9 @@ const paymentFileFields = {
   notes: null
 }
 
-const evaluationFileFields = {
+const studentFileFields = {
   id: null,
+  documentTypeId: null,
   notes: null
 }
 
@@ -2287,11 +2302,12 @@ export default {
     SubjectApi,
     SectionApi,
     Tables,
-    EvaluationFileApi,
+    StudentFileApi,
     EvaluationApi,
     CurriculumApi,
     PeraPadalaAccountApi,
-    ReportApi
+    ReportApi,
+    TranscriptRecordApi
   ],
   components: {
     ApprovalIndicator,
@@ -2305,7 +2321,7 @@ export default {
   data() {
     return {
       fileViewer: {
-        evaluation: {
+        student: {
           isActiveNavEnabled: false,
           activeNavCount: 0,
           activeNavIndex: 0,
@@ -2322,15 +2338,15 @@ export default {
       lastActiveFile: null,
       showModalSection: false,
       showPaymentFileModal: false,
-      showEvaluationFileModal: false,
+      showStudentFileModal: false,
       showModalSubjects: false,
       showModalPreview: false,
       selectedPaymentMode: 1,
       selectedPayType: 1,
       paymentFiles: [],
-      evaluationFiles: [],
+      studentFiles: [],
       selectedPaymentFileIndex: null,
-      selectedEvaluationFileIndex: null,
+      selectedStudentFileIndex: null,
       isFileUpdating: false,
       isFileDeleting: false,
       isApplied: false,
@@ -2394,10 +2410,15 @@ export default {
           states: { ...evaluationErrorFields },
           errors: { ...evaluationErrorFields }
         },
-        evaluationFile: {
-          fields: { ...evaluationFileFields },
-          states: { ...evaluationFileFields },
-          errors: { ...evaluationFileFields }
+        activeTranscriptRecord: {
+          fields: { ...activeTranscriptRecordFields },
+          states: { ...activeTranscriptRecordFields },
+          errors: { ...activeTranscriptRecordFields }
+        },
+        studentFile: {
+          fields: { ...studentFileFields },
+          states: { ...studentFileFields },
+          errors: { ...studentFileFields }
         },
         billing: {
           fields: { ...billingFields },
@@ -2896,9 +2917,9 @@ export default {
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
-        const { id: evaluationId,  curriculumId } = student.evaluation
+        const { id: transcriptRecordId,  curriculumId } = student.activeTranscriptRecord
         const params = { paginate: false , curriculumId }
-        this.getUnscheduledSubjects(evaluationId, params).then(({ data }) => {
+        this.getUnscheduledSubjects(transcriptRecordId, params).then(({ data }) => {
           const result = data.filter(subject => subject.isAllowed == true)
 
           //clear subjects
@@ -2927,11 +2948,11 @@ export default {
         })
       }
 
-      //load evaluation files
-      this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
+      //load student files
+      this.getStudentFiles(studentId, params).then(({ data }) => {
         //this.tables.files.items = data
         data.forEach(file => {
-          this.evaluationFiles.push({
+          this.studentFiles.push({
             id: file.id,
             name: file.name,
             notes: file.notes,
@@ -2975,7 +2996,8 @@ export default {
         education,
         academicRecord,
         evaluation,
-        activeApplication: { fields: activeApplication }
+        activeApplication: { fields: activeApplication },
+        activeTranscriptRecord: { fields: activeTranscriptRecord }
       } = this.forms;
 
       const { items } = this.tables.enlistedSubjects
@@ -3034,6 +3056,21 @@ export default {
         ? ApplicationStatuses.COMPLETED.id
         : activeApplication.applicationStatusId
 
+      const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id,SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
+
+      //set transcript field values based on evaluation fields
+      if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
+        activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
+        activeTranscriptRecord.courseId = evaluation.fields.courseId
+        activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
+        activeTranscriptRecord.studentCurriculumId = evaluation.fields.studentCurriculumId
+        activeTranscriptRecord.curriculumId = evaluation.fields.curriculumId
+      }
+
+
+      const activeTranscriptPayload = (activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ?
+        { ...activeTranscriptRecord } :  null)
+
       const data = {
         ...payloads[currentStepIndex],
         activeApplication: {
@@ -3041,9 +3078,9 @@ export default {
           id: activeApplication.id,
           applicationStepId,
           applicationStatusId
-        }
+        },
+        activeTranscriptRecord: activeTranscriptPayload
       }
-
 
       formsToValidate.forEach(form => {
         if (form)
@@ -3601,64 +3638,64 @@ export default {
     removeSubject(row){
       this.tables.enlistedSubjects.items.splice(row.index, 1);
     },
-    onEvaluationFileUpload(file) {
+    onStudentFileUpload(file) {
       const formData = new FormData();
-      const { evaluation } = this.forms
+      const { student: { fields:{ id: studentId } } } = this.forms
 
       formData.append('file', file);
 
-      this.evaluationFiles.push({ id: null, name: null, notes: null, isBusy: true })
-      let newFileIndex = this.evaluationFiles.length - 1
-      let newFile = this.evaluationFiles[newFileIndex]
+      this.studentFiles.push({ id: null, name: null, notes: null, isBusy: true })
+      let newFileIndex = this.studentFiles.length - 1
+      let newFile = this.studentFiles[newFileIndex]
 
-      this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
+      this.addStudentFile(formData, studentId).then(({ data }) =>{
           newFile.id = data.id
           newFile.name = data.name
           newFile.isBusy = false
-          this.onEvaluationFileItemSelect(newFileIndex)
+          this.onStudentFileItemSelect(newFileIndex)
       })
     },
-    onDeleteEvaluationFile (index) {
-      const { evaluation: { fields:{ id: evaluationId } } } = this.forms
+    onDeleteStudentFile (index) {
+      const { student: { fields:{ id: studentId } } } = this.forms
 
-      const selectedFile = this.evaluationFiles[index]
+      const selectedFile = this.studentFiles[index]
       this.isFileDeleting = true
       selectedFile.isBusy = true
-      this.deleteEvaluationFile(evaluationId, selectedFile.id).then(()=> {
+      this.deleteStudentFile(studentId, selectedFile.id).then(()=> {
         this.isFileDeleting = false
-        this.showEvaluationFileModal = false
-        this.evaluationFiles.splice(index, 1);
+        this.showStudentFileModal = false
+        this.studentFiles.splice(index, 1);
       }).catch((error) => {
         this.isFileDeleting = false
         selectedFile.isBusy = false
       });
     },
-    onEvaluationFileItemSelect(idx) {
-      const { evaluationFile } = this.forms
-      reset(evaluationFile)
-      this.selectedEvaluationFileIndex = idx
+    onStudentFileItemSelect(idx) {
+      const { studentFile } = this.forms
+      reset(studentFile)
+      this.selectedStudentFileIndex = idx
 
-      evaluationFile.fields.id = this.evaluationFiles[idx].id
-      evaluationFile.fields.notes = this.evaluationFiles[idx].notes
+      studentFile.fields.id = this.studentFiles[idx].id
+      studentFile.fields.notes = this.studentFiles[idx].notes
 
-      this.showEvaluationFileModal = true
+      this.showStudentFileModal = true
     },
-    onUpdateEvaluationFile () {
-      const { evaluation: { fields:{ id: evaluationId } },
-              evaluationFile } = this.forms
+    onUpdateStudentFile () {
+      const { student: { fields:{ id: studentId } },
+              studentFile } = this.forms
 
-      const selectedFile = this.evaluationFiles[this.selectedEvaluationFileIndex]
+      const selectedFile = this.studentFiles[this.selectedStudentFileIndex]
       this.isFileUpdating = true
       selectedFile.isBusy = true
 
-      this.updateEvaluationFile(evaluationFile.fields, evaluationId, evaluationFile.fields.id).then(({ data }) => {
+      this.updateStudentFile(studentFile.fields, studentId, studentFile.fields.id).then(({ data }) => {
         selectedFile.notes = data.notes;
         this.isFileUpdating = false
-        this.showEvaluationFileModal = false;
+        this.showStudentFileModal = false;
         setTimeout(() => selectedFile.isBusy = false, 1000);
       }).catch((error) => {
         const { errors } = error.response.data;
-        validate(evaluationFile, errors);
+        validate(studentFile, errors);
         this.isFileUpdating = false
         selectedFile.isBusy = false
       });
@@ -3826,16 +3863,16 @@ export default {
         scheduledSubjects.isBusy = false
       })
     },
-    setupEvaluationActiveFileViewer(index) {
-      this.lastActiveFile = this.evaluationFiles[index]
-      this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
-      this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
-      this.fileViewer.evaluation.activeNavIndex =  index
+    setupStudentFileActiveFileViewer(index) {
+      this.lastActiveFile = this.studentFiles[index]
+      this.fileViewer.student.isActiveNavEnabled = this.studentFiles?.length > 1
+      this.fileViewer.student.activeNavCount = this.studentFiles?.length;
+      this.fileViewer.student.activeNavIndex =  index
     },
-    previewEvaluationFile(index) {
-      this.setupEvaluationActiveFileViewer(index)
-      const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
-      const selectedFile = this.evaluationFiles[index]
+    previewStudentFile(index) {
+      this.setupStudentFileActiveFileViewer(index)
+      const { student: { fields : student } } = this.forms
+      const selectedFile = this.studentFiles[index]
 
       this.file.type = null
       this.file.src = null
@@ -3843,9 +3880,9 @@ export default {
       this.file.notes = selectedFile?.notes
       this.file.isLoading = true
       this.file.owner = student;
-      this.fileViewer.evaluation.show = true
+      this.fileViewer.student.show = true
 
-      this.getEvaluationFilePreview(evaluationId, selectedFile.id)
+      this.getStudentFilePreview(student.id, selectedFile.id)
       .then(response => {
         this.file.type = response.headers.contentType
         const file = new Blob([response.data], { type: response.headers.contentType })
@@ -3856,9 +3893,9 @@ export default {
 
       })
     },
-    onEvaluationFileNavLeft() {
-      const files = this.evaluationFiles;
-      let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+    onStudentFileNavLeft() {
+      const files = this.studentFiles;
+      let currentIdx = this.studentFiles.indexOf(this.lastActiveFile)
       const isFirst = currentIdx === 0;
       currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
       const file = files[currentIdx];
@@ -3867,11 +3904,11 @@ export default {
         index: currentIdx,
         item: file
       };
-      this.previewEvaluationFile(currentIdx);
+      this.previewStudentFile(currentIdx);
     },
-    onEvaluationFileNavRight() {
-      const files = this.evaluationFiles;
-      let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+    onStudentFileNavRight() {
+      const files = this.studentFiles;
+      let currentIdx = this.studentFiles.indexOf(this.lastActiveFile)
       const isLast = currentIdx === files.length - 1;
       currentIdx = isLast ? 0 : currentIdx + 1;
       const file = files[currentIdx];
@@ -3880,7 +3917,7 @@ export default {
         index: currentIdx,
         item: file
       };
-      this.previewEvaluationFile(currentIdx);
+      this.previewStudentFile(currentIdx);
     },
     setupPaymentActiveFileViewer(index) {
       this.lastActiveFile = this.paymentFiles[index]

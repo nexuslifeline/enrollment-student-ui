@@ -45,9 +45,9 @@
                   </b-form-group>
                   <b-form-group>
                     <label class="required">Birthdate</label>
-                    <b-form-input type="date" 
-                      v-model="forms.student.fields.birthDate" 
-                      :state="forms.student.states.birthDate" 
+                    <b-form-input type="date"
+                      v-model="forms.student.fields.birthDate"
+                      :state="forms.student.states.birthDate"
                       />
                     <b-form-invalid-feedback>
                       {{forms.student.errors.birthDate}}
@@ -56,12 +56,12 @@
                   <b-form-group>
                     <label>Mobile No.</label>
                     <b-form-input
-                      v-model="forms.student.fields.mobileNo" 
+                      v-model="forms.student.fields.mobileNo"
                       debounce="500"/>
                   </b-form-group>
                    <b-form-group>
                     <label class="required">Civil Status</label>
-                    <b-form-select 
+                    <b-form-select
                       v-model="forms.student.fields.civilStatusId"
                       :state="forms.student.states.civilStatusId" >
                       <template v-slot:first>
@@ -101,8 +101,8 @@
                   <b-form-group>
                     <label class="required">House No/Street</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentHouseNoStreet" 
-                      :state="forms.address.states.addressCurrentHouseNoStreet" 
+                      v-model="forms.address.fields.currentHouseNoStreet"
+                      :state="forms.address.states.addressCurrentHouseNoStreet"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentHouseNoStreet}}
@@ -113,8 +113,8 @@
                   <b-form-group>
                     <label class="required">Barangay</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentBarangay" 
-                      :state="forms.address.states.addressCurrentBarangay" 
+                      v-model="forms.address.fields.currentBarangay"
+                      :state="forms.address.states.addressCurrentBarangay"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentBarangay}}
@@ -125,8 +125,8 @@
                   <b-form-group>
                     <label class="required">City/Town</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentCityTown" 
-                      :state="forms.address.states.addressCurrentCityTown" 
+                      v-model="forms.address.fields.currentCityTown"
+                      :state="forms.address.states.addressCurrentCityTown"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentCityTown}}
@@ -139,8 +139,8 @@
                   <b-form-group>
                     <label class="required">Province</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentProvince" 
-                      :state="forms.address.states.addressCurrentProvince" 
+                      v-model="forms.address.fields.currentProvince"
+                      :state="forms.address.states.addressCurrentProvince"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentProvince}}
@@ -151,8 +151,8 @@
                   <b-form-group>
                     <label class="required">Postal/Zip Code</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentPostalCode" 
-                      :state="forms.address.states.addressCurrentPostalCode" 
+                      v-model="forms.address.fields.currentPostalCode"
+                      :state="forms.address.states.addressCurrentPostalCode"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentPostalCode}}
@@ -163,7 +163,7 @@
                   <b-form-group>
                     <label >District</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentDistrict" 
+                      v-model="forms.address.fields.currentDistrict"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -173,15 +173,15 @@
                   <b-form-group>
                     <label>Region</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentRegion" 
+                      v-model="forms.address.fields.currentRegion"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
                 <b-col md="4">
                   <b-form-group>
                     <label class="required">Country</label>
-                    <b-form-select 
-                      v-model="forms.address.fields.currentCountryId" 
+                    <b-form-select
+                      v-model="forms.address.fields.currentCountryId"
                       :state="forms.address.states.addressCurrentCountryId">
                       <template v-slot:first>
                         <b-form-select-option :value='null' disabled>--Select Country --</b-form-select-option>
@@ -199,8 +199,8 @@
                   <b-form-group>
                     <label class="required">Home Landline/Mobile No.</label>
                     <b-form-input
-                      v-model="forms.address.fields.currentHomeLandlineMobileNo" 
-                      :state="forms.address.states.addressCurrentHomeLandlineMobileNo" 
+                      v-model="forms.address.fields.currentHomeLandlineMobileNo"
+                      :state="forms.address.states.addressCurrentHomeLandlineMobileNo"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentHomeLandlineMobileNo}}
@@ -215,7 +215,7 @@
                     <b-form-textarea
                       rows="3"
                       v-model="forms.address.fields.currentCompleteAddress"
-                      :state="forms.address.states.addressCurrentCompleteAddress" 
+                      :state="forms.address.states.addressCurrentCompleteAddress"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressCurrentCompleteAddress}}
@@ -237,8 +237,8 @@
                   <b-form-group>
                     <label class="required">House No/Street</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHouseNoStreet" 
-                      :state="forms.address.states.addressPermanentHouseNoStreet" 
+                      v-model="forms.address.fields.permanentHouseNoStreet"
+                      :state="forms.address.states.addressPermanentHouseNoStreet"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressPermanentHouseNoStreet}}
@@ -249,8 +249,8 @@
                   <b-form-group>
                     <label class="required">Barangay</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentBarangay" 
-                      :state="forms.address.states.addressPermanentBarangay" 
+                      v-model="forms.address.fields.permanentBarangay"
+                      :state="forms.address.states.addressPermanentBarangay"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressPermanentBarangay}}
@@ -261,8 +261,8 @@
                   <b-form-group>
                     <label class="required">City/Town</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentCityTown" 
-                      :state="forms.address.states.addressPermanentCityTown" 
+                      v-model="forms.address.fields.permanentCityTown"
+                      :state="forms.address.states.addressPermanentCityTown"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.address.errors.addressPermanentCityTown}}
@@ -317,7 +317,7 @@
                 <b-col md="4">
                   <b-form-group>
                     <label class="required">Country</label>
-                    <b-form-select 
+                    <b-form-select
                       v-model="forms.address.fields.permanentCountryId"
                       :state="forms.address.states.addressPermanentCountryId">
                       <template v-slot:first>
@@ -336,7 +336,7 @@
                   <b-form-group>
                     <label class="required">Home Landline/Mobile No.</label>
                     <b-form-input
-                      v-model="forms.address.fields.permanentHomeLandlineMobileNo" 
+                      v-model="forms.address.fields.permanentHomeLandlineMobileNo"
                       :state="forms.address.states.addressPermanentHomeLandlineMobileNo"
                       debounce="500" />
                     <b-form-invalid-feedback>
@@ -368,7 +368,7 @@
                     <label class="required">Father</label>
                     <b-form-input
                       v-model="forms.family.fields.fatherName"
-                      :state="forms.family.states.familyFatherName" 
+                      :state="forms.family.states.familyFatherName"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.family.errors.familyFatherName}}
@@ -379,7 +379,7 @@
                   <b-form-group>
                     <label>Contact No.</label>
                     <b-form-input
-                      v-model="forms.family.fields.fatherMobileNo" 
+                      v-model="forms.family.fields.fatherMobileNo"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -389,7 +389,7 @@
                   <b-form-group>
                     <label>Occupation</label>
                     <b-form-input
-                      v-model="forms.family.fields.fatherOccupation" 
+                      v-model="forms.family.fields.fatherOccupation"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -412,7 +412,7 @@
                     <label class="required">Mother</label>
                     <b-form-input
                       v-model="forms.family.fields.motherName"
-                      :state="forms.family.states.familyMotherName" 
+                      :state="forms.family.states.familyMotherName"
                       debounce="500"/>
                     <b-form-invalid-feedback>
                       {{forms.family.errors.familyMotherName}}
@@ -500,7 +500,7 @@
                   <b-form-group>
                     <label>From</label>
                     <b-form-input
-                      v-model="forms.education.fields.lastSchoolYearFrom" 
+                      v-model="forms.education.fields.lastSchoolYearFrom"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -508,7 +508,7 @@
                   <b-form-group>
                     <label>To</label>
                     <b-form-input
-                      v-model="forms.education.fields.lastSchoolYearTo" 
+                      v-model="forms.education.fields.lastSchoolYearTo"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -538,7 +538,7 @@
                       <b-form-group>
                         <label>Elementary or Primary</label>
                         <b-form-input
-                            v-model="forms.education.fields.elementaryCourse" 
+                            v-model="forms.education.fields.elementaryCourse"
                             debounce="500"/>
                       </b-form-group>
                     </b-col>
@@ -874,8 +874,8 @@
                 <b-col md=12>
                   <div class="file-uploader-container">
                     <FileUploader
-                      @onFileChange="onEvaluationFileUpload" 
-                      @onFileDrop="onEvaluationFileUpload"
+                      @onFileChange="onStudentFileUpload" 
+                      @onFileDrop="onStudentFileUpload"
                     />
                   </div>
                 </b-col>
@@ -884,14 +884,14 @@
                 <b-col md=12>
                   <div class="file-item-container">
                     <FileItem
-                      v-for="(item, index) of evaluationFiles"
+                      v-for="(item, index) of studentFiles"
                       :key="index"
                       :title="item.name"
                       :description="item.notes"
                       :fileIndex="index"
-                      @onFileItemSelect="onEvaluationFileItemSelect"
-                      @onFileItemRemove="onDeleteEvaluationFile"
-                      @onFileItemPreview="previewEvaluationFile"
+                      @onFileItemSelect="onStudentFileItemSelect"
+                      @onFileItemRemove="onDeleteStudentFile"
+                      @onFileItemPreview="previewStudentFile"
                       :isBusy="item.isBusy"
                     />
                   </div>
@@ -1807,12 +1807,11 @@
                       <b-form-input
                         v-model="filters.subject.criteria"
                         type="text"
-                        debounce="500"> 
+                        debounce="500">
                       </b-form-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
-                
                 <b-table
                   class="c-app__table"
                   small hover outlined show-empty
@@ -1825,8 +1824,8 @@
                   @filtered="onFiltered($event, paginations.subject)">
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
-                      <v-icon 
-                        name="spinner" 
+                      <v-icon
+                        name="spinner"
                         spin
                         class="mr-2" />
                       <strong>Loading...</strong>
@@ -1840,7 +1839,7 @@
                   <template v-slot:cell(action)="row">
                     <b-button
                       v-if="row.item.isAllowed"
-                      @click="addSubject(row)" 
+                      @click="addSubject(row)"
                       size="sm" variant="success">
                       <v-icon name="plus" />
                     </b-button>
@@ -1922,7 +1921,7 @@
 		</b-modal>
     <!-- Modal Preview -->
     <b-modal
-      v-model="showEvaluationFileModal"
+      v-model="showStudentFileModal"
       centered
       header-bg-variant="success"
       header-text-variant="light"
@@ -1930,25 +1929,25 @@
       :noCloseOnBackdrop="true"
       >
       <div slot="modal-title"> <!-- modal title -->
-        Evaluation File
+        Student File
       </div> <!-- modal title -->
       <b-row> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
           <b-textarea
-            v-model="forms.evaluationFile.fields.notes"
-            :state="forms.evaluationFile.states.notes"
+            v-model="forms.studentFile.fields.notes"
+            :state="forms.studentFile.states.notes"
             rows=7
             debounce="500" />
           <b-form-invalid-feedback>
-            {{ forms.evaluationFile.errors.notes }}
+            {{ forms.studentFile.errors.notes }}
           </b-form-invalid-feedback>
         </b-col>
       </b-row> <!-- modal body -->
       <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
         <b-button
           class="float-left"
-          @click="onDeleteEvaluationFile(selectedEvaluationFileIndex)"
+          @click="onDeleteStudentFile(selectedStudentFileIndex)"
           variant="outline-danger">
           <v-icon
             v-if="isFileDeleting"
@@ -1959,7 +1958,7 @@
           Delete
         </b-button>
         <b-button
-          @click="onUpdateEvaluationFile()"
+          @click="onUpdateStudentFile()"
           class="float-right"
           variant="outline-primary">
           <v-icon
@@ -2053,16 +2052,16 @@
       @close="showModalPreview = false"
     />
     <FileViewer
-      :show="fileViewer.evaluation.show"
+      :show="fileViewer.student.show"
       :file="file"
       :owner="file.owner"
       :isBusy="file.isLoading"
-      @close="fileViewer.evaluation.show = false"
-      @onNavLeft="onEvaluationFileNavLeft"
-      @onNavRight="onEvaluationFileNavRight"
-      :navCount="fileViewer.evaluation.activeNavCount"
-      :navActiveIndex="fileViewer.evaluation.activeNavIndex"
-      :enableArrowNav="fileViewer.evaluation.isActiveNavEnabled"
+      @close="fileViewer.student.show = false"
+      @onNavLeft="onStudentFileNavLeft"
+      @onNavRight="onStudentFileNavRight"
+      :navCount="fileViewer.student.activeNavCount"
+      :navActiveIndex="fileViewer.student.activeNavIndex"
+      :enableArrowNav="fileViewer.student.isActiveNavEnabled"
     />
     <FileViewer
       :show="fileViewer.payment.show"
@@ -2093,11 +2092,12 @@ import {
   BankAccountApi,
   SubjectApi,
   SectionApi,
-  EvaluationFileApi,
+  StudentFileApi,
   EvaluationApi,
   CurriculumApi,
   PeraPadalaAccountApi,
-  ReportApi
+  ReportApi,
+  TranscriptRecordApi
 } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import SlideStageIndicator from '../components/SlideStageIndicator';
@@ -2290,6 +2290,18 @@ const evaluationFields = {
   schoolCategoryId: null,
   studentCurriculumId: null,
   semesterId: null,
+  transcriptRecordId: null
+}
+
+const activeTranscriptRecordFields = {
+  id : null,
+  curriculumId: null,
+  schoolCategoryId: null,
+  levelId: null,
+  courseId: null,
+  transcriptRecordStatusId: null,
+  schoolCategoryId: null,
+  studentCurriculumId: null,
 }
 
 const evaluationErrorFields = {
@@ -2341,8 +2353,9 @@ const admissionFileFields = {
   notes: null
 }
 
-const evaluationFileFields = {
+const studentFileFields = {
   id: null,
+  documentTypeId: null,
   notes: null
 }
 
@@ -2371,11 +2384,12 @@ export default {
       SubjectApi,
       SectionApi,
       Tables,
-      EvaluationFileApi,
+      StudentFileApi,
       EvaluationApi,
       CurriculumApi,
       PeraPadalaAccountApi,
-      ReportApi
+      ReportApi,
+      TranscriptRecordApi
     ],
     components: {
       SlideStageIndicator,
@@ -2389,7 +2403,7 @@ export default {
     data() {
       return {
         fileViewer: {
-          evaluation: {
+          student: {
             isActiveNavEnabled: false,
             activeNavCount: 0,
             activeNavIndex: 0,
@@ -2407,17 +2421,17 @@ export default {
       showModalSection: false,
         showPaymentFileModal: false,
         showAdmissionFileModal: false,
-        showEvaluationFileModal: false,
+        showStudentFileModal: false,
         showModalSubjects: false,
         showModalPreview: false,
         isProfilePhotoBusy: false,
         selectedPaymentMode: 1,
         admissionFiles: [],
-        evaluationFiles: [],
+        studentFiles: [],
         paymentFiles: [],
         selectedPaymentFileIndex: null,
         selectedAdmissionFileIndex: null,
-        selectedEvaluationFileIndex: null,
+        selectedStudentFileIndex: null,
         isApplied: false,
         isProcessing: false,
         isFileUpdating: false,
@@ -2481,7 +2495,12 @@ export default {
             states: { ...evaluationErrorFields },
             errors: { ...evaluationErrorFields }
           },
-          evaluationFile: {
+          activeTranscriptRecord: {
+            fields: { ...activeTranscriptRecordFields },
+            states: { ...activeTranscriptRecordFields },
+            errors: { ...activeTranscriptRecordFields }
+          },
+          studentFile: {
             fields: { ...evaluationFileFields },
             states: { ...evaluationFileFields },
             errors: { ...evaluationFileFields }
@@ -3002,9 +3021,9 @@ export default {
           subjects.isBusy = true
           this.loadSections()
           //need to load subjects here
-          const { id: evaluationId,  curriculumId } = student.evaluation
+          const { id: transcriptRecordId,  curriculumId } = student.activeTranscriptRecord
           const params = { paginate: false , curriculumId }
-          this.getUnscheduledSubjects(evaluationId, params).then(({ data }) => {
+          this.getUnscheduledSubjects(transcriptRecordId, params).then(({ data }) => {
             const result = data.filter(subject => subject.isAllowed == true)
 
             //clear subjects
@@ -3033,10 +3052,10 @@ export default {
           })
         }
 
-        this.getEvaluationFiles(this.forms.evaluation.fields.id, params).then(({ data }) => {
+        this.getStudentFiles(studentId, params).then(({ data }) => {
           //this.tables.files.items = data
           data.forEach(file => {
-            this.evaluationFiles.push({
+            this.studentFiles.push({
               id: file.id,
               name: file.name,
               notes: file.notes,
@@ -3070,7 +3089,8 @@ export default {
           education,
           academicRecord,
           evaluation,
-          activeAdmission: { fields: activeAdmission }
+          activeAdmission: { fields: activeAdmission },
+          activeTranscriptRecord: { fields: activeTranscriptRecord }
         } = this.forms;
         ///const { subjects : { items: subjects } } = this.tables
 
@@ -3131,6 +3151,21 @@ export default {
           ? ApplicationStatuses.COMPLETED.id
           : activeAdmission.applicationStatusId
 
+          const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id,SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
+
+          //set transcript field values based on evaluation fields
+          if ( activeApplication.applicationStepId == AdmissionSteps.REQUEST_EVALUATION.id ) {
+            activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
+            activeTranscriptRecord.courseId = evaluation.fields.courseId
+            activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
+            activeTranscriptRecord.studentCurriculumId = evaluation.fields.studentCurriculumId
+            activeTranscriptRecord.curriculumId = evaluation.fields.curriculumId
+          }
+
+
+        const activeTranscriptPayload = (activeAdmission.admissionStepId == AdmissionSteps.REQUEST_EVALUATION.id ?
+          { ...activeTranscriptRecord } :  null)
+
         const data = {
           ...payloads[currentStepIndex],
           activeAdmission: {
@@ -3138,7 +3173,8 @@ export default {
             id: activeAdmission.id,
             admissionStepId,
             applicationStatusId
-          }
+          },
+          activeTranscriptRecord: activeTranscriptPayload
         }
 
         formsToValidate.forEach(form => {
@@ -3768,64 +3804,65 @@ export default {
       removeSubject(row){
         this.tables.enlistedSubjects.items.splice(row.index, 1);
       },
-      onEvaluationFileUpload(file) {
+      onStudentFileUpload(file) {
         const formData = new FormData();
-        const { evaluation } = this.forms
+        const { student: { fields:{ id: studentId } } } = this.forms
 
         formData.append('file', file);
 
-        this.evaluationFiles.push({ id: null, name: null, notes: null, isBusy: true })
-        let newFileIndex = this.evaluationFiles.length - 1
-        let newFile = this.evaluationFiles[newFileIndex]
+        this.studentFiles.push({ id: null, name: null, notes: null, isBusy: true })
+        let newFileIndex = this.studentFiles.length - 1
+        let newFile = this.studentFiles[newFileIndex]
 
-        this.addEvaluationFile(formData, evaluation.fields.id).then(({ data }) =>{
-            newFile.id = data.id
-            newFile.name = data.name
-            newFile.isBusy = false
-            this.onEvaluationFileItemSelect(newFileIndex)
-        })
+        this.addStudentFile(formData, studentId).then(({ data }) =>{
+          newFile.id = data.id
+          newFile.name = data.name
+          newFile.isBusy = false
+          this.onEvaluationFileItemSelect(newFileIndex)
+          this.onStudentFileItemSelect(newFileIndex)
+      })
       },
-      onDeleteEvaluationFile (index) {
-        const { evaluation: { fields:{ id: evaluationId } } } = this.forms
+      onDeleteStudentFile (index) {
+        const { student: { fields:{ id: studentId } } } = this.forms
 
-        const selectedFile = this.evaluationFiles[index]
+        const selectedFile = this.studentFiles[index]
         this.isFileDeleting = true
         selectedFile.isBusy = true
-        this.deleteEvaluationFile(evaluationId, selectedFile.id).then(()=> {
+        this.deleteStudentFile(studentId, selectedFile.id).then(()=> {
           this.isFileDeleting = false
-          this.showEvaluationFileModal = false
-          this.evaluationFiles.splice(index, 1);
+          this.showStudentFileModal = false
+          this.studentFiles.splice(index, 1);
         }).catch((error) => {
           this.isFileDeleting = false
           selectedFile.isBusy = false
         });
       },
-      onEvaluationFileItemSelect(idx) {
-        const { evaluationFile } = this.forms
-        reset(evaluationFile)
-        this.selectedEvaluationFileIndex = idx
+      onStudentFileItemSelect(idx) {
+        const { studentFile } = this.forms
+        reset(studentFile)
+        this.selectedStudentFileIndex = idx
 
-        evaluationFile.fields.id = this.evaluationFiles[idx].id
-        evaluationFile.fields.notes = this.evaluationFiles[idx].notes
+        studentFile.fields.id = this.studentFiles[idx].id
+        studentFile.fields.notes = this.studentFiles[idx].notes
 
-        this.showEvaluationFileModal = true
+        this.showStudentFileModal = true
       },
       onUpdateEvaluationFile () {
-        const { evaluation: { fields:{ id: evaluationId } },
-                evaluationFile } = this.forms
+        const { student: { fields:{ id: studentId } },
+              studentFile } = this.forms
 
-        const selectedFile = this.evaluationFiles[this.selectedEvaluationFileIndex]
+        const selectedFile = this.studentFiles[this.selectedStudentFileIndex]
         this.isFileUpdating = true
         selectedFile.isBusy = true
 
-        this.updateEvaluationFile(evaluationFile.fields, evaluationId, evaluationFile.fields.id).then(({ data }) => {
+        this.updateStudentFile(studentFile.fields, studentId, studentFile.fields.id).then(({ data }) => {
           selectedFile.notes = data.notes;
           this.isFileUpdating = false
-          this.showEvaluationFileModal = false;
+          this.showStudentFileModal = false;
           setTimeout(() => selectedFile.isBusy = false, 1000);
         }).catch((error) => {
           const { errors } = error.response.data;
-          validate(evaluationFile, errors);
+          validate(studentFile, errors);
           this.isFileUpdating = false
           selectedFile.isBusy = false
         });
@@ -4032,16 +4069,16 @@ export default {
           scheduledSubjects.isBusy = false
         })
       },
-      setupEvaluationActiveFileViewer(index) {
-        this.lastActiveFile = this.evaluationFiles[index]
-        this.fileViewer.evaluation.isActiveNavEnabled = this.evaluationFiles?.length > 1
-        this.fileViewer.evaluation.activeNavCount = this.evaluationFiles?.length;
-        this.fileViewer.evaluation.activeNavIndex =  index
+      setupStudentFileActiveFileViewer(index) {
+        this.lastActiveFile = this.studentFiles[index]
+        this.fileViewer.student.isActiveNavEnabled = this.studentFiles?.length > 1
+        this.fileViewer.student.activeNavCount = this.studentFiles?.length;
+        this.fileViewer.student.activeNavIndex =  index
       },
-      previewEvaluationFile(index) {
-        this.setupEvaluationActiveFileViewer(index)
-        const { evaluation: { fields:{ id: evaluationId } }, student: { fields : student } } = this.forms
-        const selectedFile = this.evaluationFiles[index]
+      previewStudentFile(index) {
+        this.setupStudentFileActiveFileViewer(index)
+        const { student: { fields : student } } = this.forms
+        const selectedFile = this.studentFiles[index]
 
         this.file.type = null
         this.file.src = null
@@ -4049,9 +4086,9 @@ export default {
         this.file.notes = selectedFile?.notes
         this.file.isLoading = true
         this.file.owner = student;
-        this.fileViewer.evaluation.show = true
+        this.fileViewer.student.show = true
 
-        this.getEvaluationFilePreview(evaluationId, selectedFile.id)
+        this.getStudentFilePreview(evaluationId, selectedFile.id)
         .then(response => {
           this.file.type = response.headers.contentType
           const file = new Blob([response.data], { type: response.headers.contentType })
@@ -4062,9 +4099,9 @@ export default {
 
         })
       },
-      onEvaluationFileNavLeft() {
-        const files = this.evaluationFiles;
-        let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+      onStudentFileNavLeft() {
+        const files = this.studentFiles;
+        let currentIdx = this.studentFiles.indexOf(this.lastActiveFile)
         const isFirst = currentIdx === 0;
         currentIdx = isFirst ? files.length - 1 : currentIdx - 1;
         const file = files[currentIdx];
@@ -4073,11 +4110,11 @@ export default {
           index: currentIdx,
           item: file
         };
-        this.previewEvaluationFile(currentIdx);
+        this.previewStudentFile(currentIdx);
       },
-      onEvaluationFileNavRight() {
-        const files = this.evaluationFiles;
-        let currentIdx = this.evaluationFiles.indexOf(this.lastActiveFile)
+      onStudentFileNavRight() {
+        const files = this.studentFiles;
+        let currentIdx = this.studentFiles.indexOf(this.lastActiveFile)
         const isLast = currentIdx === files.length - 1;
         currentIdx = isLast ? 0 : currentIdx + 1;
         const file = files[currentIdx];
@@ -4086,7 +4123,7 @@ export default {
           index: currentIdx,
           item: file
         };
-        this.previewEvaluationFile(currentIdx);
+        this.previewStudentFile(currentIdx);
       },
       setupPaymentActiveFileViewer(index) {
         this.lastActiveFile = this.paymentFiles[index]

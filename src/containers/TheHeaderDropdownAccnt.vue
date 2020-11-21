@@ -66,6 +66,7 @@ import MyProfile from '../assets/svg/my-profile-nav.svg';
 import MyPreferences from '../assets/svg/my-preferences-nav.svg';
 import DownArrow from '../assets/svg/down-arrow.svg';
 
+
 export default {
   name: 'TheHeaderDropdownAccnt',
   components: {
@@ -74,11 +75,11 @@ export default {
     MyPreferences,
     DownArrow
   },
-  mixins: [AuthApi],
+  mixins: [ AuthApi ],
   data () {
     return {
       src: null,
-      isLoading: false
+      isLoading: false,
     }
   },
   computed: {
@@ -91,7 +92,7 @@ export default {
     },
     user() {
       return this.$store.state.user || {};
-    }
+    },
   },
   methods: {
     logout(){
@@ -113,8 +114,8 @@ export default {
     },
     loadAvatar(){
       return localStorage.getItem('studentPhotoUrl')
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -8,6 +8,8 @@ const state = {
   sidebarMinimize: false,
   isLoggedIn: !!localStorage.getItem('accessToken') ?? false,
   user: null,
+  activeSchoolYear: null,
+  activeSemester: null
 }
 
 const mutations = {
@@ -30,6 +32,12 @@ const mutations = {
   },
   SET_USER (state, payload) {
     state.user = payload
+  },
+  SET_ACTIVE_SCHOOL_YEAR (state, payload) {
+    state.activeSchoolYear = payload
+  },
+  SET_ACTIVE_SEMESTER (state, payload) {
+    state.activeSemester = payload
   },
 }
 
