@@ -31,10 +31,10 @@ const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
-const ApplicationNotice = () => import('@/views/pages/ApplicationNotice')
+
 
 const ApplicationEntry = () => import('@/views/pages/my-applications/ApplicationEntry')
-const ApplicationList = () => import('@/views/pages/my-applications/ApplicationList')
+
 
 
 Vue.use(Router)
