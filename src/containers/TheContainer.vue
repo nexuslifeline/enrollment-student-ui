@@ -20,18 +20,17 @@
         </main>
         <!--<TheFooter/>-->
       </div>
-      <div v-if="applyApplicationVisible" class="new-application">
-        <v-icon name="info" class="application-icon"></v-icon>
+      <!-- <v-icon name="info" class="application-icon"></v-icon> -->
+      <!-- <div v-if="applyApplicationVisible" class="new-application">
         <div class="info-message-container">
           <div class="info-message">
             <p>NEW SCHOOL YEAR IS OPEN !</p>
             <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda quis explicabo, accusantium a accusamus nulla laudantium impedit! Quod, tempore ducimus.</span>
           </div>
-          
           <b-button variant="outline-primary">
              Apply Now ! </b-button>
         </div>
-      </div>
+      </div> -->
     </CWrapper>
   </div>
 </template>
@@ -161,9 +160,9 @@ export default {
 
   .new-application {
     position: absolute;
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
+    height: 250px;
+    width: 300px;
+    border-radius: 5px;
     z-index: 999!important;
     margin-left: 70px;
     bottom: 0;
@@ -176,9 +175,15 @@ export default {
     border: solid 0.5px lightgray;
 
     .info-message-container {
-      display: none;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      padding: 10px;
 
       .info-message {
+        flex: 1;
+
         p {
           font-size: 14pt;
           text-align: center;
@@ -196,30 +201,6 @@ export default {
       height: 30px;
       color: rgb(86, 29, 243);
       transition: all 0.3s ease;
-    }
-
-    &:hover {
-      border-radius: 5px;
-      width: 300px;
-      height: 250px;
-
-      .application-icon {
-        opacity: 0;
-        display: none;
-      }
-
-      .info-message-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-        padding: 10px;
-        opacity: 1;
-
-        .info-message {
-          flex: 1;
-        }
-      }
     }
   }
 </style>

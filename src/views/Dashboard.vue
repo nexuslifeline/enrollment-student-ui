@@ -6,12 +6,13 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </p>
     </div>-->
-    <Menus />
+    <Menus :showNewApplicationNotice="showNewApplicationNotice"/>
   </div>
 </template>
 
 <script>
   import Menus from './components/menus/Menus'
+  import { SchoolCategories } from "../helpers/enum";
   export default {
     name: 'Home',
     components: {
@@ -19,7 +20,8 @@
     },
     data() {
       return {
-        isReady: false
+        isReady: false,
+        SchoolCategories: SchoolCategories
       }
     },
     computed: {
@@ -27,7 +29,38 @@
         return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
       },
       hasActiveApplication() {
-        return !!(this.$store.state.user && this.$store.state.user.activeApplication);
+        return !!(this.$store.state.user && this.$store.state.user.activeApplication && this.$store.state.user.activeApplication.isManual === 0);
+      },
+      user() {
+        return this.$store.state.user || {};
+      },
+      activeSchoolYear() {
+        return this.$store.state.activeSchoolYear || {};
+      },
+      activeSemester() {
+        return this.$store.state.activeSemester || {};
+      },
+      latestAcademicRecord() {
+        return this.$store.state.user.latestAcademicRecord || {};
+      },
+      showNewApplicationNotice() {
+        if (this.user && this.activeSchoolYear && this.activeSemester && this.latestAcademicRecord) {
+          if (this.latestAcademicRecord.schoolYearId !== this.activeSchoolYear.id ) {
+            return true
+          }
+          else {
+            if (this.latestAcademicRecord.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
+              || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.COLLEGE.id
+              || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
+                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
+                  //check if active semester id is equal to latest academic record semester id
+                  if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
+                    return true
+                  }
+            }
+          }
+        }
+        return false
       }
     },
     created() {

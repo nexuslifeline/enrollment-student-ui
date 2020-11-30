@@ -7,7 +7,6 @@
 <script>
 export default {
   name: 'Menu404'
-    
 }
 </script>
 
@@ -23,5 +22,5 @@ export default {
     font-size: 30pt;
     font-style: italic;
   }
-  
+
 </style>

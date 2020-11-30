@@ -1550,8 +1550,22 @@
       <div slot="modal-title"> <!-- modal title -->
         Student File
       </div> <!-- modal title -->
-      <b-row> <!-- modal body -->
-      
+      <b-row>
+        <b-col md=12>
+          <label>Document Type</label>
+          <b-form-select
+            v-model="forms.studentFile.fields.documentTypeId"
+            :state="forms.studentFile.states.documentTypeId" >
+            <template v-slot:first>
+              <b-form-select-option :value='null' disabled>--Select Document Type--</b-form-select-option>
+            </template>
+            <b-form-select-option v-for='documentType in options.documentTypes.items' :key='documentType.id' :value='documentType.id'>
+              {{ documentType.name }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-col>
+      </b-row>
+      <b-row class="mt-2"> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
           <b-textarea
@@ -2025,6 +2039,7 @@ import {
   PeraPadalaAccountApi,
   ReportApi,
   TranscriptRecordApi,
+  DocumentTypeApi,
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import SlideStageIndicator from '../components/SlideStageIndicator';
@@ -2307,7 +2322,8 @@ export default {
     CurriculumApi,
     PeraPadalaAccountApi,
     ReportApi,
-    TranscriptRecordApi
+    TranscriptRecordApi,
+    DocumentTypeApi
   ],
   components: {
     ApprovalIndicator,
@@ -2840,6 +2856,9 @@ export default {
         levelsOfCourses: {
           items: []
         },
+        documentTypes: {
+          items: []
+        }
       },
       selectedApprovalStage: 1,
       selectedPaymentApprovalStage: 1,
@@ -2973,9 +2992,12 @@ export default {
       }
     });
 
-    this.getSchoolYearList(params).then(response => {
-      const res = response.data
-      this.options.schoolYears.items = res
+    this.getSchoolYearList(params).then(({ data }) => {
+      this.options.schoolYears.items = data
+    });
+
+    this.getDocumentTypeList(params).then(({ data }) => {
+      this.options.documentTypes.items = data
     });
 
     this.loadEWalletAccounts();
@@ -3056,7 +3078,7 @@ export default {
         ? ApplicationStatuses.COMPLETED.id
         : activeApplication.applicationStatusId
 
-      const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id,SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
+      const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
       //set transcript field values based on evaluation fields
       if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
@@ -3745,7 +3767,7 @@ export default {
       })
     },
     onCompleteEnrollment(routePath) {
-      const { student, activeApplication } = this.forms
+      const { student, activeApplication, evaluation } = this.forms
 
       const applicationStatusId = ApplicationStatuses.COMPLETED.id
 
@@ -3754,6 +3776,10 @@ export default {
         activeApplication: {
           ...activeApplication.fields,
           applicationStatusId
+        },
+        evaluation: {
+          id: evaluation.fields.id,
+          evaluationStatusId : EvaluationStatuses.COMPLETED.id
         }
       }
 

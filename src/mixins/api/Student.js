@@ -25,5 +25,8 @@ export default {
     getBillingsOfStudent(studentId) {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/billings`);
     },
+    enrollStudent(studentId, data) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/students/${studentId}/enroll`, data);
+    },
   }
 }

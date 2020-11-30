@@ -4,7 +4,8 @@
       :title="item.title"
       :description="item.description"
       :path="item.path"
-      :key="idx">
+      :key="idx"
+      :isVisible="item.isVisible">
       <template v-slot:image>
         <img :src="item.image" />
       </template>
@@ -18,6 +19,11 @@
 
   export default {
     name: 'Menus',
+    props: {
+      showNewApplicationNotice: {
+        type: [Boolean]
+      }
+    },
     components: {
       ArrowRight,
       MenuItem,
@@ -27,52 +33,67 @@
         academicRecordId: null,
         menus: [
           {
+            title: 'Enroll Now !',
+            image: '/img/svg/my-documents.svg',
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: '/applications/new',
+            isVisible: this.showNewApplicationNotice
+          },
+          {
             title: 'My Documents',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'documents'
+            path: 'documents',
+            isVisible: true
           },
           {
             title: 'My Statements',
             image: '/img/svg/my-statements.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'statements'
+            path: 'statements',
+            isVisible: true
           },
           {
             title: 'My Payments',
             image: '/img/svg/my-payments.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'payments'
+            path: 'payments',
+            isVisible: true
           },
           {
             title: 'My Grades',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'grades'
+            path: 'grades',
+            isVisible: true
           },
           {
             title: 'My Profile',
             image: '/img/svg/my-profile.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'profile'
+            path: 'profile',
+            isVisible: true
           },
           {
             title: 'My Applications',
             image: '/img/svg/my-applications.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'applications'
+            path: 'applications',
+            isVisible: true
           },
           {
             title: 'My Requirements',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'requirements'
+            path: 'requirements',
+            isVisible: true
           },
           {
             title: 'My Schedule',
             image: '/img/svg/my-documents.svg',
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: `schedules/${this.$store?.state?.user?.academicRecord.id}`
+            path: `schedules/${this.$store?.state?.user?.academicRecord.id}`,
+            isVisible: true
           }
         ]
       }

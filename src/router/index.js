@@ -31,6 +31,10 @@ const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
+const ApplicationNotice = () => import('@/views/pages/ApplicationNotice')
+
+const ApplicationEntry = () => import('@/views/pages/my-applications/ApplicationEntry')
+const ApplicationList = () => import('@/views/pages/my-applications/ApplicationList')
 
 
 Vue.use(Router)
@@ -75,6 +79,12 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
+          path: 'application-notice',
+          name: 'ApplicationNotice',
+          component: ApplicationNotice,
+          meta: {requiresAuth: true}
+        },
+        {
           path: 'application',
           name: 'Application',
           component: Application,
@@ -111,10 +121,27 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'applications',
-          name: 'MyApplications',
-          component: MyApplications,
-          meta: {requiresAuth: true}
+          path: '/applications',
+          component: { render(c) { return c('router-view') } },
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: '/',
+              redirect: 'application-list',
+            },
+            {
+              path: 'application-list',
+              component: ApplicationList
+            },
+            {
+              path: '/new',
+              component: ApplicationEntry
+            },
+            {
+              path: ':applicationId',
+              component: ApplicationEntry
+            },
+          ]
         },
         {
           path: 'requirements',

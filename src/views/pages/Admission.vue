@@ -1931,7 +1931,22 @@
       <div slot="modal-title"> <!-- modal title -->
         Student File
       </div> <!-- modal title -->
-      <b-row> <!-- modal body -->
+       <b-row>
+        <b-col md=12>
+          <label>Document Type</label>
+          <b-form-select
+            v-model="forms.studentFile.fields.documentTypeId"
+            :state="forms.studentFile.states.documentTypeId" >
+            <template v-slot:first>
+              <b-form-select-option :value='null' disabled>--Select Document Type--</b-form-select-option>
+            </template>
+            <b-form-select-option v-for='documentType in options.documentTypes.items' :key='documentType.id' :value='documentType.id'>
+              {{ documentType.name }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-col>
+      </b-row>
+      <b-row b-row class="mt-2"> <!-- modal body -->
         <b-col md=12>
           <label>Notes</label>
           <b-textarea
@@ -2097,7 +2112,8 @@ import {
   CurriculumApi,
   PeraPadalaAccountApi,
   ReportApi,
-  TranscriptRecordApi
+  TranscriptRecordApi,
+  DocumentTypeApi
 } from "../../mixins/api"
 //import StageIndicator from '../components/StageIndicator'
 import SlideStageIndicator from '../components/SlideStageIndicator';
@@ -2389,7 +2405,8 @@ export default {
       CurriculumApi,
       PeraPadalaAccountApi,
       ReportApi,
-      TranscriptRecordApi
+      TranscriptRecordApi,
+      DocumentTypeApi
     ],
     components: {
       SlideStageIndicator,
@@ -2926,6 +2943,9 @@ export default {
             items: [
               ...paymentMethods
             ]
+          },
+          documentTypes: {
+            items: []
           }
         },
         selectedApprovalStage: 1,
@@ -3075,6 +3095,10 @@ export default {
         this.options.levels.scheduledItems = res
         this.options.levels.items = res
       })
+
+      this.getDocumentTypeList(params).then(({ data }) => {
+        this.options.documentTypes.items = data
+      });
 
     },
     methods: {
@@ -3943,7 +3967,7 @@ export default {
 
       },
       onCompleteEnrollment(routePath) {
-        const { student, activeAdmission } = this.forms
+        const { student, activeApplication, evaluation } = this.forms
 
         const applicationStatusId = ApplicationStatuses.COMPLETED.id
 
@@ -3952,6 +3976,10 @@ export default {
           activeAdmission: {
             ...activeAdmission.fields,
             applicationStatusId
+          },
+          evaluation: {
+            id: evaluation.fields.id,
+            evaluationStatusId : EvaluationStatuses.COMPLETED.id
           }
         }
 

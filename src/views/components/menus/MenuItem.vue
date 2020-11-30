@@ -1,5 +1,5 @@
 <template>
-  <div class="home__menu-action" @click="onMenuClick(path)">
+  <div class="home__menu-action" @click="onMenuClick(path)" v-if="isVisible">
     <div class="home__menu-image">
       <slot name="image"></slot>
     </div>
@@ -12,7 +12,7 @@
       </p>
       <button class="home__menu-more" @click="onMenuClick(path)">
         <span class="home__menu-more-count">2</span>
-        new recent documents
+          new recent documents
         <div class="home__menu-icon-right">
           <ArrowRight />
         </div>
@@ -38,6 +38,9 @@
       },
       path: {
         type: [String]
+      },
+      isVisible: {
+        type: [Boolean]
       }
     },
     methods: {
@@ -48,7 +51,7 @@
         }
         this.$router.push({ path: 'menu404'})
       }
-    }
+    },
   }
 </script>
 <style lang="scss" scoped>
