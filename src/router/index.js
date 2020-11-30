@@ -79,12 +79,6 @@ function configRoutes () {
           meta: {requiresAuth: true}
         },
         {
-          path: 'application-notice',
-          name: 'ApplicationNotice',
-          component: ApplicationNotice,
-          meta: {requiresAuth: true}
-        },
-        {
           path: 'application',
           name: 'Application',
           component: Application,
@@ -126,19 +120,7 @@ function configRoutes () {
           meta: {requiresAuth: true},
           children: [
             {
-              path: '/',
-              redirect: 'application-list',
-            },
-            {
-              path: 'application-list',
-              component: ApplicationList
-            },
-            {
               path: '/new',
-              component: ApplicationEntry
-            },
-            {
-              path: ':applicationId',
               component: ApplicationEntry
             },
           ]
