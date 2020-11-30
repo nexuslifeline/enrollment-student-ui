@@ -790,7 +790,7 @@
                 @click="forms.activeApplication.fields.applicationStepId--"
                 v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
                 variant="outline-secondary"
-                :disabled="forms.activeApplication.fields.applicationStepId === 1"
+                :disabled="forms.activeApplication.fields.applicationStepId === 5"
                 class="application__back-action">
                 Back
               </b-button>
