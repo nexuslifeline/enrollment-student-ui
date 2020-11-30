@@ -1831,8 +1831,6 @@ export default {
         }
       })
 
-      console.log(student)
-
       if (!(student.evaluation && student.latestAcademicRecord)) {
         this.forms.evaluation.fields.levelId = student.latestAcademicRecord.levelId
         setTimeout(() => {
@@ -1866,8 +1864,7 @@ export default {
           : student.academicRecord.academicRecordStatusId == 2
           ? 2
           : 1;
-
-        this.selectedEvaluationApprovalStage = student.evaluation.evaluationStatusId == 3
+        this.selectedEvaluationApprovalStage =  student.evaluation && student.evaluation.evaluationStatusId == 3
           ? 2
           : 1;
 
@@ -1876,7 +1873,7 @@ export default {
         }
 
         const { academicRecord } = this.forms
-        if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
+        if (student.evaluation && student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
           //show countdown
           if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
             this.evaluationDismissCountDown = 5
@@ -1909,7 +1906,7 @@ export default {
             subjects.isBusy = false
             this.recordDetails(subject)
           })
-        } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
+        } else if (student.evaluation && student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
           //if rejected move 1 step back
           const { activeApplication } = this.forms
 

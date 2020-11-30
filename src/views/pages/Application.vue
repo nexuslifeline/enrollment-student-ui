@@ -3909,14 +3909,13 @@ export default {
       this.fileViewer.student.show = true
 
       this.getStudentFilePreview(student.id, selectedFile.id)
-      .then(response => {
-        this.file.type = response.headers.contentType
-        const file = new Blob([response.data], { type: response.headers.contentType })
-        const reader = new FileReader();
-        reader.onload = e => this.file.src = e.target.result
-        reader.readAsDataURL(file);
-        this.file.isLoading = false
-
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: response.headers.contentType })
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
       })
     },
     onStudentFileNavLeft() {

@@ -29,6 +29,7 @@ const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
 const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
 const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
+const RequirementList = () => import('@/views/pages/my-requirements/RequirementList')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -130,10 +131,15 @@ function configRoutes () {
           ]
         },
         {
-          path: 'requirements',
-          name: 'MyRequirements',
-          component: MyRequirements,
-          meta: {requiresAuth: true}
+          path: '/requirements',
+          component: { render(c) { return c('router-view') } },
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: '/',
+              component: RequirementList
+            },
+          ]
         },
         {
           path: '/schedules',
