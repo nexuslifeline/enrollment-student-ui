@@ -1831,6 +1831,15 @@ export default {
         }
       })
 
+      console.log(student)
+
+      if (!(student.evaluation && student.latestAcademicRecord)) {
+        this.forms.evaluation.fields.levelId = student.latestAcademicRecord.levelId
+        setTimeout(() => {
+          this.forms.evaluation.fields.courseId = student.latestAcademicRecord.courseId
+        }, 500);
+      }
+
       if (!student.civilStatusId) {
         this.forms.student.fields.civilStatusId = CivilStatuses.SINGLE.id
       }

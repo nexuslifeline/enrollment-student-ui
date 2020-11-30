@@ -120,7 +120,11 @@ function configRoutes () {
           meta: {requiresAuth: true},
           children: [
             {
-              path: '/new',
+              path: '/',
+              component: ApplicationEntry
+            },
+            {
+              path: 'new',
               component: ApplicationEntry
             },
           ]
