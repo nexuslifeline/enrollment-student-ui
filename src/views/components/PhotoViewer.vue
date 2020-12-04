@@ -5,16 +5,16 @@
         <v-icon class="photo-viewer__remove-icon" name="times-circle" scale="1.2" />
       </button>
     </div>
-    <img
-      v-if="!!imageUrl"
-      class="photo-viewer__image"
-      :src="imageUrl"
-    />
     <div v-if="isBusy" class="photo-viewer__spinner">
       <v-icon
         name="spinner"
         pulse />
     </div>
+    <img
+      v-if="!!imageUrl"
+      class="photo-viewer__image"
+      :src="imageUrl"
+    />
     <div class="photo-viewer__action">
       <input
         @change="onInputFileChange"
@@ -84,6 +84,7 @@ export default {
     justify-content: center;
     background-color: $light-gray;
     opacity: .6;
+    z-index: 999;
   }
 
   .photo-viewer__image {
