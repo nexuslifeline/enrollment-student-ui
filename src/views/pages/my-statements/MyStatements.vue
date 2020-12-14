@@ -110,7 +110,6 @@
         class="total-billing-amount"
         :class="'form-control'"
         :options="[{
-          minimumValue: 0,
           modifyValueOnWheel: false,
           emptyInputBehavior: 0 }]">
       </vue-autonumeric>

@@ -4,7 +4,9 @@
       <li v-for="(item, idx) in $options.nav"
         :key="idx"
         class="side-bar__menu-item"
-        :class="{ 'active': $route.path.includes(item.to) }">
+        :class="{ 'active': $route.path.includes(item.to) }"
+        v-b-tooltip.hover
+        :title="item.name">
         <a :href="`#${item.to}`" class="side-bar__menu-link">
           <v-icon :name="item.icon" />
         </a>

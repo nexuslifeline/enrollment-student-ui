@@ -1350,7 +1350,7 @@
                         <b-row>
                           <b-col md=4>
                             <b-form-group>
-                              <label>Enter amount you pay</label>
+                              <label>Enter amount you pay <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.amount.title}"/></label>
                               <vue-autonumeric
                                 v-model="forms.payment.fields.amount"
                                 class="form-control text-right"
@@ -1367,7 +1367,7 @@
                           </b-col>
                           <b-col md=4>
                             <b-form-group>
-                              <label>Transaction No</label>
+                              <label>Transaction No <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.transactionNo.title}"/></label>
                               <b-form-input
                                 v-model="forms.payment.fields.transactionNo"
                                 :state="forms.payment.states.transactionNo"
@@ -1381,7 +1381,7 @@
                           </b-col>
                           <b-col md=4>
                             <b-form-group>
-                              <label>Date Paid</label>
+                              <label>Date Paid <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.datePaid.title}"/></label>
                               <b-form-input
                                 type="date"
                                 v-model="forms.payment.fields.datePaid"
@@ -2072,7 +2072,8 @@ import {
   paymentMethods,
   approvalStages,
   evaluationApprovalStages,
-  paymentApprovalStages
+  paymentApprovalStages,
+  paymentTooltips
 } from '../../content';
 
 const studentFields = {
@@ -2350,6 +2351,7 @@ export default {
           show: false,
         }
       },
+      toolTips: { ...paymentTooltips },
       activeSchoolYear: null,
       lastActiveFile: null,
       showModalSection: false,
@@ -4261,6 +4263,13 @@ export default {
 
   .item + .item:before {
     content: " | ";
+  }
+
+  .icon-tooltip {
+    height: 14px;
+    width: 14px;
+    color: rgb(68, 185, 224);
+    margin: 0 0 2px 5px;
   }
 
 </style>

@@ -28,7 +28,7 @@
           <div class="account__dropdown-icon">
             <MyProfile />
           </div>
-          <span class="account__dropdown-item-label">
+          <span class="account__dropdown-item-label" @click="$router.push('profile')" >
             My Profile
           </span>
         </li>

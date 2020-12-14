@@ -4,3 +4,4 @@ export { approvalStages } from './approvalStages';
 export { evaluationApprovalStages } from './evaluationStages';
 export { paymentApprovalStages } from './paymentStages';
 export { paymentMethods } from './paymentMethods';
+export { paymentTooltips } from './paymentTooltips';

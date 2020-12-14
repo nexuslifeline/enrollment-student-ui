@@ -193,7 +193,7 @@
               <b-row>
                 <b-col md=4>
                   <b-form-group>
-                    <label>Enter amount you pay</label>
+                    <label>Enter amount you pay <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.amount.title}"/></label>
                     <vue-autonumeric
                       v-model="forms.payment.fields.amount"
                       class="form-control text-right"
@@ -210,7 +210,7 @@
                 </b-col>
                 <b-col md=4>
                   <b-form-group>
-                    <label>Transaction No</label>
+                    <label>Transaction No <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.transactionNo.title}"/></label>
                     <b-form-input
                       v-model="forms.payment.fields.transactionNo"
                       :state="forms.payment.states.transactionNo"
@@ -224,7 +224,7 @@
                 </b-col>
                 <b-col md=4>
                   <b-form-group>
-                    <label>Date Paid</label>
+                    <label>Date Paid <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.datePaid.title}"/></label>
                     <b-form-input
                       type="date"
                       v-model="forms.payment.fields.datePaid"
@@ -341,6 +341,7 @@ import FileUploader from "../../components/FileUploader";
 import { BankAccountApi, EWalletAccountApi, PeraPadalaAccountApi, BillingApi, PaymentApi, SchoolYearApi, PaymentFileApi } from "../../../mixins/api";
 import { format } from 'date-fns';
 import { validate, reset, formatNumber, showNotification } from '../../../helpers/forms';
+import { paymentTooltips }  from '../../../content'
 
 const paymentFields = {
   id: null,
@@ -396,6 +397,7 @@ export default {
       attachments: [],
       showPaymentFileModal: false,
       isFileUpdating: false,
+      toolTips: { ...paymentTooltips },
       fileViewer: {
         paymentFile: {
           isActiveNavEnabled: false,
@@ -747,7 +749,8 @@ export default {
 
     .payment-container {
       border: solid 1px whitesmoke;
-      width: 700px;
+      max-width: 900px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       padding: 0 30px;
@@ -756,6 +759,7 @@ export default {
     @include for-size(phone-only) {
       .payment-container {
         width: 100%;
+        padding: 0;
       }
     }
 
@@ -848,5 +852,12 @@ export default {
     border:1px dashed gray;
     padding: 20px;
     margin: 0 30px;
+  }
+
+  .icon-tooltip {
+    height: 14px;
+    width: 14px;
+    color: rgb(68, 185, 224);
+    margin: 0 0 2px 5px;
   }
 </style>
