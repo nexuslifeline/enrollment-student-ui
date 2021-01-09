@@ -7,6 +7,9 @@ export default {
     },
     updatePayment(data, id) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/payments/${id}`, data);
-    }
+    },
+    getPaymentList(params) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments`, { params: params });
+    },
   }
 }

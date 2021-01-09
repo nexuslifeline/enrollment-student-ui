@@ -10,13 +10,13 @@
       <p class="home__menu-description">
         {{description}}
       </p>
-      <button class="home__menu-more" @click="onMenuClick(path)">
+      <!-- <button class="home__menu-more" @click="onMenuClick(path)">
         <span class="home__menu-more-count">2</span>
           new recent documents
         <div class="home__menu-icon-right">
           <ArrowRight />
         </div>
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
