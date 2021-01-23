@@ -91,6 +91,7 @@
                       @onPhotoChange="onPhotoChange"
                       @onPhotoRemove="onPhotoRemove"
                       :imageUrl="studentPhotoUrl"
+                      :isBusy="isProfilePhotoBusy"
                     />
                   </div>
                 </div>

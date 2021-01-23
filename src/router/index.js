@@ -18,7 +18,7 @@ const Application = () => import('@/views/pages/Application')
 const Admission = () => import('@/views/pages/Admission')
 const MyStatements = () => import('@/views/pages/my-statements/MyStatements')
 const MyGrades = () => import('@/views/pages/MyGrades')
-const MyProfile = () => import('@/views/pages/my-profile/MyProfile')
+const MyProfile = () => import('@/views/pages/my-profile/MyProfile2')
 const MyPayments = () => import('@/views/pages/my-payments/MyPayments')
 const MyApplications = () => import('@/views/pages/MyApplications')
 const MyRequirements = () => import('@/views/pages/MyRequirements')
@@ -109,6 +109,12 @@ function configRoutes () {
           component: MyProfile,
           meta: {requiresAuth: true}
         },
+        // {
+        //   path: 'profile2',
+        //   name: 'MyProfile2',
+        //   component: MyProfile2,
+        //   meta: {requiresAuth: true}
+        // },
         {
           path: 'payments',
           name: 'MyPayments',

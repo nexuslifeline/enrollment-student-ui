@@ -42,13 +42,6 @@
     </div>
     <div class="profile__details">
       <div class="profile__details-left">
-        <!-- <b-card no-body class="profile__details-card">
-          <b-tabs pills card>
-            <b-tab title="Personal" active><b-card-text>Personal</b-card-text></b-tab>
-            <b-tab title="Address"><b-card-text>Address</b-card-text></b-tab>
-            <b-tab title="Family"><b-card-text>Family</b-card-text></b-tab>
-          </b-tabs>
-        </b-card> -->
         <div class="profile__nav-container">
           <ul  class="profile__navs">
             <li @click="onNavSelected(idx)" v-for="(item, idx) in nav" :key="idx" :class="{ active: idx === selectedNavIndex }">{{ item }}</li>
@@ -547,7 +540,22 @@
           <b-row>
             <b-col md=6>
               <b-form-group >
-                <label class="required">Password</label>
+                <label class="required">Old Password</label>
+                <b-form-input
+                  type="password"
+                  v-model="forms.user.fields.oldPassword"
+                  :state="forms.user.states.userOldPassword"
+                  debounce="500" />
+                <b-form-invalid-feedback>
+                  {{forms.user.errors.userOldPassword}}
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md=6>
+              <b-form-group >
+                <label class="required">New Password</label>
                 <b-form-input
                   type="password"
                   v-model="forms.user.fields.password"
@@ -559,11 +567,10 @@
               </b-form-group>
             </b-col>
           </b-row>
-
           <b-row>
             <b-col md=6>
               <b-form-group >
-                <label class="required">Confirm Password</label>
+                <label class="required">Confirm New Password</label>
                 <b-form-input
                   type="password"
                   v-model="forms.user.fields.passwordConfirmation"
@@ -682,11 +689,13 @@ const familyErrorFields = {
 const userFields = {
   username: null,
   password: null,
+  oldPassword: null,
   passwordConfirmation: null,
 }
 
 const userErrorFields = {
   userUsername: null,
+  userOldPassword: null,
   userPassword: null,
 }
 
@@ -1082,7 +1091,6 @@ export default {
     width: 100%;
     // justify-content: center;
     // align-items: center;
-    
     border-radius: 5px;
     padding: 10px 0 10px 10px;
 
