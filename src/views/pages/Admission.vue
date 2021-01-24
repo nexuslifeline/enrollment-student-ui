@@ -54,6 +54,16 @@
                     </b-form-invalid-feedback>
                   </b-form-group>
                   <b-form-group>
+                    <label class="required">Email</label>
+                    <b-form-input
+                      v-model="forms.student.fields.email"
+                      :state="forms.student.states.email"
+                      debounce="500"/>
+                    <b-form-invalid-feedback>
+                      {{forms.student.errors.email}}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+                  <b-form-group>
                     <label>Mobile No.</label>
                     <b-form-input
                       v-model="forms.student.fields.mobileNo"
@@ -452,7 +462,7 @@
               </b-row>
               <b-row>
                 <b-col md=12>
-                  <b-row>
+                  <b-row class="mb-2 mt-2">
                     <b-col md=12>
                       <h6>In case of emergency, Please contact : </h6>
                     </b-col>
@@ -888,6 +898,7 @@
                       :key="index"
                       :title="item.name"
                       :description="item.notes"
+                      :documentTypeName="item.documentType ? item.documentType.name  : ''"
                       :fileIndex="index"
                       @onFileItemSelect="onStudentFileItemSelect"
                       @onFileItemRemove="onDeleteStudentFile"
@@ -2160,7 +2171,8 @@ const studentFields = {
   mobileNo: null,
   birthDate: null,
   civilStatusId: null,
-  name: null
+  name: null,
+  email: null
 }
 
 const addressFields = {
@@ -3077,10 +3089,12 @@ export default {
         this.getStudentFiles(studentId, params).then(({ data }) => {
           //this.tables.files.items = data
           data.forEach(file => {
+            const { documentType } = file
             this.studentFiles.push({
               id: file.id,
               name: file.name,
               notes: file.notes,
+              documentType: { ...documentType },
               isBusy: false
             })
           })
@@ -3180,7 +3194,7 @@ export default {
           const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id,SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
           //set transcript field values based on evaluation fields
-          if ( activeApplication.applicationStepId == AdmissionSteps.REQUEST_EVALUATION.id ) {
+          if ( activeAdmission.applicationStepId == AdmissionSteps.REQUEST_EVALUATION.id ) {
             activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
             activeTranscriptRecord.courseId = evaluation.fields.courseId
             activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
@@ -3413,6 +3427,9 @@ export default {
       buttonNextShowHide(admissionStepId) {
         //arrHidden = steps id where the button next should be hidden
         let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id, AdmissionSteps.WAITING_EVALUATION.id]
+        if (admissionStepId === ApplicationSteps.PAYMENTS.id && !this.isPaying) {
+          arrHidden.push(ApplicationSteps.PAYMENTS.id)
+        }
         return !arrHidden.includes(admissionStepId)
       },
       loadBilling() {

@@ -69,6 +69,16 @@
                 </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group>
+                <label class="required">Email</label>
+                <b-form-input
+                  v-model="forms.student.fields.email"
+                  :state="forms.student.states.email"
+                  debounce="500"/>
+                <b-form-invalid-feedback>
+                  {{forms.student.errors.email}}
+                </b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group>
                 <label>Mobile No.</label>
                 <b-form-input
                   v-model="forms.student.fields.mobileNo"
@@ -496,8 +506,9 @@
           <b-row>
             <b-col md=12>
               <b-form-group >
-                <label class="required">Email</label>
+                <label class="required">Username</label>
                 <b-form-input
+                  disabled
                   ref="username"
                   v-model="forms.user.fields.username"
                   :state="forms.user.states.userUsername"

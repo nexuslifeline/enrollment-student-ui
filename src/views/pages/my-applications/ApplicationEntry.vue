@@ -1078,6 +1078,59 @@
       </b-button>
 			</div> <!-- modal footer buttons -->
 		</b-modal>
+
+    <b-modal
+      v-model="showPaymentFileModal"
+      centered
+      header-bg-variant="success"
+      header-text-variant="light"
+      :noCloseOnEsc="true"
+      :noCloseOnBackdrop="true"
+      >
+      <div slot="modal-title"> <!-- modal title -->
+        Payment File
+      </div> <!-- modal title -->
+      <b-row> <!-- modal body -->
+        <b-col md=12>
+          <label>Notes</label>
+          <b-textarea
+            v-model="forms.paymentFile.fields.notes"
+            :state="forms.paymentFile.states.notes"
+            rows=7
+            debounce="500" />
+          <b-form-invalid-feedback>
+            {{ forms.paymentFile.errors.notes }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row> <!-- modal body -->
+      <div slot="modal-footer" class="w-100"><!-- modal footer buttons -->
+        <b-button
+          class="float-left"
+          @click="onDeletePaymentFile(selectedPaymentFileIndex)"
+          variant="outline-danger">
+          <v-icon
+            v-if="isFileDeleting"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Delete
+        </b-button>
+        <b-button
+          @click="onUpdatePaymentFile()"
+          class="float-right"
+          variant="outline-primary">
+          <v-icon
+            v-if="isFileUpdating"
+            name="sync"
+            class="mr-2"
+            spin
+          />
+          Update
+        </b-button>
+      </div> <!-- modal footer buttons -->
+    </b-modal>
+
     <FileViewer
       :show="showModalPreview"
       :file="file"
@@ -1352,6 +1405,7 @@ export default {
       paymentFiles: [],
       showModalPreview: false,
       selectedPaymentApprovalStage: 1,
+      showPaymentFileModal: false,
       file: {
         type: null,
         src: null,
@@ -1818,7 +1872,6 @@ export default {
     }
   },
   created() {
-
     let params = { paginate: false }
     const studentId = this.$store.state.user.id;
     this.isLoading = true
@@ -1891,13 +1944,13 @@ export default {
           academicRecord.fields.schoolCategoryId = student.evaluation.schoolCategoryId
           academicRecord.fields.curriculumId = student.evaluation.studentCurriculumId
           subjects.isBusy = true
+
           this.loadSections()
           //need to load subjects here
           const { id: transcriptRecordId,  curriculumId } = student.activeTranscriptRecord
           const params = { paginate: false , curriculumId }
           this.getUnscheduledSubjects(transcriptRecordId, params).then(({ data }) => {
             const result = data.filter(subject => subject.isAllowed == true)
-
             //clear subjects
             subjects.items = []
 
@@ -2486,6 +2539,7 @@ export default {
       })
     },
     onPaymentFileItemSelect(idx) {
+      console.log('file item')
       const { paymentFile } = this.forms
       reset(paymentFile)
       this.selectedPaymentFileIndex = idx

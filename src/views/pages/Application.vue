@@ -62,6 +62,16 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group>
+                  <label class="required">Email</label>
+                  <b-form-input
+                    v-model="forms.student.fields.email"
+                    :state="forms.student.states.email"
+                    debounce="500"/>
+                  <b-form-invalid-feedback>
+                    {{forms.student.errors.email}}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group>
                   <label>Mobile No.</label>
                   <b-form-input
                     v-model="forms.student.fields.mobileNo" 
@@ -459,8 +469,8 @@
             </b-row>
             <b-row>
               <b-col md=12>
-                <b-row>
-                  <b-col md=12>
+                <b-row class="mt-2 mb-2">
+                  <b-col md=12 >
                     <h6>In case of emergency, Please contact : </h6>
                   </b-col>
                 </b-row>
@@ -882,6 +892,7 @@
                     :key="index"
                     :title="item.name"
                     :description="item.notes"
+                    :documentTypeName="item.documentType ? item.documentType.name  : ''"
                     :fileIndex="index"
                     @onFileItemSelect="onStudentFileItemSelect"
                     @onFileItemRemove="onDeleteStudentFile"
@@ -1472,7 +1483,8 @@
               Back
             </b-button>
             <b-button
-              @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ? onUpdatePayment() : onUpdateStudent()"
+              @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ?
+                onUpdatePayment() : onUpdateStudent()"
               variant="primary"
               class="application__main-action"
               :disabled="isProcessing"
@@ -2087,6 +2099,7 @@ const studentFields = {
   birthDate: null,
   civilStatusId: null,
   name: null,
+  email: null
 }
 
 const addressFields = {
@@ -2353,6 +2366,7 @@ export default {
         }
       },
       toolTips: { ...paymentTooltips },
+      isProfilePhotoBusy: false,
       activeSchoolYear: null,
       lastActiveFile: null,
       showModalSection: false,
@@ -2974,10 +2988,12 @@ export default {
       this.getStudentFiles(studentId, params).then(({ data }) => {
         //this.tables.files.items = data
         data.forEach(file => {
+          const { documentType } = file
           this.studentFiles.push({
             id: file.id,
             name: file.name,
             notes: file.notes,
+            documentType: { ...documentType },
             isBusy: false
           })
         })
@@ -3073,13 +3089,15 @@ export default {
           ? ApplicationSteps.STATUS.id
           : activeApplication.applicationStepId + 1;
 
-      const applicationStatusId = ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-        ? ApplicationStatuses.SUBMITTED.id
-        : ApplicationSteps.STATUS.id === activeApplication.applicationStepId
-        ? ApplicationStatuses.APPROVED_ASSESMENT.id
-        : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
-        ? ApplicationStatuses.COMPLETED.id
-        : activeApplication.applicationStatusId
+      const applicationStatusId =
+        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+          ? ApplicationStatuses.SUBMITTED.id
+          : ApplicationSteps.STATUS.id === activeApplication.applicationStepId
+          ? ApplicationStatuses.APPROVED_ASSESMENT.id
+          : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
+          ? ApplicationStatuses.COMPLETED.id
+          : activeApplication.applicationStatusId
+
 
       const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
@@ -3322,6 +3340,9 @@ export default {
     buttonNextShowHide(applicationStepId) {
       //arrHidden = steps id where the button next should be hidden
       let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
+      if (applicationStepId === ApplicationSteps.PAYMENTS.id && !this.isPaying) {
+        arrHidden.push(ApplicationSteps.PAYMENTS.id)
+      }
       return !arrHidden.includes(applicationStepId)
     },
     loadBilling() {

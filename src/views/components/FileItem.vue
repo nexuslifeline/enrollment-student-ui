@@ -5,6 +5,7 @@
       <div class="file-item__details" @click="$emit('onFileItemSelect', fileIndex)">
         <p v-if="!!title" class="file-item__title">{{title}}</p>
         <p v-if="!!description" class="file-item__description">{{description}}</p>
+        <p v-if="!!documentTypeName" class="file-item__description">{{documentTypeName}}</p>
       </div>
       <div class="file-item__actions">
         <button class="file-item__btn-action" @click="$emit('onFileItemRemove', fileIndex)">
@@ -47,6 +48,9 @@ export default {
       type: [String]
     },
     description: {
+      type: [String]
+    },
+    documentTypeName: {
       type: [String]
     },
     fileIndex: {

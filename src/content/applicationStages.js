@@ -43,7 +43,7 @@ export const groupStages = [
         id: 5,
         subHeader: 'Evaluation Request',
         image: '/img/svg/employee-messaging.svg',
-        description: 'Please provide the all the required fields and submit your request.',
+        description: 'Please provide all the required fields and submit your request.',
         slideTitle: 'Submit your Evaluation Request to us!',
         overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
       },

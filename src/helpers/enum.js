@@ -392,7 +392,7 @@ export const EvaluationStatuses = new Enum({
   SUBMITTED: { id: 2, name: 'Submitted' },
   APPROVED: { id: 3, name: 'Approved' },
   REJECTED: { id: 4, name: 'Rejected' },
-  COMPLETED: { id: 5, name: 'Rejected' }
+  COMPLETED: { id: 5, name: 'Completed' }
 });
 
 export const Days = new Enum({

@@ -24,7 +24,7 @@
       </div>
       <span class="triangle-top"></span>
       <ul class="account__dropdown-action-items">
-        <li class="account__dropdown-item">
+        <li class="account__dropdown-item" v-if="!showMyProfile">
           <div class="account__dropdown-icon">
             <MyProfile />
           </div>
@@ -93,6 +93,15 @@ export default {
     user() {
       return this.$store.state.user || {};
     },
+    hasActiveAdmission() {
+      return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+    },
+    hasActiveApplication() {
+      return !!(this.$store.state.user && this.$store.state.user.activeApplication && this.$store.state.user.activeApplication.isManual === 0);
+    },
+    showMyProfile() {
+      return this.hasActiveApplication || this.hasActiveAdmission
+    }
   },
   methods: {
     logout(){
@@ -115,7 +124,7 @@ export default {
     loadAvatar(){
       return localStorage.getItem('studentPhotoUrl')
     },
-  },
+  }
 }
 </script>
 

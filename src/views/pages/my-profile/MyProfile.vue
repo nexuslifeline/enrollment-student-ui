@@ -525,9 +525,10 @@
           <b-row>
             <b-col md=6>
               <b-form-group >
-                <label class="required">Email</label>
+                <label class="required">Username</label>
                 <b-form-input
                   ref="username"
+                  disabled
                   v-model="forms.user.fields.username"
                   :state="forms.user.states.userUsername"
                   debounce="500" />
