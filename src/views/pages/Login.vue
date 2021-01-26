@@ -167,7 +167,7 @@
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
               </li>
-              <li @click="register(isEnrolled ? studentCategories.OLD.id : studentCategories.TRANSFEREE.id)" class="signup__answer-item">
+              <li @click="register(isEnrolled ? studentCategories.TRANSFEREE_OLD.id : studentCategories.TRANSFEREE.id)" class="signup__answer-item">
                 <v-icon
                   name="check"
                   class="signup__answer-icon"

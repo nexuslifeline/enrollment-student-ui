@@ -153,7 +153,7 @@ export default {
       this.file.notes = null
       this.file.isLoading = true
       this.file.owner = null;
-      this.file.name = 'Assesment Form'
+      this.file.name = 'Assessment Form'
 
       this.showModalPreview = true
       this.getAssessmentFormPreview(academicRecordId)

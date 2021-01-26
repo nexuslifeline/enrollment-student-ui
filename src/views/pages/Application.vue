@@ -74,12 +74,12 @@
                 <b-form-group>
                   <label>Mobile No.</label>
                   <b-form-input
-                    v-model="forms.student.fields.mobileNo" 
+                    v-model="forms.student.fields.mobileNo"
                     debounce="500"/>
                 </b-form-group>
                 <b-form-group>
                   <label class="required">Civil Status</label>
-                  <b-form-select 
+                  <b-form-select
                     v-model="forms.student.fields.civilStatusId"
                     :state="forms.student.states.civilStatusId" >
                     <template v-slot:first>
@@ -1013,8 +1013,8 @@
                     <p>
                       Subjects for <strong>{{ getSelectedEvaluationLevel }}</strong> <strong>{{ forms.academicRecord.fields.semesterId ? ', ' + getSelectedEvaluationSemester + ' ' : ' ' }}</strong><strong>{{ forms.academicRecord.fields.courseId ? 'of ' + getSelectedEvaluationCourse : '' }}</strong>.
                     </p>
-                  </b-col> 
-                  <b-col md=3 > 
+                  </b-col>
+                  <b-col md=3 >
                     <b-button
                       block
                       class="float-right float-bottom"
@@ -1060,9 +1060,26 @@
                   </template>
                   <template v-slot:cell(section)="row">
                     <span>{{ row.item.section ? row.item.section.name : '' }}</span>
-                    <a class="float-right" href="#" @click.prevent="onShowModalSection(row)">[Change]</a>
+                    <!-- <a class="float-right" href="#" @click.prevent="onShowModalSection(row)">[Change]</a>
                     <br>
-                    <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a>
+                    <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a> -->
+
+                    <b-dropdown
+                      right
+                      variant="link"
+                      toggle-class="text-decoration-none"
+                      no-caret
+                    >
+                      <template v-slot:button-content>
+                        <v-icon name="ellipsis-v" />
+                      </template>
+                      <b-dropdown-item @click.prevent="onShowModalSection(row)">
+                        Change
+                      </b-dropdown-item>
+                      <b-dropdown-item @click.prevent="onSectionSubjectClear(row)">
+                        Clear
+                      </b-dropdown-item>
+                    </b-dropdown>
                   </template>
                 </b-table>
               </b-col>
@@ -2480,41 +2497,42 @@ export default {
               key: "name",
               label: "SUBJECTS",
               tdClass: "align-middle",
+              thClass: "align-middle",
               thStyle: { width: "auto" }
             },
             {
               key: "units",
               label: "LEC UNITS",
               tdClass: "align-middle text-center",
-              thClass: "text-center",
+              thClass: "text-center align-middle",
               thStyle: { width: "15%" }
             },
             {
               key: "labs",
               label: "LAB UNITS",
               tdClass: "align-middle text-center",
-              thClass: "text-center",
+              thClass: "text-center align-middle",
               thStyle: { width: "15%" }
             },
             {
               key: "totalUnits",
               label: "TOTAL UNITS",
               tdClass: "align-middle text-right",
-              thClass: "text-right",
+              thClass: "text-right align-middle",
               thStyle: {width: "8%"}
             },
             {
               key: "section",
               label: "SECTION",
-              tdClass: "align-middle",
-              thClass: "align-middle",
-              thStyle: {width: "20%"}
+              tdClass: "align-middle text-right",
+              thClass: "align-middle text-right",
+              thStyle: {width: "15%"}
             },
             {
               key: "action",
               label: "",
               tdClass: "align-middle text-center",
-              thStyle: {width: "5%"}
+              thStyle: {width: "60px"}
             }
           ],
           items: []

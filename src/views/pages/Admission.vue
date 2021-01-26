@@ -1055,9 +1055,22 @@
                     </template>
                     <template v-slot:cell(section)="row">
                       <span>{{ row.item.section ? row.item.section.name : '' }}</span>
-                      <a class="float-right" href="#" @click.prevent="onShowModalSection(row)">[Change]</a>
-                      <br>
-                      <a class="float-right" href="#" @click.prevent="onSectionSubjectClear(row)">[Clear]</a> 
+                      <b-dropdown
+                        right
+                        variant="link"
+                        toggle-class="text-decoration-none"
+                        no-caret
+                      >
+                        <template v-slot:button-content>
+                          <v-icon name="ellipsis-v" />
+                        </template>
+                        <b-dropdown-item @click.prevent="onShowModalSection(row)">
+                          Change
+                        </b-dropdown-item>
+                        <b-dropdown-item @click.prevent="onSectionSubjectClear(row)">
+                          Clear
+                        </b-dropdown-item>
+                      </b-dropdown>
                     </template>
                   </b-table>
                 </b-col>
@@ -2568,41 +2581,42 @@ export default {
                 key: "name",
                 label: "SUBJECTS",
                 tdClass: "align-middle",
+                thClass: "align-middle",
                 thStyle: { width: "auto" }
               },
               {
                 key: "units",
                 label: "LEC UNITS",
                 tdClass: "align-middle text-center",
-                thClass: "text-center",
+                thClass: "text-center align-middle",
                 thStyle: { width: "15%" }
               },
               {
                 key: "labs",
                 label: "LAB UNITS",
                 tdClass: "align-middle text-center",
-                thClass: "text-center",
+                thClass: "text-center align-middle",
                 thStyle: { width: "15%" }
               },
               {
                 key: "totalUnits",
                 label: "TOTAL UNITS",
                 tdClass: "align-middle text-right",
-                thClass: "text-right",
-                thStyle: {width: "15%"}
+                thClass: "text-right align-middle",
+                thStyle: {width: "8%"}
               },
               {
                 key: "section",
                 label: "SECTION",
-                tdClass: "align-middle",
-                thClass: "align-middle",
-                thStyle: {width: "20%"}
+                tdClass: "align-middle text-right",
+                thClass: "align-middle text-right",
+                thStyle: {width: "15%"}
               },
               {
                 key: "action",
                 label: "",
                 tdClass: "align-middle text-center",
-                thStyle: {width: "5%"}
+                thStyle: {width: "60px"}
               }
             ],
             items: [],
@@ -3194,7 +3208,7 @@ export default {
           const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id,SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
           //set transcript field values based on evaluation fields
-          if ( activeAdmission.applicationStepId == AdmissionSteps.REQUEST_EVALUATION.id ) {
+          if ( activeAdmission.admissionStepId == AdmissionSteps.REQUEST_EVALUATION.id ) {
             activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
             activeTranscriptRecord.courseId = evaluation.fields.courseId
             activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
@@ -3427,8 +3441,8 @@ export default {
       buttonNextShowHide(admissionStepId) {
         //arrHidden = steps id where the button next should be hidden
         let arrHidden = [AdmissionSteps.STATUS.id, AdmissionSteps.WAITING.id, AdmissionSteps.WAITING_EVALUATION.id]
-        if (admissionStepId === ApplicationSteps.PAYMENTS.id && !this.isPaying) {
-          arrHidden.push(ApplicationSteps.PAYMENTS.id)
+        if (admissionStepId === AdmissionSteps.PAYMENTS.id && !this.isPaying) {
+          arrHidden.push(AdmissionSteps.PAYMENTS.id)
         }
         return !arrHidden.includes(admissionStepId)
       },
