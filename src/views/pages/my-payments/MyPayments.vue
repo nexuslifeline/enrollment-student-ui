@@ -16,13 +16,6 @@
       hover
       outlined
       show-empty>
-      <!-- <template v-slot:cell(action) = "row">
-        <b-button
-          @click="onPreviewFile(row.index)"
-          variant="primary">
-          <v-icon name="print" />
-        </b-button>
-      </template> -->
       <template v-slot:table-busy>
         <div class="text-center my-2">
           <v-icon
@@ -36,13 +29,13 @@
             <b-badge
               :variant="
                 data.item.paymentStatusId === PaymentStatuses.APPROVED.id
-                  ? 'primary'
+                  ? 'success'
                   : data.item.paymentStatusId === PaymentStatuses.SUBMITTED.id
                   ? 'warning'
                   : 'danger'
               "
             >
-              {{ PaymentStatuses.getEnum(data.item.paymentStatusId).name }}
+              {{ data.item.paymentStatusId === PaymentStatuses.SUBMITTED.id ? 'Pending' : PaymentStatuses.getEnum(data.item.paymentStatusId).name }}
             </b-badge>
           </template>
     </b-table>

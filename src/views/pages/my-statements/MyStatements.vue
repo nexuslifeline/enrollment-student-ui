@@ -31,6 +31,15 @@
       <template v-slot:cell(billingNo)="row">
         <div><span class="link" @click="loadDetails(row)">{{ row.item.billingNo }}</span></div>
       </template>
+      <template v-slot:cell(totalPaid)="row">
+        <b-badge
+              :variant="
+                row.item.submittedPayments.length > 0 
+                  ? 'warning'
+                  : 'success'"
+            >
+        {{ row.item.submittedPayments.length > 0 ? 'For Approval' : formatNumber(row.item.totalPaid) }}</b-badge>
+      </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
             right
@@ -45,21 +54,12 @@
               View Details
             </b-dropdown-item>
             <b-dropdown-item
-              :to="`/payment/${row.item.id}`" >
+              :to="`/payment/${row.item.id}`"
+              v-if="!row.item.submittedPayments.length > 0">
               Pay Bill
             </b-dropdown-item>
         </b-dropdown>
       </template>
-
-      <!-- <template v-slot:cell(action)="row">
-        <button type="button" class="btn-invisible">
-          <v-icon
-            :name="row.detailsShowing ? 'chevron-down' : 'chevron-left'"
-            @click="loadDetails(row)"
-            scale="1"
-          />
-        </button>
-      </template> -->
       <template v-slot:row-details="data">
         <b-overlay :show="data.item.isLoading" rounded="sm">
           <div class="row-details-container">
@@ -133,6 +133,7 @@ export default {
   data() {
     return {
       student: null,
+      formatNumber,
       tables: {
         billings: {
           fields: [

@@ -2603,7 +2603,7 @@ export default {
                 label: "TOTAL UNITS",
                 tdClass: "align-middle text-right",
                 thClass: "text-right align-middle",
-                thStyle: {width: "8%"}
+                thStyle: {width: "15%"}
               },
               {
                 key: "section",
