@@ -157,7 +157,7 @@ export default {
               thStyle: {width: "15%"},
               formatter: (value) => {
                 if(Math.sign(value) < 0) {
-                  return `(${Math.abs(value)})`
+                  return `(${formatNumber(Math.abs(value))})`
                 }
                 return formatNumber(value)
               }
@@ -177,7 +177,7 @@ export default {
             },
             {
               key: "total",
-              label: "Total Amount ",
+              label: "Total Amount Due",
               tdClass: "align-middle text-right",
               thClass: "text-right",
               thStyle: {width: "15%"},

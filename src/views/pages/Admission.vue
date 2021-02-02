@@ -4000,7 +4000,7 @@ export default {
 
       },
       onCompleteEnrollment(routePath) {
-        const { student, activeApplication, evaluation } = this.forms
+        const { student, activeAdmission, evaluation } = this.forms
 
         const applicationStatusId = ApplicationStatuses.COMPLETED.id
 
@@ -4042,7 +4042,7 @@ export default {
         this.file.notes = null
         this.file.isLoading = true
         this.file.owner = null;
-        this.file.name = 'Assesment Form'
+        this.file.name = 'Assessment Form'
 
         this.showModalPreview = true
         this.getAssessmentFormPreview(academicRecordId)
