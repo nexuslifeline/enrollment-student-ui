@@ -94,6 +94,13 @@
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
             path: `schedules/${this.$store?.state?.user?.academicRecord.id}`,
             isVisible: true
+          },
+          {
+            title: 'My Ledger',
+            image: '/img/svg/my-documents.svg',
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: `ledgers`,
+            isVisible: true
           }
         ]
       }

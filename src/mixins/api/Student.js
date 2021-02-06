@@ -28,5 +28,8 @@ export default {
     enrollStudent(studentId, data) {
       return this.$authHttp.post(`${apiPrefix}/${apiVersion}/students/${studentId}/enroll`, data);
     },
+    getLedgerOfStudent(studentId, params) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/ledgers`, { params: params });
+    }
   }
 }

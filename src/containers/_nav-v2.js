@@ -43,5 +43,10 @@ export default [
     name: 'My Schedules',
     to: `/schedules`,
     icon: 'folder'
+  },
+  {
+    name: 'My Ledger',
+    to: `/ledgers`,
+    icon: 'folder'
   }
 ]

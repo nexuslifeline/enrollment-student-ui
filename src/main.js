@@ -53,6 +53,39 @@ import 'vue-awesome/icons/info-circle'
 import Icon from 'vue-awesome/components/Icon'
 import './assets/scss/global.scss'
 
+import {
+  BIconFolderSymlink,
+  BIconFolder2Open,
+  BIconAlarm,
+  BIconArrowRightCircle,
+  BIconArrowLeftCircle,
+  BIconPaperclip,
+  BIconCloudDownload,
+  BIconCheckCircle,
+  BIconEnvelope,
+  BIconPersonBadge,
+  BIconGeoAlt,
+  BIconCalendar2Week,
+  BIconCaretDownFill,
+  BIconCaretUpFill,
+  BProgress
+} from 'bootstrap-vue'
+Vue.component('BIconFolderSymlink', BIconFolderSymlink);
+// Vue.component('BIconFolder2Open', BIconFolder2Open);
+Vue.component('BIconAlarm', BIconAlarm);
+Vue.component('BIconArrowRightCircle', BIconArrowRightCircle);
+Vue.component('BIconArrowLeftCircle', BIconArrowLeftCircle);
+Vue.component('BIconPaperclip', BIconPaperclip);
+Vue.component('BIconCloudDownload', BIconCloudDownload);
+Vue.component('BIconCheckCircle', BIconCheckCircle);
+Vue.component('BIconEnvelope', BIconEnvelope);
+// Vue.component('BIconPersonBadge', BIconPersonBadge);
+Vue.component('BIconGeoAlt', BIconGeoAlt);
+// Vue.component('BIconCalendar2Week', BIconCalendar2Week);
+Vue.component('BIconCaretDownFill', BIconCaretDownFill);
+Vue.component('BIconCaretUpFill', BIconCaretUpFill);
+Vue.component('BProgress', BProgress)
+
 Vue.config.performance = true
 Vue.component('v-icon', Icon)
 Vue.use(CoreuiVue)

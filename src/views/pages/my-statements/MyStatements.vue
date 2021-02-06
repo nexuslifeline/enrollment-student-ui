@@ -45,7 +45,8 @@
             right
             variant="link"
             toggle-class="text-decoration-none"
-            no-caret>
+            no-caret
+            boundary="window">
             <template v-slot:button-content>
               <v-icon name="ellipsis-v" />
             </template>

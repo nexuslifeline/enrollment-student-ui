@@ -11,5 +11,9 @@ export default {
     getPaymentList(params) {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments`, { params: params });
     },
+    getPayment(id) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments/${id}`);
+    },
+
   }
 }

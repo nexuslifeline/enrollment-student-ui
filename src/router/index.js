@@ -27,6 +27,7 @@ const MySchedule = () => import('@/views/pages/my-schedules/MySchedule')
 const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
 const AssessmentList = () => import('@/views/pages/my-documents/AssessmentList')
 const RegistrationList = () => import('@/views/pages/my-documents/RegistrationList')
+const MyLedger = () => import('@/views/pages/my-ledgers/MyLedger')
 const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
 const RequirementList = () => import('@/views/pages/my-requirements/RequirementList')
@@ -144,6 +145,17 @@ function configRoutes () {
             {
               path: '/',
               component: RequirementList
+            },
+          ]
+        },
+        {
+          path: '/ledgers',
+          component: { render(c) { return c('router-view') } },
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: '/',
+              component: MyLedger
             },
           ]
         },
