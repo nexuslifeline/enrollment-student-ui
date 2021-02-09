@@ -74,13 +74,13 @@
             path: 'profile',
             isVisible: true
           },
-          {
-            title: 'My Applications',
-            image: '/img/svg/my-applications.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
-            path: 'applications',
-            isVisible: true
-          },
+          // {
+          //   title: 'My Applications',
+          //   image: '/img/svg/my-applications.svg',
+          //   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+          //   path: 'applications',
+          //   isVisible: true
+          // },
           {
             title: 'My Requirements',
             image: '/img/svg/my-documents.svg',

@@ -29,11 +29,11 @@ export default [
     to: '/profile',
     icon: 'address-card'
   },
-  {
-    name: 'My Applications',
-    to: '/applications',
-    icon: 'bookmark'
-  },
+  // {
+  //   name: 'My Applications',
+  //   to: '/applications',
+  //   icon: 'bookmark'
+  // },
   {
     name: 'My Requirements',
     to: '/requirements',
