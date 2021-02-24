@@ -22,3 +22,4 @@ export { default as AcademicRecordApi } from './AcademicRecord';
 export { default as TranscriptRecordApi } from './TranscriptRecord';
 export { default as DocumentTypeApi } from './DocumentType';
 export { default as PaymentReceiptFileApi } from './PaymentReceiptFile';
+export { default as TermApi } from './Term';
