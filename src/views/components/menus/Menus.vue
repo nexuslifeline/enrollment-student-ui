@@ -42,35 +42,35 @@
           {
             title: 'My Documents',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "You can view your past enrollment records such as your Assessment Forms and Certificate of Registration.",
             path: 'documents',
             isVisible: true
           },
           {
             title: 'My Statements',
             image: '/img/svg/my-statements.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "You can view a detailed breakdown of your School charges.",
             path: 'statements',
             isVisible: true
           },
           {
             title: 'My Payments',
             image: '/img/svg/my-payments.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "Your payment history is a record of your past payment transactions. allows you to view a complete record of payments made on a SOA or other Billing.",
             path: 'payments',
             isVisible: true
           },
           {
             title: 'My Grades',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "See an overview of grading and feedback on your completed course work.",
             path: 'grades',
             isVisible: true
           },
           {
             title: 'My Profile',
             image: '/img/svg/my-profile.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "You can edit your account settings, as well as some information on your public profile.",
             path: 'profile',
             isVisible: true
           },
@@ -84,21 +84,21 @@
           {
             title: 'My Requirements',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "See what requirements you have submitted. Allows you to update requirements.",
             path: 'requirements',
             isVisible: true
           },
           {
             title: 'My Schedule',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "Shows your class schedule. See what time your subject is over the course of the week.",
             path: `schedules/${this.$store?.state?.user?.academicRecord.id}`,
             isVisible: true
           },
           {
             title: 'My Ledger',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "Shows how you've paid your accounts over the length of period.",
             path: `ledgers`,
             isVisible: true
           }
