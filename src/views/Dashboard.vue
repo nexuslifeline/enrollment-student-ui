@@ -21,7 +21,8 @@
     data() {
       return {
         isReady: false,
-        SchoolCategories: SchoolCategories
+        SchoolCategories: SchoolCategories,
+        showNewApplicationNotice: false
       }
     },
     computed: {
@@ -43,25 +44,6 @@
       latestAcademicRecord() {
         return this.$store.state.user.latestAcademicRecord || {};
       },
-      showNewApplicationNotice() {
-        if (this.user && this.activeSchoolYear && this.activeSemester && this.latestAcademicRecord) {
-          if (this.latestAcademicRecord.schoolYearId !== this.activeSchoolYear.id ) {
-            return true
-          }
-          else {
-            if (this.latestAcademicRecord.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
-              || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.COLLEGE.id
-              || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
-                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
-                  //check if active semester id is equal to latest academic record semester id
-                  if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
-                    return true
-                  }
-            }
-          }
-        }
-        return false
-      }
     },
     created() {
       if (this.hasActiveApplication) {
@@ -71,7 +53,27 @@
       }
     },
     mounted() {
-      setTimeout(() => this.isReady = true, 1500)
+      this.$nextTick(() => {
+        setTimeout(() => {
+          if (this.user && this.activeSchoolYear && this.activeSemester && this.latestAcademicRecord) {
+            if (this.latestAcademicRecord.schoolYearId !== this.activeSchoolYear.id ) {
+              this.showNewApplicationNotice = true
+            }
+            else {
+              if (this.latestAcademicRecord.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
+                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.COLLEGE.id
+                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
+                  || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
+                    //check if active semester id is equal to latest academic record semester id
+                  if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
+                    this.showNewApplicationNotice = true
+                  }
+              }
+            }
+          }
+          this.isReady = true
+        }, 1500);
+      })
     },
   }
 </script>
