@@ -48,5 +48,10 @@ export default [
     name: 'My Ledger',
     to: `/ledgers`,
     icon: 'folder'
+  },
+  {
+    name: 'My Clearance',
+    to: `/clearance`,
+    icon: 'folder'
   }
 ]

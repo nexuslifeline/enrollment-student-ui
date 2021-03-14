@@ -101,6 +101,13 @@
             description: "Shows how you've paid your accounts over the length of period.",
             path: `ledgers`,
             isVisible: true
+          },
+          {
+            title: 'My Clearance',
+            image: '/img/svg/my-documents.svg',
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            path: `clearance`,
+            isVisible: true
           }
         ]
       }

@@ -31,6 +31,7 @@ const MyLedger = () => import('@/views/pages/my-ledgers/MyLedger')
 const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
 const RequirementList = () => import('@/views/pages/my-requirements/RequirementList')
+const MyClearance = () => import('@/views/pages/my-clearances/MyClearance')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -120,6 +121,12 @@ function configRoutes () {
           path: 'payments',
           name: 'MyPayments',
           component: MyPayments,
+          meta: {requiresAuth: true}
+        },
+        {
+          path: 'clearance',
+          name: 'MyClearance',
+          component: MyClearance,
           meta: {requiresAuth: true}
         },
         {

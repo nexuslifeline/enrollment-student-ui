@@ -31,22 +31,22 @@
               <v-icon name="ellipsis-v" />
             </template>
             <b-dropdown-item
-              @click="onShowGrades(row)" >
-              View Grades
+              @click="onShowSignatories(row)" >
+              View Clearance
             </b-dropdown-item>
         </b-dropdown>
       </template>
     </b-table>
 
     <b-modal
-      v-model="showGradesModal"
+      v-model="showSignatoriesModal"
         :noCloseOnEsc="true"
         :noCloseOnBackdrop="true"
         size="lg">
 
         <div slot="modal-title">
           <!-- modal title -->
-          Grades
+          Clearances
         </div>
 
         <b-table
@@ -55,19 +55,19 @@
             hover
             outlined
             show-empty
-            :fields="tables.grades.fields"
-            :busy="tables.grades.isBusy"
-            :items="tables.grades.items"
+            :fields="tables.signatories.fields"
+            :busy="tables.signatories.isBusy"
+            :items="tables.signatories.items"
             responsive
           >
-            <template v-slot:head(terms)>
+            <!-- <template v-slot:head(terms)>
               <div class="cell-term__header">
                 <div class="cell-term-input text-right" v-for="term in terms" :key="term.id">
                   {{ term.name }}
                 </div>
               </div>
-            </template>
-            <template v-slot:cell(name)="{ item }">
+            </template> -->
+            <!-- <template v-slot:cell(name)="{ item }">
               <div>{{ item.name }}</div>
               <div>{{ item.description }}</div>
             </template>
@@ -79,6 +79,10 @@
                   class="cell-term-input text-right"
                 >{{ item.grades.find(d => d.id === term.id) ? $options.formatNumber(item.grades.find(d => d.id === term.id).pivot.grade) : null }}</div>
               </div>
+            </template> -->
+            <template v-slot:cell(pivot.isCleared)="data">
+              <v-icon v-if="data.item.pivot.isCleared" name="check" color="green"></v-icon>
+              <v-icon v-else name="times" color="red"></v-icon>
             </template>
             <template v-slot:table-busy>
               <div class="text-center my-2">
@@ -93,7 +97,7 @@
           <b-button
             variant="outline-danger"
             class="float-right btn-close"
-            @click="showGradesModal = false"
+            @click="showSignatoriesModal = false"
           >
             Close
           </b-button>
@@ -105,43 +109,43 @@
 </template>
 
 <script>
-import { AcademicRecordApi, StudentApi, TermApi } from '../../../mixins/api'
-import headline from './data/grade';
+import { AcademicRecordApi, StudentApi, TermApi, StudentClearanceApi } from '../../../mixins/api'
+import headline from './data/clearance';
 import { AcademicRecordStatuses } from "../../../helpers/enum";
 import { formatNumber } from "../../../helpers/forms"
 export default {
   formatNumber,
   AcademicRecordStatuses,
   headline,
-  mixins: [ StudentApi, AcademicRecordApi, TermApi ],
+  mixins: [ StudentApi, AcademicRecordApi, TermApi, StudentClearanceApi ],
   data() {
     return {
-      showGradesModal: false,
+      showSignatoriesModal: false,
       terms: [],
       tables: {
         academicRecords: {
           isBusy: false,
           fields: [
             {
-							key: "schoolYear.name",
+							key: "academicRecord.schoolYear.name",
 							label: "School Year",
 							tdClass: "align-middle",
               thStyle: {width: "25%"},
             },
             {
-							key: "level.name",
+							key: "academicRecord.level.name",
 							label: "Level",
 							tdClass: "align-middle",
               thStyle: {width: "25%"},
             },
             {
-							key: "course.name",
+							key: "academicRecord.course.name",
 							label: "Course",
 							tdClass: "align-middle",
               thStyle: {width: "25%"},
             },
             {
-							key: "semester.name",
+							key: "academicRecord.semester.name",
 							label: "Semester",
 							tdClass: "align-middle",
               thStyle: {width: "25%"},
@@ -155,20 +159,26 @@ export default {
           ],
           items: []
         },
-        grades: {
+        signatories: {
           isBusy: false,
           fields: [
             {
               key: 'name',
-              label: 'Subject',
+              label: 'Signatory',
               tdClass: 'align-middle',
-              thStyle: { width: '30%' },
+              thStyle: { width: '50%' },
             },
             {
-              key: 'terms',
-              label: '',
+              key: 'pivot.remarks',
+              label: 'Remarks',
               tdClass: 'align-middle',
-              thStyle: { width: '70%' },
+              thStyle: { width: '40%' },
+            },
+            {
+              key: 'pivot.isCleared',
+              label: 'Cleared ?',
+              tdClass: 'align-middle text-center',
+              thStyle: { width: '10%' },
             },
           ],
           items: []
@@ -183,37 +193,28 @@ export default {
     }
   },
   created() {
-    // this.loadTerms()
-    this.loadAcademicRecords()
+    this.loadStudentClearances()
   },
   methods: {
-    loadAcademicRecords() {
+    loadStudentClearances() {
       const studentId = this.$store.state.user.id;
       const { academicRecords } = this.tables
-      const { academicRecordStatusId } = this.filters.academicRecord
-      const params = { paginate: false, studentId, academicRecordStatusId }
+      const params = { paginate: false, studentId }
       academicRecords.isBusy = true
 
-      this.getAcademicRecordList(params).then(( { data }) => {
+      this.getStudentClearanceList(params).then(( { data }) => {
         academicRecords.items = data
         academicRecords.isBusy = false
       })
     },
-    onShowGrades(row) {
-      this.showGradesModal = true
-      const { grades } = this.tables
-      const academicRecordId = row.item.id
-      const { schoolCategoryId, schoolYearId, semesterId } = row.item
-      const params = { schoolCategoryId, schoolYearId, semesterId, paginate: false  }
-      grades.isBusy = true
-
-      this.getTermList(params).then(({ data }) => {
-        this.terms = data
-      });
-
-      this.getAcademicRecord(academicRecordId).then(({ data })=> {
-        grades.items = data.subjects
-        grades.isBusy = false
+    onShowSignatories(row) {
+      this.showSignatoriesModal = true
+      const { signatories } = this.tables
+      const studentClearanceId = row.item.id
+      signatories.isBusy = true
+      this.getStudentClearance(studentClearanceId).then(({ data })=> {
+        signatories.items = data.signatories
+        signatories.isBusy = false
       })
     },
 
