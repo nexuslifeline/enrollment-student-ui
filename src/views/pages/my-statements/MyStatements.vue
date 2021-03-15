@@ -29,12 +29,12 @@
         </div>
       </template>
       <template v-slot:cell(billingNo)="row">
-        <div><span class="link" @click="loadDetails(row)">{{ row.item.billingNo }}</span></div>
+        <div><span class="link" @click="previewBilling(row.item.id)">{{ row.item.billingNo }}</span></div>
       </template>
       <template v-slot:cell(totalPaid)="row">
         <b-badge
               :variant="
-                row.item.submittedPayments.length > 0 
+                row.item.submittedPayments.length > 0
                   ? 'warning'
                   : 'success'"
             >
@@ -51,9 +51,14 @@
               <v-icon name="ellipsis-v" />
             </template>
             <b-dropdown-item
+              @click="previewBilling(row.item.id)"
+            >
+            Preview
+            </b-dropdown-item>
+            <!-- <b-dropdown-item
               @click="loadDetails(row)" >
               View Details
-            </b-dropdown-item>
+            </b-dropdown-item> -->
             <b-dropdown-item
               :to="`/payment/${row.item.id}`"
               v-if="!row.item.submittedPayments.length > 0">
@@ -115,26 +120,47 @@
           emptyInputBehavior: 0 }]">
       </vue-autonumeric>
     </div>
+    <FileViewer
+      :show="fileViewer.show"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="fileViewer.show = false"/>
   </div>
 </template>
 
 <script>
-import { StudentApi, PaymentApi, BillingApi, SchoolYearApi } from "../../../mixins/api"
+import { StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi } from "../../../mixins/api"
 import { showNotification, formatNumber, clearFields, validate, reset, } from "../../../helpers/forms"
 import { format } from 'date-fns'
 import Maintenance from '../../components/Maintenance';
 import headline from './data/statement';
+import FileViewer from '../../components/FileViewer'
 
 export default {
-  mixins: [ StudentApi, PaymentApi, BillingApi, SchoolYearApi ],
+  mixins: [ StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi ],
   headline,
   components: {
-    Maintenance
+    Maintenance,
+    FileViewer
   },
   data() {
     return {
       student: null,
       formatNumber,
+      fileViewer: {
+        isActiveNavEnabled: false,
+        activeNavCount: 0,
+        activeNavIndex: 0,
+        show: false,
+      },
+      file: {
+        type: null,
+        src: null,
+        name: null,
+        notes: null,
+        isLoading: false,
+      },
       tables: {
         billings: {
           fields: [
@@ -320,6 +346,21 @@ export default {
         // payment.fields.billingId = row.length ? row[0].id :  null
         // payment.fields.amount = remainingBalance > 0 ? remainingBalance : 0
       }
+    },
+    previewBilling(id) {
+      this.file.type = null;
+      this.file.src = null;
+      this.fileViewer.show = true;
+      this.file.isLoading = true;
+      this.file.name = 'Statement of Account';
+      this.previewStatementOfAccount(id).then((response) => {
+        this.file.type = response.headers.contentType;
+        const file = new Blob([response.data], { type: 'application/pdf' });
+        const reader = new FileReader();
+        reader.onload = (e) => (this.file.src = e.target.result);
+        reader.readAsDataURL(file);
+        this.file.isLoading = false;
+      });
     },
   },
   computed: {
