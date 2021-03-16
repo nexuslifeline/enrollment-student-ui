@@ -17,5 +17,10 @@ export default {
         responseType: 'blob'
       });
     },
+    previewStatementOfAccount(billingId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/statement-of-account/${billingId}`, {
+        responseType: 'blob'
+      });
+    },
   }
 }

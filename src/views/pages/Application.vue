@@ -1074,7 +1074,7 @@
                         <v-icon name="ellipsis-v" />
                       </template>
                       <b-dropdown-item @click.prevent="onShowModalSection(row)">
-                        Change
+                        {{ row.item.sectionId ? 'Change' : 'Select Section' }}
                       </b-dropdown-item>
                       <b-dropdown-item @click.prevent="onSectionSubjectClear(row)">
                         Clear
