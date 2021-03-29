@@ -52,7 +52,7 @@ export const groupStages = [
         subHeader: 'Evaluation Status',
         image: '/img/svg/my-documents.svg',
         description: 'Waiting for subject evaluation.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        overview: 'Evaluation request should undergo keen assessment to be able to properly update your record. Upon approval the Student would be able to enlist his/her subjects.'
       }
     ]
   },
@@ -64,7 +64,7 @@ export const groupStages = [
         subHeader: 'Subjects',
         image: '/img/svg/online-tutorial.svg',
         description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        overview: 'Prepare the subjects in your preferred section and schedule beforehand.'
       },
       {
         id: 8,

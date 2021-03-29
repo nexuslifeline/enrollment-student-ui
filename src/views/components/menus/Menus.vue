@@ -105,7 +105,7 @@
           {
             title: 'My Clearance',
             image: '/img/svg/my-documents.svg',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid idunt ut labore et dolore magna aliqua.",
+            description: "See if you have already obtained clearance in various departments and offices.",
             path: `clearance`,
             isVisible: true
           }
