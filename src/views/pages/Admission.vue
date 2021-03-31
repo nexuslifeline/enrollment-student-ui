@@ -2317,6 +2317,7 @@ const academicRecordErrorFields = {
 const evaluationFields = {
   id : null,
   curriculumId: null,
+  schoolYearId: null,
   studentCategoryId: null,
   levelId: null,
   courseId: null,
@@ -2460,7 +2461,6 @@ export default {
           }
       },
       toolTips: { ...paymentTooltips },
-      activeSchoolYear: null,
       lastActiveFile: null,
       showModalSection: false,
         showPaymentFileModal: false,
@@ -3118,7 +3118,6 @@ export default {
       this.loadEWalletAccounts();
       this.loadBankAccounts();
       this.loadPeraPadalaAccounts();
-      this.getActiveSchoolYear();
 
       this.getLevelList(params).then(response => {
         const res = response.data
@@ -3163,6 +3162,7 @@ export default {
             : evaluation.fields.evaluationStatusId;
 
         if (activeAdmission.admissionStepId === AdmissionSteps.REQUEST_EVALUATION.id) {
+          evaluation.fields.schoolYearId =  this.activeSchoolYear?.id
           evaluation.fields.submittedDate =  getCurrentDateTime()
         }
 
@@ -4240,14 +4240,6 @@ export default {
         };
         this.previewPaymentFile(currentIdx);
     },
-    getActiveSchoolYear() {
-      const params = { paginate: false, isActive: 1 }
-      this.getSchoolYearList(params).then(({ data }) => {
-        if (data.length > 0) {
-          this.activeSchoolYear = data[0]
-        }
-      })
-    },
   },
   computed: {
     hasActiveAdmission() {
@@ -4324,7 +4316,10 @@ export default {
       } else {
         return 'Next'
       }
-    }
+    },
+    activeSchoolYear() {
+      return this.$store.state.activeSchoolYear || {};
+    },
   }
 }
 </script>

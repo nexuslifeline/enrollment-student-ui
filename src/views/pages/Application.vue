@@ -2246,6 +2246,7 @@ const academicRecordErrorFields = {
 const evaluationFields = {
   id : null,
   curriculumId: null,
+  schoolYearId: null,
   studentCategoryId: null,
   levelId: null,
   courseId: null,
@@ -2262,7 +2263,7 @@ const evaluationFields = {
   studentCurriculumId: null,
   semesterId: null,
   submittedDate: null,
-  transcriptRecordId: null
+  transcriptRecordId: null,
 }
 
 const activeTranscriptRecordFields = {
@@ -2384,7 +2385,6 @@ export default {
       },
       toolTips: { ...paymentTooltips },
       isProfilePhotoBusy: false,
-      activeSchoolYear: null,
       lastActiveFile: null,
       showModalSection: false,
       showPaymentFileModal: false,
@@ -3040,7 +3040,6 @@ export default {
     this.loadEWalletAccounts();
     this.loadBankAccounts();
     this.loadPeraPadalaAccounts();
-    this.getActiveSchoolYear();
 
   },
   methods: {
@@ -3074,6 +3073,7 @@ export default {
         : evaluation.fields.evaluationStatusId;
 
       if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
+        evaluation.fields.schoolYearId = this.activeSchoolYear?.id
         evaluation.fields.submittedDate =  getCurrentDateTime()
       }
 
@@ -4040,14 +4040,7 @@ export default {
       };
       this.previewPaymentFile(currentIdx);
     },
-    getActiveSchoolYear() {
-      const params = { paginate: false, isActive: 1 }
-      this.getSchoolYearList(params).then(({ data }) => {
-        if (data.length > 0) {
-          this.activeSchoolYear = data[0]
-        }
-      })
-    },
+
   },
   computed: {
     hasActiveAdmission() {
@@ -4120,6 +4113,9 @@ export default {
       } else {
         return 'Next'
       }
+    },
+    activeSchoolYear() {
+      return this.$store.state.activeSchoolYear || {};
     },
   }
 }

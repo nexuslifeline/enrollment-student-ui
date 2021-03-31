@@ -1255,6 +1255,7 @@ const academicRecordErrorFields = {
 const evaluationFields = {
   id : null,
   curriculumId: null,
+  schoolYearId: null,
   studentCategoryId: StudentCategories.OLD.id,
   levelId: null,
   courseId: null,
@@ -1390,7 +1391,6 @@ export default {
       showStudentFileModal: false,
       isFileDeleting: false,
       isFileUpdating: false,
-      activeSchoolYear: null,
       selectedEvaluationApprovalStage : null,
       evaluationDismissCountDown: 0,
       sectionIsLoading: false,
@@ -1999,7 +1999,6 @@ export default {
       this.options.documentTypes.items = data
     });
 
-    this.activeSchoolYear = this.$store.state.activeSchoolYear || {}
   },
   methods: {
     buttonBackShowHide(applicationStepId) {
@@ -2070,14 +2069,16 @@ export default {
 
       const currentStepIndex = activeApplication.applicationStepId - 1;
 
-      const evaluationStatusId = evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id ||
+      let evaluationStatusId = evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id ||
         evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id
         ? EvaluationStatuses.SUBMITTED.id
         : evaluation.fields.evaluationStatusId;
 
-      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
+      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id || activeApplication === null) {
         evaluation.fields.submittedDate =  getCurrentDateTime()
-        activeApplication.schoolYearId = this.activeSchoolYear ? this.activeSchoolYear.id  : null
+        evaluation.fields.schoolYearId = this.activeSchoolYear?.id
+        evaluationStatusId = EvaluationStatuses.SUBMITTED.id
+        activeApplication.schoolYearId = this.activeSchoolYear?.id
       }
 
       if (activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
@@ -2148,6 +2149,9 @@ export default {
         if (form)
         reset(form)
       })
+      console.log(data)
+
+      // return
 
       this.enrollStudent(studentId, data).then(({ data }) => {
          //load billing when on payment stage after update
@@ -2744,7 +2748,7 @@ export default {
         return 'Next'
       }
     },
-    getActiveSchoolYear() {
+    activeSchoolYear() {
       return this.$store.state.activeSchoolYear || {};
     },
     getActiveSemester() {
