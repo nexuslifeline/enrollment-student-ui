@@ -6,7 +6,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </p>
     </div>-->
-    <Menus :showNewApplicationNotice="showNewApplicationNotice"/>
+    <Menus :showNewApplicationNotice="showNewApplicationNotice" ref="menus" :key="menuKey"/>
   </div>
 </template>
 
@@ -20,6 +20,7 @@
     },
     data() {
       return {
+        menuKey: 0,
         isReady: false,
         SchoolCategories: SchoolCategories,
         showNewApplicationNotice: false
@@ -44,6 +45,9 @@
       latestAcademicRecord() {
         return this.$store.state.user.latestAcademicRecord || {};
       },
+      academicRecords() {
+        return this.$store.state.user.academicRecords || [];
+      }
     },
     created() {
       if (this.hasActiveApplication) {
@@ -65,12 +69,16 @@
                 || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
                   || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
                     //check if active semester id is equal to latest academic record semester id
-                  if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
-                    this.showNewApplicationNotice = true
-                  }
+                  // if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
+                  //   this.showNewApplicationNotice = true
+                  // }
+                const result = this.academicRecords.find(el => el.academicRecordStatusId === 3 && el.semesterId === this.activeSemester.id)
+                console.log(result)
+                this.showNewApplicationNotice = !!result ? false : true
               }
             }
           }
+          this.menuKey =+ 1 //force render menu component
           this.isReady = true
         }, 1500);
       })
