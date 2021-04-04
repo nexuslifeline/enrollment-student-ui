@@ -73,8 +73,7 @@
                   //   this.showNewApplicationNotice = true
                   // }
                 const result = this.academicRecords.find(el => el.academicRecordStatusId === 3 && el.semesterId === this.activeSemester.id)
-                console.log(result)
-                this.showNewApplicationNotice = !!result ? false : true
+                this.showNewApplicationNotice = result ? false : true
               }
             }
           }

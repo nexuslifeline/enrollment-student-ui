@@ -1,5 +1,5 @@
 <template>
-  <div class="grade__main-container">
+  <div class="clearance__main-container">
     <h4 class="c-app__page-title">
       {{$options.headline.title}} ({{tables.academicRecords.items.length}})
     </h4>
@@ -42,12 +42,23 @@
       v-model="showSignatoriesModal"
         :noCloseOnEsc="true"
         :noCloseOnBackdrop="true"
-        size="lg">
+        size="xl">
 
         <div slot="modal-title">
           <!-- modal title -->
           Clearances
         </div>
+
+        <b-row class="mb-3">
+          <b-col md=3 offset-md="9">
+            <b-form-input
+              v-model="filters.signatory.criteria"
+              debounce="500"
+              type="text"
+              placeholder="Search"
+            />
+          </b-col>
+        </b-row>
 
         <b-table
             class="c-table"
@@ -58,6 +69,9 @@
             :fields="tables.signatories.fields"
             :busy="tables.signatories.isBusy"
             :items="tables.signatories.items"
+            :filter="filters.signatory.criteria"
+            :current-page="paginations.signatory.page"
+            :per-page="paginations.signatory.perPage"
             responsive
           >
             <!-- <template v-slot:head(terms)>
@@ -166,18 +180,25 @@ export default {
               key: 'name',
               label: 'Signatory',
               tdClass: 'align-middle',
-              thStyle: { width: '50%' },
+              thStyle: { width: '30%' },
+            },
+            {
+              key: 'pivot.description',
+              label: 'Desription',
+              tdClass: 'align-middle',
+              thStyle: { width: '30%' },
             },
             {
               key: 'pivot.remarks',
               label: 'Remarks',
               tdClass: 'align-middle',
-              thStyle: { width: '40%' },
+              thStyle: { width: '30%' },
             },
             {
               key: 'pivot.isCleared',
               label: 'Cleared ?',
               tdClass: 'align-middle text-center',
+              thClass: 'align-middle text-center',
               thStyle: { width: '10%' },
             },
           ],
@@ -188,7 +209,19 @@ export default {
         academicRecord: {
           criteria: null,
           academicRecordStatusId: this.$options.AcademicRecordStatuses.ENROLLED.id
+        },
+        signatory: {
+          criteria: null
         }
+      },
+      paginations: {
+        signatory: {
+          from: 0,
+          to: 0,
+          totalRows: 0,
+          page: 1,
+          perPage: 10,
+        },
       },
     }
   },
@@ -227,7 +260,7 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../../assets/scss/shared.scss";
-  .grade__main-container {
+  .clearance__main-container {
     height: 100%;
     display: flex;
     padding: 20px;

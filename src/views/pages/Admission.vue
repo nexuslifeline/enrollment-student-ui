@@ -3875,7 +3875,6 @@ export default {
           newFile.id = data.id
           newFile.name = data.name
           newFile.isBusy = false
-          this.onEvaluationFileItemSelect(newFileIndex)
           this.onStudentFileItemSelect(newFileIndex)
       })
       },
@@ -3904,7 +3903,7 @@ export default {
 
         this.showStudentFileModal = true
       },
-      onUpdateEvaluationFile () {
+      onUpdateStudentFile () {
         const { student: { fields:{ id: studentId } },
               studentFile } = this.forms
 
