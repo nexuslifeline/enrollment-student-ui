@@ -60,24 +60,24 @@
             :items="tables.grades.items"
             responsive
           >
-            <template v-slot:head(terms)>
+            <template v-slot:head(gradingPeriods)>
               <div class="cell-term__header">
-                <div class="cell-term-input text-right" v-for="term in terms" :key="term.id">
-                  {{ term.name }}
+                <div class="cell-term-input text-right" v-for="gradingPeriod in gradingPeriods" :key="gradingPeriod.id">
+                  {{ gradingPeriod.name }}
                 </div>
               </div>
             </template>
             <template v-slot:cell(name)="{ item }">
-              <div>{{ item.name }}</div>
-              <div>{{ item.description }}</div>
+              <div>{{ item.subject.name }}</div>
+              <div>{{ item.subject.description }}</div>
             </template>
-            <template v-slot:cell(terms)="{ item }">
+            <template v-slot:cell(gradingPeriods)="{ item }">
               <div class="cell-term">
                 <div
-                  v-for="term in terms"
-                  :key="term.id"
+                  v-for="gradingPeriod in gradingPeriods"
+                  :key="gradingPeriod.id"
                   class="cell-term-input text-right"
-                >{{ item.grades.find(d => d.id === term.id) ? $options.formatNumber(item.grades.find(d => d.id === term.id).pivot.grade) : null }}</div>
+                >{{ item.grades.find(d => d.id === gradingPeriod.id) ? $options.formatNumber(item.grades.find(d => d.id === gradingPeriod.id).pivot.grade) : null }}</div>
               </div>
             </template>
             <template v-slot:table-busy>
@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { AcademicRecordApi, StudentApi, TermApi } from '../../../mixins/api'
+import { AcademicRecordApi, GradingPeriodApi, StudentApi, StudentGradeApi, } from '../../../mixins/api'
 import headline from './data/grade';
 import { AcademicRecordStatuses } from "../../../helpers/enum";
 import { formatNumber } from "../../../helpers/forms"
@@ -113,11 +113,11 @@ export default {
   formatNumber,
   AcademicRecordStatuses,
   headline,
-  mixins: [ StudentApi, AcademicRecordApi, TermApi ],
+  mixins: [ StudentApi, AcademicRecordApi, GradingPeriodApi, StudentGradeApi ],
   data() {
     return {
       showGradesModal: false,
-      terms: [],
+      gradingPeriods: [],
       tables: {
         academicRecords: {
           isBusy: false,
@@ -165,7 +165,7 @@ export default {
               thStyle: { width: '30%' },
             },
             {
-              key: 'terms',
+              key: 'gradingPeriods',
               label: '',
               tdClass: 'align-middle',
               thStyle: { width: '70%' },
@@ -203,16 +203,17 @@ export default {
       this.showGradesModal = true
       const { grades } = this.tables
       const academicRecordId = row.item.id
-      const { schoolCategoryId, schoolYearId, semesterId } = row.item
+      const { schoolCategoryId, schoolYearId, semesterId, courseId, sectionId } = row.item
       const params = { schoolCategoryId, schoolYearId, semesterId, paginate: false  }
       grades.isBusy = true
 
-      this.getTermList(params).then(({ data }) => {
-        this.terms = data
+      this.getGradingPeriodList(params).then(({ data }) => {
+        this.gradingPeriods = data
       });
-
-      this.getAcademicRecord(academicRecordId).then(({ data })=> {
-        grades.items = data.subjects
+      const studentId = this.$store.state.user.id;
+      const gradeParams = { studentId, courseId, sectionId, schoolYearId, semesterId, paginate: false }
+      this.getStudentGradeList(gradeParams).then(({ data })=> {
+        grades.items = data
         grades.isBusy = false
       })
     },
@@ -301,7 +302,7 @@ export default {
     width: 100%;
     .cell-term-input {
       margin: 0 5px;
-      min-width: 23%;
+      width: 100%;
       //border-left: solid 1px  lightgray;
     }
   }
@@ -311,7 +312,8 @@ export default {
 
     .cell-term-input {
       margin: 0 5px;
-      min-width: 23%;
+      width: 100%;
+      // min-width: 23%;
       //border-left: solid 1px  lightgray;
     }
   }
