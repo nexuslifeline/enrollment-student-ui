@@ -802,8 +802,8 @@
                   <label class="required">Level</label>
                   <b-form-select
                     @input="loadCourses()"
-                    v-model='forms.evaluation.fields.levelId'
-                    :state="forms.evaluation.states.evaluationLevelId">
+                    v-model='forms.academicRecord.fields.levelId'
+                    :state="forms.academicRecord.states.academicRecordLevelId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
@@ -812,19 +812,19 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationLevelId }}
+                    {{ forms.academicRecord.errors.academicRecordLevelId }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
-                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
-                        forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
+                <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id ||
+                    forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                      forms.academicRecord.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                        forms.academicRecord.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                   <label class="required">Course</label>
                   <b-form-select
-                    v-model='forms.evaluation.fields.courseId'
-                    :state="forms.evaluation.states.evaluationCourseId"
+                    v-model='forms.academicRecord.fields.courseId'
+                    :state="forms.academicRecord.states.academicRecordCourseId"
                     >
                     <!-- :state="forms.academicRecord.states.transcriptCourseId" -->
                     <template v-slot:first>
@@ -835,17 +835,17 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationCourseId }}
+                    {{ forms.academicRecord.errors.academicRecordCourseId }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
+                <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id ||
+                    forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
                   <label>Semester</label>
                   <b-form-select
-                    v-model='forms.evaluation.fields.semesterId'
-                    :state="forms.evaluation.states.evaluationSemesterId">
+                    v-model='forms.academicRecord.fields.semesterId'
+                    :state="forms.academicRecord.states.academicRecordSemesterId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                     </template>
@@ -854,7 +854,7 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{forms.evaluation.errors.evaluationSemesterId}}
+                    {{forms.academicRecord.errors.academicRecordSemesterId}}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -958,10 +958,10 @@
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
-                            forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
-                              forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
+                        <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                          forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                            forms.academicRecord.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                              forms.academicRecord.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                           <label>Course</label>
                           <br>
                           <label class="font-weight-bold">{{ getSelectedEvaluationCourse }} </label>
@@ -995,8 +995,8 @@
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                          forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ">
+                        <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                          forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ">
                           <label>Semester</label>
                           <br>
                           <label class="font-weight-bold">{{ getSelectedEvaluationSemester }} </label>
@@ -2234,22 +2234,24 @@ const academicRecordFields = {
   academicRecordStatusId: null,
   sectionId: null,
   studentCategoryId: null,
-  curriculumId: null,
+  // curriculumId: null, //remove on evaluation enhancement
 }
 
 const academicRecordErrorFields = {
   academicRecordLevelId: null,
+  academicRecordCourseId: null,
+  academicRecordSemesterId: null,
   academicRecordSectionId: null,
   subjects: null
 }
 
 const evaluationFields = {
   id : null,
-  curriculumId: null,
-  schoolYearId: null,
-  studentCategoryId: null,
-  levelId: null,
-  courseId: null,
+  // curriculumId: null, //remove on evaluation enhancement
+  // schoolYearId: null, //remove on evaluation enhancement
+  // studentCategoryId: null, //remove on evaluation enhancement
+  // levelId: null, //remove on evaluation enhancement
+  // courseId: null, //remove on evaluation enhancement
   evaluationStatusId: null,
   lastSchoolYearFrom: null,
   lastSchoolYearTo: null,
@@ -2260,10 +2262,10 @@ const evaluationFields = {
   approvalNotes: null,
   disapprovalNotes: null,
   schoolCategoryId: null,
-  studentCurriculumId: null,
-  semesterId: null,
+  // studentCurriculumId: null,
+  // semesterId: null, //remove on evaluation enhancement
   submittedDate: null,
-  transcriptRecordId: null,
+  // transcriptRecordId: null, //remove on evaluation enhancement
 }
 
 const activeTranscriptRecordFields = {
@@ -2278,14 +2280,14 @@ const activeTranscriptRecordFields = {
 }
 
 const evaluationErrorFields = {
-  evaluationLevelId: null,
-  evaluationCourseId: null,
+  // evaluationLevelId: null, //remove on evaluation enhancement
+  // evaluationCourseId: null, //remove on evaluation enhancement
   evaluationLastSchoolYearFrom: null,
   evaluationLastSchoolYearTo: null,
   evaluationLastSchoolAttended: null,
   // evaluationEnrolledYear: null,
   evaluationLastSchoolLevelId: null,
-  evaluationSemesterId: null,
+  // evaluationSemesterId: null, //remove on evaluation enhancement
 }
 
 const billingFields = {
@@ -2911,13 +2913,13 @@ export default {
     let params = { paginate: false }
     const studentId = this.$store.state.user.id;
     this.getStudent(studentId).then(({ data: student }) => {
+      console.log(student)
       Object.keys(this.forms).forEach((key) => {
         const source = student[key] || student;
         if (source) {
           copyValue(source, this.forms[key].fields);
         }
       })
-
 
       if (!student.civilStatusId) {
         this.forms.student.fields.civilStatusId = CivilStatuses.SINGLE.id
@@ -2953,6 +2955,7 @@ export default {
       }
 
       const { academicRecord } = this.forms
+
       if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
         //show countdown
         if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
@@ -2963,16 +2966,22 @@ export default {
         const { subjects } = this.tables
         const { subject } = this.paginations
 
-        academicRecord.fields.levelId = student.evaluation.levelId
-        academicRecord.fields.courseId = student.evaluation.courseId
-        academicRecord.fields.semesterId = student.evaluation.semesterId
-        academicRecord.fields.schoolCategoryId = student.evaluation.schoolCategoryId
-        academicRecord.fields.curriculumId = student.evaluation.studentCurriculumId
+
+        // academicRecord.fields.levelId = student.academicRecord.levelId
+        // academicRecord.fields.courseId = student.academicRecord.courseId
+        // academicRecord.fields.semesterId = student.academicRecord.semesterId
+        // academicRecord.fields.schoolCategoryId = student.academicRecord.schoolCategoryId
+        // academicRecord.fields.levelId = student.evaluation.levelId
+        // academicRecord.fields.courseId = student.evaluation.courseId
+        // academicRecord.fields.semesterId = student.evaluation.semesterId
+        // academicRecord.fields.schoolCategoryId = student.evaluation.schoolCategoryId
+        // academicRecord.fields.curriculumId = student.evaluation.studentCurriculumId
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
         const { id: transcriptRecordId,  curriculumId } = student.activeTranscriptRecord
         const params = { paginate: false , curriculumId }
+
         this.getUnscheduledSubjects(transcriptRecordId, params).then(({ data }) => {
           const result = data.filter(subject => subject.isAllowed == true)
 
@@ -3054,8 +3063,7 @@ export default {
         education,
         academicRecord,
         evaluation,
-        activeApplication: { fields: activeApplication },
-        activeTranscriptRecord: { fields: activeTranscriptRecord }
+        activeApplication: { fields: activeApplication }
       } = this.forms;
 
       const { items } = this.tables.enlistedSubjects
@@ -3073,7 +3081,7 @@ export default {
         : evaluation.fields.evaluationStatusId;
 
       if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
-        evaluation.fields.schoolYearId = this.activeSchoolYear?.id
+        // evaluation.fields.schoolYearId = this.activeSchoolYear?.id //remove on evaluation enhancement
         evaluation.fields.submittedDate =  getCurrentDateTime()
       }
 
@@ -3086,10 +3094,12 @@ export default {
         { address: address.fields },
         { family: family.fields },
         { education: education.fields },
-        { evaluation: { ...evaluation.fields, evaluationStatusId } },
+        { evaluation: { ...evaluation.fields, evaluationStatusId }, academicRecord: { ...academicRecord.fields } }, //added academic record payload on request evaluation stage
         null,
         { academicRecord: academicRecord.fields, subjects }
       ];
+
+      // console.log(payloads)
 
       // added null to skip waiting for evaluation step
       const formsToValidate = [
@@ -3117,36 +3127,36 @@ export default {
           : activeApplication.applicationStatusId
 
 
-      const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
+      // const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
       //set transcript field values based on evaluation fields
-      if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
-        activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
-        activeTranscriptRecord.courseId = evaluation.fields.courseId
-        activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
-        activeTranscriptRecord.studentCurriculumId = evaluation.fields.studentCurriculumId
-        activeTranscriptRecord.curriculumId = evaluation.fields.curriculumId
-      }
+      //disabled for adjustment in transcript may/15/2021
+      // if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
+      //   activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
+      //   activeTranscriptRecord.courseId = evaluation.fields.courseId
+      //   activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
+      //   activeTranscriptRecord.studentCurriculumId = evaluation.fields.studentCurriculumId
+      //   activeTranscriptRecord.curriculumId = evaluation.fields.curriculumId
+      // }
+      // const activeTranscriptPayload = (activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ?
+      //   { ...activeTranscriptRecord } :  null)
 
-
-      const activeTranscriptPayload = (activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ?
-        { ...activeTranscriptRecord } :  null)
-
-      const data = {
+      let data = {
         ...payloads[currentStepIndex],
         activeApplication: {
           ...activeApplication,
           id: activeApplication.id,
           applicationStepId,
           applicationStatusId
-        },
-        activeTranscriptRecord: activeTranscriptPayload
+        }
       }
+
 
       formsToValidate.forEach(form => {
         if (form)
         reset(form)
       })
+
 
       this.updateStudent(data, studentId).then(({ data }) => {
 
@@ -3177,6 +3187,7 @@ export default {
         const { errors } = error.response.data;
         if (formsToValidate[currentStepIndex])
         validate(formsToValidate[currentStepIndex], errors);
+        validate(academicRecord, errors)
         this.isProcessing = false;
       });
     },
@@ -3222,22 +3233,27 @@ export default {
     loadCourses() {
 
       // const { fields } = this.forms.academicRecord;
-      const { fields } = this.forms.evaluation;
+      const { fields: evaluation } = this.forms.evaluation;
+      const { fields: academicRecord } = this.forms.academicRecord;
+      const { fields: activeApplication } = this.forms.activeApplication;
       const { items } = this.options.levels
 
 
       // console.log(fields.levelId)
-      const level = items.find(i => i.id == fields.levelId)
+      const level = items.find(i => i.id == academicRecord.levelId)
       if (level) {
-        fields.schoolCategoryId = level.schoolCategoryId
+        evaluation.schoolCategoryId = level.schoolCategoryId
+        academicRecord.schoolCategoryId = level.schoolCategoryId
       }
 
-      fields.courseId = null
-      fields.semesterId = null
+      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
+        academicRecord.courseId = null
+        academicRecord.semesterId = null
+      }
       // fields.semesterId = null
 
       const params = { paginate: false }
-      this.getCoursesOfLevelList(fields.levelId, params).then(({ data }) => {
+      this.getCoursesOfLevelList(academicRecord.levelId, params).then(({ data }) => {
         this.options.courses.items = data
         if (data.length === 0) {
           this.loadSections()
@@ -3786,7 +3802,7 @@ export default {
     prePopulateStudentSubjects() {
 
       const { sectionId } = this.forms.academicRecord.fields
-      const { curriculumId } = this.forms.evaluation.fields
+      const { curriculumId } = this.forms.activeTranscriptRecord.fields
       const { enlistedSubjects } = this.tables
       const params = { paginate: false, curriculumId }
       enlistedSubjects.isBusy = true
