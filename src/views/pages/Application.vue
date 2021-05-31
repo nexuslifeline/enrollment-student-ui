@@ -2966,16 +2966,6 @@ export default {
         const { subjects } = this.tables
         const { subject } = this.paginations
 
-
-        // academicRecord.fields.levelId = student.academicRecord.levelId
-        // academicRecord.fields.courseId = student.academicRecord.courseId
-        // academicRecord.fields.semesterId = student.academicRecord.semesterId
-        // academicRecord.fields.schoolCategoryId = student.academicRecord.schoolCategoryId
-        // academicRecord.fields.levelId = student.evaluation.levelId
-        // academicRecord.fields.courseId = student.evaluation.courseId
-        // academicRecord.fields.semesterId = student.evaluation.semesterId
-        // academicRecord.fields.schoolCategoryId = student.evaluation.schoolCategoryId
-        // academicRecord.fields.curriculumId = student.evaluation.studentCurriculumId
         subjects.isBusy = true
         this.loadSections()
         //need to load subjects here
@@ -3053,6 +3043,7 @@ export default {
   },
   methods: {
     onUpdateStudent() {
+
       this.isProcessing = true;
 
       const {
@@ -3158,6 +3149,9 @@ export default {
       })
 
 
+       
+
+
       this.updateStudent(data, studentId).then(({ data }) => {
 
         //load billing when on payment stage after update
@@ -3217,6 +3211,7 @@ export default {
         submittedDate: getCurrentDateTime(),
         billingId
       }
+
 
       if (payment.fields.id != null) {
         this.updatePayment(dataPayment, payment.fields.id).then(({ data }) =>{
