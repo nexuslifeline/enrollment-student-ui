@@ -141,7 +141,7 @@
                   <span class="signup__confirmation-answer-notes">
                     {{ questionaire[isEnrolled ? 0 : 1][0].description }}
                     <br>
-                    <small>{{ questionaire[isEnrolled ? 0 : 1][0].notes }}</small>
+                    <span>{{ questionaire[isEnrolled ? 0 : 1][0].notes }}</span>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -162,7 +162,7 @@
                   <span class="signup__confirmation-answer-notes">
                     {{ questionaire[isEnrolled ? 0 : 1][1].description }}
                     <br>
-                    <small>{{ questionaire[isEnrolled ? 0 : 1][1].notes }}</small>
+                    <span>{{ questionaire[isEnrolled ? 0 : 1][1].notes }}</span>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -183,7 +183,7 @@
                   <span class="signup__confirmation-answer-notes">
                     {{ questionaire[isEnrolled ? 0 : 1][2].description }}
                     <br>
-                    <small>{{ questionaire[isEnrolled ? 0 : 1][2].notes }}</small>
+                    <span>{{ questionaire[isEnrolled ? 0 : 1][2].notes }}</span>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -205,7 +205,7 @@
                   <span class="signup__confirmation-answer-notes">
                     {{ questionaire[isEnrolled ? 0 : 1][3].description }}
                     <br>
-                    <small>{{ questionaire[isEnrolled ? 0 : 1][3].notes }}</small>
+                    <span>{{ questionaire[isEnrolled ? 0 : 1][3].notes }}</span>
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -264,7 +264,7 @@ export default {
           },
           {
             header: '3. I am a newly enrolled transferee student',
-            description: '(Choose this if you are a student who moved in to STC from other institution)',
+            description: '(Choose this if you are a student from other institution and wish to move in STC from other institution)',
             notes: null
           },
           {
@@ -276,7 +276,7 @@ export default {
         [
           {
             header: '1. I am a new student ',
-            description: 'Choose this if this is your first time to enroll in STC)',
+            description: '(Choose this if this is your first time to enroll in STC)',
             notes: 'Note: for transferees, please proceed to No. 3.'
           },
           {
@@ -286,7 +286,7 @@ export default {
           },
           {
             header: '3. I am a  transferee student',
-            description: '(Choose this if you are a student who wish to move in STC from other institution)',
+            description: '(Choose this if you are a student from other institution and wish to move in STC from other institution)',
             notes: null
           },
           {
@@ -454,7 +454,7 @@ export default {
     position: absolute;
     background-color: $white;
     z-index: 2;
-    opacity: .9;
+    opacity: .98;
     display: flex;
     justify-content: center;
     flex-direction: row;

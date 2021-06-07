@@ -28,9 +28,9 @@ export const groupStages = [
       },
       {
         id: 4,
-        subHeader: 'Education',
+        subHeader: 'Educational Background',
         image: '/img/svg/employee-analyzing.svg',
-        description: 'Please enter your previous educational background and proceed to the next step.',
+        description: 'Please enter your educational background and proceed to the next step.',
         slideTitle: 'Share your Educational Background with us!',
         overview: 'Your educational background refers to all of the education you have undergone. By providing this details with us, we can have a good insight of your previous eduation and will greatly help us in doing things.'
       }
@@ -64,7 +64,7 @@ export const groupStages = [
         subHeader: 'Subjects',
         image: '/img/svg/online-tutorial.svg',
         description: 'Details about the level, course, section and the subjects you are requesting to take. Please include all required(*) fields.',
-        overview: 'Prepare the subjects in your preferred section and schedule beforehand.'
+        overview: 'If you are a regular student, you can choose a desired section and submit your application for the approval of the school registrar. While if you are a transferee or irregular student, you can choose a desired section and add or remove certain subjects in the subject list then submit your application for the approval of the school registrar.'
       },
       {
         id: 8,

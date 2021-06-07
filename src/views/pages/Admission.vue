@@ -622,7 +622,7 @@
                   <b-row>
                     <b-col md="5">
                       <b-form-group>
-                        <label>Senior School or Upper Secondary</label>
+                        <label>Senior High School or Upper Secondary</label>
                         <b-form-input
                             v-model="forms.education.fields.seniorSchoolCourse"
                             debounce="500"/>
@@ -660,7 +660,7 @@
                   <b-row>
                     <b-col md="5">
                       <b-form-group>
-                        <label >College Degree(if graduated) or Tertiary</label>
+                        <label >College (if graduated) or Tertiary</label>
                         <b-form-input
                           v-model="forms.education.fields.collegeDegree"
                           debounce="500"/>
@@ -732,7 +732,7 @@
                     <b-form-group>
                       <label class="required">From</label>
                       <b-form-input
-                        v-model="forms.evaluation.fields.lastSchoolYearFrom" 
+                        v-model="forms.evaluation.fields.lastSchoolYearFrom"
                         :state="forms.evaluation.states.evaluationLastSchoolYearFrom"
                         debounce="500" />
                       <b-form-invalid-feedback>
@@ -744,7 +744,7 @@
                     <b-form-group>
                       <label class="required">To</label>
                       <b-form-input
-                        v-model="forms.evaluation.fields.lastSchoolYearTo" 
+                        v-model="forms.evaluation.fields.lastSchoolYearTo"
                         :state="forms.evaluation.states.evaluationLastSchoolYearTo"
                         debounce="500" />
                       <b-form-invalid-feedback>
@@ -756,7 +756,7 @@
                   <b-form-group>
                     <label class="required">Enrolled Year</label>
                     <b-form-input
-                      v-model="forms.evaluation.fields.enrolledYear" 
+                      v-model="forms.evaluation.fields.enrolledYear"
                       :state="forms.evaluation.states.evaluationEnrolledYear"
                       type="number"
                       debounce="500"/>
@@ -790,7 +790,7 @@
                     <label>Notes</label>
                     <b-form-textarea
                       rows="2"
-                      v-model="forms.evaluation.fields.notes" 
+                      v-model="forms.evaluation.fields.notes"
                       debounce="500"/>
                   </b-form-group>
                 </b-col>
@@ -805,7 +805,7 @@
               <b-row>
                 <b-col md="4">
                   <b-form-group>
-                    <label class="required">Level</label>
+                    <!-- <label class="required">Level</label> -->
                     <b-form-select
                       @input="loadCourses()"
                       v-model='forms.evaluation.fields.levelId'
@@ -827,8 +827,8 @@
                       forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
                       forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
                       forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
-                    <label class="required">Course</label>
-                    <b-form-select 
+                    <!-- <label class="required">Course</label> -->
+                    <b-form-select
                       v-model='forms.evaluation.fields.courseId'
                       :state="forms.evaluation.states.evaluationCourseId"
                       >
@@ -848,7 +848,7 @@
                 <b-col md="4">
                   <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id ||
                       forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
-                    <label>Semester</label>
+                    <!-- <label>Semester</label> -->
                     <b-form-select
                       v-model='forms.evaluation.fields.semesterId'
                       :state="forms.evaluation.states.evaluationSemesterId">
@@ -873,9 +873,9 @@
                   <p class="ml-3">
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for the approval of the registrar's office. <br>
-                    In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">HERE</a>. <br>
-                    If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time You log in.
+                    In order for this application to be approved and proceed to the next phase of the enrollment process, please upload your complete enrollment requirements. <br>
+                    <strong>You can get full list of your complete enrollment requirements <a href="#" @click="previewRequirementList()">HERE</a>.</strong> <br>
+                    If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time you log in.
                   </small>
                 </p>
                 </b-col>
@@ -884,8 +884,9 @@
                 <b-col md=12>
                   <div class="file-uploader-container">
                     <FileUploader
-                      @onFileChange="onStudentFileUpload" 
+                      @onFileChange="onStudentFileUpload"
                       @onFileDrop="onStudentFileUpload"
+                      title="UPLOAD REQUIREMENTS"
                     />
                   </div>
                 </b-col>
