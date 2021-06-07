@@ -3739,9 +3739,9 @@ export default {
       const { studentFile } = this.forms
       reset(studentFile)
       this.selectedStudentFileIndex = idx
-
       studentFile.fields.id = this.studentFiles[idx].id
       studentFile.fields.notes = this.studentFiles[idx].notes
+      studentFile.fields.documentTypeId = this.studentFiles[idx].documentType?.id
 
       this.showStudentFileModal = true
     },
@@ -3754,7 +3754,8 @@ export default {
       selectedFile.isBusy = true
 
       this.updateStudentFile(studentFile.fields, studentId, studentFile.fields.id).then(({ data }) => {
-        selectedFile.notes = data.notes;
+        selectedFile.notes = data.notes
+        selectedFile.documentType = data.documentType
         this.isFileUpdating = false
         this.showStudentFileModal = false;
         setTimeout(() => selectedFile.isBusy = false, 1000);
