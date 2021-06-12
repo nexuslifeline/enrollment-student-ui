@@ -509,7 +509,7 @@
                 <b-form-group>
                   <label>Last School Attended</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolAttended" 
+                    v-model="forms.education.fields.lastSchoolAttended"
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -517,7 +517,7 @@
                 <b-form-group>
                   <label>From</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolYearFrom" 
+                    v-model="forms.education.fields.lastSchoolYearFrom"
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -525,7 +525,7 @@
                 <b-form-group>
                   <label>To</label>
                   <b-form-input
-                    v-model="forms.education.fields.lastSchoolYearTo" 
+                    v-model="forms.education.fields.lastSchoolYearTo"
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -555,7 +555,7 @@
                     <b-form-group>
                       <label>Elementary or Primary</label>
                       <b-form-input
-                          v-model="forms.education.fields.elementaryCourse" 
+                          v-model="forms.education.fields.elementaryCourse"
                           debounce="500"/>
                     </b-form-group>
                   </b-col>
@@ -629,7 +629,7 @@
                 <b-row>
                   <b-col md="5">
                     <b-form-group>
-                      <label>Senior School or Upper Secondary</label>
+                      <label>Senior High School or Upper Secondary</label>
                       <b-form-input
                           v-model="forms.education.fields.seniorSchoolCourse"
                           debounce="500"/>
@@ -667,7 +667,7 @@
                 <b-row>
                   <b-col md="5">
                     <b-form-group>
-                      <label >College Degree(if graduated) or Tertiary</label>
+                      <label >College (if graduated) or Tertiary</label>
                       <b-form-input
                           v-model="forms.education.fields.collegeDegree"
                           debounce="500"/>
@@ -799,7 +799,7 @@
             <b-row>
               <b-col md="4">
                 <b-form-group>
-                  <label class="required">Level</label>
+                  <!-- <label class="required">Level</label> -->
                   <b-form-select
                     @input="loadCourses()"
                     v-model='forms.academicRecord.fields.levelId'
@@ -817,11 +817,11 @@
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id ||
-                    forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
-                      forms.academicRecord.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
-                        forms.academicRecord.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
-                  <label class="required">Course</label>
+                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                        forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
+                  <!-- <label class="required">Course</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.courseId'
                     :state="forms.academicRecord.states.academicRecordCourseId"
@@ -840,9 +840,9 @@
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.academicRecord.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id ||
-                    forms.academicRecord.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
-                  <label>Semester</label>
+                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
+                  <!-- <label>Semester</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.semesterId'
                     :state="forms.academicRecord.states.academicRecordSemesterId">
@@ -867,9 +867,9 @@
                 <p class="ml-3">
                   <small>
                     Upon submitting this form, the details you provided in the system will be examined and are subject for the approval of the registrar's office. <br>
-                    In order for this application to be approved and proceed to the next phase of the enrollment process, Please upload your complete enrollment requirements. <br>
-                    You can get full list of your complete enrollment requirements <a href="#" @click.prevent="previewRequirementList()">HERE</a>. <br>
-                    If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time You log in.
+                    In order for this application to be approved and proceed to the next phase of the enrollment process, please upload your complete enrollment requirements. <br>
+                    <strong>You can get full list of your complete enrollment requirements <a href="#" @click.prevent="previewRequirementList()">HERE</a>.</strong> <br>
+                    If your requirements are not yet ready, you can log out for now and your application will be saved. Your enrollment application can be continued the next time you log in.
                   </small>
                 </p>
               </b-col>
@@ -880,6 +880,7 @@
                   <FileUploader
                     @onFileChange="onStudentFileUpload"
                     @onFileDrop="onStudentFileUpload"
+                    title="UPLOAD REQUIREMENTS"
                   />
                 </div>
               </b-col>
@@ -3749,9 +3750,9 @@ export default {
       const { studentFile } = this.forms
       reset(studentFile)
       this.selectedStudentFileIndex = idx
-
       studentFile.fields.id = this.studentFiles[idx].id
       studentFile.fields.notes = this.studentFiles[idx].notes
+      studentFile.fields.documentTypeId = this.studentFiles[idx].documentType?.id
 
       this.showStudentFileModal = true
     },
@@ -3764,7 +3765,8 @@ export default {
       selectedFile.isBusy = true
 
       this.updateStudentFile(studentFile.fields, studentId, studentFile.fields.id).then(({ data }) => {
-        selectedFile.notes = data.notes;
+        selectedFile.notes = data.notes
+        selectedFile.documentType = data.documentType
         this.isFileUpdating = false
         this.showStudentFileModal = false;
         setTimeout(() => selectedFile.isBusy = false, 1000);
