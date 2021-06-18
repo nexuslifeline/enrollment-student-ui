@@ -67,9 +67,9 @@ export const ApplicationSteps = new Enum({
   FAMILY: { id: 3, name: 'Family' },
   EDUCATION: { id: 4, name: 'Education' },
   REQUEST_EVALUATION: { id: 5, name: 'Request Evaluation' },
-  WAITING_EVALUATION: { id: 6, name: 'Waiting Evaluation' },
+  EVALUATION_IN_REVIEW: { id: 6, name: 'Waiting Evaluation' },
   ACADEMIC_YEAR_APPLICATION: { id: 7, name: 'Academic Year - Application' },
-  STATUS: { id: 8, name: 'Status', description: 'Lorem ipsum dolor amet' },
+  ACADEMIC_RECORD_IN_REVIEW: { id: 8, name: 'Status', description: 'Lorem ipsum dolor amet' },
   PAYMENTS: { id: 9, name: 'Payments', description: 'Lorem ipsum dolor amet' },
   WAITING: { id: 10, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
@@ -354,10 +354,24 @@ export const Countries = new Enum({
   ZIMBABWE: { id: 263, name: 'Zimbabwe', description: 'Zimbabwe' }
 });
 
+// export const AcademicRecordStatuses = new Enum({
+//   FINALIZED: { id: 1, name: 'Finalized' },
+//   DRAFT: { id: 2, name: 'Draft' },
+//   ENROLLED: { id: 3, name: 'Enrolled' },
+// });
+
 export const AcademicRecordStatuses = new Enum({
-  FINALIZED: { id: 1, name: 'Finalized' },
-  DRAFT: { id: 2, name: 'Draft' },
-  ENROLLED: { id: 3, name: 'Enrolled' },
+  DRAFT: { id: 1, name: 'Draft' },
+  EVALUATION_PENDING: { id: 2, name: 'Evaluation Pending' },
+  EVALUATION_REJECTED: { id: 3, name: 'Evaluation Rejected' },
+  EVALUATION_APPROVED: { id: 4, name: 'Evaluation Approved' },
+  ENLISTMENT_PENDING: { id: 5, name: 'Enlistment Pending' },
+  ENLISTMENT_REJECTED: { id: 6, name: 'Enlistment Rejected' },
+  ENLISTMENT_APPROVED: { id: 7, name: 'Enlistment Approved' },
+  ASSESSMENT_REJECTED: { id: 8, name: 'Assessment Rejected' },
+  ASSESSMENT_APPROVED: { id: 9, name: 'Assessment Approved' },
+  PAYMENT_SUBMITTED: { id: 10, name: 'Payment Submitted' },
+  ENROLLED: { id: 11, name: 'Enrolled' },
 });
 
 export const ApplicationStatuses = new Enum({

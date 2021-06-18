@@ -26,3 +26,4 @@ export { default as TermApi } from './Term';
 export { default as StudentClearanceApi } from './StudentClearance';
 export { default as GradingPeriodApi } from './GradingPeriod';
 export { default as StudentGradeApi } from './StudentGrade';
+export { default as ApplicationApi } from './Application';

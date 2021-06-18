@@ -5,7 +5,7 @@
         <div class="application__group-stage-container">
           <SlideStageIndicator
             :stages="$options.groupStages"
-            :activeId="forms.activeApplication.fields.applicationStepId"
+            :activeId="currentStepId"
           />
         </div>
       </div>
@@ -13,7 +13,7 @@
         <div class="application__wizard-form">
           <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
           <p class="application__form-description">{{heading && heading.description}}</p>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PROFILE.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
@@ -108,7 +108,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ADDRESS.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ADDRESS.id">
             <b-row>
               <b-col md=12>
                 <h5>Current Address</h5>
@@ -378,7 +378,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.FAMILY.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.FAMILY.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -503,7 +503,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EDUCATION.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
               <b-col md="5">
                 <b-form-group>
@@ -701,16 +701,16 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
-            <b-row v-if="forms.evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+            <b-row v-if="forms.activeEvaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
                   <p>
                     <strong>
                       Sorry, your request for evaluation is rejected with the ffg. reasons : <br>
-                      {{ forms.evaluation.fields.disapprovalNotes }} <br><br>
+                      {{ forms.activeEvaluation.fields.disapprovalNotes }} <br><br>
                     </strong>
-                    <small>Please be inform that you can modify your request and resubmit for evaluation.</small>
+                    <small>Please be inform that you can modify your request and resubmit for activeEvaluation.</small>
                   </p>
                 </b-alert>
               </b-col>
@@ -727,11 +727,11 @@
                 <b-form-group>
                   <label class="required">Last School Attended</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolAttended"
-                    :state="forms.evaluation.states.evaluationLastSchoolAttended"
+                    v-model="forms.activeEvaluation.fields.lastSchoolAttended"
+                    :state="forms.activeEvaluation.states.lastSchoolAttended"
                     debounce="500"/>
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationLastSchoolAttended }}
+                    {{ forms.activeEvaluation.errors.lastSchoolAttended }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -739,11 +739,11 @@
                 <b-form-group>
                   <label class="required">From</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolYearFrom"
-                    :state="forms.evaluation.states.evaluationLastSchoolYearFrom"
+                    v-model="forms.activeEvaluation.fields.lastSchoolYearFrom"
+                    :state="forms.activeEvaluation.states.lastSchoolYearFrom"
                     debounce="500" />
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationLastSchoolYearFrom }}
+                    {{ forms.activeEvaluation.errors.lastSchoolYearFrom }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -751,11 +751,11 @@
                 <b-form-group>
                   <label class="required">To</label>
                   <b-form-input
-                    v-model="forms.evaluation.fields.lastSchoolYearTo"
-                    :state="forms.evaluation.states.evaluationLastSchoolYearTo"
+                    v-model="forms.activeEvaluation.fields.lastSchoolYearTo"
+                    :state="forms.activeEvaluation.states.lastSchoolYearTo"
                     debounce="500" />
                   <b-form-invalid-feedback>
-                    {{ forms.evaluation.errors.evaluationLastSchoolYearTo }}
+                    {{ forms.activeEvaluation.errors.lastSchoolYearTo }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -763,8 +763,8 @@
                   <b-form-group>
                     <label class="required">School Level</label>
                     <b-form-select
-                      v-model='forms.evaluation.fields.lastSchoolLevelId'
-                      :state="forms.evaluation.states.evaluationLastSchoolLevelId">
+                      v-model='forms.activeEvaluation.fields.lastSchoolLevelId'
+                      :state="forms.activeEvaluation.states.lastSchoolLevelId">
                       <template v-slot:first>
                         <b-form-select-option :value='null' disabled>-- School Level --</b-form-select-option>
                       </template>
@@ -773,7 +773,7 @@
                       </b-form-select-option>
                     </b-form-select>
                     <b-form-invalid-feedback>
-                      {{ forms.evaluation.errors.evaluationLastSchoolLevelId }}
+                      {{ forms.activeEvaluation.errors.lastSchoolLevelId }}
                     </b-form-invalid-feedback>
                   </b-form-group>
                 </b-col>
@@ -784,7 +784,7 @@
                   <label>Notes</label>
                   <b-form-textarea
                     rows="2"
-                    v-model="forms.evaluation.fields.notes"
+                    v-model="forms.activeEvaluation.fields.notes"
                     debounce="500"/>
                 </b-form-group>
               </b-col>
@@ -803,7 +803,7 @@
                   <b-form-select
                     @input="loadCourses()"
                     v-model='forms.academicRecord.fields.levelId'
-                    :state="forms.academicRecord.states.academicRecordLevelId">
+                    :state="forms.academicRecord.states.levelId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Level --</b-form-select-option>
                     </template>
@@ -812,19 +812,19 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{ forms.academicRecord.errors.academicRecordLevelId }}
+                    {{ forms.academicRecord.errors.levelId }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
-                      forms.evaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
-                        forms.evaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
+                <b-form-group v-if="forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
+                      forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
+                        forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
                   <!-- <label class="required">Course</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.courseId'
-                    :state="forms.academicRecord.states.academicRecordCourseId"
+                    :state="forms.academicRecord.states.courseId"
                     >
                     <!-- :state="forms.academicRecord.states.transcriptCourseId" -->
                     <template v-slot:first>
@@ -835,17 +835,17 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{ forms.academicRecord.errors.academicRecordCourseId }}
+                    {{ forms.academicRecord.errors.courseId }}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md="4">
-                <b-form-group v-if="forms.evaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
-                    forms.evaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
+                <b-form-group v-if="forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
+                    forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
                   <!-- <label>Semester</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.semesterId'
-                    :state="forms.academicRecord.states.academicRecordSemesterId">
+                    :state="forms.academicRecord.states.semesterId">
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Semester --</b-form-select-option>
                     </template>
@@ -854,7 +854,7 @@
                     </b-form-select-option>
                   </b-form-select>
                   <b-form-invalid-feedback>
-                    {{forms.academicRecord.errors.academicRecordSemesterId}}
+                    {{forms.academicRecord.errors.semesterId}}
                   </b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -904,7 +904,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
             <div>
               <b-alert variant="success" show>
                 <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -935,14 +935,14 @@
                 </b-alert>
             </div>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
                   <p style="font-weight:bold">
                     Sorry, your application is rejected with the ffg. reasons : <br>
                     {{ this.forms.activeApplication.fields.disapprovalNotes }} <br><br>
-                    <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
+                    <small>Please be inform that you can modify your application and resubmit for activeEvaluation.</small>
                   </p>
                 </b-alert>
               </b-col>
@@ -976,7 +976,7 @@
                           <b-form-select
                             :disabled="sectionIsLoading"
                             v-model='forms.academicRecord.fields.sectionId'
-                            :state="forms.academicRecord.states.academicRecordSectionId"
+                            :state="forms.academicRecord.states.sectionId"
                             @change="prePopulateStudentSubjects()">
                             <template v-slot:first>
                               <b-form-select-option :value='null' disabled>
@@ -991,7 +991,7 @@
                             </b-form-select-option>
                           </b-form-select>
                           <b-form-invalid-feedback>
-                            {{forms.academicRecord.errors.academicRecordSectionId}}
+                            {{forms.academicRecord.errors.sectionId}}
                           </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
@@ -1094,7 +1094,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id">
             <b-row>
               <b-col md="12">
                 <b-alert variant="success" show>
@@ -1143,14 +1143,14 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.PAYMENTS.id">
             <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
                   <p>
                     Sorry, your payment is rejected with the ffg. reasons : <br>
                     {{ forms.payment.fields.disapprovalNotes }} <br><br>
-                    <small>Please be inform that you can modify your payment and resubmit for evaluation.</small>
+                    <small>Please be inform that you can modify your payment and resubmit for activeEvaluation.</small>
                   </p>
                 </b-alert>
               </b-col>
@@ -1453,7 +1453,7 @@
               </b-row>
             </div>
           </div>
-          <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
+          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.WAITING.id">
             <b-row>
               <b-col md="12">
                 <div v-if="forms.academicRecord.fields.academicRecordStatusId === AcademicRecordStatuses.ENROLLED.id">
@@ -1500,20 +1500,64 @@
               class="application__back-action">
               Back
             </b-button>
-            <b-button
-              @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ?
-                onUpdatePayment() : onUpdateStudent()"
-              variant="primary"
-              class="application__main-action"
-              :disabled="isProcessing"
-              v-if="buttonNextShowHide(forms.activeApplication.fields.applicationStepId)">
-              <v-icon
-                v-if="isProcessing"
-                name="sync"
-                class="mr-2"
-                spin />
-                {{ getNextButtonCaption }}
-            </b-button>
+            <template v-if="isNextVisible(currentStepId)">
+              <template v-if="currentStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
+                <b-button
+                  @click="onSubmitApplication"
+                  variant="primary"
+                  class="application__main-action"
+                  :disabled="isProcessing">
+                  <v-icon
+                    v-if="isProcessing"
+                    name="sync"
+                    class="mr-2"
+                    spin />
+                    Submit Application
+                </b-button>
+              </template>
+              <template v-else-if="currentStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+                <b-button
+                  @click="onSubmitEvaluationRequest"
+                  variant="primary"
+                  class="application__main-action"
+                  :disabled="isProcessing">
+                  <v-icon
+                    v-if="isProcessing"
+                    name="sync"
+                    class="mr-2"
+                    spin />
+                    Submit Request
+                </b-button>
+              </template>
+              <template v-else-if="currentStepId === ApplicationSteps.PAYMENTS.id">
+                <b-button
+                  @click="onUpdatePayment"
+                  variant="primary"
+                  class="application__main-action"
+                  :disabled="isProcessing">
+                  <v-icon
+                    v-if="isProcessing"
+                    name="sync"
+                    class="mr-2"
+                    spin />
+                    Submit Payment
+                </b-button>
+              </template>
+              <template v-else>
+                <b-button
+                  @click="onUpdateStudent"
+                  variant="primary"
+                  class="application__main-action"
+                  :disabled="isProcessing">
+                  <v-icon
+                    v-if="isProcessing"
+                    name="sync"
+                    class="mr-2"
+                    spin />
+                    Next
+                </b-button>
+              </template>
+            </template>
           </div>
         </div>
       </div>
@@ -2071,6 +2115,7 @@ import {
   ReportApi,
   TranscriptRecordApi,
   DocumentTypeApi,
+  ApplicationApi
 } from '../../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import SlideStageIndicator from '../components/SlideStageIndicator';
@@ -2117,7 +2162,8 @@ const studentFields = {
   birthDate: null,
   civilStatusId: null,
   name: null,
-  email: null
+  email: null,
+  onboardingStepId: null
 }
 
 const addressFields = {
@@ -2239,10 +2285,10 @@ const academicRecordFields = {
 }
 
 const academicRecordErrorFields = {
-  academicRecordLevelId: null,
-  academicRecordCourseId: null,
-  academicRecordSemesterId: null,
-  academicRecordSectionId: null,
+  levelId: null,
+  courseId: null,
+  semesterId: null,
+  sectionId: null,
   subjects: null
 }
 
@@ -2283,11 +2329,11 @@ const activeTranscriptRecordFields = {
 const evaluationErrorFields = {
   // evaluationLevelId: null, //remove on evaluation enhancement
   // evaluationCourseId: null, //remove on evaluation enhancement
-  evaluationLastSchoolYearFrom: null,
-  evaluationLastSchoolYearTo: null,
-  evaluationLastSchoolAttended: null,
+  lastSchoolYearFrom: null,
+  lastSchoolYearTo: null,
+  lastSchoolAttended: null,
   // evaluationEnrolledYear: null,
-  evaluationLastSchoolLevelId: null,
+  lastSchoolLevelId: null,
   // evaluationSemesterId: null, //remove on evaluation enhancement
 }
 
@@ -2359,7 +2405,8 @@ export default {
     PeraPadalaAccountApi,
     ReportApi,
     TranscriptRecordApi,
-    DocumentTypeApi
+    DocumentTypeApi,
+    ApplicationApi
   ],
   components: {
     ApprovalIndicator,
@@ -2458,7 +2505,7 @@ export default {
           states: { ...academicRecordErrorFields },
           errors: { ...academicRecordErrorFields }
         },
-        evaluation: {
+        activeEvaluation: {
           fields: { ...evaluationFields },
           states: { ...evaluationErrorFields },
           errors: { ...evaluationErrorFields }
@@ -2947,7 +2994,8 @@ export default {
         ? 2
         : 1;
 
-      this.selectedEvaluationApprovalStage = student.evaluation.evaluationStatusId == 3
+      this.selectedEvaluationApprovalStage =
+        student?.activeEvaluation?.academicRecord?.academicRecordStatusId == AcademicRecordStatuses.EVALUATION_APPROVED.id
         ? 2
         : 1;
 
@@ -2957,9 +3005,10 @@ export default {
 
       const { academicRecord } = this.forms
 
-      if (student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
+      // Note! move on a separate method
+      if (student?.activeEvaluation?.academicRecord?.academicRecordStatus === AcademicRecordStatuses.EVALUATION_APPROVED.id) {
         //show countdown
-        if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
+        if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id){
           this.evaluationDismissCountDown = 5
         }
 
@@ -2986,21 +3035,22 @@ export default {
           subjects.isBusy = false
           this.recordDetails(subject)
         })
-      } else if (student.evaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
-        //if rejected move 1 step back
-        const { activeApplication } = this.forms
-
-        const data = {
-          activeApplication: {
-            ...activeApplication.fields,
-            applicationStepId : ApplicationSteps.REQUEST_EVALUATION.id
-          }
-        }
-
-        this.updateStudent(data, studentId).then(({ data }) => {
-          this.forms.activeApplication.fields.applicationStepId = data.activeApplication.applicationStepId
-        })
       }
+      // else if (student.activeEvaluation.evaluationStatusId === EvaluationStatuses.REJECTED.id) {
+      //   //if rejected move 1 step back
+      //   const { activeApplication } = this.forms
+
+      //   const data = {
+      //     activeApplication: {
+      //       ...activeApplication.fields,
+      //       applicationStepId : ApplicationSteps.REQUEST_EVALUATION.id
+      //     }
+      //   }
+
+      //   this.updateStudent(data, studentId).then(({ data }) => {
+      //     this.forms.activeApplication.fields.applicationStepId = data.activeApplication.applicationStepId
+      //   })
+      // }
 
       //load student files
       this.getStudentFiles(studentId, params).then(({ data }) => {
@@ -3023,9 +3073,9 @@ export default {
       const res = response.data
       this.options.levels.items = res
       this.options.levels.scheduledItems = res
-      const level = this.options.levels.items.find(i => i.id == this.forms.evaluation.fields.levelId)
+      const level = this.options.levels.items.find(i => i.id == this.forms.activeEvaluation.fields.levelId)
       if (level) {
-        this.forms.evaluation.fields.schoolCategoryId = level.schoolCategoryId
+        this.forms.activeEvaluation.fields.schoolCategoryId = level.schoolCategoryId
       }
     });
 
@@ -3043,6 +3093,68 @@ export default {
 
   },
   methods: {
+    moveToStep(onboardingStepId) {
+      this.$set(this.forms.student.fields, 'onboardingStepId', onboardingStepId);
+    },
+    onSubmitApplication() {
+      this.isProcessing = true;
+
+       const {
+        activeApplication: { fields: activeApplication },
+        academicRecord
+      } = this.forms;
+
+      const { items } = this.tables.enlistedSubjects;
+      const subjects = items?.map(v => ({ subjectId: v.id, sectionId: v.sectionId }));
+
+      const payload = {
+        sectionId: academicRecord?.fields?.sectionId,
+        subjects
+      }
+
+      postApplicationSubmit(activeApplication.id, payload).then(() => {
+        this.moveToStep(ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id);
+        this.isProcessing = false;
+      }).catch((error) => {
+        const { errors } = error.response.data;
+        validate(this.forms.academicRecord, errors);
+        this.isProcessing = false;
+      });
+    },
+    onSubmitEvaluationRequest() {
+      this.isProcessing = true;
+
+      const {
+        activeEvaluation: { fields: activeEvaluation },
+        activeApplication: { fields: activeApplication },
+        academicRecord: { fields: academicRecord }
+      } = this.forms;
+
+      reset(this.forms.academicRecord);
+
+      const payload = {
+        id: activeEvaluation?.id,
+        notes: activeEvaluation?.notes,
+        lastSchoolAttended: activeEvaluation?.lastSchoolAttended,
+        lastSchoolLevelId: activeEvaluation?.lastSchoolLevelId,
+        lastSchoolYearFrom: activeEvaluation?.lastSchoolYearFrom,
+        lastSchoolYearTo: activeEvaluation?.lastSchoolYearTo,
+        levelId: academicRecord?.levelId,
+        courseId: academicRecord?.courseId,
+        semesterId: academicRecord?.semesterId
+      }
+
+      this.postApplicationEvaluationRequest(activeApplication.id, payload).then(({ data }) => {
+        this.moveToStep(ApplicationSteps.EVALUATION_IN_REVIEW.id);
+      }).catch((error) => {
+        const { errors } = error.response.data;
+        if (errors?.levelId || errors?.courseId || errors?.semesterId) {
+          validate(this.forms.academicRecord, errors);
+        }
+        validate(this.forms.activeEvaluation, errors);
+        this.isProcessing = false;
+      });
+    },
     onUpdateStudent() {
 
       this.isProcessing = true;
@@ -3053,96 +3165,26 @@ export default {
         address,
         family,
         education,
-        academicRecord,
-        evaluation,
-        activeApplication: { fields: activeApplication }
       } = this.forms;
 
-      const { items } = this.tables.enlistedSubjects
-      let subjects = []
-
-      items.forEach(subject => {
-				subjects.push({ subjectId: subject.id, sectionId: subject.sectionId})
-			})
-
-      const currentStepIndex = activeApplication.applicationStepId - 1;
-
-      const evaluationStatusId = evaluation.fields.evaluationStatusId === EvaluationStatuses.PENDING.id ||
-        evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id
-        ? EvaluationStatuses.SUBMITTED.id
-        : evaluation.fields.evaluationStatusId;
-
-      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
-        // evaluation.fields.schoolYearId = this.activeSchoolYear?.id //remove on evaluation enhancement
-        evaluation.fields.submittedDate =  getCurrentDateTime()
-      }
-
-      if (activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
-        activeApplication.appliedDate = getCurrentDateTime()
-      }
+      const currentStepIndex = student.fields.onboardingStepId - 1; // index is zero based
 
       const payloads = [
          student.fields,
         { address: address.fields },
         { family: family.fields },
-        { education: education.fields },
-        { evaluation: { ...evaluation.fields, evaluationStatusId }, academicRecord: { ...academicRecord.fields } }, //added academic record payload on request evaluation stage
-        null,
-        { academicRecord: academicRecord.fields, subjects }
+        { education: education.fields }
       ];
 
-      // console.log(payloads)
-
-      // added null to skip waiting for evaluation step
       const formsToValidate = [
         student,
         address,
         family,
-        education,
-        evaluation,
-        null,
-        academicRecord,
+        education
       ]
 
-      const applicationStepId = ApplicationSteps.STATUS.id === activeApplication.applicationStepId &&
-        activeApplication.applicationStatusId !==1
-          ? ApplicationSteps.STATUS.id
-          : activeApplication.applicationStepId + 1;
-
-      const applicationStatusId =
-        ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
-          ? ApplicationStatuses.SUBMITTED.id
-          : ApplicationSteps.STATUS.id === activeApplication.applicationStepId
-          ? ApplicationStatuses.APPROVED_ASSESMENT.id
-          : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
-          ? ApplicationStatuses.COMPLETED.id
-          : activeApplication.applicationStatusId
-
-
-      // const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
-
-      //set transcript field values based on evaluation fields
-      //disabled for adjustment in transcript may/15/2021
-      // if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
-      //   activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
-      //   activeTranscriptRecord.courseId = evaluation.fields.courseId
-      //   activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
-      //   activeTranscriptRecord.studentCurriculumId = evaluation.fields.studentCurriculumId
-      //   activeTranscriptRecord.curriculumId = evaluation.fields.curriculumId
-      // }
-      // const activeTranscriptPayload = (activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ?
-      //   { ...activeTranscriptRecord } :  null)
-
-      let data = {
-        ...payloads[currentStepIndex],
-        activeApplication: {
-          ...activeApplication,
-          id: activeApplication.id,
-          applicationStepId,
-          applicationStatusId
-        }
-      }
-
+      const nextStepId = this.currentStepId + 1;
+      const data = { ...payloads[currentStepIndex], onboardingStepId: nextStepId };
 
       formsToValidate.forEach(form => {
         if (form)
@@ -3150,30 +3192,20 @@ export default {
       })
 
 
-       
-
-
       this.updateStudent(data, studentId).then(({ data }) => {
+        this.moveToStep(nextStepId);
 
-        //load billing when on payment stage after update
-        if (data.activeApplication.applicationStepId === ApplicationSteps.PAYMENTS.id) {
+        // load billing when on payment stage after update
+        if (data.onboardingStepId === ApplicationSteps.PAYMENTS.id) {
           this.loadBilling()
         }
 
-        copyValue(data.activeApplication, activeApplication);
-        this.$set(this.forms.activeApplication, 'fields',  { ...activeApplication })
-
-        //pre populate enlistedsubjects of student
-        // if (data.activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
-        //   this.prePopulateStudentSubjects()
-        // }
-
-        //make education last school attended and year
+        // make education last school attended and year
         //default to request evaluation with the same fields
         if (data.activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id) {
-          evaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
-          evaluation.fields.lastSchoolYearFrom =  data.education.lastSchoolYearFrom
-          evaluation.fields.lastSchoolYearTo=  data.education.lastSchoolYearTo
+          activeEvaluation.fields.lastSchoolAttended =  data.education.lastSchoolAttended
+          activeEvaluation.fields.lastSchoolYearFrom =  data.education.lastSchoolYearFrom
+          activeEvaluation.fields.lastSchoolYearTo=  data.education.lastSchoolYearTo
         }
 
         this.isProcessing = false;
@@ -3229,16 +3261,15 @@ export default {
     loadCourses() {
 
       // const { fields } = this.forms.academicRecord;
-      const { fields: evaluation } = this.forms.evaluation;
+      const { fields: activeEvaluation } = this.forms.activeEvaluation;
       const { fields: academicRecord } = this.forms.academicRecord;
       const { fields: activeApplication } = this.forms.activeApplication;
       const { items } = this.options.levels
 
-
       // console.log(fields.levelId)
       const level = items.find(i => i.id == academicRecord.levelId)
       if (level) {
-        evaluation.schoolCategoryId = level.schoolCategoryId
+        activeEvaluation.schoolCategoryId = level.schoolCategoryId
         academicRecord.schoolCategoryId = level.schoolCategoryId
       }
 
@@ -3285,7 +3316,7 @@ export default {
       });
 
       // if (level) {
-      //   courseId = this.forms.evaluation.courseId
+      //   courseId = this.forms.activeEvaluation.courseId
       // }
     },
     loadSubjectsOfLevel() {
@@ -3364,12 +3395,12 @@ export default {
     },
     buttonBackShowHide(applicationStepId) {
       //arrHidden = steps id where the button back should be hidden
-      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
+      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
       return !arrHidden.includes(applicationStepId)
     },
-    buttonNextShowHide(applicationStepId) {
+    isNextVisible(applicationStepId) {
       //arrHidden = steps id where the button next should be hidden
-      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
+      let arrHidden = [ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
       if (applicationStepId === ApplicationSteps.PAYMENTS.id && !this.isPaying) {
         arrHidden.push(ApplicationSteps.PAYMENTS.id)
       }
@@ -3833,7 +3864,7 @@ export default {
           applicationStatusId
         },
         evaluation: {
-          id: evaluation.fields.id,
+          id: activeEvaluation.fields.id,
           evaluationStatusId : EvaluationStatuses.COMPLETED.id
         }
       }
@@ -3925,7 +3956,7 @@ export default {
       const { scheduledSubjects } = this.tables
       const { scheduledSubject } = this.paginations
       const { sectionId } = this.filters.scheduledSubject
-      const { curriculumId } = this.forms.evaluation.fields
+      const { curriculumId } = this.forms.activeEvaluation.fields
       const params = { paginate: false, curriculumId }
       scheduledSubjects.isBusy = true
 
@@ -4115,6 +4146,9 @@ export default {
         return this.Semesters.getEnum(semesterId).name
       }
       return ''
+    },
+    currentStepId() {
+      return this.forms.student.fields.onboardingStepId;
     },
     getNextButtonCaption() {
       if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {

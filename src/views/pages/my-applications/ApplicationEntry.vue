@@ -215,7 +215,7 @@
                 </b-col>
               </b-row> -->
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
               <div>
                 <b-alert variant="success" show>
                   <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -388,7 +388,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.STATUS.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id">
               <b-row>
                 <b-col md="12">
                   <b-alert variant="success" show>
@@ -1930,7 +1930,7 @@ export default {
         const { academicRecord } = this.forms
         if (student.evaluation && student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
           //show countdown
-          if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING_EVALUATION.id){
+          if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id){
             this.evaluationDismissCountDown = 5
           }
 
@@ -2003,12 +2003,12 @@ export default {
   methods: {
     buttonBackShowHide(applicationStepId) {
       //arrHidden = steps id where the button back should be hidden
-      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.STATUS.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
+      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
       return !arrHidden.includes(applicationStepId)
     },
     buttonNextShowHide(applicationStepId) {
       //arrHidden = steps id where the button next should be hidden
-      let arrHidden = [ApplicationSteps.STATUS.id, ApplicationSteps.WAITING.id, ApplicationSteps.WAITING_EVALUATION.id]
+      let arrHidden = [ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
       return !arrHidden.includes(applicationStepId)
     },
     loadCourses() {
@@ -2106,14 +2106,14 @@ export default {
         academicRecord,
       ]
 
-       const applicationStepId = ApplicationSteps.STATUS.id === activeApplication.applicationStepId &&
+       const applicationStepId = ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId &&
         activeApplication.applicationStatusId !==1
-          ? ApplicationSteps.STATUS.id
+          ? ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id
           : activeApplication.applicationStepId + 1;
 
       const applicationStatusId = ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
         ? ApplicationStatuses.SUBMITTED.id
-        : ApplicationSteps.STATUS.id === activeApplication.applicationStepId
+        : ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId
         ? ApplicationStatuses.APPROVED_ASSESMENT.id
         : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
         ? ApplicationStatuses.COMPLETED.id
