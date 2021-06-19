@@ -189,16 +189,25 @@
           Next
       </b-button>
     </div>
+    <FileViewer
+      :show="isShownRequirements"
+      :file="file"
+      :owner="file.owner"
+      :isBusy="file.isLoading"
+      @close="isShownRequirements = false"
+    />
   </div>
 </template>
 <script>
   import  StudentFileList from '../StudentFiles/List';
   import { copyValue } from '../../../helpers/extractor';
   import { validate, reset } from '../../../helpers/forms';
+  import  FileViewer from '../FileViewer';
   import {
     StudentApi,
     LevelApi,
-    ApplicationApi
+    ApplicationApi,
+    ReportApi
   } from '../../../mixins/api';
   import {
     ApplicationSteps,
@@ -229,17 +238,26 @@
   }
 
   export default {
-    mixins: [StudentApi, LevelApi, ApplicationApi],
+    mixins: [StudentApi, LevelApi, ApplicationApi, ReportApi],
     props: {
       data: {
         type: [Object]
       }
     },
     components: {
-      StudentFileList
+      StudentFileList,
+      FileViewer
     },
     data() {
       return {
+        isShownRequirements: false,
+        file: {
+          type: null,
+          src: null,
+          name: null,
+          notes: null,
+          isLoading: false
+        },
         fileViewer: {
           student: {
             isActiveNavEnabled: false,
@@ -345,6 +363,25 @@
         this.getCoursesOfLevelList(levelId, { paginate: false }).then(({ data }) => {
           this.options.courses.items = data
         });
+      },
+      previewRequirementList(){
+        this.file.type = null
+        this.file.src = null
+        this.file.notes = null
+        this.file.isLoading = true
+        this.file.owner = null;
+        this.file.name = 'Requirements List'
+
+        this.isShownRequirements = true
+        this.getRequirementListPreview()
+          .then(response => {
+            this.file.type = response.headers.contentType
+            const file = new Blob([response.data], { type: "application/pdf" } )
+            const reader = new FileReader();
+            reader.onload = e => this.file.src = e.target.result
+            reader.readAsDataURL(file);
+            this.file.isLoading = false
+        })
       },
     }
   };
