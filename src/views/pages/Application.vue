@@ -10,10 +10,42 @@
         </div>
       </div>
       <div class="application__main-pane">
-        <div class="application__wizard-form">
-          <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
-          <p class="application__form-description">{{heading && heading.description}}</p>
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.PROFILE.id">
+        <template v-if="isLoaded">
+          <ProfileStage
+            v-if="currentStepId === ApplicationSteps.PROFILE.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
+          <AddressStage
+            v-if="currentStepId === ApplicationSteps.ADDRESS.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            @onBack="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
+          <FamilyStage
+            v-if="currentStepId === ApplicationSteps.FAMILY.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            @onBack="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
+          <EducationStage
+            v-if="currentStepId === ApplicationSteps.EDUCATION.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            @onBack="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
+          <RequestEvaluationStage
+            v-if="currentStepId === ApplicationSteps.REQUEST_EVALUATION.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            @onBack="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
+        </template>
+
+        <div v-if="false" class="application__wizard-form">
+          <!-- <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
+          <p class="application__form-description">{{heading && heading.description}}</p> -->
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.PROFILE.id">
             <b-row class="mt-4">
               <b-col md="6">
                 <b-form-group>
@@ -107,8 +139,8 @@
                 </div>
               </b-col>
             </b-row>
-          </div>
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ADDRESS.id">
+          </div> -->
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ADDRESS.id">
             <b-row>
               <b-col md=12>
                 <h5>Current Address</h5>
@@ -377,8 +409,8 @@
                 </b-form-group>
               </b-col>
             </b-row>
-          </div>
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.FAMILY.id">
+          </div> -->
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.FAMILY.id">
             <b-row>
               <b-col md="6">
                 <b-form-group>
@@ -502,8 +534,8 @@
                 </b-row>
               </b-col>
             </b-row>
-          </div>
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EDUCATION.id">
+          </div> -->
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EDUCATION.id">
             <b-row>
               <b-col md="5">
                 <b-form-group>
@@ -700,8 +732,8 @@
                 </b-row>
               </b-col>
             </b-row>
-          </div>
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+          </div> -->
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.REQUEST_EVALUATION.id">
             <b-row v-if="forms.activeEvaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
               <b-col md=12>
                 <b-alert variant="danger" show>
@@ -799,7 +831,6 @@
             <b-row>
               <b-col md="4">
                 <b-form-group>
-                  <!-- <label class="required">Level</label> -->
                   <b-form-select
                     @input="loadCourses()"
                     v-model='forms.academicRecord.fields.levelId'
@@ -821,12 +852,10 @@
                     forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id ||
                       forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id ||
                         forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.VOCATIONAL.id">
-                  <!-- <label class="required">Course</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.courseId'
                     :state="forms.academicRecord.states.courseId"
                     >
-                    <!-- :state="forms.academicRecord.states.transcriptCourseId" -->
                     <template v-slot:first>
                       <b-form-select-option :value='null' disabled>-- Course --</b-form-select-option>
                     </template>
@@ -842,7 +871,6 @@
               <b-col md="4">
                 <b-form-group v-if="forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id || 
                     forms.activeEvaluation.fields.schoolCategoryId === SchoolCategories.COLLEGE.id">
-                  <!-- <label>Semester</label> -->
                   <b-form-select
                     v-model='forms.academicRecord.fields.semesterId'
                     :state="forms.academicRecord.states.semesterId">
@@ -903,7 +931,7 @@
                 </div>
               </b-col>
             </b-row>
-          </div>
+          </div> -->
           <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
             <div>
               <b-alert variant="success" show>
@@ -1491,7 +1519,7 @@
               </b-col>
             </b-row>
           </div>
-          <div class="application__action-bar">
+          <div v-if="false" class="application__action-bar">
             <b-button
               @click="forms.activeApplication.fields.applicationStepId--"
               v-if="buttonBackShowHide(forms.activeApplication.fields.applicationStepId)"
@@ -1995,7 +2023,7 @@
       :isBusy="file.isLoading"
       @close="showModalPreview = false"
     />
-    <FileViewer
+    <!-- <FileViewer
       :show="fileViewer.student.show"
       :file="file"
       :owner="file.owner"
@@ -2006,7 +2034,7 @@
       :navCount="fileViewer.student.activeNavCount"
       :navActiveIndex="fileViewer.student.activeNavIndex"
       :enableArrowNav="fileViewer.student.isActiveNavEnabled"
-    />
+    /> -->
     <FileViewer
       :show="fileViewer.payment.show"
       :file="file"
@@ -2151,116 +2179,123 @@ import {
   paymentApprovalStages,
   paymentTooltips
 } from '../../content';
+import {
+  ProfileStage,
+  AddressStage,
+  FamilyStage,
+  EducationStage,
+  RequestEvaluationStage
+} from '../components/OnboardingSteps'
 
-const studentFields = {
-  id: null,
-  studentNo: null,
-  firstName: null,
-  middleName: null,
-  lastName: null,
-  mobileNo: null,
-  birthDate: null,
-  civilStatusId: null,
-  name: null,
-  email: null,
-  onboardingStepId: null
-}
+// const studentFields = {
+//   id: null,
+//   studentNo: null,
+//   firstName: null,
+//   middleName: null,
+//   lastName: null,
+//   mobileNo: null,
+//   birthDate: null,
+//   civilStatusId: null,
+//   name: null,
+//   email: null,
+//   onboardingStepId: null
+// }
 
-const addressFields = {
-  currentHouseNoStreet: null,
-  currentBarangay: null,
-  currentCityTown: null,
-  currentProvince: null,
-  currentRegion: null,
-  currentDistrict: null,
-  currentPostalCode: null,
-  currentCountryId: Countries.PHILIPPINES.id,
-  currentCompleteAddress: null,
-  currentHomeLandlineMobileNo: null,
-  permanentHouseNoStreet: null,
-  permanentBarangay: null,
-  permanentCityTown: null,
-  permanentProvince: null,
-  permanentRegion: null,
-  permanentDistrict: null,
-  permanentPostalCode: null,
-  permanentCountryId: Countries.PHILIPPINES.id,
-  permanentCompleteAddress: null,
-  permanentHomeLandlineMobileNo: null
-}
+// const addressFields = {
+//   currentHouseNoStreet: null,
+//   currentBarangay: null,
+//   currentCityTown: null,
+//   currentProvince: null,
+//   currentRegion: null,
+//   currentDistrict: null,
+//   currentPostalCode: null,
+//   currentCountryId: Countries.PHILIPPINES.id,
+//   currentCompleteAddress: null,
+//   currentHomeLandlineMobileNo: null,
+//   permanentHouseNoStreet: null,
+//   permanentBarangay: null,
+//   permanentCityTown: null,
+//   permanentProvince: null,
+//   permanentRegion: null,
+//   permanentDistrict: null,
+//   permanentPostalCode: null,
+//   permanentCountryId: Countries.PHILIPPINES.id,
+//   permanentCompleteAddress: null,
+//   permanentHomeLandlineMobileNo: null
+// }
 
-const addressErrorFields = {
-  addressCurrentHouseNoStreet: null,
-  addressCurrentBarangay: null,
-  addressCurrentCityTown: null,
-  addressCurrentProvince: null,
-  addressCurrentRegion: null,
-  addressCurrentDistrict: null,
-  addressCurrentPostalCode: null,
-  addressCurrentCountryId: null,
-  addressCurrentCompleteAddress: null,
-  addressCurrentHomeLandlineMobileNo: null,
-  addressPermanentHouseNoStreet: null,
-  addressPermanentBarangay: null,
-  addressPermanentCityTown: null,
-  addressPermanentProvince: null,
-  addressPermanentRegion: null,
-  addressPermanentDistrict: null,
-  addressPermanentPostalCode: null,
-  addressPermanentCountryId: null,
-  addressPermanentCompleteAddress: null,
-  addressPermanentHomeLandlineMobileNo: null
-}
+// const addressErrorFields = {
+//   addressCurrentHouseNoStreet: null,
+//   addressCurrentBarangay: null,
+//   addressCurrentCityTown: null,
+//   addressCurrentProvince: null,
+//   addressCurrentRegion: null,
+//   addressCurrentDistrict: null,
+//   addressCurrentPostalCode: null,
+//   addressCurrentCountryId: null,
+//   addressCurrentCompleteAddress: null,
+//   addressCurrentHomeLandlineMobileNo: null,
+//   addressPermanentHouseNoStreet: null,
+//   addressPermanentBarangay: null,
+//   addressPermanentCityTown: null,
+//   addressPermanentProvince: null,
+//   addressPermanentRegion: null,
+//   addressPermanentDistrict: null,
+//   addressPermanentPostalCode: null,
+//   addressPermanentCountryId: null,
+//   addressPermanentCompleteAddress: null,
+//   addressPermanentHomeLandlineMobileNo: null
+// }
 
-const familyFields = {
-  fatherName: null,
-  fatherOccupation: null,
-  fatherMobileNo: null,
-  fatherEmail: null,
-  motherName: null,
-  motherOccupation: null,
-  motherMobileNo: null,
-  motherEmail: null,
-  parentGuardianName: null,
-  parentGuardianContactNo: null
-}
+// const familyFields = {
+//   fatherName: null,
+//   fatherOccupation: null,
+//   fatherMobileNo: null,
+//   fatherEmail: null,
+//   motherName: null,
+//   motherOccupation: null,
+//   motherMobileNo: null,
+//   motherEmail: null,
+//   parentGuardianName: null,
+//   parentGuardianContactNo: null
+// }
 
-const familyErrorFields = {
-  familyFatherName: null,
-  familyFatherOccupation: null,
-  familyFatherMobileNo: null,
-  familyFatherEmail: null,
-  familyMotherName: null,
-  familyMotherOccupation: null,
-  familyMotherMobileNo: null,
-  familyMotherEmail: null,
-  familyParentGuardianName: null,
-  familyParentGuardianContactNo: null
-}
+// const familyErrorFields = {
+//   familyFatherName: null,
+//   familyFatherOccupation: null,
+//   familyFatherMobileNo: null,
+//   familyFatherEmail: null,
+//   familyMotherName: null,
+//   familyMotherOccupation: null,
+//   familyMotherMobileNo: null,
+//   familyMotherEmail: null,
+//   familyParentGuardianName: null,
+//   familyParentGuardianContactNo: null
+// }
 
-const educationFields = {
-  lastSchoolAttended: null,
-  lastSchoolAddress: null,
-  lastSchoolYearFrom: null,
-  lastSchoolYearTo: null,
-  lastLevel: null,
-  elementaryCourse: null,
-  elementaryCourseYearFrom: null,
-  elementaryCourseYearTo: null,
-  elementaryCourseHonors: null,
-  highSchoolCourse: null,
-  highSchoolCourseYearFrom: null,
-  highSchoolCourseYearTo: null,
-  highSchoolCourseHonors: null,
-  seniorSchoolCourse: null,
-  seniorSchoolCourseYearFrom: null,
-  seniorSchoolCourseYearTo: null,
-  seniorSchoolCourseHonors: null,
-  collegeDegree: null,
-  collegeDegreeYearFrom: null,
-  collegeDegreeYearTo: null,
-  collegeDegreeHonors: null,
-}
+// const educationFields = {
+//   lastSchoolAttended: null,
+//   lastSchoolAddress: null,
+//   lastSchoolYearFrom: null,
+//   lastSchoolYearTo: null,
+//   lastLevel: null,
+//   elementaryCourse: null,
+//   elementaryCourseYearFrom: null,
+//   elementaryCourseYearTo: null,
+//   elementaryCourseHonors: null,
+//   highSchoolCourse: null,
+//   highSchoolCourseYearFrom: null,
+//   highSchoolCourseYearTo: null,
+//   highSchoolCourseHonors: null,
+//   seniorSchoolCourse: null,
+//   seniorSchoolCourseYearFrom: null,
+//   seniorSchoolCourseYearTo: null,
+//   seniorSchoolCourseHonors: null,
+//   collegeDegree: null,
+//   collegeDegreeYearFrom: null,
+//   collegeDegreeYearTo: null,
+//   collegeDegreeHonors: null,
+// }
 
 const activeApplicationFields = {
   id: null,
@@ -2415,10 +2450,18 @@ export default {
     FileUploader,
     FileItem,
     ProgressIndicator,
-    FileViewer
+    FileViewer,
+    ProfileStage,
+    AddressStage,
+    FamilyStage,
+    EducationStage,
+    RequestEvaluationStage
   },
   data() {
     return {
+      currentStepId: 1,
+      isLoaded: false,
+      data: {},
       fileViewer: {
         student: {
           isActiveNavEnabled: false,
@@ -2477,26 +2520,26 @@ export default {
         isLoading: false
       },
       forms: {
-        student: {
-          fields: { ...studentFields },
-          states: { ...studentFields },
-          errors: { ...studentFields }
-        },
-        address: {
-          fields: { ...addressFields },
-          states: { ...addressErrorFields },
-          errors: { ...addressErrorFields }
-        },
-        family: {
-          fields: { ...familyFields },
-          states: { ...familyErrorFields },
-          errors: { ...familyErrorFields }
-        },
-        education: {
-          fields: { ...educationFields },
-          states: { ...educationFields },
-          errors: { ...educationFields }
-        },
+        // student: {
+        //   fields: { ...studentFields },
+        //   states: { ...studentFields },
+        //   errors: { ...studentFields }
+        // },
+        // address: {
+        //   fields: { ...addressFields },
+        //   states: { ...addressErrorFields },
+        //   errors: { ...addressErrorFields }
+        // },
+        // family: {
+        //   fields: { ...familyFields },
+        //   states: { ...familyErrorFields },
+        //   errors: { ...familyErrorFields }
+        // },
+        // education: {
+        //   fields: { ...educationFields },
+        //   states: { ...educationFields },
+        //   errors: { ...educationFields }
+        // },
         activeApplication : {
           fields: { ...activeApplicationFields }
         },
@@ -2953,15 +2996,17 @@ export default {
     };
   },
   created() {
-    if (!this.hasActiveApplication && this.hasActiveAdmission) {
-      this.$router.push({ path: '/admission' });
-      return;
-    }
+    // if (!this.hasActiveApplication && this.hasActiveAdmission) {
+    //   this.$router.push({ path: '/admission' });
+    //   return;
+    // }
 
     let params = { paginate: false }
     const studentId = this.$store.state.user.id;
     this.getStudent(studentId).then(({ data: student }) => {
-      console.log(student)
+      this.isLoaded = true;
+      this.data = student;
+      this.currentStepId = student?.onboardingStepId || 1;
       Object.keys(this.forms).forEach((key) => {
         const source = student[key] || student;
         if (source) {
@@ -3053,43 +3098,43 @@ export default {
       // }
 
       //load student files
-      this.getStudentFiles(studentId, params).then(({ data }) => {
-        //this.tables.files.items = data
-        data.forEach(file => {
-          const { documentType } = file
-          this.studentFiles.push({
-            id: file.id,
-            name: file.name,
-            notes: file.notes,
-            documentType: { ...documentType },
-            isBusy: false
-          })
-        })
-      })
+      // this.getStudentFiles(studentId, params).then(({ data }) => {
+      //   //this.tables.files.items = data
+      //   data.forEach(file => {
+      //     const { documentType } = file
+      //     this.studentFiles.push({
+      //       id: file.id,
+      //       name: file.name,
+      //       notes: file.notes,
+      //       documentType: { ...documentType },
+      //       isBusy: false
+      //     })
+      //   })
+      // })
 
     })
 
-    this.getLevelList(params).then(response => {
-      const res = response.data
-      this.options.levels.items = res
-      this.options.levels.scheduledItems = res
-      const level = this.options.levels.items.find(i => i.id == this.forms.activeEvaluation.fields.levelId)
-      if (level) {
-        this.forms.activeEvaluation.fields.schoolCategoryId = level.schoolCategoryId
-      }
-    });
+    // this.getLevelList(params).then(response => {
+    //   const res = response.data
+    //   this.options.levels.items = res
+    //   this.options.levels.scheduledItems = res
+    //   const level = this.options.levels.items.find(i => i.id == this.forms.activeEvaluation.fields.levelId)
+    //   if (level) {
+    //     this.forms.activeEvaluation.fields.schoolCategoryId = level.schoolCategoryId
+    //   }
+    // });
 
-    this.getSchoolYearList(params).then(({ data }) => {
-      this.options.schoolYears.items = data
-    });
+    // this.getSchoolYearList(params).then(({ data }) => {
+    //   this.options.schoolYears.items = data
+    // });
 
-    this.getDocumentTypeList(params).then(({ data }) => {
-      this.options.documentTypes.items = data
-    });
+    // this.getDocumentTypeList(params).then(({ data }) => {
+    //   this.options.documentTypes.items = data
+    // });
 
-    this.loadEWalletAccounts();
-    this.loadBankAccounts();
-    this.loadPeraPadalaAccounts();
+    // this.loadEWalletAccounts();
+    // this.loadBankAccounts();
+    // this.loadPeraPadalaAccounts();
 
   },
   methods: {
@@ -4147,9 +4192,9 @@ export default {
       }
       return ''
     },
-    currentStepId() {
-      return this.forms.student.fields.onboardingStepId;
-    },
+    // currentStepId() {
+    //   return this.forms.student.fields.onboardingStepId;
+    // },
     getNextButtonCaption() {
       if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
         return 'Submit Application'
@@ -4295,18 +4340,6 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-  }
-
-  .file-uploader-container {
-    width: 100%;
-    height: 250px;
-    margin: 20px 0 20px 0;
-
-  }
-
-  .file-item-container {
-    width: 100%;
-    height: auto;
   }
 
   .payment-step__number {
