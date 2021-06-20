@@ -456,7 +456,7 @@
     SchoolCategories,
     Semesters,
     Days,
-    ApplicationSteps
+    OnboardingSteps
   } from '../../../helpers/enum';
 
   const academicRecordFields = {
@@ -901,7 +901,7 @@
       },
       onSubmitApplication() {
         this.isProcessing = true;
-        const onboardingStepId = ApplicationSteps.REQUEST_EVALUATION.id; // next step
+        const onboardingStepId = OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id; // next step
 
         const { academicRecord } = this.forms;
 
@@ -912,8 +912,9 @@
 
         const applicationId = this.data.activeAcademicRecord?.application?.id;
 
-        this.postApplicationSubmit(applicationId, payload).then(() => {
-          this.$emit('update: data', data);
+        this.postApplicationSubmit(applicationId, payload).then(({ data }) => {
+          const activeAcademicRecord = { ...this.data?.activeAcademicRecord, ...data.academicRecord };
+          this.$emit('update: data', { ...this.data, activeAcademicRecord });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {
@@ -922,7 +923,7 @@
           this.isProcessing = false;
         });
       },
-      onAddSubject(){
+      onAddSubject() {
         const { levelId, schoolCategoryId, courseId, semesterId } = this.forms.academicRecord.fields
         // const { levelsOfCourses } = this.options
         // const { subjects } = this.tables

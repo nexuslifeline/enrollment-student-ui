@@ -13,7 +13,7 @@
           <div class="application__wizard-form">
             <h4 class="application__form-title">{{heading && heading.subHeader}}</h4>
             <p class="application__form-description">{{heading && heading.description}}</p>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.REQUEST_EVALUATION.id">
               <b-row v-if="forms.evaluation.fields.evaluationStatusId === EvaluationStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -215,7 +215,7 @@
                 </b-col>
               </b-row> -->
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.EVALUATION_IN_REVIEW.id">
               <div>
                 <b-alert variant="success" show>
                   <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -246,7 +246,7 @@
                   </b-alert>
               </div>
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id">
               <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -388,7 +388,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id">
               <b-row>
                 <b-col md="12">
                   <b-alert variant="success" show>
@@ -437,7 +437,7 @@
                 </b-col>
               </b-row>
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.PAYMENTS.id">
               <b-row v-if="forms.payment.fields.paymentStatusId === PaymentStatuses.REJECTED.id">
                 <b-col md=12>
                   <b-alert variant="danger" show>
@@ -747,7 +747,7 @@
                 </b-row>
               </div>
             </div>
-            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === ApplicationSteps.WAITING.id">
+            <div class="application__wizard-form-fields" v-show="forms.activeApplication.fields.applicationStepId === OnboardingSteps.WAITING.id">
               <b-row>
                 <b-col md="12">
                   <div v-if="forms.academicRecord.fields.academicRecordStatusId === AcademicRecordStatuses.ENROLLED.id">
@@ -795,7 +795,7 @@
                 Back
               </b-button>
               <b-button
-                @click="forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ? onUpdatePayment() : onEnrollStudent()"
+                @click="forms.activeApplication.fields.applicationStepId === OnboardingSteps.PAYMENTS.id ? onUpdatePayment() : onEnrollStudent()"
                 variant="primary"
                 class="application__main-action"
                 :disabled="isProcessing"
@@ -1169,7 +1169,7 @@ import Loading from 'vue-loading-overlay'
 import { paymentTooltips } from '../../../content'
 import {
   Semesters,
-  ApplicationSteps,
+  OnboardingSteps,
   Countries,
   CivilStatuses,
   ApplicationStatuses,
@@ -1229,7 +1229,7 @@ const activeApplicationFields = {
   appliedDate: null,
   schoolYearId: null,
   applicationStatusId : ApplicationStatuses.DRAFT.id,
-  applicationStepId: ApplicationSteps.REQUEST_EVALUATION.id,
+  applicationStepId: OnboardingSteps.REQUEST_EVALUATION.id,
   disapprovalNotes: null
 }
 
@@ -1374,7 +1374,7 @@ export default {
   data() {
     return {
       toolTips: { ...paymentTooltips },
-      ApplicationSteps: ApplicationSteps,
+      OnboardingSteps: OnboardingSteps,
       ApplicationStatuses: ApplicationStatuses,
       PaymentStatuses: PaymentStatuses,
       AcademicRecordStatuses: AcademicRecordStatuses,
@@ -1923,14 +1923,14 @@ export default {
           ? 2
           : 1;
 
-        if (student.activeApplication.applicationStepId >= ApplicationSteps.PAYMENTS.id) {
+        if (student.activeApplication.applicationStepId >= OnboardingSteps.PAYMENTS.id) {
           this.loadBilling()
         }
 
         const { academicRecord } = this.forms
         if (student.evaluation && student.evaluation.evaluationStatusId === EvaluationStatuses.APPROVED.id) {
           //show countdown
-          if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id){
+          if (this.forms.activeApplication.fields.applicationStepId === OnboardingSteps.EVALUATION_IN_REVIEW.id){
             this.evaluationDismissCountDown = 5
           }
 
@@ -1968,7 +1968,7 @@ export default {
           const data = {
             activeApplication: {
               ...activeApplication.fields,
-              applicationStepId : ApplicationSteps.REQUEST_EVALUATION.id
+              applicationStepId : OnboardingSteps.REQUEST_EVALUATION.id
             }
           }
 
@@ -2003,12 +2003,12 @@ export default {
   methods: {
     buttonBackShowHide(applicationStepId) {
       //arrHidden = steps id where the button back should be hidden
-      let arrHidden = [ApplicationSteps.PROFILE.id, ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id , ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.PAYMENTS.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
+      let arrHidden = [OnboardingSteps.PROFILE.id, OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id , OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id, OnboardingSteps.PAYMENTS.id, OnboardingSteps.WAITING.id, OnboardingSteps.EVALUATION_IN_REVIEW.id]
       return !arrHidden.includes(applicationStepId)
     },
     buttonNextShowHide(applicationStepId) {
       //arrHidden = steps id where the button next should be hidden
-      let arrHidden = [ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id, ApplicationSteps.WAITING.id, ApplicationSteps.EVALUATION_IN_REVIEW.id]
+      let arrHidden = [OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id, OnboardingSteps.WAITING.id, OnboardingSteps.EVALUATION_IN_REVIEW.id]
       return !arrHidden.includes(applicationStepId)
     },
     loadCourses() {
@@ -2074,14 +2074,14 @@ export default {
         ? EvaluationStatuses.SUBMITTED.id
         : evaluation.fields.evaluationStatusId;
 
-      if (activeApplication.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id || activeApplication === null) {
+      if (activeApplication.applicationStepId === OnboardingSteps.REQUEST_EVALUATION.id || activeApplication === null) {
         evaluation.fields.submittedDate =  getCurrentDateTime()
         evaluation.fields.schoolYearId = this.activeSchoolYear?.id
         evaluationStatusId = EvaluationStatuses.SUBMITTED.id
         activeApplication.schoolYearId = this.activeSchoolYear?.id
       }
 
-      if (activeApplication.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
+      if (activeApplication.applicationStepId === OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id) {
         activeApplication.appliedDate = getCurrentDateTime()
       }
 
@@ -2106,23 +2106,23 @@ export default {
         academicRecord,
       ]
 
-       const applicationStepId = ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId &&
+       const applicationStepId = OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId &&
         activeApplication.applicationStatusId !==1
-          ? ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id
+          ? OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id
           : activeApplication.applicationStepId + 1;
 
-      const applicationStatusId = ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
+      const applicationStatusId = OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id === activeApplication.applicationStepId
         ? ApplicationStatuses.SUBMITTED.id
-        : ApplicationSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId
+        : OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id === activeApplication.applicationStepId
         ? ApplicationStatuses.APPROVED_ASSESMENT.id
-        : ApplicationSteps.WAITING.id === activeApplication.applicationStepId
+        : OnboardingSteps.WAITING.id === activeApplication.applicationStepId
         ? ApplicationStatuses.COMPLETED.id
         : activeApplication.applicationStatusId
 
       const fullLevelSchoolCategory = [SchoolCategories.SENIOR_HIGH_SCHOOL.id, SchoolCategories.COLLEGE.id, SchoolCategories.GRADUATE_SCHOOL.id, SchoolCategories.VOCATIONAL.id ]
 
       //set transcript field values based on evaluation fields
-      if ( activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ) {
+      if ( activeApplication.applicationStepId == OnboardingSteps.REQUEST_EVALUATION.id ) {
         activeTranscriptRecord.levelId = (fullLevelSchoolCategory.includes(evaluation.fields.schoolCategoryId) ? null : evaluation.fields.levelId )
         activeTranscriptRecord.courseId = evaluation.fields.courseId
         activeTranscriptRecord.schoolCategoryId = evaluation.fields.schoolCategoryId
@@ -2131,7 +2131,7 @@ export default {
       }
 
 
-      const activeTranscriptPayload = (activeApplication.applicationStepId == ApplicationSteps.REQUEST_EVALUATION.id ?
+      const activeTranscriptPayload = (activeApplication.applicationStepId == OnboardingSteps.REQUEST_EVALUATION.id ?
         { ...activeTranscriptRecord } :  null)
 
       const data = {
@@ -2155,7 +2155,7 @@ export default {
 
       this.enrollStudent(studentId, data).then(({ data }) => {
          //load billing when on payment stage after update
-        if (data.activeApplication.applicationStepId === ApplicationSteps.PAYMENTS.id) {
+        if (data.activeApplication.applicationStepId === OnboardingSteps.PAYMENTS.id) {
           this.loadBilling()
         }
         copyValue(data.activeApplication, activeApplication);
@@ -2406,7 +2406,7 @@ export default {
             const application = {
               activeApplication: {
                 id: this.forms.activeApplication.fields.id,
-                applicationStepId: ApplicationSteps.PAYMENTS.id,
+                applicationStepId: OnboardingSteps.PAYMENTS.id,
                 applicationStatusId: ApplicationStatuses.APPROVED_ASSESMENT.id
               }
             }
@@ -2738,11 +2738,11 @@ export default {
       return null;
     },
     getNextButtonCaption() {
-      if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id) {
+      if (this.forms.activeApplication.fields.applicationStepId === OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id) {
         return 'Submit Application'
-      } else if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.REQUEST_EVALUATION.id ) {
+      } else if (this.forms.activeApplication.fields.applicationStepId === OnboardingSteps.REQUEST_EVALUATION.id ) {
         return 'Submit Request'
-      }  else if (this.forms.activeApplication.fields.applicationStepId === ApplicationSteps.PAYMENTS.id ) {
+      }  else if (this.forms.activeApplication.fields.applicationStepId === OnboardingSteps.PAYMENTS.id ) {
         return 'Submit Payment'
       } else {
         return 'Next'

@@ -61,7 +61,7 @@ export const AdmissionSteps = new Enum({
   WAITING: { id: 10, name: 'Waiting', description: 'Lorem ipsum dolor amet' }
 });
 
-export const ApplicationSteps = new Enum({
+export const OnboardingSteps = new Enum({
   PROFILE: { id: 1, name: 'Profile' },
   ADDRESS: { id: 2, name: 'Address' },
   FAMILY: { id: 3, name: 'Family' },

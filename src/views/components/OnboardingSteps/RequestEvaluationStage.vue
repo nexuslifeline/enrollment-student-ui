@@ -210,7 +210,7 @@
     ReportApi
   } from '../../../mixins/api';
   import {
-    ApplicationSteps,
+    OnboardingSteps,
     AcademicRecordStatuses,
     SchoolCategories,
     Semesters
@@ -269,7 +269,7 @@
         AcademicRecordStatuses,
         SchoolCategories,
         isProcessing: false,
-        previousStepId: ApplicationSteps.EDUCATION.id,
+        previousStepId: OnboardingSteps.EDUCATION.id,
         forms: {
           evaluation: {
             fields: { ...evaluationFields },
@@ -339,7 +339,7 @@
           ...this.forms?.activeAcademicRecord?.fields
         }
 
-        const onboardingStepId = ApplicationSteps.EVALUATION_IN_REVIEW.id; // next step
+        const onboardingStepId = OnboardingSteps.EVALUATION_IN_REVIEW.id; // next step
         const applicationId = this.data?.activeAcademicRecord?.application?.id;
 
         this.postApplicationEvaluationRequest(applicationId, payload).then((response) => {

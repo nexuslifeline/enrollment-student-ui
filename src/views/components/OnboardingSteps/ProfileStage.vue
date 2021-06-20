@@ -119,7 +119,7 @@
     StudentApi
   } from '../../../mixins/api';
   import {
-    ApplicationSteps,
+    OnboardingSteps,
     CivilStatuses
   } from '../../../helpers/enum';
 
@@ -197,7 +197,7 @@
       },
       onSubmitNext() {
         this.isProcessing = true;
-        const onboardingStepId = ApplicationSteps.ADDRESS.id; // next step
+        const onboardingStepId = OnboardingSteps.ADDRESS.id; // next step
         const payload = {
           ...this.forms.student?.fields,
           onboardingStepId

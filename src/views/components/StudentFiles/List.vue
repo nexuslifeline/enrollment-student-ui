@@ -47,7 +47,7 @@
     StudentFileApi
   } from '../../../mixins/api';
   import {
-    ApplicationSteps,
+    OnboardingSteps,
     AcademicRecordStatuses
   } from '../../../helpers/enum';
 
