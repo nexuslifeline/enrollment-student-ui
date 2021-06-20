@@ -27,11 +27,14 @@
       }
     },
     computed: {
-      hasActiveAdmission() {
-        return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
-      },
-      hasActiveApplication() {
-        return !!(this.$store.state.user && this.$store.state.user.activeApplication && this.$store.state.user.activeApplication.isManual === 0);
+      // hasActiveAdmission() {
+      //   return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
+      // },
+      // hasActiveApplication() {
+      //   return !!(this.$store.state.user && this.$store.state.user.activeApplication && this.$store.state.user.activeApplication.isManual === 0);
+      // },
+      isOnboarding() {
+        return !!this.$store.state.user?.isOnboarding;
       },
       user() {
         return this.$store.state.user || {};
@@ -50,38 +53,37 @@
       }
     },
     created() {
-      if (this.hasActiveApplication) {
+      if (this.isOnboarding) {
         this.$router.push({ path: '/application' });
-      } else if (this.hasActiveAdmission) {
-        this.$router.push({ path: '/admission' });
       }
     },
-    mounted() {
-      this.$nextTick(() => {
-        setTimeout(() => {
-          if (this.user && this.activeSchoolYear && this.activeSemester && this.latestAcademicRecord) {
-            if (this.latestAcademicRecord.schoolYearId !== this.activeSchoolYear.id ) {
-              this.showNewApplicationNotice = true
-            }
-            else {
-              if (this.latestAcademicRecord.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
-                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.COLLEGE.id
-                || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
-                  || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
-                    //check if active semester id is equal to latest academic record semester id
-                  // if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
-                  //   this.showNewApplicationNotice = true
-                  // }
-                const result = this.academicRecords.find(el => el.academicRecordStatusId === 3 && el.semesterId === this.activeSemester.id)
-                this.showNewApplicationNotice = result ? false : true
-              }
-            }
-          }
-          this.menuKey =+ 1 //force render menu component
-          this.isReady = true
-        }, 1500);
-      })
-    },
+    // temporarily commented this
+    // mounted() {
+    //   this.$nextTick(() => {
+    //     setTimeout(() => {
+    //       if (this.user && this.activeSchoolYear && this.activeSemester && this.latestAcademicRecord) {
+    //         if (this.latestAcademicRecord.schoolYearId !== this.activeSchoolYear.id ) {
+    //           this.showNewApplicationNotice = true
+    //         }
+    //         else {
+    //           if (this.latestAcademicRecord.schoolCategoryId === SchoolCategories.SENIOR_HIGH_SCHOOL.id
+    //             || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.COLLEGE.id
+    //             || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.GRADUATE_SCHOOL.id
+    //               || this.latestAcademicRecord.schoolCategoryId === SchoolCategories.VOCATIONAL.id  ) {
+    //                 //check if active semester id is equal to latest academic record semester id
+    //               // if (this.latestAcademicRecord.semesterId !== this.activeSemester.id) {
+    //               //   this.showNewApplicationNotice = true
+    //               // }
+    //             const result = this.academicRecords.find(el => el.academicRecordStatusId === 3 && el.semesterId === this.activeSemester.id)
+    //             this.showNewApplicationNotice = result ? false : true
+    //           }
+    //         }
+    //       }
+    //       this.menuKey =+ 1 //force render menu component
+    //       this.isReady = true
+    //     }, 1500);
+    //   })
+    // },
   }
 </script>
 <style lang="scss" scoped>

@@ -5,8 +5,8 @@ export default {
     postApplicationEvaluationRequest(applicationId, data) {
       return this.$authHttp.post(`${apiPrefix}/${apiVersion}/applications/${applicationId}/request-evaluation`, data);
     },
-    postApplicationSubmit(applicationId) {
-      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/applications/${applicationId}/submit`);
+    postApplicationSubmit(applicationId, data) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/applications/${applicationId}/submit`, data);
     },
   }
 }

@@ -40,6 +40,16 @@
             @onBack="(stepId) => currentStepId = stepId"
             :data.sync="data"
           />
+          <ReviewEvaluationStage
+            v-if="currentStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id"
+            :data.sync="data"
+          />
+          <SubmitApplicationStage
+            v-if="currentStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
+            @onBack="(stepId) => currentStepId = stepId"
+            :data.sync="data"
+          />
         </template>
 
         <div v-if="false" class="application__wizard-form">
@@ -932,7 +942,7 @@
               </b-col>
             </b-row>
           </div> -->
-          <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
+          <!-- <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.EVALUATION_IN_REVIEW.id">
             <div>
               <b-alert variant="success" show>
                 <h5>REQUEST FOR EVALUATION SUBMITTED !</h5>
@@ -962,7 +972,7 @@
                     spin />
                 </b-alert>
             </div>
-          </div>
+          </div> -->
           <div class="application__wizard-form-fields" v-show="currentStepId === ApplicationSteps.ACADEMIC_YEAR_APPLICATION.id">
             <b-row v-if="forms.activeApplication.fields.applicationStatusId === ApplicationStatuses.REJECTED.id">
               <b-col md=12>
@@ -2184,7 +2194,9 @@ import {
   AddressStage,
   FamilyStage,
   EducationStage,
-  RequestEvaluationStage
+  RequestEvaluationStage,
+  ReviewEvaluationStage,
+  SubmitApplicationStage
 } from '../components/OnboardingSteps'
 
 // const studentFields = {
@@ -2455,7 +2467,9 @@ export default {
     AddressStage,
     FamilyStage,
     EducationStage,
-    RequestEvaluationStage
+    RequestEvaluationStage,
+    ReviewEvaluationStage,
+    SubmitApplicationStage
   },
   data() {
     return {

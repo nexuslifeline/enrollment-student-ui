@@ -7,9 +7,9 @@
             <p>
               <strong>
                 Sorry, your request for evaluation is rejected with the ffg. reasons : <br>
-                {{ data.activeEvaluation.disapprovalNotes }} <br><br>
+                {{ data.evaluation.disapprovalNotes }} <br><br>
               </strong>
-              <small>Please be inform that you can modify your request and resubmit for activeEvaluation.</small>
+              <small>Please be inform that you can modify your request and resubmit for evaluation.</small>
             </p>
           </b-alert>
         </b-col>
@@ -26,11 +26,11 @@
           <b-form-group>
             <label class="required">Last School Attended</label>
             <b-form-input
-              v-model="forms.activeEvaluation.fields.lastSchoolAttended"
-              :state="forms.activeEvaluation.states.lastSchoolAttended"
+              v-model="forms.evaluation.fields.lastSchoolAttended"
+              :state="forms.evaluation.states.lastSchoolAttended"
               debounce="500"/>
             <b-form-invalid-feedback>
-              {{ forms.activeEvaluation.errors.lastSchoolAttended }}
+              {{ forms.evaluation.errors.lastSchoolAttended }}
             </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -38,11 +38,11 @@
           <b-form-group>
             <label class="required">From</label>
             <b-form-input
-              v-model="forms.activeEvaluation.fields.lastSchoolYearFrom"
-              :state="forms.activeEvaluation.states.lastSchoolYearFrom"
+              v-model="forms.evaluation.fields.lastSchoolYearFrom"
+              :state="forms.evaluation.states.lastSchoolYearFrom"
               debounce="500" />
             <b-form-invalid-feedback>
-              {{ forms.activeEvaluation.errors.lastSchoolYearFrom }}
+              {{ forms.evaluation.errors.lastSchoolYearFrom }}
             </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -50,11 +50,11 @@
           <b-form-group>
             <label class="required">To</label>
             <b-form-input
-              v-model="forms.activeEvaluation.fields.lastSchoolYearTo"
-              :state="forms.activeEvaluation.states.lastSchoolYearTo"
+              v-model="forms.evaluation.fields.lastSchoolYearTo"
+              :state="forms.evaluation.states.lastSchoolYearTo"
               debounce="500" />
             <b-form-invalid-feedback>
-              {{ forms.activeEvaluation.errors.lastSchoolYearTo }}
+              {{ forms.evaluation.errors.lastSchoolYearTo }}
             </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -62,8 +62,8 @@
             <b-form-group>
               <label class="required">School Level</label>
               <b-form-select
-                v-model='forms.activeEvaluation.fields.lastSchoolLevelId'
-                :state="forms.activeEvaluation.states.lastSchoolLevelId">
+                v-model='forms.evaluation.fields.lastSchoolLevelId'
+                :state="forms.evaluation.states.lastSchoolLevelId">
                 <template v-slot:first>
                   <b-form-select-option :value='null' disabled>-- School Level --</b-form-select-option>
                 </template>
@@ -72,7 +72,7 @@
                 </b-form-select-option>
               </b-form-select>
               <b-form-invalid-feedback>
-                {{ forms.activeEvaluation.errors.lastSchoolLevelId }}
+                {{ forms.evaluation.errors.lastSchoolLevelId }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -83,7 +83,7 @@
             <label>Notes</label>
             <b-form-textarea
               rows="2"
-              v-model="forms.activeEvaluation.fields.notes"
+              v-model="forms.evaluation.fields.notes"
               debounce="500"/>
           </b-form-group>
         </b-col>
@@ -271,7 +271,7 @@
         isProcessing: false,
         previousStepId: ApplicationSteps.EDUCATION.id,
         forms: {
-          activeEvaluation: {
+          evaluation: {
             fields: { ...evaluationFields },
             states: { ...evaluationFields },
             errors: { ...evaluationFields }
@@ -295,17 +295,19 @@
       }
     },
     created() {
-      console.log('created', this.data)
       this.populate();
       this.loadLevels();
       this.loadCourses();
     },
     computed: {
       currentAcademicRecordStatusId() {
-        return this.data?.activeEvaluation?.academicRecord?.academicRecordStatusId;
+        return this.data?.activeAcademicRecord?.academicRecordStatusId;
       },
-      currentSchoolCategoryId() {
-        return this.data?.activeEvaluation?.academicRecord?.schoolCategoryId;
+      selectedSchoolCategoryId() {
+        const { levelId } = this.forms?.activeAcademicRecord?.fields;
+        if (levelId) {
+          return this.options?.levels?.items[levelId - 1]?.schoolCategoryId;
+        }
       },
       isCourseVisible() {
         return  [
@@ -313,19 +315,19 @@
             SchoolCategories.COLLEGE.id,
             SchoolCategories.GRADUATE_SCHOOL.id,
             SchoolCategories.VOCATIONAL.id
-          ].includes(this.currentSchoolCategoryId);
+          ].includes(this.selectedSchoolCategoryId);
       },
       isSemesterVisible() {
         return [
             SchoolCategories.SENIOR_HIGH_SCHOOL.id,
             SchoolCategories.COLLEGE.id
-          ].includes(this.currentSchoolCategoryId);
+          ].includes(this.selectedSchoolCategoryId);
       }
     },
     methods: {
       populate() {
-        copyValue(this.data?.activeEvaluation, this.forms.activeEvaluation.fields);
-        copyValue(this.data?.activeEvaluation?.academicRecord, this.forms.activeAcademicRecord.fields);
+        copyValue(this.data?.activeAcademicRecord?.evaluation, this.forms.evaluation.fields);
+        copyValue(this.data?.activeAcademicRecord, this.forms.activeAcademicRecord.fields);
       },
       onSubmitEvaluationRequest() {
         this.isProcessing = true;
@@ -333,20 +335,21 @@
         reset(this.forms.activeAcademicRecord);
 
         const payload = {
-          ...this.forms?.activeEvaluation?.fields,
+          ...this.forms?.evaluation?.fields,
           ...this.forms?.activeAcademicRecord?.fields
         }
 
         const onboardingStepId = ApplicationSteps.EVALUATION_IN_REVIEW.id; // next step
+        const applicationId = this.data?.activeAcademicRecord?.application?.id;
 
-        this.postApplicationEvaluationRequest(this.data?.activeApplication?.id, payload).then((response) => {
-          this.$emit('update: data', { ...this.data, activeEvaluation: { ...response?.data } });
+        this.postApplicationEvaluationRequest(applicationId, payload).then((response) => {
+          this.$emit('update: data', { ...this.data, evaluation: { ...response?.data } });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {
           const { errors } = error.response.data;
           validate(this.forms.activeAcademicRecord, errors);
-          validate(this.forms.activeEvaluation, errors);
+          validate(this.forms.evaluation, errors);
           this.isProcessing = false;
         });
       },
