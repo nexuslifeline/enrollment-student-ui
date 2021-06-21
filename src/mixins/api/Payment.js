@@ -14,6 +14,8 @@ export default {
     getPayment(id) {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/payments/${id}`);
     },
-
+    postSubmitPayment(data, id) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/payments/${id}/submit`, data);
+    },
   }
 }

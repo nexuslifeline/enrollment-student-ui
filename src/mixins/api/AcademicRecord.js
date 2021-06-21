@@ -10,6 +10,15 @@ export default {
     },
     getAcademicRecord(academicRecordId) {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/academic-records/${academicRecordId}`);
+    },
+    getInitialBilling(academicRecordId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/academic-records/${academicRecordId}/initial-billing`);
+    },
+    postRequestEvaluation(data, id) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/academic-records/${id}/request-evaluation`, data);
+    },
+    postSubmitApplication(data, id) {
+      return this.$authHttp.post(`${apiPrefix}/${apiVersion}/academic-records/${id}/submit-application`, data);
     }
   }
 }

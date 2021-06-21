@@ -88,9 +88,9 @@
           : 1;
       },
       showEstimatedPercentage() {
-        this.percentage = this.currentStatusId === AcademicRecordStatuses.ENLISTMENT_APPROVED.id
+        this.percentage = this.currentStatusId === AcademicRecordStatuses.ASSESSMENT_APPROVED.id
           ? 100
-          : this.currentStatusId === AcademicRecordStatuses.ENLISTMENT_PENDING.id
+          : this.currentStatusId === AcademicRecordStatuses.ENLISTMENT_APPROVED.id
           ? 60
           : 30;
       }

@@ -449,7 +449,8 @@
     SectionApi,
     LevelApi,
     TranscriptRecordApi,
-    ApplicationApi
+    ApplicationApi,
+    AcademicRecordApi
   } from '../../../mixins/api';
   import {
     AcademicRecordStatuses,
@@ -467,7 +468,14 @@
   }
 
   export default {
-    mixins: [SectionApi, LevelApi, Tables, TranscriptRecordApi, ApplicationApi],
+    mixins: [
+      SectionApi,
+      LevelApi,
+      Tables,
+      TranscriptRecordApi,
+      ApplicationApi,
+      AcademicRecordApi
+    ],
     components: {
       PhotoViewer
     },
@@ -910,9 +918,9 @@
 
         const payload = { sectionId: academicRecord?.fields?.sectionId, subjects };
 
-        const applicationId = this.data.activeAcademicRecord?.application?.id;
+        const academicRecordId = this.data.activeAcademicRecord?.id;
 
-        this.postApplicationSubmit(applicationId, payload).then(({ data }) => {
+        this.postSubmitApplication(payload, academicRecordId).then(({ data }) => {
           const activeAcademicRecord = { ...this.data?.activeAcademicRecord, ...data.academicRecord };
           this.$emit('update: data', { ...this.data, activeAcademicRecord });
           this.$emit('onAfterSubmit', onboardingStepId);

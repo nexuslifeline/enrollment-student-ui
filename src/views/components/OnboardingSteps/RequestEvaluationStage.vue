@@ -207,7 +207,8 @@
     StudentApi,
     LevelApi,
     ApplicationApi,
-    ReportApi
+    ReportApi,
+    AcademicRecordApi
   } from '../../../mixins/api';
   import {
     OnboardingSteps,
@@ -238,7 +239,13 @@
   }
 
   export default {
-    mixins: [StudentApi, LevelApi, ApplicationApi, ReportApi],
+    mixins: [
+      StudentApi,
+      LevelApi,
+      ApplicationApi,
+      ReportApi,
+      AcademicRecordApi
+    ],
     props: {
       data: {
         type: [Object]
@@ -340,9 +347,9 @@
         }
 
         const onboardingStepId = OnboardingSteps.EVALUATION_IN_REVIEW.id; // next step
-        const applicationId = this.data?.activeAcademicRecord?.application?.id;
+        const academicRecordId = this.data?.activeAcademicRecord?.id;
 
-        this.postApplicationEvaluationRequest(applicationId, payload).then((response) => {
+        this.postRequestEvaluation(payload, academicRecordId).then((response) => {
           this.$emit('update: data', { ...this.data, evaluation: { ...response?.data } });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
