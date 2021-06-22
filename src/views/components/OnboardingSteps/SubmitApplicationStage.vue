@@ -494,6 +494,7 @@
         isProcessing: false,
         selectedSubjectListIndex: 0,
         isShownSubjects: false,
+        previousStepId: OnboardingSteps.EVALUATION_IN_REVIEW.id,
         forms: {
           academicRecord: {
             fields: { ...academicRecordFields },

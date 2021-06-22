@@ -1,62 +1,59 @@
 <template>
   <div class="application__wizard-form-fields">
-    <b-row>
-      <b-col md="12">
-        <b-alert variant="success" show>
-          <h5>APPLICATION SUBMITTED!</h5>
-          <p>Thank you for submitting your enrollment application for this school year.
-          <br> We will review your application and once approved, you will be able to proceed to payment.
-          <br>
-          <br>You'll be notified via email / sms about the result of your subject enlistment request.
-          <br>Once notified, log in again to continue your enrollment application. </p>
-        </b-alert>
-        <b-row class="pb-2">
-          <b-col md="12">
-            <div>
-              <span style="font-size: 1.5rem; font-weight: bold">{{ percentage }}% </span>
-              <span>
-                We are still reviewing your application. Please check your account from time to time
-              </span>
-            </div>
-          </b-col>
-        </b-row>
-        <div class="pb-5">
-          <ProgressIndicator
-            :barCount="6"
-            :activeBar="percentage === 30 ? 2 : percentage === 60 ? 4 : 6"
-          />
-        </div>
-        <div class="approval-container">
-          <ApprovalIndicator
-            :stages="$options.approvalStages"
-            :currentStage="selectedApprovalStage"
-          />
-        </div>
-        <!-- <b-alert
-          :show="dismissCountDown"
-          variant="info"
-          @dismissed="onUpdateStudent()"
-          @dismiss-count-down="countDownChanged"
-        >
-          Please wait a few second, we are setting up for you. Time remaining: {{ dismissCountDown  }} second(s).
-          <v-icon
-            v-if="dismissCountDown"
-            name="spinner"
-            class="mr-2 float-right"
-            spin />
-        </b-alert> -->
-      </b-col>
-    </b-row>
+   <div class="application__content">
+      <b-alert variant="success" show>
+      <h5>APPLICATION SUBMITTED!</h5>
+      <p>Thank you for submitting your enrollment application for this school year.
+      <br> We will review your application and once approved, you will be able to proceed to payment.
+      <br>
+      <br>You'll be notified via email / sms about the result of your subject enlistment request.
+      <br>Once notified, log in again to continue your enrollment application. </p>
+    </b-alert>
+
+    <div>
+      <span style="font-size: 1.5rem; font-weight: bold">{{ percentage }}% </span>
+      <span>
+        We are still reviewing your application. Please check your account from time to time
+      </span>
+    </div>
+    <div class="pb-5">
+      <ProgressIndicator
+        :barCount="6"
+        :activeBar="percentage === 30 ? 2 : percentage === 60 ? 4 : 6"
+      />
+    </div>
+    <ApprovalIndicator
+      :stages="$options.approvalStages"
+      :currentStage="selectedApprovalStage"
+    />
+   </div>
+    <div class="application__action-bar">
+      <b-button
+        v-if="isNextVisible"
+        @click="onSubmitNext"
+        variant="primary"
+        class="application__main-action"
+        :disabled="isProcessing">
+        <v-icon
+          v-if="isProcessing"
+          name="sync"
+          class="mr-2"
+          spin />
+          Continue to Payment
+      </b-button>
+    </div>
   </div>
 </template>
 <script>
   import ApprovalIndicator from '../ApprovalIndicator';
   import ProgressIndicator from '../ProgressIndicator';
   import { approvalStages } from '../../../content';
-  import { AcademicRecordStatuses } from '../../../helpers/enum';
+  import { AcademicRecordStatuses, OnboardingSteps  } from '../../../helpers/enum';
+  import { StudentApi } from '../../../mixins/api';
 
   export default {
     approvalStages,
+    mixins: [StudentApi],
     components: {
       ApprovalIndicator,
       ProgressIndicator
@@ -70,7 +67,10 @@
       return {
         approvalStage: 1,
         percentage: 30,
-        selectedApprovalStage: 1
+        selectedApprovalStage: 1,
+        isProcessing: false,
+        AcademicRecordStatuses,
+        OnboardingSteps
       }
     },
     created() {
@@ -80,20 +80,44 @@
     computed: {
       currentStatusId() {
         return this.data?.activeAcademicRecord?.academicRecordStatusId;
+      },
+      isNextVisible() {
+        return [
+          AcademicRecordStatuses.ASSESSMENT_APPROVED.id,
+          AcademicRecordStatuses.PAYMENT_SUBMITTED.id,
+          AcademicRecordStatuses.ENROLLED.id,
+        ].includes(this.data?.activeAcademicRecord.academicRecordStatusId);
       }
     },
     methods: {
       showCurrentStage() {
-        this.approvalStage = this.currentStatusId === AcademicRecordStatuses.EVALUATION_APPROVED.id
-          ? 2
-          : 1;
+        const stages = {
+          [AcademicRecordStatuses.ENLISTMENT_PENDING.id]: 1,
+          [AcademicRecordStatuses.ENLISTMENT_REJECTED.id]: 1,
+          [AcademicRecordStatuses.ENLISTMENT_APPROVED.id]: 2,
+          [AcademicRecordStatuses.ASSESSMENT_REJECTED.id]: 2,
+          [AcademicRecordStatuses.ASSESSMENT_APPROVED.id]: 3
+        }
+        this.selectedApprovalStage = stages?.[this.currentStatusId] || 1;
       },
       showEstimatedPercentage() {
-        this.percentage = this.currentStatusId === AcademicRecordStatuses.ASSESSMENT_APPROVED.id
-          ? 100
-          : this.currentStatusId === AcademicRecordStatuses.ENLISTMENT_APPROVED.id
-          ? 60
-          : 30;
+        const estimates = {
+          [AcademicRecordStatuses.ASSESSMENT_APPROVED.id]: 100,
+          [AcademicRecordStatuses.ENLISTMENT_APPROVED.id]: 60,
+        }
+        this.percentage = estimates?.[this.currentStatusId] || 30;
+      },
+      onSubmitNext() {
+        this.isProcessing = true;
+        const onboardingStepId = OnboardingSteps.PAYMENTS.id;
+        this.patchStudent({ onboardingStepId }, this.data?.id).then(({ data }) => {
+          this.$emit('update:data', data);
+          this.$emit('onAfterSubmit', onboardingStepId);
+          this.isProcessing = false;
+        }).catch((error) => {
+          console.warn(error);
+          this.isProcessing = false;
+        });
       }
     }
   };
@@ -168,6 +192,10 @@
     @include for-size(desktop-up) {
       padding: 20px 60px 60px 60px;
     }
+  }
+
+  .application__content {
+    height: calc(100% - 80px);
   }
 
 

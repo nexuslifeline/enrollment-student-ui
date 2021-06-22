@@ -16,6 +16,9 @@ export default {
     updateStudent(data, id) {
       return this.$authHttp.put(`${apiPrefix}/${apiVersion}/students/${id}`, data)
     },
+    patchStudent(data, id) {
+      return this.$authHttp.patch(`${apiPrefix}/${apiVersion}/students/${id}`, data)
+    },
     savePhoto(data, id){
       return this.$authHttp.post(`${apiPrefix}/${apiVersion}/students/${id}/photos`, data)
     },

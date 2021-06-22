@@ -42,6 +42,7 @@
           />
           <ReviewEvaluationStage
             v-if="currentStepId === OnboardingSteps.EVALUATION_IN_REVIEW.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
             :data.sync="data"
           />
           <SubmitApplicationStage
@@ -52,6 +53,7 @@
           />
           <ReviewApplicationStage
             v-if="currentStepId === OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id"
+            @onAfterSubmit="(stepId) => currentStepId = stepId"
             :data.sync="data"
           />
           <PaymentStage

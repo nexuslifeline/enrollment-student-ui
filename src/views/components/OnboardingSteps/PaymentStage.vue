@@ -18,14 +18,14 @@
           <b-row>
             <b-col md=12>
               <b-alert show variant="primary">
-                <p style="font-weight: bold">
+                <p>
                   The initial fee should be paid to secure you registration. You will not be officially registered unless payment procedure is completed.
                   <br>
                   <br>
                   <span v-if="initialBill.studentFee && initialBill.studentFee.approvalNotes">
-                    <strong>IMPORTANT NOTICE : </strong>
+                    IMPORTANT NOTICE:
                     <br>
-                      {{ initialBill.studentFee.approvalNotes }}
+                    {{ initialBill.studentFee.approvalNotes }}
                   </span>
                 </p>
               </b-alert>
@@ -608,6 +608,9 @@ import { copyValue } from '../../../helpers/extractor';
       }
     },
     created() {
+      // Note! add an improvement that will check initial billing
+      // if there is no initial billing found, add a message saying that you need to submit an Assessment Request first
+      // when click will go back to Assessment Request Stage
       this.loadInitialBilling();
       this.loadBankAccounts();
       this.loadPeraPadalaAccounts();
@@ -620,7 +623,13 @@ import { copyValue } from '../../../helpers/extractor';
           copyValue(data.payments?.[0], this.forms.payment.fields);
           this.loadPaymentFiles(); // this is temporry only, will be moved to separate component for handle payment files
         } else {
-          showNotification(this, 'danger', `Something went wrong. Brace yourself till we fix this issue or you may reload the page. `, 'Error')
+          // create a draft payment here if no there is no current draft payment
+          showNotification(
+            this,
+            'danger',
+            `Something went wrong due to Draft Payment not found. Brace yourself till we fix this issue or you may reload the page. `,
+            'Error'
+          );
         }
       },
       loadInitialBilling() {

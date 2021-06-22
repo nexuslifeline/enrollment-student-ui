@@ -17,15 +17,32 @@
       :stages="$options.evaluationApprovalStages"
       :currentStage="approvalStage"
     />
+    <div class="application__action-bar">
+      <b-button
+        v-if="isNextVisible"
+        @click="onSubmitNext"
+        variant="primary"
+        class="application__main-action"
+        :disabled="isProcessing">
+        <v-icon
+          v-if="isProcessing"
+          name="sync"
+          class="mr-2"
+          spin />
+          Continue to Application
+      </b-button>
+    </div>
   </div>
 </template>
 <script>
   import ApprovalIndicator from '../ApprovalIndicator.vue'
   import { evaluationApprovalStages } from '../../../content';
-  import { AcademicRecordStatuses } from '../../../helpers/enum';
+  import { AcademicRecordStatuses, OnboardingSteps } from '../../../helpers/enum';
+  import { StudentApi } from '../../../mixins/api';
 
   export default {
     evaluationApprovalStages,
+    mixins: [StudentApi],
     components: {
       ApprovalIndicator
     },
@@ -36,7 +53,9 @@
     },
     data() {
       return {
-        approvalStage: 1
+        isProcessing: false,
+        approvalStage: 1,
+        AcademicRecordStatuses
       }
     },
     created() {
@@ -45,6 +64,14 @@
     computed: {
       currentStatusId() {
         return this.data?.activeAcademicRecord?.academicRecordStatusId;
+      },
+      isNextVisible() {
+        return ![
+          AcademicRecordStatuses.DRAFT.id,
+          AcademicRecordStatuses.EVALUATION_PENDING.id,
+          AcademicRecordStatuses.EVALUATION_REJECTED.id,
+          AcademicRecordStatuses.CLOSED.id,
+        ].includes(this.data?.activeAcademicRecord.academicRecordStatusId);
       }
     },
     methods: {
@@ -52,6 +79,18 @@
         this.approvalStage = this.currentStatusId === AcademicRecordStatuses.EVALUATION_APPROVED.id
           ? 2
           : 1;
+      },
+      onSubmitNext() {
+        this.isProcessing = true;
+        const onboardingStepId = OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id;
+        this.patchStudent({ onboardingStepId }, this.data?.id).then(({ data }) => {
+          this.$emit('update:data', data);
+          this.$emit('onAfterSubmit', onboardingStepId);
+          this.isProcessing = false;
+        }).catch((error) => {
+          console.warn(error);
+          this.isProcessing = false;
+        });
       }
     }
   };
