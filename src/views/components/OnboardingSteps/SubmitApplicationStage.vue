@@ -814,7 +814,7 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.activeAcademicRecord, this.forms.academicRecord.fields);
+        copyValue(this.data?.activeAcademicRecord || {}, this.forms.academicRecord.fields);
       },
       loadLevels() {
         this.getLevelList({ paginate: false }).then(({ data }) => {
@@ -909,6 +909,7 @@
       },
       onSubmitApplication() {
         this.isProcessing = true;
+        reset(this.forms.academicRecord);
         const onboardingStepId = OnboardingSteps.ACADEMIC_RECORD_IN_REVIEW.id; // next step
 
         const { academicRecord } = this.forms;
@@ -922,7 +923,7 @@
 
         this.postSubmitApplication(payload, academicRecordId).then(({ data }) => {
           const activeAcademicRecord = { ...this.data?.activeAcademicRecord, ...data.academicRecord };
-          this.$emit('update: data', { ...this.data, activeAcademicRecord });
+          this.$emit('update:data', { ...this.data, activeAcademicRecord });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

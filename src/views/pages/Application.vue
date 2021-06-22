@@ -60,6 +60,10 @@
             @onBack="(stepId) => currentStepId = stepId"
             :data.sync="data"
           />
+          <ReviewPaymentStage
+            v-if="currentStepId === OnboardingSteps.WAITING.id"
+            :data.sync="data"
+          />
         </template>
       </div>
     </div>
@@ -74,14 +78,8 @@ import SlideStageIndicator from '../components/SlideStageIndicator';
 import {
   OnboardingSteps,
 } from '../../helpers/enum';
-import { copyValue } from '../../helpers/extractor';
 import {
   groupStages,
-  paymentMethods,
-  approvalStages,
-  evaluationApprovalStages,
-  paymentApprovalStages,
-  paymentTooltips
 } from '../../content';
 import {
   ProfileStage,
@@ -92,7 +90,8 @@ import {
   ReviewEvaluationStage,
   SubmitApplicationStage,
   ReviewApplicationStage,
-  PaymentStage
+  PaymentStage,
+  ReviewPaymentStage
 } from '../components/OnboardingSteps'
 
 
@@ -112,7 +111,8 @@ export default {
     ReviewEvaluationStage,
     SubmitApplicationStage,
     ReviewApplicationStage,
-    PaymentStage
+    PaymentStage,
+    ReviewPaymentStage
   },
   data() {
     return {
@@ -128,12 +128,6 @@ export default {
       this.isLoaded = true;
       this.data = student;
       this.currentStepId = student?.onboardingStepId || 1;
-      Object.keys(this.forms).forEach((key) => {
-        const source = student[key] || student;
-        if (source) {
-          copyValue(source, this.forms[key].fields);
-        }
-      })
     });
   }
 }

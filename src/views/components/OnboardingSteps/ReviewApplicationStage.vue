@@ -70,6 +70,7 @@
       return {
         approvalStage: 1,
         percentage: 30,
+        selectedApprovalStage: 1
       }
     },
     created() {

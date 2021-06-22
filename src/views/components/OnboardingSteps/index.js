@@ -7,3 +7,4 @@ export { default as ReviewEvaluationStage } from './ReviewEvaluationStage';
 export { default as SubmitApplicationStage } from './SubmitApplicationStage';
 export { default as ReviewApplicationStage } from './ReviewApplicationStage';
 export { default as PaymentStage } from './PaymentStage';
+export { default as ReviewPaymentStage } from './ReviewPaymentStage';

@@ -360,10 +360,11 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.address, this.forms.address.fields);
+        copyValue(this.data?.address || {}, this.forms.address.fields);
       },
       onSubmitNext() {
         this.isProcessing = true;
+        reset(this.forms.address);
         const onboardingStepId = OnboardingSteps.FAMILY.id; // next step
         const payload = {
           onboardingStepId,
@@ -372,7 +373,7 @@
           }
         }
         this.updateStudent(payload, this.data?.id).then(({ data }) => {
-          this.$emit('update: data', data);
+          this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

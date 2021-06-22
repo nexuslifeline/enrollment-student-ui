@@ -166,7 +166,7 @@ export default {
   data() {
     return {
       currentFormIndex: 0,
-      StudentCategories: StudentCategories,
+      StudentCategories,
       isEnrolled: null,
       forms: {
         register: {
@@ -226,7 +226,7 @@ export default {
       }
 
       const data = {
-        isEnrolled: this.isEnrolled,
+        isAdmission: !this.isEnrolled && studentCategoryId !== StudentCategories.OLD.id,
         ...register.fields
       }
       register.isProcessing = true;

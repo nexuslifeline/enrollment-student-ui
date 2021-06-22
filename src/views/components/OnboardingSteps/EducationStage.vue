@@ -283,10 +283,11 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.education, this.forms.education.fields);
+        copyValue(this.data?.education || {}, this.forms.education.fields);
       },
       onSubmitNext() {
         this.isProcessing = true;
+        reset(this.forms.education);
         const onboardingStepId = OnboardingSteps.REQUEST_EVALUATION.id; // next step
         const payload = {
           onboardingStepId,
@@ -295,7 +296,7 @@
           }
         }
         this.updateStudent(payload, this.data?.id).then(({ data }) => {
-          this.$emit('update: data', data);
+          this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

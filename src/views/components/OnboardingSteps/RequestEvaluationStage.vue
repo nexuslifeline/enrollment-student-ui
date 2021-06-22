@@ -4,13 +4,13 @@
       <b-row v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.EVALUATION_REJECTED.id">
         <b-col md=12>
           <b-alert variant="danger" show>
+            <h5 class="mb-3">
+              Request has been Rejected!
+            </h5>
             <p>
-              <strong>
-                Sorry, your request for evaluation is rejected with the ffg. reasons : <br>
-                {{ data.evaluation.disapprovalNotes }} <br><br>
-              </strong>
-              <small>Please be inform that you can modify your request and resubmit for evaluation.</small>
+              {{ data.activeAcademicRecord.evaluation.disapprovalNotes }}
             </p>
+            <p>Please be inform that you can modify your request and resubmit for evaluation.</p>
           </b-alert>
         </b-col>
       </b-row>
@@ -186,7 +186,7 @@
           name="sync"
           class="mr-2"
           spin />
-          Next
+          Submit Request
       </b-button>
     </div>
     <FileViewer
@@ -333,13 +333,14 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.activeAcademicRecord?.evaluation, this.forms.evaluation.fields);
-        copyValue(this.data?.activeAcademicRecord, this.forms.activeAcademicRecord.fields);
+        copyValue(this.data?.activeAcademicRecord?.evaluation || {}, this.forms.evaluation.fields);
+        copyValue(this.data?.activeAcademicRecord || {}, this.forms.activeAcademicRecord.fields);
       },
       onSubmitEvaluationRequest() {
         this.isProcessing = true;
 
         reset(this.forms.activeAcademicRecord);
+        reset(this.forms.evaluation);
 
         const payload = {
           ...this.forms?.evaluation?.fields,
@@ -350,7 +351,7 @@
         const academicRecordId = this.data?.activeAcademicRecord?.id;
 
         this.postRequestEvaluation(payload, academicRecordId).then((response) => {
-          this.$emit('update: data', { ...this.data, evaluation: { ...response?.data } });
+          this.$emit('update:data', { ...this.data, evaluation: { ...response?.data } });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

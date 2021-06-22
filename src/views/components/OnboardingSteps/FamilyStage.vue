@@ -218,10 +218,11 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.family, this.forms.family.fields);
+        copyValue(this.data?.family || {}, this.forms.family.fields);
       },
       onSubmitNext() {
         this.isProcessing = true;
+        reset(this.forms.family);
         const onboardingStepId = OnboardingSteps.EDUCATION.id; // next step
         const payload = {
           onboardingStepId,
@@ -230,7 +231,7 @@
           }
         }
         this.updateStudent(payload, this.data?.id).then(({ data }) => {
-          this.$emit('update: data', data);
+          this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

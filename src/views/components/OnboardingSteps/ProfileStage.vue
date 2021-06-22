@@ -175,7 +175,7 @@
     },
     methods: {
       populate() {
-        copyValue(this.data, this.forms.student.fields);
+        copyValue(this.data || {}, this.forms.student.fields);
         if(this.data?.photo){
           this.studentPhotoUrl = process.env.VUE_APP_PUBLIC_PHOTO_URL + this.data?.photo?.hashName;
         }
@@ -197,13 +197,14 @@
       },
       onSubmitNext() {
         this.isProcessing = true;
+        reset(this.forms.student);
         const onboardingStepId = OnboardingSteps.ADDRESS.id; // next step
         const payload = {
-          ...this.forms.student?.fields,
+          ...this.forms?.student?.fields,
           onboardingStepId
         }
         this.updateStudent(payload, this.data?.id).then(({ data }) => {
-          this.$emit('update: data', data);
+          this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

@@ -866,12 +866,13 @@ import { copyValue } from '../../../helpers/extractor';
       },
       onSubmitPayment() {
         this.isProcessing = true;
+        reset(this.forms.payment);
         const onboardingStepId = OnboardingSteps.WAITING.id; // next step
         const payload = {
           ...this.forms.payment?.fields
         }
         this.postSubmitPayment(payload, this.forms.payment?.fields?.id).then(({ data }) => {
-          this.$emit('update: data', data);
+          this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
         }).catch((error) => {

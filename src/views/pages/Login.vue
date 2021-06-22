@@ -72,7 +72,7 @@
 
           <div v-if="step === 1" class="signup__confirmation-content">
             <p class="signup__confirmation-headline">
-              Are you already enrolled for SY 2020-2021?
+              Are you already enrolled for SY 2021-2022?
             </p>
             <ul class="signup__confirmation-answers">
               <li @click="onSelectOption(true)" class="signup__answer-item">
@@ -89,7 +89,7 @@
                 <div class="signup__confirmation-answer-item">
                   Yes, I am enrolled
                   <span class="signup__confirmation-answer-notes">
-                    (Choose this if you are Already ENROLLED this Academic Year 2020-2021 and you want to register for an STC student account)
+                    (Choose this if you are Already ENROLLED this Academic Year 2021-2022 and you want to register for an STC student account)
                   </span>
                 </div>
                 <v-icon name="chevron-right" class="signup__answer-chevron-right" scale="2" />
@@ -121,7 +121,7 @@
               What type of student are you?
             </p>
             <span v-if="isEnrolled" class="signup__confirmation-answer-notes">
-              (If you are not sure, you may refer to your Certificate of Registration(SY 2020-2021)
+              (If you are not sure, you may refer to your Certificate of Registration(SY 2021-2022)
               or you may contact us at <a href='#'>{{fbPageUrl}}</a>)
             </span>
             <ul class="signup__confirmation-answers">
@@ -254,7 +254,7 @@ export default {
         [
           {
             header: '1. I am a newly enrolled student',
-            description: '(Choose this if this Academic Year 2020-2021 is your first time in STC)',
+            description: '(Choose this if this Academic Year 2021-2022 is your first time in STC)',
             notes: 'Note: for  newly enrolled transferees, please proceed to No. 3.'
           },
           {
