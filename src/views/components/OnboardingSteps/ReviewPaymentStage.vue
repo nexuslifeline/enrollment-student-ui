@@ -71,6 +71,7 @@ import { StudentApi } from '../../../mixins/api';
       onCompleteEnrollment(routePath) {
         const data = { isOnboarding: false };
         this.updateStudent(data, this.data?.id).then(({ data }) => {
+          this.$store.commit('SET_USER', data);
           this.$router.push({ path: routePath });
         })
       },
