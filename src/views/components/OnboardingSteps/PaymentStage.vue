@@ -633,7 +633,7 @@ import { copyValue } from '../../../helpers/extractor';
         }
       },
       loadInitialBilling() {
-        this.getInitialBilling(this.data?.activeAcademicRecord?.id).then(({ data }) => {
+        this.getInitialBilling(this.data?.latestAcademicRecord?.id).then(({ data }) => {
           this.initialBill = data;
           this.tables.billings.items = [data];
           this.setDefaultData(data);
@@ -854,7 +854,7 @@ import { copyValue } from '../../../helpers/extractor';
         this.previewPaymentFile(currentIdx);
       },
       previewAssessmentForm(){
-        const academicRecordId = this.data?.activeAcademicRecord?.id;
+        const academicRecordId = this.data?.latestAcademicRecord?.id;
         this.file.type = null
         this.file.src = null
         this.file.notes = null
@@ -893,7 +893,7 @@ import { copyValue } from '../../../helpers/extractor';
     },
     computed: {
       currentStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       // initialBill() {
       //   const bills = this.data?.activeAcademicRecord?.studentFee?.billings || [];

@@ -79,14 +79,14 @@
     },
     computed: {
       currentStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       isNextVisible() {
         return [
           AcademicRecordStatuses.ASSESSMENT_APPROVED.id,
           AcademicRecordStatuses.PAYMENT_SUBMITTED.id,
           AcademicRecordStatuses.ENROLLED.id,
-        ].includes(this.data?.activeAcademicRecord.academicRecordStatusId);
+        ].includes(this.data?.latestAcademicRecord.academicRecordStatusId);
       }
     },
     methods: {

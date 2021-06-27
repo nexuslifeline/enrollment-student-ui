@@ -63,7 +63,7 @@
     },
     computed: {
       currentStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       isNextVisible() {
         return ![
@@ -71,7 +71,7 @@
           AcademicRecordStatuses.EVALUATION_PENDING.id,
           AcademicRecordStatuses.EVALUATION_REJECTED.id,
           AcademicRecordStatuses.CLOSED.id,
-        ].includes(this.data?.activeAcademicRecord.academicRecordStatusId);
+        ].includes(this.data?.latestAcademicRecord.academicRecordStatusId);
       }
     },
     methods: {

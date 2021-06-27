@@ -92,7 +92,7 @@
             title: 'My Schedule',
             image: '/img/svg/my-documents.svg',
             description: "Shows your class schedule. See what time your subject is over the course of the week.",
-            path: `schedules/${this.$store?.state?.user?.activeAcademicRecord.id}`,
+            path: `schedules/${this.$store?.state?.user?.latestAcademicRecord.id}`,
             isVisible: true
           },
           {

@@ -777,19 +777,19 @@
     },
     computed: {
       currentAcademicRecordStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       currentSchoolCategoryId() {
-        return this.data?.activeAcademicRecord?.schoolCategoryId;
+        return this.data?.latestAcademicRecord?.schoolCategoryId;
       },
       levelName() {
-        return this.data?.activeAcademicRecord?.level?.name || 'No Level';
+        return this.data?.latestAcademicRecord?.level?.name || 'No Level';
       },
       courseName() {
-        return this.data?.activeAcademicRecord?.course?.name || 'No Course';
+        return this.data?.latestAcademicRecord?.course?.name || 'No Course';
       },
       semesterName() {
-        return this.data?.activeAcademicRecord?.semester?.name || 'No Semester';
+        return this.data?.latestAcademicRecord?.semester?.name || 'No Semester';
       },
       totalUnits() {
         let totalUnits = 0
@@ -815,7 +815,7 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.activeAcademicRecord || {}, this.forms.academicRecord.fields);
+        copyValue(this.data?.latestAcademicRecord || {}, this.forms.academicRecord.fields);
       },
       loadLevels() {
         this.getLevelList({ paginate: false }).then(({ data }) => {
@@ -825,7 +825,7 @@
       },
       loadCurrentLevelCourses() {
         this.options.courses.scheduledLoading = true
-        const { levelId } = this.data?.activeAcademicRecord;
+        const { levelId } = this.data?.latestAcademicRecord;
         this.getCoursesOfLevelList(levelId, { paginate: false }).then(({ data }) => {
           this.options.courses.scheduledItems = data
           this.options.semesters.scheduledItems = Semesters
@@ -839,13 +839,13 @@
         });
       },
       loadCurrentCourseLevels() {
-        const { courseId } = this.data?.activeAcademicRecord;
+        const { courseId } = this.data?.latestAcademicRecord;
         this.getLevelOfCoursesList(courseId, { paginate: false }).then(({ data }) => {
           this.options.levelsOfCourses.items = data
         })
       },
       loadUnscheduledSubjects() {
-        const { transcriptRecord } = this.data?.activeAcademicRecord;
+        const { transcriptRecord } = this.data?.latestAcademicRecord;
         const { subjects } = this.tables
         const { subject } = this.paginations
 
@@ -874,7 +874,7 @@
         this.isLoadingSection = true;
         this.forms.academicRecord.fields.sectionId = null;
 
-        const { schoolYearId, levelId, courseId, semesterId } = this.data?.activeAcademicRecord;
+        const { schoolYearId, levelId, courseId, semesterId } = this.data?.latestAcademicRecord;
         const params = { paginate: false, schoolYearId, levelId, courseId, semesterId };
 
         this.getSectionList(params).then(({ data }) => {
@@ -886,7 +886,7 @@
       },
       loadDefaultSubjects() {
         const { sectionId } = this.forms.academicRecord.fields;
-        const { curriculumId } = this.data?.activeAcademicRecord?.transcriptRecord;
+        const { curriculumId } = this.data?.latestAcademicRecord?.transcriptRecord;
 
         const { enlistedSubjects } = this.tables
         const params = { paginate: false, curriculumId }
@@ -920,10 +920,10 @@
 
         const payload = { sectionId: academicRecord?.fields?.sectionId, subjects };
 
-        const academicRecordId = this.data.activeAcademicRecord?.id;
+        const academicRecordId = this.data.latestAcademicRecord?.id;
 
         this.postSubmitApplication(payload, academicRecordId).then(({ data }) => {
-          const activeAcademicRecord = { ...this.data?.activeAcademicRecord, ...data.academicRecord };
+          const activeAcademicRecord = { ...this.data?.latestAcademicRecord, ...data.latestAcademicRecord };
           this.$emit('update:data', { ...this.data, activeAcademicRecord });
           this.$emit('onAfterSubmit', onboardingStepId);
           this.isProcessing = false;
@@ -1041,7 +1041,7 @@
         const { scheduledSubjects } = this.tables
         const { scheduledSubject } = this.paginations
         const { sectionId } = this.filters.scheduledSubject
-        const { curriculumId } = this.data?.activeAcademicRecord?.transcriptRecord;
+        const { curriculumId } = this.data?.latestAcademicRecord?.transcriptRecord;
         const params = { paginate: false, curriculumId }
         scheduledSubjects.isBusy = true
 

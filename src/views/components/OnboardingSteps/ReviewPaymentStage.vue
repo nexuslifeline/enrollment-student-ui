@@ -62,7 +62,7 @@
     },
     computed: {
       currentStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       }
     },
     methods: {

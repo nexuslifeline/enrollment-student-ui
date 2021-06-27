@@ -8,7 +8,7 @@
               Request has been Rejected!
             </h5>
             <p>
-              {{ data.activeAcademicRecord.evaluation.disapprovalNotes }}
+              {{ data.latestAcademicRecord.evaluation.disapprovalNotes }}
             </p>
             <p>Please be inform that you can modify your request and resubmit for evaluation.</p>
           </b-alert>
@@ -308,7 +308,7 @@
     },
     computed: {
       currentAcademicRecordStatusId() {
-        return this.data?.activeAcademicRecord?.academicRecordStatusId;
+        return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       selectedSchoolCategoryId() {
         const { levelId } = this.forms?.activeAcademicRecord?.fields;
@@ -333,8 +333,8 @@
     },
     methods: {
       populate() {
-        copyValue(this.data?.activeAcademicRecord?.evaluation || {}, this.forms.evaluation.fields);
-        copyValue(this.data?.activeAcademicRecord || {}, this.forms.activeAcademicRecord.fields);
+        copyValue(this.data?.latestAcademicRecord?.evaluation || {}, this.forms.evaluation.fields);
+        copyValue(this.data?.latestAcademicRecord || {}, this.forms.activeAcademicRecord.fields);
       },
       onSubmitEvaluationRequest() {
         this.isProcessing = true;
@@ -348,7 +348,7 @@
         }
 
         const onboardingStepId = OnboardingSteps.EVALUATION_IN_REVIEW.id; // next step
-        const academicRecordId = this.data?.activeAcademicRecord?.id;
+        const academicRecordId = this.data?.latestAcademicRecord?.id;
 
         this.postRequestEvaluation(payload, academicRecordId).then((response) => {
           this.$emit('update:data', { ...this.data, evaluation: { ...response?.data } });
