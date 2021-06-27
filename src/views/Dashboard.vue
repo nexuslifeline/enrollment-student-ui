@@ -21,7 +21,7 @@
     data() {
       return {
         menuKey: 0,
-        isReady: false,
+        isReady: true,
         SchoolCategories: SchoolCategories,
         showNewApplicationNotice: false
       }
@@ -48,9 +48,6 @@
       latestAcademicRecord() {
         return this.$store.state.user.latestAcademicRecord || {};
       },
-      academicRecords() {
-        return this.$store.state.user.academicRecords || [];
-      }
     },
     created() {
       if (this.isOnboarding) {

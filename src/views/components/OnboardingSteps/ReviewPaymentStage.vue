@@ -43,6 +43,7 @@
   import ApprovalIndicator from '../ApprovalIndicator';
   import { paymentApprovalStages } from '../../../content';
   import { AcademicRecordStatuses } from '../../../helpers/enum';
+import { StudentApi } from '../../../mixins/api';
 
   export default {
     paymentApprovalStages,
@@ -54,6 +55,7 @@
         type: [Object]
       }
     },
+    mixins: [ StudentApi ],
     data() {
       return {
         AcademicRecordStatuses,
@@ -68,7 +70,7 @@
     methods: {
       onCompleteEnrollment(routePath) {
         const data = { isOnboarding: false };
-        this.updateStudent(data, this.data?.student.id).then(({ data }) => {
+        this.updateStudent(data, this.data?.id).then(({ data }) => {
           this.$router.push({ path: routePath });
         })
       },
