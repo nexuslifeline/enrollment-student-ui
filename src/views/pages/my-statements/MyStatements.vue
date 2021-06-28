@@ -6,12 +6,6 @@
       <p class="c-app__page-description">
         {{$options.headline.description}}
       </p>
-    <!-- <div class="add-button-container">
-      <b-button
-        class="pay-button"
-        variant="primary"> PAY
-      </b-button>
-    </div> -->
     <b-table
       ref="billings"
       class="c-app__table"
@@ -55,13 +49,9 @@
             >
             Preview
             </b-dropdown-item>
-            <!-- <b-dropdown-item
-              @click="loadDetails(row)" >
-              View Details
-            </b-dropdown-item> -->
             <b-dropdown-item
               :to="`/payment/${row.item.id}`"
-              v-if="!row.item.submittedPayments.length > 0">
+              v-if="isAllowedPayBill(row.item)">
               Pay Bill
             </b-dropdown-item>
         </b-dropdown>
@@ -324,9 +314,6 @@ export default {
         billings.items = data
         billings.isBusy = false
       })
-
-      // if (billings.items.length > 0)
-      //   this.$refs.billings.selectRow(0)
     },
     loadDetails(row) {
       const { item } = row
@@ -362,6 +349,19 @@ export default {
         this.file.isLoading = false;
       });
     },
+    isAllowedPayBill(billing){
+
+      if(billing.submittedPayments.length > 0) {
+        //prevent pay bill while there's a pending payment
+        return false
+      }
+
+      if(parseFloat(billing.totalPaid) < parseFloat(billing.totalAmount)) {
+        return true
+      }
+
+      return false
+    }
   },
   computed: {
     getTotalBilling() {
