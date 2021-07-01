@@ -1,5 +1,16 @@
 <template>
   <div class="application__wizard-form-fields">
+    <b-row v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.ASSESSMENT_REJECTED.id">
+    <b-col md=12>
+      <b-alert variant="danger" show>
+        <p style="font-weight:bold">
+          Sorry, your application is rejected with the ffg. reasons : <br>
+          {{ data.latestAcademicRecord.studentFee.disapprovalNotes }} <br><br>
+          <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
+        </p>
+      </b-alert>
+    </b-col>
+  </b-row>
    <div class="application__content">
       <b-alert variant="success" show>
       <h5>APPLICATION SUBMITTED!</h5>
@@ -9,7 +20,6 @@
       <br>You'll be notified via email / sms about the result of your subject enlistment request.
       <br>Once notified, log in again to continue your enrollment application. </p>
     </b-alert>
-
     <div>
       <span style="font-size: 1.5rem; font-weight: bold">{{ percentage }}% </span>
       <span>
@@ -78,7 +88,7 @@
       this.showEstimatedPercentage();
     },
     computed: {
-      currentStatusId() {
+      currentAcademicRecordStatusId() {
         return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       isNextVisible() {
@@ -98,14 +108,14 @@
           [AcademicRecordStatuses.ASSESSMENT_REJECTED.id]: 2,
           [AcademicRecordStatuses.ASSESSMENT_APPROVED.id]: 3
         }
-        this.selectedApprovalStage = stages?.[this.currentStatusId] || 1;
+        this.selectedApprovalStage = stages?.[this.currentAcademicRecordStatusId] || 1;
       },
       showEstimatedPercentage() {
         const estimates = {
           [AcademicRecordStatuses.ASSESSMENT_APPROVED.id]: 100,
           [AcademicRecordStatuses.ENLISTMENT_APPROVED.id]: 60,
         }
-        this.percentage = estimates?.[this.currentStatusId] || 30;
+        this.percentage = estimates?.[this.currentAcademicRecordStatusId] || 30;
       },
       onSubmitNext() {
         this.isProcessing = true;
