@@ -1,17 +1,19 @@
 <template>
   <div class="application__wizard-form-fields">
-    <b-row v-if="false">
+    <!-- there is no payment reject status in academi records status -->
+    <!-- to check if it is rejected, it will be based if disapproval notes is not null -->
+    <b-row v-if="forms.payment.fields.disapprovalNotes">
       <b-col md=12>
         <b-alert variant="danger" show>
           <p>
-            Sorry, your payment is rejected with the ffg. reasons : <br>
-            {{ initialBill.studentFee && initialBill.studentFee.disapprovalNotes }} <br><br>
-            <small>Please be inform that you can modify your payment and resubmit for activeEvaluation.</small>
+            Sorry, your payment is <b>rejected</b> with the ffg. reasons : <br>
+            <b>{{ forms.payment.fields.disapprovalNotes }}</b> <br>
+            <small>Please be inform that you can modify your payment and resubmit for Evaluation.</small>
           </p>
         </b-alert>
       </b-col>
     </b-row>
-    <div v-show="!isPaying" class="mt-4" >
+    <div v-show="!isPaying" class="mt-2" >
       <!--  -->
       <b-row >
         <b-col md=12>
@@ -59,12 +61,12 @@
                 <b-row>
                   <b-col md=12>
                     <b-list-group  >
-                      <b-list-group-item v-if="initialBill.totalAmount > 0" 
+                      <b-list-group-item v-if="initialBill.totalAmount > 0"
                         style="border:none;" href="#"
-                        class="d-flex justify-content-between align-items-center" 
+                        class="d-flex justify-content-between align-items-center"
                         @click="onPaySelected(PayTypes.INITIAL.id)">
                         <div class="mr-4" style="color:black">
-                          <h5 class="mb-1 mt-3">PAY {{ formattedInitialFeeValue }} PESOS ONLY</h5>
+                          <h5 class="mb-1 mt-3">PAY {{ $options.formatNumber(initialBill.totalAmount) }} PESOS ONLY</h5>
                           <p class="mb-2">
                             Make a payment for the initial fee only to be officially enrolled.
                           </p>
@@ -404,6 +406,8 @@ import { copyValue } from '../../../helpers/extractor';
   }
 
   export default {
+    formatNumber,
+    AcademicRecordStatuses,
     mixins: [
       AcademicRecordApi,
       EWalletAccountApi,
@@ -685,7 +689,7 @@ import { copyValue } from '../../../helpers/extractor';
         // this.isPaying = true
 
         if (payTypeId === PayTypes.INITIAL.id) {
-          this.forms.payment.fields.amount = initialBill.totalAmount
+          this.forms.payment.fields.amount = this.initialBill.totalAmount
         } else {
           this.forms.payment.fields.amount = 0
         }
@@ -892,7 +896,7 @@ import { copyValue } from '../../../helpers/extractor';
       },
     },
     computed: {
-      currentStatusId() {
+      currentAcademicRecordStatusId() {
         return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
       // initialBill() {
