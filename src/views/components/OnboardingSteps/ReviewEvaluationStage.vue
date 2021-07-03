@@ -1,22 +1,7 @@
 <template>
   <div class="application__wizard-form-fields">
-    <b-alert variant="success" class="mt-4" show>
-      <h5 class="mb-3">REQUEST FOR EVALUATION SUBMITTED!</h5>
-      <p>
-        Thank you for submitting your enrollment application for this school year.
-        <br> You'll be notified via email / sms about the result of you evaluation request.
-      </p>
-      <p>
-        Once notified, log in again to continue your enrollment application.
-      </p>
-      <p>
-        We will try to get back to you as soon as we can!
-      </p>
-    </b-alert>
-    <ApprovalIndicator
-      :stages="$options.evaluationApprovalStages"
-      :currentStage="approvalStage"
-    />
+    <EvaluationApprovedAlert v-if="isApproved" :data="data.latestAcademicRecord && data.latestAcademicRecord.evaluation || null" />
+    <EvaluationPendingAlert v-else :currentStage="approvalStage" />
     <div class="application__action-bar">
       <b-button
         v-if="isNextVisible"
@@ -35,16 +20,17 @@
   </div>
 </template>
 <script>
-  import ApprovalIndicator from '../ApprovalIndicator.vue'
-  import { evaluationApprovalStages } from '../../../content';
+
   import { AcademicRecordStatuses, OnboardingSteps } from '../../../helpers/enum';
   import { StudentApi } from '../../../mixins/api';
+  import EvaluationPendingAlert from '../AlertNotifications/EvaluationPending'
+  import EvaluationApprovedAlert from '../AlertNotifications/EvaluationApproved'
 
   export default {
-    evaluationApprovalStages,
     mixins: [StudentApi],
     components: {
-      ApprovalIndicator
+      EvaluationPendingAlert,
+      EvaluationApprovedAlert
     },
     props: {
       data: {
@@ -71,6 +57,18 @@
           AcademicRecordStatuses.EVALUATION_PENDING.id,
           AcademicRecordStatuses.EVALUATION_REJECTED.id,
           AcademicRecordStatuses.CLOSED.id,
+        ].includes(this.data?.latestAcademicRecord.academicRecordStatusId);
+      },
+      isApproved() {
+        return [
+          AcademicRecordStatuses.EVALUATION_APPROVED.id,
+          AcademicRecordStatuses.ENLISTMENT_PENDING.id,
+          AcademicRecordStatuses.ENLISTMENT_REJECTED.id,
+          AcademicRecordStatuses.ENLISTMENT_APPROVED.id,
+          AcademicRecordStatuses.ASSESSMENT_REJECTED.id,
+          AcademicRecordStatuses.ASSESSMENT_APPROVED.id,
+          AcademicRecordStatuses.PAYMENT_SUBMITTED.id,
+          AcademicRecordStatuses.ENROLLED.id
         ].includes(this.data?.latestAcademicRecord.academicRecordStatusId);
       }
     },

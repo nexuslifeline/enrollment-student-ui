@@ -3,7 +3,7 @@
       <b-row>
         <b-col md="12">
           <div v-if="currentStatusId === AcademicRecordStatuses.ENROLLED.id">
-            <b-alert variant="success" show>
+            <!-- <b-alert variant="success" show>
               <h5>CONGRATULATIONS!</h5>
               <p> Your are now officially enrolled and a certified Theresian. <br><br>
                 You can download your Certificate of Registration 
@@ -16,18 +16,14 @@
                 Go to my <a href="#" @click="onCompleteEnrollment('/dashboard')">Dashboard</a>. <br>
                 View my <a href="#" @click="onCompleteEnrollment('/documents/assessment-list')">Documents</a>. <br>
               </p>
-              <!-- <small>Please, click here to complete your enrollment.</small> <b-button variant="outline-primary" @click="onCompleteEnrollment"> Click Here</b-button> -->
-            </b-alert>
+            </b-alert> -->
+            <PaymentApproveAlert
+              @onPreviewRegistration="onCompleteEnrollment('/documents/registration-list')"
+              @onGoToDashboard="onCompleteEnrollment('/dashboard')"
+              @onPreviewAssessment="onCompleteEnrollment('/documents/assessment-list')"/>
           </div>
           <div v-else>
-            <b-alert variant="success" show>
-              <h5>PAYMENT SUBMITTED !</h5>
-              <p> Thank you for submitting your application for this school year.
-              <br> We will review your payment and once approved, we will
-              <br> notify you.
-              <br>
-              <br>We will try to get back to you as soon as we can!</p>
-            </b-alert>
+            <PaymentPendingAlert />
             <div class="approval-container">
               <ApprovalIndicator
                 :stages="$options.paymentApprovalStages"
@@ -44,11 +40,15 @@
   import { paymentApprovalStages } from '../../../content';
   import { AcademicRecordStatuses } from '../../../helpers/enum';
 import { StudentApi } from '../../../mixins/api';
+import PaymentPendingAlert from '../AlertNotifications/PaymentPending'
+import PaymentApproveAlert from '../AlertNotifications/PaymentApproved'
 
   export default {
     paymentApprovalStages,
     components: {
-      ApprovalIndicator
+      ApprovalIndicator,
+      PaymentPendingAlert,
+      PaymentApproveAlert
     },
     props: {
       data: {

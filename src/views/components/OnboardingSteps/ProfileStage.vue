@@ -3,7 +3,7 @@
     <div class="application__wizard-form-fields">
       <b-row class="mt-4">
         <b-col md="6">
-          <b-form-group>
+          <b-form-group v-if="data && ! data.latestAcademicRecord.isAdmission">
             <label class="required">Student No.</label>
             <b-form-input
               v-model="forms.student.fields.studentNo"

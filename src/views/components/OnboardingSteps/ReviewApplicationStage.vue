@@ -1,41 +1,18 @@
 <template>
   <div class="application__wizard-form-fields">
-    <b-row v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.ASSESSMENT_REJECTED.id">
-    <b-col md=12>
-      <b-alert variant="danger" show>
-        <p style="font-weight:bold">
-          Sorry, your application is rejected with the ffg. reasons : <br>
-          {{ data.latestAcademicRecord.studentFee.disapprovalNotes }} <br><br>
-          <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
-        </p>
-      </b-alert>
-    </b-col>
-  </b-row>
    <div class="application__content">
-      <b-alert variant="success" show>
-      <h5>APPLICATION SUBMITTED!</h5>
-      <p>Thank you for submitting your enrollment application for this school year.
-      <br> We will review your application and once approved, you will be able to proceed to payment.
-      <br>
-      <br>You'll be notified via email / sms about the result of your subject enlistment request.
-      <br>Once notified, log in again to continue your enrollment application. </p>
-    </b-alert>
-    <div>
+    <EnlistmentPendingAlert v-if="[AcademicRecordStatuses.EVALUATION_APPROVED.id, AcademicRecordStatuses.ENLISTMENT_PENDING.id].includes(currentAcademicRecordStatusId)"/>
+    <EnlistmentApprovedAlert :data="application" v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.ENLISTMENT_APPROVED.id"/>
+    <AssessmentRejectedAlert :data="studentFee" v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.ASSESSMENT_REJECTED.id"/>
+    <AssessmentApprovedAlert :data="studentFee" v-if="currentAcademicRecordStatusId === AcademicRecordStatuses.ASSESSMENT_APPROVED.id"/>
+    <div class="mt-2 mb-2">
       <span style="font-size: 1.5rem; font-weight: bold">{{ percentage }}% </span>
       <span>
         We are still reviewing your application. Please check your account from time to time
       </span>
     </div>
-    <div class="pb-5">
-      <ProgressIndicator
-        :barCount="6"
-        :activeBar="percentage === 30 ? 2 : percentage === 60 ? 4 : 6"
-      />
-    </div>
-    <ApprovalIndicator
-      :stages="$options.approvalStages"
-      :currentStage="selectedApprovalStage"
-    />
+    <ProgressIndicator :barCount="6" :activeBar="percentage === 30 ? 2 : percentage === 60 ? 4 : 6"/>
+    <ApprovalIndicator :stages="$options.approvalStages" :currentStage="selectedApprovalStage"/>
    </div>
     <div class="application__action-bar">
       <b-button
@@ -55,18 +32,26 @@
   </div>
 </template>
 <script>
-  import ApprovalIndicator from '../ApprovalIndicator';
-  import ProgressIndicator from '../ProgressIndicator';
   import { approvalStages } from '../../../content';
   import { AcademicRecordStatuses, OnboardingSteps  } from '../../../helpers/enum';
   import { StudentApi } from '../../../mixins/api';
+  import EnlistmentPendingAlert from '../AlertNotifications/EnlistmentPending'
+  import EnlistmentApprovedAlert from '../AlertNotifications/EnlistmentApproved'
+  import AssessmentRejectedAlert from '../AlertNotifications/AssesmentRejected'
+  import AssessmentApprovedAlert from '../AlertNotifications/AssessmentApproved'
+  import ProgressIndicator from '../ProgressIndicator'
+  import ApprovalIndicator from '../ApprovalIndicator'
 
   export default {
     approvalStages,
     mixins: [StudentApi],
     components: {
+      EnlistmentPendingAlert,
+      AssessmentRejectedAlert,
+      ProgressIndicator,
       ApprovalIndicator,
-      ProgressIndicator
+      EnlistmentApprovedAlert,
+      AssessmentApprovedAlert
     },
     props: {
       data: {
@@ -97,6 +82,12 @@
           AcademicRecordStatuses.PAYMENT_SUBMITTED.id,
           AcademicRecordStatuses.ENROLLED.id,
         ].includes(this.data?.latestAcademicRecord.academicRecordStatusId);
+      },
+      application() {
+        return this.data?.latestAcademicRecord?.application
+      },
+      studentFee() {
+        return this.data?.latestAcademicRecord?.studentFee
       }
     },
     methods: {
