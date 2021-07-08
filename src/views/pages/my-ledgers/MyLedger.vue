@@ -1,7 +1,7 @@
 <template>
   <div class="ledger__main-container">
     <div class="left-pane">
-      <p class="sub-nav__title">Scool Years</p>
+      <p class="sub-nav__title">School Years</p>
         <ul class="sub-nav">
           <li
             v-for="(item, idx) in options.schoolYear.items"

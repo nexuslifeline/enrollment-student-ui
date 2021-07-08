@@ -1,4 +1,4 @@
 export default {
-  title: 'All Assessments',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+  title: 'List of All Assessments',
+  description: 'Please click the blue button on the right side of each assessment to view further details.'
 }

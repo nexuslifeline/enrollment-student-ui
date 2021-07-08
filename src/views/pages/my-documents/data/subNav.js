@@ -2,11 +2,11 @@ export default {
   title: 'My Documents',
   items: [
     {
-      label: 'Assessment List',
+      label: 'My Assessment Forms',
       to: '/documents/assessment-list'
     },
     {
-      label: 'Registration List',
+      label: 'My Registration Forms',
       to: '/documents/registration-list'
     }
   ]

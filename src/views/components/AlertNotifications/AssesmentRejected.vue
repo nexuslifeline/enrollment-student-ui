@@ -4,7 +4,7 @@
     <p style="font-weight:bold">
         Sorry, your assessment is rejected with the ffg. reasons : <br>
         {{ data && data.disapprovalNotes }} <br><br>
-        <small>Please be inform that you can modify your application and resubmit for evaluation.</small>
+        <small>Your application is being reviewed again by the Registrar.</small>
     </p>
     </b-alert>
   </div>

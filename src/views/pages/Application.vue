@@ -131,11 +131,15 @@ export default {
       this.data = student;
       this.currentStepId = student?.onboardingStepId || 1;
     });
-  }
+  },
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   @import "../../assets/scss/shared.scss";
+
+  .c-body {
+    overflow-x: hidden!important ;
+  }
 
   .application__container {
     display: flex;

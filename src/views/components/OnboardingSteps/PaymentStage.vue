@@ -136,15 +136,15 @@
             <span class="payment-step__number">1</span>
             <div class="payment-step-details-container">
               <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                <span v-if="forms.payment.fields.paymentModeId === 1">Choose your preferred bank.
+                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id">Choose your preferred bank.
                 You can deposit/transfer your payment in any bank listed below.</span>
-                <span v-if="forms.payment.fields.paymentModeId === 4">Choose your preferred Account.</span>
-                <span v-if="forms.payment.fields.paymentModeId === 5">Choose your preferred Pera Padala provider.</span>
-                <b-table
+                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id">Choose your preferred Account.</span>
+                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id">Choose your preferred Pera Padala provider.</span>
+                <!-- <b-table
                   v-if="forms.payment.fields.paymentModeId === 1"
                   :fields="tables.bankAccounts.fields"
                   :items.sync="tables.bankAccounts.items"
-                  borderless small responsive
+                  bordered small responsive
                   :busy="tables.bankAccounts.isBusy">
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
@@ -160,7 +160,7 @@
                   v-if="forms.payment.fields.paymentModeId === 4"
                   :fields="tables.eWalletAccounts.fields"
                   :items.sync="tables.eWalletAccounts.items"
-                  borderless small responsive
+                  bordered small responsive
                   :busy="tables.bankAccounts.isBusy">
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
@@ -176,7 +176,7 @@
                   v-if="forms.payment.fields.paymentModeId === 5"
                   :fields="tables.peraPadalaAccounts.fields"
                   :items.sync="tables.peraPadalaAccounts.items"
-                  borderless small responsive
+                  bordered small responsive
                   :busy="tables.bankAccounts.isBusy">
                   <template v-slot:table-busy>
                     <div class="text-center my-2">
@@ -187,7 +187,10 @@
                       <strong>Loading...</strong>
                     </div>
                   </template>
-                </b-table>
+                </b-table> -->
+                <BankAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id"/>
+                <PeraPadalaAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id"/>
+                <EWalletAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id"/>
               </div>
               <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
             </div>
@@ -196,7 +199,7 @@
       </b-row>
       <b-row>
         <b-col md=12>
-          <div v-if="forms.payment.fields.paymentModeId !== 3" class="payment-step-container">
+          <div v-if="forms.payment.fields.paymentModeId !== $options.PaymentModes.OTHERS.id" class="payment-step-container">
             <span class="payment-step__number">2</span>
             <div class="payment-step-details-container">
               <span>Confirmation of your payment.</span>
@@ -224,7 +227,7 @@
           </div>
         </b-col>
       </b-row>
-      <b-row class="mt-3">
+      <b-row class="mt-3" v-show="paymentFiles.length > 0">
         <b-col md=12>
           <div class="payment-step-container mb-3">
             <span class="payment-step__number">{{ forms.payment.fields.paymentModeId === 3 ? 2 : 3 }}</span>
@@ -269,7 +272,7 @@
                   </b-col>
                   <b-col md=4>
                     <b-form-group>
-                      <label>Date Paid 
+                      <label>Date Paid
                         <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.datePaid.title}"/>
                       </label>
                       <b-form-input
@@ -356,7 +359,8 @@
     PaymentStatuses,
     BillingTypes,
     PayTypes,
-    OnboardingSteps
+    OnboardingSteps,
+    PaymentModes
   } from '../../../helpers/enum';
   import { paymentMethods, paymentTooltips } from '../../../content';
   import { validate, reset, formatNumber, showNotification } from '../../../helpers/forms';
@@ -371,6 +375,9 @@
     PaymentApi
   } from '../../../mixins/api';
 import { copyValue } from '../../../helpers/extractor';
+import BankAccountTable from '../../components/PaymentMethodAccounts/BankAccountTable'
+import EWalletAccountTable from '../../components/PaymentMethodAccounts/EWalletAccountTable'
+import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraPadalaAccountTable'
 
   // const billingFields = {
   //   id: null,
@@ -408,6 +415,7 @@ import { copyValue } from '../../../helpers/extractor';
   export default {
     formatNumber,
     AcademicRecordStatuses,
+    PaymentModes,
     mixins: [
       AcademicRecordApi,
       EWalletAccountApi,
@@ -420,7 +428,10 @@ import { copyValue } from '../../../helpers/extractor';
     components: {
       FileUploader,
       FileItem,
-      FileViewer
+      FileViewer,
+      BankAccountTable,
+      EWalletAccountTable,
+      PeraPadalaAccountTable
     },
     props: {
       data: {
@@ -512,78 +523,78 @@ import { copyValue } from '../../../helpers/extractor';
             ],
             items: []
           },
-          bankAccounts: {
-            isBusy: false,
-            fields: [
-              {
-                key: "bank",
-                label: "Bank",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-              {
-                key: "accountName",
-                label: "Account Name",
-                tdClass: "align-middle",
-                thStyle: { width: "auto" }
-              },
-              {
-                key: "accountNumber",
-                label: "Account No.",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-            ],
-            items: []
-          },
-          eWalletAccounts: {
-            isBusy: false,
-            fields: [
-              {
-                key: "provider",
-                label: "Provider",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-              {
-                key: "accountName",
-                label: "Account Name",
-                tdClass: "align-middle",
-                thStyle: { width: "auto" }
-              },
-              {
-                key: "accountId",
-                label: "Account ID",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-            ],
-            items:  []
-          },
-          peraPadalaAccounts: {
-            isBusy: false,
-            fields: [
-              {
-                key: "provider",
-                label: "Provider",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-              {
-                key: "receiverName",
-                label: "Receiver Name",
-                tdClass: "align-middle",
-                thStyle: { width: "auto" }
-              },
-              {
-                key: "receiverMobileNo",
-                label: "Receiver Mobile No",
-                tdClass: "align-middle",
-                thStyle: { width: "25%" }
-              },
-            ],
-            items:  []
-          },
+          // bankAccounts: {
+          //   isBusy: false,
+          //   fields: [
+          //     {
+          //       key: "bank",
+          //       label: "Bank",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //     {
+          //       key: "accountName",
+          //       label: "Account Name",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "auto" }
+          //     },
+          //     {
+          //       key: "accountNumber",
+          //       label: "Account No.",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //   ],
+          //   items: []
+          // },
+          // eWalletAccounts: {
+          //   isBusy: false,
+          //   fields: [
+          //     {
+          //       key: "provider",
+          //       label: "Provider",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //     {
+          //       key: "accountName",
+          //       label: "Account Name",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "auto" }
+          //     },
+          //     {
+          //       key: "accountId",
+          //       label: "Account ID",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //   ],
+          //   items:  []
+          // },
+          // peraPadalaAccounts: {
+          //   isBusy: false,
+          //   fields: [
+          //     {
+          //       key: "provider",
+          //       label: "Provider",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //     {
+          //       key: "receiverName",
+          //       label: "Receiver Name",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "auto" }
+          //     },
+          //     {
+          //       key: "receiverMobileNo",
+          //       label: "Receiver Mobile No",
+          //       tdClass: "align-middle",
+          //       thStyle: { width: "25%" }
+          //     },
+          //   ],
+          //   items:  []
+          // },
         },
         forms: {
           // billing: {
@@ -616,9 +627,9 @@ import { copyValue } from '../../../helpers/extractor';
       // if there is no initial billing found, add a message saying that you need to submit an Assessment Request first
       // when click will go back to Assessment Request Stage
       this.loadInitialBilling();
-      this.loadBankAccounts();
-      this.loadPeraPadalaAccounts();
-      this.loadEWalletAccounts();
+      // this.loadBankAccounts();
+      // this.loadPeraPadalaAccounts();
+      // this.loadEWalletAccounts();
     },
     methods: {
       setDefaultData(data) {
@@ -704,37 +715,37 @@ import { copyValue } from '../../../helpers/extractor';
         //   });
         // }
       },
-      loadBankAccounts() {
-        const params = { paginate: false }
-        const { bankAccounts } = this.tables
-        bankAccounts.isBusy = true
-        this.getBankAccountList(params).then(({ data }) => {
-          bankAccounts.items = data
-          bankAccounts.isBusy = false
-        }).catch((error) =>{
-          bankAccounts.isBusy = false
-        })
-      },
-      loadPeraPadalaAccounts() {
-        const params = { paginate: false }
-        const { peraPadalaAccounts } = this.tables
-        peraPadalaAccounts.isBusy = true
-        this.getPeraPadalaAccountList(params).then(({ data }) => {
-          peraPadalaAccounts.items = data
-        }).catch((error) =>{
-          peraPadalaAccounts.isBusy = false
-        })
-      },
-      loadEWalletAccounts() {
-        const params = { paginate: false }
-        const { eWalletAccounts } = this.tables
-        eWalletAccounts.isBusy = true
-        this.getEWalletAccountList(params).then(({ data }) => {
-          eWalletAccounts.items = data
-        }).catch((error) =>{
-          eWalletAccounts.isBusy = false
-        })
-      },
+      // loadBankAccounts() {
+      //   const params = { paginate: false }
+      //   const { bankAccounts } = this.tables
+      //   bankAccounts.isBusy = true
+      //   this.getBankAccountList(params).then(({ data }) => {
+      //     bankAccounts.items = data
+      //     bankAccounts.isBusy = false
+      //   }).catch((error) =>{
+      //     bankAccounts.isBusy = false
+      //   })
+      // },
+      // loadPeraPadalaAccounts() {
+      //   const params = { paginate: false }
+      //   const { peraPadalaAccounts } = this.tables
+      //   peraPadalaAccounts.isBusy = true
+      //   this.getPeraPadalaAccountList(params).then(({ data }) => {
+      //     peraPadalaAccounts.items = data
+      //   }).catch((error) =>{
+      //     peraPadalaAccounts.isBusy = false
+      //   })
+      // },
+      // loadEWalletAccounts() {
+      //   const params = { paginate: false }
+      //   const { eWalletAccounts } = this.tables
+      //   eWalletAccounts.isBusy = true
+      //   this.getEWalletAccountList(params).then(({ data }) => {
+      //     eWalletAccounts.items = data
+      //   }).catch((error) =>{
+      //     eWalletAccounts.isBusy = false
+      //   })
+      // },
       onPaymentFileUpload(file) {
         const formData = new FormData();
         const { payment } = this.forms

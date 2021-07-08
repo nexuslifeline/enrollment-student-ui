@@ -422,4 +422,11 @@ export const Days = new Enum({
   SUNDAY: { id: 4, name: 'Sunday', abbrev: 'Sun' }
 });
 
+export const PaymentModes = new Enum({
+  BANK_DEPOSIT: { id: 1, name: 'Bank Deposit/Transfer' },
+  OTHERS: { id: 3, name: 'Others', },
+  E_WALLET: { id: 4, name: 'E-Wallet'},
+  PERA_PADALA: { id: 5, name: 'Pera Padala' },
+});
+
 
