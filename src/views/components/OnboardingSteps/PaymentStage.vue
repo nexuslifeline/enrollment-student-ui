@@ -319,7 +319,7 @@
           @click="onSubmitPayment"
           variant="primary"
           class="application__main-action"
-          :disabled="isProcessing">
+          :disabled="isProcessing || !allowSubmit">
           <v-icon
             v-if="isProcessing"
             name="sync"
@@ -523,85 +523,8 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
             ],
             items: []
           },
-          // bankAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "bank",
-          //       label: "Bank",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "accountName",
-          //       label: "Account Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "accountNumber",
-          //       label: "Account No.",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items: []
-          // },
-          // eWalletAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "provider",
-          //       label: "Provider",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "accountName",
-          //       label: "Account Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "accountId",
-          //       label: "Account ID",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items:  []
-          // },
-          // peraPadalaAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "provider",
-          //       label: "Provider",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "receiverName",
-          //       label: "Receiver Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "receiverMobileNo",
-          //       label: "Receiver Mobile No",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items:  []
-          // },
         },
         forms: {
-          // billing: {
-          //   fields: { ...billingFields },
-          //   states: { ...billingFields },
-          //   errors: { ...billingFields }
-          // },
           payment: {
             fields: { ...paymentFields },
             states: { ...paymentErrorFields },
@@ -910,6 +833,10 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
       currentAcademicRecordStatusId() {
         return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
+      allowSubmit() {
+        return this.paymentFiles.length > 0
+
+      }
       // initialBill() {
       //   const bills = this.data?.activeAcademicRecord?.studentFee?.billings || [];
       //   return bills.find((v) => v.billTypeId === BillingTypes.INITIAL.id) || {};
