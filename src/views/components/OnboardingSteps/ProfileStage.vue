@@ -165,11 +165,11 @@
         }
       }
     },
-    // watch: {
-    //   data: function() {
-    //     this.populate();
-    //   }
-    // },
+    computed: {
+      isAdmission() {
+        return this.data?.latestAcademicRecord?.isAdmission;
+      }
+    },
     created() {
       this.populate();
     },
@@ -203,6 +203,12 @@
           ...this.forms?.student?.fields,
           onboardingStepId
         }
+
+        // if latest academic record is admission, do not include Student No so it will not be validated
+        if (this.isAdmission && payload.hasOwnProperty('studentNo')) {
+          delete payload.studentNo;
+        }
+
         this.updateStudent(payload, this.data?.id).then(({ data }) => {
           this.$emit('update:data', data);
           this.$emit('onAfterSubmit', onboardingStepId);
