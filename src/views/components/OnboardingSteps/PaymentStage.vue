@@ -1,332 +1,325 @@
 <template>
   <div class="application__wizard-form-fields">
-    <!-- there is no payment reject status in academi records status -->
-    <!-- to check if it is rejected, it will be based if disapproval notes is not null -->
-    <b-row v-if="forms.payment.fields.disapprovalNotes">
-      <b-col md=12>
-        <b-alert variant="danger" show>
-          <p>
-            Sorry, your payment is <b>rejected</b> with the ffg. reasons : <br>
-            <b>{{ forms.payment.fields.disapprovalNotes }}</b> <br>
-            <small>Please be inform that you can modify your payment and resubmit for Evaluation.</small>
-          </p>
-        </b-alert>
-      </b-col>
-    </b-row>
-    <div v-show="!isPaying" class="mt-2" >
-      <!--  -->
-      <b-row >
-        <b-col md=12>
-          <b-row>
-            <b-col md=12>
-              <b-alert show variant="primary">
-                <p>
-                  The initial fee should be paid to secure you registration. You will not be officially registered unless payment procedure is completed.
-                  <br>
-                  <br>
-                  <span v-if="initialBill.studentFee && initialBill.studentFee.approvalNotes">
-                    IMPORTANT NOTICE:
-                    <br>
-                    {{ initialBill.studentFee.approvalNotes }}
-                  </span>
-                </p>
-              </b-alert>
-            </b-col>
-          </b-row>
-          <b-row class="mt-2">
-            <b-col md=12>
-              <b-card border-variant="warning">
-                <b-row>
-                  <b-col md=12>
-                    <b-table
-                      :fields="tables.billings.fields"
-                      :items.sync="tables.billings.items"
-                      borderless small responsive
-                      :busy="tables.billings.isBusy" >
-                      <template v-slot:table-busy>
-                        <div class="text-center my-2">
-                          <v-icon
-                            name="spinner"
-                            spin
-                            class="mr-2" />
-                          <strong>Loading...</strong>
-                        </div>
-                      </template>
-                      <template v-slot:cell(action)>
-                        <a href="#" @click.prevent="previewAssessmentForm">View Details</a>
-                      </template>
-                    </b-table>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md=12>
-                    <b-list-group  >
-                      <b-list-group-item v-if="initialBill.totalAmount > 0"
-                        style="border:none;" href="#"
-                        class="d-flex justify-content-between align-items-center"
-                        @click="onPaySelected(PayTypes.INITIAL.id)">
-                        <div class="mr-4" style="color:black">
-                          <h5 class="mb-1 mt-3">PAY {{ $options.formatNumber(initialBill.totalAmount) }} PESOS ONLY</h5>
-                          <p class="mb-2">
-                            Make a payment for the initial fee only to be officially enrolled.
-                          </p>
-                        </div>
-                        <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                      </b-list-group-item>
-                      <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                        @click="onPaySelected(PayTypes.CUSTOM.id)">
-                        <div class="mr-4" style="color:black">
-                          <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
-                          <p class="mb-2">
-                            Make a full or partial payment not less than the initial fee to be officially enrolled.
-                          </p>
-                        </div>
-                        <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                      </b-list-group-item>
-                      <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
-                        @click="onPaySelected(PayTypes.ATTACHMENT.id)">
-                        <div class="mr-4" style="color:black">
-                          <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
-                          <p class="mb-2">
-                            If you are already enrolled and have an Official Receipt or any Proof of Payment, or if you have a scholarship voucher, please attach them here, and once verified, you will be registered in the system.
-                          </p>
-                        </div>
-                        <v-icon name="greater-than" style="color:darkblue"></v-icon>
-                      </b-list-group-item>
-                    </b-list-group>
-                  </b-col>
-                </b-row>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-col>
+    <NoInitialBilling v-if="noInitialBilling" @linkClicked="onRediretToEnlistment"/>
+    <div v-else>
+      <b-row v-if="forms.payment.fields.paymentStatusId == PaymentStatuses.REJECTED.id ">
+        <PaymentRejected :data="forms.payment.fields"/>
       </b-row>
-    </div>
-    <div v-show="isPaying">
-      <b-row>
-        <b-col md=12>
-          <b-card border-variant="warning">
-            <b-alert show>
-              <b-form-group>
-                <b-form-radio-group
-                  v-model="forms.payment.fields.paymentModeId"
-                  stacked>
-                  <b-form-radio
-                    v-for="paymentMode in options.paymentModes.items"
-                    :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
-                    :value="paymentMode.id"
-                    :key="paymentMode.id">
-                    <strong> {{ paymentMode.name }} </strong>
-                    <br>
-                    <small> {{ paymentMode.description }} </small>
-                  </b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-alert>
-          </b-card>
-          <h6>
-            You have until {{ initialBill.dueDate }} to make the payment.
-            This reference number will not be valid until that.
-          </h6>
-        </b-col>
-      </b-row>
-      <b-row class="mt-5">
-        <b-col md=12>
-          <div class="payment-step-container">
-            <span class="payment-step__number">1</span>
-            <div class="payment-step-details-container">
-              <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
-                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id">Choose your preferred bank.
-                You can deposit/transfer your payment in any bank listed below.</span>
-                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id">Choose your preferred Account.</span>
-                <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id">Choose your preferred Pera Padala provider.</span>
-                <!-- <b-table
-                  v-if="forms.payment.fields.paymentModeId === 1"
-                  :fields="tables.bankAccounts.fields"
-                  :items.sync="tables.bankAccounts.items"
-                  bordered small responsive
-                  :busy="tables.bankAccounts.isBusy">
-                  <template v-slot:table-busy>
-                    <div class="text-center my-2">
-                      <v-icon
-                        name="spinner"
-                        spin
-                        class="mr-2" />
-                      <strong>Loading...</strong>
-                    </div>
-                  </template>
-                </b-table>
-                <b-table
-                  v-if="forms.payment.fields.paymentModeId === 4"
-                  :fields="tables.eWalletAccounts.fields"
-                  :items.sync="tables.eWalletAccounts.items"
-                  bordered small responsive
-                  :busy="tables.bankAccounts.isBusy">
-                  <template v-slot:table-busy>
-                    <div class="text-center my-2">
-                      <v-icon
-                        name="spinner"
-                        spin
-                        class="mr-2" />
-                      <strong>Loading...</strong>
-                    </div>
-                  </template>
-                </b-table>
-                <b-table
-                  v-if="forms.payment.fields.paymentModeId === 5"
-                  :fields="tables.peraPadalaAccounts.fields"
-                  :items.sync="tables.peraPadalaAccounts.items"
-                  bordered small responsive
-                  :busy="tables.bankAccounts.isBusy">
-                  <template v-slot:table-busy>
-                    <div class="text-center my-2">
-                      <v-icon
-                        name="spinner"
-                        spin
-                        class="mr-2" />
-                      <strong>Loading...</strong>
-                    </div>
-                  </template>
-                </b-table> -->
-                <BankAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id"/>
-                <PeraPadalaAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id"/>
-                <EWalletAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id"/>
-              </div>
-              <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
-            </div>
-          </div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col md=12>
-          <div v-if="forms.payment.fields.paymentModeId !== $options.PaymentModes.OTHERS.id" class="payment-step-container">
-            <span class="payment-step__number">2</span>
-            <div class="payment-step-details-container">
-              <span>Confirmation of your payment.</span>
-              <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
-            </div>
-          </div>
-          <div class="file-uploader-container">
-            <FileUploader
-              @onFileChange="onPaymentFileUpload"
-              @onFileDrop="onPaymentFileUpload"
-            />
-          </div>
-          <div class="file-item-container">
-            <FileItem
-              v-for="(item, index) of paymentFiles"
-              :key="index"
-              :title="item.name"
-              :description="item.notes"
-              :fileIndex="index"
-              @onFileItemSelect="onPaymentFileItemSelect"
-              @onFileItemRemove="onDeletePaymentFile"
-              @onFileItemPreview="previewPaymentFile"
-              :isBusy="item.isBusy"
-            />
-          </div>
-        </b-col>
-      </b-row>
-      <b-row class="mt-3" v-show="paymentFiles.length > 0">
-        <b-col md=12>
-          <div class="payment-step-container mb-3">
-            <span class="payment-step__number">{{ forms.payment.fields.paymentModeId === 3 ? 2 : 3 }}</span>
-            <div class="payment-step-details-container">
-              <span>Enter the details of your proof of payment or deposit slip.</span>
-            </div>
-          </div>
-          <div style="border:1px dashed gray; padding: 20px">
+      <div v-show="!isPaying" class="mt-2" >
+        <!--  -->
+        <b-row >
+          <b-col md=12>
             <b-row>
               <b-col md=12>
-                <b-row>
-                  <b-col md=4>
-                    <b-form-group>
-                      <label>Enter amount you pay <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.amount.title}"/></label>
-                      <vue-autonumeric
-                        v-model="forms.payment.fields.amount"
-                        class="form-control text-right"
-                        :class="forms.payment.states.amount === false ? 'is-invalid' : ''"
-                        :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
-                        :state="forms.payment.states.amount"
-                        debounce="500"
-                        :disabled="paymentFiles.length > 0 ? false : true">
-                      </vue-autonumeric>
-                      <b-form-invalid-feedback>
-                        {{ forms.payment.errors.amount }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md=4>
-                    <b-form-group>
-                      <label>Transaction No <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.transactionNo.title}"/></label>
-                      <b-form-input
-                        v-model="forms.payment.fields.transactionNo"
-                        :state="forms.payment.states.transactionNo"
-                        debounce="500"
-                        :disabled="paymentFiles.length > 0 ? false : true"
-                      />
-                      <b-form-invalid-feedback>
-                        {{ forms.payment.errors.transactionNo }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                  <b-col md=4>
-                    <b-form-group>
-                      <label>Date Paid
-                        <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.datePaid.title}"/>
-                      </label>
-                      <b-form-input
-                        type="date"
-                        v-model="forms.payment.fields.datePaid"
-                        :state="forms.payment.states.datePaid"
-                        :disabled="paymentFiles.length > 0 ? false : true"
-                      />
-                      <b-form-invalid-feedback>
-                        {{ forms.payment.errors.datePaid }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md=12>
-                    <b-form-group>
-                      <label>Add Notes</label>
-                      <b-form-textarea
-                        rows="4"
-                        v-model="forms.payment.fields.notes"
-                        :state="forms.payment.states.notes"
-                        debounce="500"
-                        :disabled="paymentFiles.length > 0 ? false : true"
-                      ></b-form-textarea>
-                      <b-form-invalid-feedback>
-                        {{ forms.payment.errors.notes }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
+                <b-alert show variant="primary">
+                  <p>
+                    The initial fee should be paid to secure you registration. You will not be officially registered unless payment procedure is completed.
+                    <br>
+                    <br>
+                    <span v-if="initialBill.studentFee && initialBill.studentFee.approvalNotes">
+                      IMPORTANT NOTICE:
+                      <br>
+                      {{ initialBill.studentFee.approvalNotes }}
+                    </span>
+                  </p>
+                </b-alert>
               </b-col>
             </b-row>
-          </div>
-          <div class="mt-3">
-            <b-button variant="danger" @click="isPaying=false">
-              CANCEL
-            </b-button>
-          </div>
-        </b-col>
-      </b-row>
-      <div class="application__action-bar">
-        <b-button
-          @click="onSubmitPayment"
-          variant="primary"
-          class="application__main-action"
-          :disabled="isProcessing">
-          <v-icon
-            v-if="isProcessing"
-            name="sync"
-            class="mr-2"
-            spin />
-            Submit Payment
-        </b-button>
+            <b-row class="mt-2">
+              <b-col md=12>
+                <b-card border-variant="warning">
+                  <b-row>
+                    <b-col md=12>
+                      <b-table
+                        :fields="tables.billings.fields"
+                        :items.sync="tables.billings.items"
+                        borderless small responsive
+                        :busy="tables.billings.isBusy" >
+                        <template v-slot:table-busy>
+                          <div class="text-center my-2">
+                            <v-icon
+                              name="spinner"
+                              spin
+                              class="mr-2" />
+                            <strong>Loading...</strong>
+                          </div>
+                        </template>
+                        <template v-slot:cell(action)>
+                          <a href="#" @click.prevent="previewAssessmentForm">View Details</a>
+                        </template>
+                      </b-table>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col md=12>
+                      <b-list-group  >
+                        <b-list-group-item v-if="initialBill.totalAmount > 0"
+                          style="border:none;" href="#"
+                          class="d-flex justify-content-between align-items-center"
+                          @click="onPaySelected(PayTypes.INITIAL.id)">
+                          <div class="mr-4" style="color:black">
+                            <h5 class="mb-1 mt-3">PAY {{ $options.formatNumber(initialBill.totalAmount) }} PESOS ONLY</h5>
+                            <p class="mb-2">
+                              Make a payment for the initial fee only to be officially enrolled.
+                            </p>
+                          </div>
+                          <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                        </b-list-group-item>
+                        <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                          @click="onPaySelected(PayTypes.CUSTOM.id)">
+                          <div class="mr-4" style="color:black">
+                            <h5 class="mb-1 mt-3">PAY CUSTOM AMOUNT</h5>
+                            <p class="mb-2">
+                              Make a full or partial payment not less than the initial fee to be officially enrolled.
+                            </p>
+                          </div>
+                          <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                        </b-list-group-item>
+                        <b-list-group-item style="border:none;" href="#" class="d-flex justify-content-between align-items-center"
+                          @click="onPaySelected(PayTypes.ATTACHMENT.id)">
+                          <div class="mr-4" style="color:black">
+                            <h5 class="mb-1 mt-3">ATTACH EXISTING RECEIPT</h5>
+                            <p class="mb-2">
+                              If you are already enrolled and have an Official Receipt or any Proof of Payment, or if you have a scholarship voucher, please attach them here, and once verified, you will be registered in the system.
+                            </p>
+                          </div>
+                          <v-icon name="greater-than" style="color:darkblue"></v-icon>
+                        </b-list-group-item>
+                      </b-list-group>
+                    </b-col>
+                  </b-row>
+                </b-card>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+      </div>
+      <div v-show="isPaying">
+        <b-row>
+          <b-col md=12>
+            <b-card border-variant="warning">
+              <b-alert show>
+                <b-form-group>
+                  <b-form-radio-group
+                    v-model="forms.payment.fields.paymentModeId"
+                    stacked>
+                    <b-form-radio
+                      v-for="paymentMode in options.paymentModes.items"
+                      :disabled="payTypeId === PayTypes.ATTACHMENT.id && payTypeId !== paymentMode.id"
+                      :value="paymentMode.id"
+                      :key="paymentMode.id">
+                      <strong> {{ paymentMode.name }} </strong>
+                      <br>
+                      <small> {{ paymentMode.description }} </small>
+                    </b-form-radio>
+                  </b-form-radio-group>
+                </b-form-group>
+              </b-alert>
+            </b-card>
+            <h6>
+              You have until {{ initialBill.dueDate }} to make the payment.
+              This reference number will not be valid until that.
+            </h6>
+          </b-col>
+        </b-row>
+        <b-row class="mt-5">
+          <b-col md=12>
+            <div class="payment-step-container">
+              <span class="payment-step__number">1</span>
+              <div class="payment-step-details-container">
+                <div v-if="payTypeId !== PayTypes.ATTACHMENT.id">
+                  <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id">Choose your preferred bank.
+                  You can deposit/transfer your payment in any bank listed below.</span>
+                  <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id">Choose your preferred Account.</span>
+                  <span v-if="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id">Choose your preferred Pera Padala provider.</span>
+                  <!-- <b-table
+                    v-if="forms.payment.fields.paymentModeId === 1"
+                    :fields="tables.bankAccounts.fields"
+                    :items.sync="tables.bankAccounts.items"
+                    bordered small responsive
+                    :busy="tables.bankAccounts.isBusy">
+                    <template v-slot:table-busy>
+                      <div class="text-center my-2">
+                        <v-icon
+                          name="spinner"
+                          spin
+                          class="mr-2" />
+                        <strong>Loading...</strong>
+                      </div>
+                    </template>
+                  </b-table>
+                  <b-table
+                    v-if="forms.payment.fields.paymentModeId === 4"
+                    :fields="tables.eWalletAccounts.fields"
+                    :items.sync="tables.eWalletAccounts.items"
+                    bordered small responsive
+                    :busy="tables.bankAccounts.isBusy">
+                    <template v-slot:table-busy>
+                      <div class="text-center my-2">
+                        <v-icon
+                          name="spinner"
+                          spin
+                          class="mr-2" />
+                        <strong>Loading...</strong>
+                      </div>
+                    </template>
+                  </b-table>
+                  <b-table
+                    v-if="forms.payment.fields.paymentModeId === 5"
+                    :fields="tables.peraPadalaAccounts.fields"
+                    :items.sync="tables.peraPadalaAccounts.items"
+                    bordered small responsive
+                    :busy="tables.bankAccounts.isBusy">
+                    <template v-slot:table-busy>
+                      <div class="text-center my-2">
+                        <v-icon
+                          name="spinner"
+                          spin
+                          class="mr-2" />
+                        <strong>Loading...</strong>
+                      </div>
+                    </template>
+                  </b-table> -->
+                  <BankAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.BANK_DEPOSIT.id"/>
+                  <PeraPadalaAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.E_WALLET.id"/>
+                  <EWalletAccountTable class="mt-1" v-show="forms.payment.fields.paymentModeId === $options.PaymentModes.PERA_PADALA.id"/>
+                </div>
+                <span v-if="payTypeId === PayTypes.ATTACHMENT.id || forms.payment.fields.paymentModeId === 3">Please attach any proof of your payment or your receipt provided by the St. Theresa College.</span>
+              </div>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md=12>
+            <div v-if="forms.payment.fields.paymentModeId !== $options.PaymentModes.OTHERS.id" class="payment-step-container">
+              <span class="payment-step__number">2</span>
+              <div class="payment-step-details-container">
+                <span>Confirmation of your payment.</span>
+                <span>After paying to your preferred account. Attach deposit slip or any proof of payment.</span>
+              </div>
+            </div>
+            <div class="file-uploader-container">
+              <FileUploader
+                @onFileChange="onPaymentFileUpload"
+                @onFileDrop="onPaymentFileUpload"
+              />
+            </div>
+            <div class="file-item-container">
+              <FileItem
+                v-for="(item, index) of paymentFiles"
+                :key="index"
+                :title="item.name"
+                :description="item.notes"
+                :fileIndex="index"
+                @onFileItemSelect="onPaymentFileItemSelect"
+                @onFileItemRemove="onDeletePaymentFile"
+                @onFileItemPreview="previewPaymentFile"
+                :isBusy="item.isBusy"
+              />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mt-3" v-show="paymentFiles.length > 0">
+          <b-col md=12>
+            <div class="payment-step-container mb-3">
+              <span class="payment-step__number">{{ forms.payment.fields.paymentModeId === 3 ? 2 : 3 }}</span>
+              <div class="payment-step-details-container">
+                <span>Enter the details of your proof of payment or deposit slip.</span>
+              </div>
+            </div>
+            <div style="border:1px dashed gray; padding: 20px">
+              <b-row>
+                <b-col md=12>
+                  <b-row>
+                    <b-col md=4>
+                      <b-form-group>
+                        <label>Enter amount you pay <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.amount.title}"/></label>
+                        <vue-autonumeric
+                          v-model="forms.payment.fields.amount"
+                          class="form-control text-right"
+                          :class="forms.payment.states.amount === false ? 'is-invalid' : ''"
+                          :options="[{ minimumValue: 0, modifyValueOnWheel: false, emptyInputBehavior: 0 }]"
+                          :state="forms.payment.states.amount"
+                          debounce="500"
+                          :disabled="paymentFiles.length > 0 ? false : true">
+                        </vue-autonumeric>
+                        <b-form-invalid-feedback>
+                          {{ forms.payment.errors.amount }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md=4>
+                      <b-form-group>
+                        <label>Transaction No <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.transactionNo.title}"/></label>
+                        <b-form-input
+                          v-model="forms.payment.fields.transactionNo"
+                          :state="forms.payment.states.transactionNo"
+                          debounce="500"
+                          :disabled="paymentFiles.length > 0 ? false : true"
+                        />
+                        <b-form-invalid-feedback>
+                          {{ forms.payment.errors.transactionNo }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col md=4>
+                      <b-form-group>
+                        <label>Date Paid
+                          <v-icon name="info-circle" class="icon-tooltip" v-b-tooltip.hover="{ variant: 'info', title: toolTips.datePaid.title}"/>
+                        </label>
+                        <b-form-input
+                          type="date"
+                          v-model="forms.payment.fields.datePaid"
+                          :state="forms.payment.states.datePaid"
+                          :disabled="paymentFiles.length > 0 ? false : true"
+                        />
+                        <b-form-invalid-feedback>
+                          {{ forms.payment.errors.datePaid }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col md=12>
+                      <b-form-group>
+                        <label>Add Notes</label>
+                        <b-form-textarea
+                          rows="4"
+                          v-model="forms.payment.fields.notes"
+                          :state="forms.payment.states.notes"
+                          debounce="500"
+                          :disabled="paymentFiles.length > 0 ? false : true"
+                        ></b-form-textarea>
+                        <b-form-invalid-feedback>
+                          {{ forms.payment.errors.notes }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </div>
+            <div class="mt-3">
+              <b-button variant="danger" @click="isPaying=false">
+                CANCEL
+              </b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <div class="application__action-bar">
+          <b-button
+            @click="onSubmitPayment"
+            variant="primary"
+            class="application__main-action"
+            :disabled="isProcessing || !allowSubmit">
+            <v-icon
+              v-if="isProcessing"
+              name="sync"
+              class="mr-2"
+              spin />
+              Submit Payment
+          </b-button>
+        </div>
       </div>
     </div>
     <FileViewer
@@ -372,12 +365,16 @@
     PeraPadalaAccountApi,
     PaymentFileApi,
     ReportApi,
-    PaymentApi
+    PaymentApi,
+    StudentApi
   } from '../../../mixins/api';
 import { copyValue } from '../../../helpers/extractor';
 import BankAccountTable from '../../components/PaymentMethodAccounts/BankAccountTable'
 import EWalletAccountTable from '../../components/PaymentMethodAccounts/EWalletAccountTable'
 import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraPadalaAccountTable'
+
+import PaymentRejected from '../AlertNotifications/PaymentRejected'
+import NoInitialBilling from '../AlertNotifications/NoInitialBilling'
 
   // const billingFields = {
   //   id: null,
@@ -423,7 +420,8 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
       PeraPadalaAccountApi,
       PaymentFileApi,
       ReportApi,
-      PaymentApi
+      PaymentApi,
+      StudentApi
     ],
     components: {
       FileUploader,
@@ -431,7 +429,9 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
       FileViewer,
       BankAccountTable,
       EWalletAccountTable,
-      PeraPadalaAccountTable
+      PeraPadalaAccountTable,
+      PaymentRejected,
+      NoInitialBilling
     },
     props: {
       data: {
@@ -443,6 +443,7 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
         OnboardingSteps,
         isProcessing: false,
         isShownAssessment: false,
+        noInitialBilling: false,
         file: {
           type: null,
           src: null,
@@ -523,85 +524,8 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
             ],
             items: []
           },
-          // bankAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "bank",
-          //       label: "Bank",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "accountName",
-          //       label: "Account Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "accountNumber",
-          //       label: "Account No.",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items: []
-          // },
-          // eWalletAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "provider",
-          //       label: "Provider",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "accountName",
-          //       label: "Account Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "accountId",
-          //       label: "Account ID",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items:  []
-          // },
-          // peraPadalaAccounts: {
-          //   isBusy: false,
-          //   fields: [
-          //     {
-          //       key: "provider",
-          //       label: "Provider",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //     {
-          //       key: "receiverName",
-          //       label: "Receiver Name",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "auto" }
-          //     },
-          //     {
-          //       key: "receiverMobileNo",
-          //       label: "Receiver Mobile No",
-          //       tdClass: "align-middle",
-          //       thStyle: { width: "25%" }
-          //     },
-          //   ],
-          //   items:  []
-          // },
         },
         forms: {
-          // billing: {
-          //   fields: { ...billingFields },
-          //   states: { ...billingFields },
-          //   errors: { ...billingFields }
-          // },
           payment: {
             fields: { ...paymentFields },
             states: { ...paymentErrorFields },
@@ -653,7 +577,10 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
           this.tables.billings.items = [data];
           this.setDefaultData(data);
         }).catch((error) => {
-
+          const errors = error.response.data.errors
+          if(errors.hasOwnProperty('nonFieldError')) {
+            this.noInitialBilling = true
+          }
         });
       },
       loadPaymentFiles() {
@@ -905,11 +832,26 @@ import PeraPadalaAccountTable from '../../components/PaymentMethodAccounts/PeraP
           this.isProcessing = false;
         });
       },
+      onRediretToEnlistment() {
+        const { id: studentId } = this.data
+        this.patchStudent({ onboardingStepId: this.OnboardingSteps.ACADEMIC_YEAR_APPLICATION.id }, studentId )
+          .then(({ data }) => {
+            this.$emit('update:data', data)
+            this.$router.go(0)
+        }).catch((error) => {
+          const { errors } = error.response.data;
+          console.log(errors)
+        });
+      }
     },
     computed: {
       currentAcademicRecordStatusId() {
         return this.data?.latestAcademicRecord?.academicRecordStatusId;
       },
+      allowSubmit() {
+        return this.paymentFiles.length > 0
+
+      }
       // initialBill() {
       //   const bills = this.data?.activeAcademicRecord?.studentFee?.billings || [];
       //   return bills.find((v) => v.billTypeId === BillingTypes.INITIAL.id) || {};
