@@ -1196,8 +1196,7 @@ import { StudentApi } from '../../../mixins/api'
 import { copyValue } from "../../../helpers/extractor";
 import PhotoViewer from '../../components/PhotoViewer'
 import ProfileMaker from '../../components/ProfileMaker'
-import { format } from 'date-fns'
-
+import format from 'date-fns/format'
 
 export default {
   name: 'MyProfile',

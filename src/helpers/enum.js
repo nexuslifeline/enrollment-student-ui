@@ -430,3 +430,10 @@ export const PaymentModes = new Enum({
 });
 
 
+export const BillingStatus = new Enum({
+  PAID: { id: 1, name: 'Fully Paid' },
+  UNPAID: { id: 2, name: 'Unpaid' },
+  PARTIAL: { id: 3, name: 'Partially Paid' },
+});
+
+

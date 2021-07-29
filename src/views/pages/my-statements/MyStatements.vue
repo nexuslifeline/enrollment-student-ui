@@ -1,14 +1,15 @@
 <template>
-  <div class="my-statement__main-container">
-      <h4 class="c-app__page-title">
-        {{$options.headline.title}} ({{tables.billings.items.length}})
-      </h4>
-      <p class="c-app__page-description">
-        {{$options.headline.description}}
-      </p>
+  <MainContainer
+    :title="`${$options.headline.title} (${tables.billings.items.length})`"
+    :description="$options.headline.description">
+    <template v-slot:subheader>
+      <Tabs :activeIndex="selectedTabIndex" :items="tabItems" @onSelect="onTabChange">
+        test
+      </Tabs>
+    </template>
     <b-table
       ref="billings"
-      class="c-app__table"
+      class="c-app__table mt-3"
       small outlined show-empty
       :fields="tables.billings.fields"
       :busy="tables.billings.isBusy"
@@ -23,16 +24,17 @@
         </div>
       </template>
       <template v-slot:cell(billingNo)="row">
-        <div><span class="link" @click="previewBilling(row.item.id)">{{ row.item.billingNo }}</span></div>
+        <BillColumn :data="row.item" @onClick="previewBilling(row.item.id)" />
       </template>
       <template v-slot:cell(totalPaid)="row">
-        <b-badge
+        <BillPaymentColumn :data="row.item" />
+        <!-- <b-badge
               :variant="
                 row.item.submittedPayments.length > 0
                   ? 'warning'
                   : 'success'"
             >
-        {{ row.item.submittedPayments.length > 0 ? 'For Approval' : formatNumber(row.item.totalPaid) }}</b-badge>
+        {{ row.item.submittedPayments.length > 0 ? 'For Approval' : formatNumber(row.item.totalPaid) }}</b-badge> -->
       </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
@@ -56,7 +58,7 @@
             </b-dropdown-item>
         </b-dropdown>
       </template>
-      <template v-slot:row-details="data">
+      <!-- <template v-slot:row-details="data">
         <b-overlay :show="data.item.isLoading" rounded="sm">
           <div class="row-details-container">
             <div v-if="data.item.termBillings && data.item.termBillings.length > 0">
@@ -95,9 +97,9 @@
             </div>
           </div>
         </b-overlay>
-      </template>
+      </template> -->
     </b-table>
-    <div class="total-container">
+    <!-- <div class="total-container">
       <strong>TOTAL REMAINING BALANCE :</strong>
       <vue-autonumeric
         :disabled="true"
@@ -109,35 +111,45 @@
           modifyValueOnWheel: false,
           emptyInputBehavior: 0 }]">
       </vue-autonumeric>
-    </div>
+    </div> -->
     <FileViewer
       :show="fileViewer.show"
       :file="file"
       :owner="file.owner"
       :isBusy="file.isLoading"
-      @close="fileViewer.show = false"/>
-  </div>
+      @close="fileViewer.show = false"
+    />
+  </MainContainer>
 </template>
 
 <script>
 import { StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi } from "../../../mixins/api"
-import { showNotification, formatNumber, clearFields, validate, reset, } from "../../../helpers/forms"
-import { format } from 'date-fns'
+import { showNotification, formatAccountingNumber, formatNumber, toReadableDate } from "../../../helpers/forms"
 import Maintenance from '../../components/Maintenance';
 import headline from './data/statement';
-import FileViewer from '../../components/FileViewer'
+import FileViewer from '../../components/FileViewer';
+import { BillingStatus } from '../../../helpers/enum';
+import BillColumn from '../../components/ColumnDetails/BillColumn';
+import BillPaymentColumn from '../../components/ColumnDetails/BillPayment';
 
 export default {
-  mixins: [ StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi ],
+  mixins: [StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi],
   headline,
   components: {
     Maintenance,
-    FileViewer
+    FileViewer,
+    BillColumn,
+    BillPaymentColumn
   },
   data() {
     return {
       student: null,
-      formatNumber,
+      selectedTabIndex: 0,
+      tabItems: [
+        { id: 0, name: 'All' },
+        ...BillingStatus.values,
+        { id: 4, name: 'Forwarded' },
+      ],
       fileViewer: {
         isActiveNavEnabled: false,
         activeNavCount: 0,
@@ -153,92 +165,60 @@ export default {
       },
       tables: {
         billings: {
+          isBusy: false,
           fields: [
             {
               key: "billingNo",
               label: "Billing No",
               tdClass: "align-middle",
-              thStyle: {width: "17%"}
             },
             {
               key: "dueDate",
               label: "Due Date",
               tdClass: "align-middle",
-              thStyle: {width: "10%"},
+              formatter: (v) => toReadableDate(v)
             },
             {
               key: "previousBalance",
-              label: "Previous Balance",
+              label: "Previous",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value) => {
-                if(Math.sign(value) < 0) {
-                  return `(${formatNumber(Math.abs(value))})`
-                }
-                return formatNumber(value)
-              }
+              formatter: formatAccountingNumber
             },
             {
               key: "totalAmount",
-              label: "CurrentDue ",
+              label: "Current",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value) => {
-                if(Math.sign(value) < 0) {
-                  return `(${formatNumber(Math.abs(value))})`
-                }
-                return formatNumber(value)
-              }
+              formatter: formatAccountingNumber
             },
             {
-              key: "total",
-              label: "Total Amount Due",
+              key: "totalAmountDue",
+              label: "Total",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value, key, item) => {
-                const total = parseFloat(item.previousBalance) + parseFloat(item.totalAmount)
-                if(Math.sign(total) < 0) {
-                  return `(${formatNumber(Math.abs(total))})`
-                }
-                return formatNumber(total)
-              }
+              formatter: formatAccountingNumber
             },
             {
               key: "totalPaid",
-              label: "Paid ",
+              label: "Paid",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value) => {
-                if(Math.sign(value) < 0) {
-                  return `(${formatNumber(Math.abs(value))})`
-                }
-                return formatNumber(value)
-              }
+              formatter: formatAccountingNumber
             },
             {
-              key: "remainingBalance",
-              label: "Balance ",
+              key: "totalRemainingDue",
+              label: "Balance",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value, key, item) => {
-                const remBalance = parseFloat(item.previousBalance) + parseFloat(item.totalAmount) - item.totalPaid
-                if(Math.sign(remBalance) < 0) {
-                  return `(${formatNumber(Math.abs(remBalance))})`
-                }
-                return formatNumber(remBalance)
-              }
+              formatter: formatAccountingNumber,
             },
             {
               key: "action",
               label: "",
               tdClass: "align-middle",
               thClass: "text-center",
-              thStyle: {width: "50px"}
+              thStyle: { width: "50px" }
             },
           ],
           items: []
@@ -307,33 +287,40 @@ export default {
     this.loadBillings(this.student.id)
   },
   methods: {
-    loadBillings(studentId) {
+    onTabChange({ item, index }) {
+      let params = { billingStatusId: item?.id };
+
+      if (item?.id === this.tabItems.slice(-1)?.[0]?.id) {
+        params.isForwarded = 1;
+      }
+
+      if (item?.id === this.tabItems.slice(0)?.[0]?.id) {
+        delete params.billingStatusId;
+      }
+
+      this.selectedTabIndex = index;
+      this.loadBillings(this.student.id, params)
+    },
+    loadBillings(studentId, params) {
       const { billings } = this.tables
       billings.isBusy = true
-      this.getBillingsOfStudent(studentId).then(({ data }) => {
-        billings.items = data
+      this.getBillingsOfStudent(studentId, params).then(({ data }) => {
+        billings.items = data.data;
         billings.isBusy = false
       })
     },
-    loadDetails(row) {
-      const { item } = row
-      this.$set(item, 'isLoading', true)
-      if (!row.detailsShowing) {
-        this.getBillingItemsOfBilling(item.id).then(({ data }) => {
-          this.$set(item, 'termBillings', data.filter(e => e.termId !== null))
-          this.$set(item, 'otherBillings', data.filter(e => e.termId === null))
-          this.$set(item, 'isLoading', false)
-        })
-      }
-      row.toggleDetails()
-    },
-    onRowSelected(row) {
-      if(row.length > 0) {
-        // const remainingBalance = parseFloat(row[0].previousBalance) + parseFloat(row[0].totalAmount) - parseFloat(row[0].totalPaid)
-        // payment.fields.billingId = row.length ? row[0].id :  null
-        // payment.fields.amount = remainingBalance > 0 ? remainingBalance : 0
-      }
-    },
+    // loadDetails(row) {
+    //   const { item } = row
+    //   this.$set(item, 'isLoading', true)
+    //   if (!row.detailsShowing) {
+    //     this.getBillingItemsOfBilling(item.id).then(({ data }) => {
+    //       this.$set(item, 'termBillings', data.filter(e => e.termId !== null))
+    //       this.$set(item, 'otherBillings', data.filter(e => e.termId === null))
+    //       this.$set(item, 'isLoading', false)
+    //     })
+    //   }
+    //   row.toggleDetails()
+    // },
     previewBilling(id) {
       this.file.type = null;
       this.file.src = null;
@@ -363,25 +350,20 @@ export default {
       return false
     }
   },
-  computed: {
-    getTotalBilling() {
-      const { billings } = this.tables
-      var sum = billings.items.reduce((sum, current)=>{
-        return sum + (parseFloat(current.totalAmount) + parseFloat(current.previousBalance) - parseFloat(current.totalPaid));
-      }, 0);
+  // computed: {
+  //   getTotalBilling() {
+  //     const { billings } = this.tables
+  //     var sum = billings.items.reduce((sum, current)=>{
+  //       return sum + (parseFloat(current.totalAmount) + parseFloat(current.previousBalance) - parseFloat(current.totalPaid));
+  //     }, 0);
 
-      return formatNumber(sum, 2);
-    },
-  }
+  //     return formatNumber(sum, 2);
+  //   },
+  // }
 }
 </script>
 
 <style lang="scss" scoped>
-  .my-statement__main-container {
-    height: 100%;
-    width: 100%;
-    padding: 20px;
-  }
 
   .my-statement__title-container {
     margin-bottom: 10px;

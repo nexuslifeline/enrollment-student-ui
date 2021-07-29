@@ -25,14 +25,14 @@ export default {
     deletePhoto(id){
       return this.$authHttp.delete(`${apiPrefix}/${apiVersion}/students/${id}/photos`)
     },
-    getBillingsOfStudent(studentId) {
-      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/billings`);
+    getBillingsOfStudent(studentId, params) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/all-billings`, { params });
     },
     enrollStudent(studentId, data) {
       return this.$authHttp.post(`${apiPrefix}/${apiVersion}/students/${studentId}/enroll`, data);
     },
     getLedgerOfStudent(studentId, params) {
-      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/ledgers`, { params: params });
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/students/${studentId}/ledgers`, { params });
     }
   }
 }

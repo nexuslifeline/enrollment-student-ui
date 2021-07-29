@@ -7,6 +7,10 @@ import CoreuiVue from '@coreui/vue'
 import store from './store'
 import { httpRequest, httpAuthRequest } from './helpers/http'
 import { BootstrapVue } from 'bootstrap-vue'
+
+import MainContainer from './views/components/LayoutContainers/MainContainer';
+import Tabs from './views/components/Tabs/Tabs';
+
 //window.moment = require('moment')
 import 'vue-awesome/icons/arrow-right'
 import 'vue-awesome/icons/chart-pie'
@@ -70,6 +74,9 @@ import {
   BIconCaretUpFill,
   BProgress
 } from 'bootstrap-vue'
+
+Vue.component('Tabs', Tabs);
+Vue.component('MainContainer', MainContainer);
 Vue.component('BIconFolderSymlink', BIconFolderSymlink);
 // Vue.component('BIconFolder2Open', BIconFolder2Open);
 Vue.component('BIconAlarm', BIconAlarm);

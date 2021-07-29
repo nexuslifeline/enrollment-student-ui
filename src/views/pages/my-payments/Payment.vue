@@ -339,7 +339,7 @@ import FileViewer from "../../components/FileViewer";
 import FileItem from "../../components/FileItem";
 import FileUploader from "../../components/FileUploader";
 import { BankAccountApi, EWalletAccountApi, PeraPadalaAccountApi, BillingApi, PaymentApi, SchoolYearApi, PaymentFileApi } from "../../../mixins/api";
-import { format } from 'date-fns';
+import format from 'date-fns/format'
 import { validate, reset, formatNumber, showNotification } from '../../../helpers/forms';
 import { paymentTooltips }  from '../../../content'
 

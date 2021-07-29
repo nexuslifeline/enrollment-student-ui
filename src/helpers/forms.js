@@ -1,3 +1,5 @@
+import format from 'date-fns/format';
+
 export const validate = (form, errors) => {
   if (errors) {
     Object.keys(errors).forEach((key) => {
@@ -16,8 +18,16 @@ export const reset = (form) => {
 
 // format number with comma and decimal place
 export const formatNumber = (value, decimal = 2) => {
-  let val = (value/1).toFixed(decimal)
+  let val = (value / 1).toFixed(decimal)
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+export const formatAccountingNumber = (value, decimal = 2) => {
+  if (Math.sign(value) < 0) {
+    return `(${formatNumber(Math.abs(value), decimal)})`;
+  }
+
+  return formatNumber(value, decimal);
 }
 
 export const showNotification = (instance, variant, msg, title) => {
@@ -36,3 +46,5 @@ export const getCurrentDateTime = () => {
   const dateTime = date +' '+ time;
   return dateTime;
 }
+
+export const toReadableDate = (date, dateFormat = 'MMMM dd, yyyy') => format(new Date(date), dateFormat);
