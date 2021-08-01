@@ -1,15 +1,17 @@
 <template>
   <MainContainer
-    :title="`${$options.headline.title} (${tables.billings.items.length})`"
+    :title="`${$options.headline.title}`"
     :description="$options.headline.description">
     <template v-slot:subheader>
-      <Tabs :activeIndex="selectedTabIndex" :items="tabItems" @onSelect="onTabChange">
-        test
-      </Tabs>
+      <Tabs
+        :activeIndex="selectedTabIndex"
+        :items="tabItems"
+        @onSelect="onTabChange"
+      />
     </template>
     <b-table
       ref="billings"
-      class="c-app__table mt-3"
+      class="c-new-table mt-3"
       small outlined show-empty
       :fields="tables.billings.fields"
       :busy="tables.billings.isBusy"
@@ -28,13 +30,9 @@
       </template>
       <template v-slot:cell(totalPaid)="row">
         <BillPaymentColumn :data="row.item" />
-        <!-- <b-badge
-              :variant="
-                row.item.submittedPayments.length > 0
-                  ? 'warning'
-                  : 'success'"
-            >
-        {{ row.item.submittedPayments.length > 0 ? 'For Approval' : formatNumber(row.item.totalPaid) }}</b-badge> -->
+      </template>
+      <template v-slot:cell(status)="row">
+        <BillStatus :data="row.item" />
       </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
@@ -99,6 +97,13 @@
         </b-overlay>
       </template> -->
     </b-table>
+    <b-pagination
+      :total-rows="tables.billings.totalRows"
+      :per-page="tables.billings.perPage"
+      @input="onPageChange"
+      size="sm"
+      align="end"
+    />
     <!-- <div class="total-container">
       <strong>TOTAL REMAINING BALANCE :</strong>
       <vue-autonumeric
@@ -131,6 +136,7 @@ import FileViewer from '../../components/FileViewer';
 import { BillingStatus } from '../../../helpers/enum';
 import BillColumn from '../../components/ColumnDetails/BillColumn';
 import BillPaymentColumn from '../../components/ColumnDetails/BillPayment';
+import BillStatus from '../../components/ColumnDetails/BillStatus';
 
 export default {
   mixins: [StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi],
@@ -139,14 +145,15 @@ export default {
     Maintenance,
     FileViewer,
     BillColumn,
-    BillPaymentColumn
+    BillPaymentColumn,
+    BillStatus
   },
   data() {
     return {
       student: null,
       selectedTabIndex: 0,
       tabItems: [
-        { id: 0, name: 'All' },
+        { id: 0, name: 'All Statements' },
         ...BillingStatus.values,
         { id: 4, name: 'Forwarded' },
       ],
@@ -166,6 +173,8 @@ export default {
       tables: {
         billings: {
           isBusy: false,
+          perPage: 10,
+          totalRows: 100,
           fields: [
             {
               key: "billingNo",
@@ -177,6 +186,11 @@ export default {
               label: "Due Date",
               tdClass: "align-middle",
               formatter: (v) => toReadableDate(v)
+            },
+            {
+              key: "status",
+              label: "Status",
+              tdClass: "align-middle",
             },
             {
               key: "previousBalance",
@@ -286,6 +300,11 @@ export default {
     this.student = this.$store.state?.user
     this.loadBillings(this.student.id)
   },
+  watch: {
+    // 'tables.billings.page': function(value) {
+    //   this.loadBillings(this.student.id, { page: value });
+    // }
+  },
   methods: {
     onTabChange({ item, index }) {
       let params = { billingStatusId: item?.id };
@@ -304,10 +323,14 @@ export default {
     loadBillings(studentId, params) {
       const { billings } = this.tables
       billings.isBusy = true
-      this.getBillingsOfStudent(studentId, params).then(({ data }) => {
-        billings.items = data.data;
+      this.getBillingsOfStudent(studentId, params).then(({ data: { data, meta } }) => {
+        billings.items = data;
+        billings.totalRows = meta.total;
         billings.isBusy = false
       })
+    },
+    onPageChange(page) {
+      this.loadBillings(this.student.id, { page });
     },
     // loadDetails(row) {
     //   const { item } = row

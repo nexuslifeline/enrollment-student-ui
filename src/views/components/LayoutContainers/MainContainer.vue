@@ -1,16 +1,16 @@
 <template>
   <div class="layout__main-container">
-    <div v-if="!!$slots.subheader" class="layout__subheader-area">
-      <slot name="subheader"></slot>
-    </div>
-    <!-- <div>
+    <div>
       <h4 class="c-app__page-title">
         {{ title }}
       </h4>
       <p class="c-app__page-description">
         {{ description }}
       </p>
-    </div> -->
+    </div>
+    <div v-if="!!$slots.subheader" class="layout__subheader-area">
+      <slot name="subheader"></slot>
+    </div>
     <slot></slot>
   </div>
 </template>
@@ -33,7 +33,7 @@ export default {
   .layout__main-container {
     height: 100%;
     width: 100%;
-    // padding: 20px;
+    padding: 30px;
     background-color: $light-gray;
   }
 

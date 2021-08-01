@@ -37,16 +37,18 @@ export default {
     align-items: center;
     list-style: none;
     margin: 0;
-    padding: 0 10px;
+    padding: 0;
+    // padding: 0 10px;
     // padding: 10px 15px;
     border-bottom: 1px solid $light-gray-10;
+    margin-bottom: 10px;
     width: 100%;
     transition: all .3s;
   }
 
   .c-subheader__tab-item {
-    margin-right: 20px;
-    padding: 7px 15px;
+    margin-right: 30px;
+    padding-bottom: 10px;
     height: 100%;
     cursor: pointer;
 
