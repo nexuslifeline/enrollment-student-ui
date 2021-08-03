@@ -62,3 +62,38 @@ label {
 textarea.form-control {
   height: auto!important;
 }
+
+.c-new-table {
+  border: 0 !important;
+
+  thead th {
+    border: 1px !important;
+    font-weight: 500;
+    font-size: 13px;
+  }
+}
+
+.c-new-pagination {
+  .page-item {
+    margin: 3px;
+  }
+
+  .page-link {
+    height: 25px;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px !important;
+    border-color: $brand-border-color !important;
+  }
+
+  span.page-link {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  button.page-link {
+    font-size: 12px;
+  }
+}

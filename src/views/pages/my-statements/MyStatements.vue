@@ -36,7 +36,6 @@
       </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
-            right
             variant="link"
             toggle-class="text-decoration-none"
             no-caret
@@ -45,13 +44,18 @@
               <v-icon name="ellipsis-v" />
             </template>
             <b-dropdown-item
-              @click="previewBilling(row.item.id)"
-            >
-            Preview
+              v-if="row.item.billingTypeId !== BillingTypes.INITIAL.id"
+              @click="previewBilling(row.item.id)">
+              Preview
             </b-dropdown-item>
             <b-dropdown-item
-              :to="`/payment/${row.item.id}`"
-              v-if="isAllowedPayBill(row.item)">
+              v-else
+              @click="onViewAssessment(row.item.academicRecordId)">
+              View Assessment
+            </b-dropdown-item>
+            <b-dropdown-item
+              v-if="row.item && !row.item.isForwarded && row.item.pendingPaymentsCount === 0"
+              :to="`/payment/${row.item.id}`">
               Pay Bill
             </b-dropdown-item>
         </b-dropdown>
@@ -98,6 +102,7 @@
       </template> -->
     </b-table>
     <b-pagination
+      class="c-new-pagination"
       :total-rows="tables.billings.totalRows"
       :per-page="tables.billings.perPage"
       @input="onPageChange"
@@ -133,7 +138,7 @@ import { showNotification, formatAccountingNumber, formatNumber, toReadableDate 
 import Maintenance from '../../components/Maintenance';
 import headline from './data/statement';
 import FileViewer from '../../components/FileViewer';
-import { BillingStatus } from '../../../helpers/enum';
+import { BillingStatus, BillingTypes } from '../../../helpers/enum';
 import BillColumn from '../../components/ColumnDetails/BillColumn';
 import BillPaymentColumn from '../../components/ColumnDetails/BillPayment';
 import BillStatus from '../../components/ColumnDetails/BillStatus';
@@ -150,6 +155,7 @@ export default {
   },
   data() {
     return {
+      BillingTypes,
       student: null,
       selectedTabIndex: 0,
       tabItems: [
@@ -344,6 +350,24 @@ export default {
     //   }
     //   row.toggleDetails()
     // },
+    onViewAssessment(academicRecordId) {
+      this.file.type = null
+      this.file.src = null
+      this.file.notes = null
+      this.file.isLoading = true
+      this.file.owner = null;
+      this.file.name = 'Assessment Form'
+      this.fileViewer.show = true;
+      this.getAssessmentFormPreview(academicRecordId)
+        .then(response => {
+          this.file.type = response.headers.contentType
+          const file = new Blob([response.data], { type: "application/pdf" } )
+          const reader = new FileReader();
+          reader.onload = e => this.file.src = e.target.result
+          reader.readAsDataURL(file);
+          this.file.isLoading = false
+      })
+    },
     previewBilling(id) {
       this.file.type = null;
       this.file.src = null;
@@ -359,19 +383,19 @@ export default {
         this.file.isLoading = false;
       });
     },
-    isAllowedPayBill(billing){
+  //   isAllowedPayBill(billing){
 
-      if(billing.submittedPayments.length > 0) {
-        //prevent pay bill while there's a pending payment
-        return false
-      }
+  //     if(billing.submittedPayments.length > 0) {
+  //       //prevent pay bill while there's a pending payment
+  //       return false
+  //     }
 
-      if(parseFloat(billing.totalPaid) < parseFloat(billing.totalAmount)) {
-        return true
-      }
+  //     if(parseFloat(billing.totalPaid) < parseFloat(billing.totalAmount)) {
+  //       return true
+  //     }
 
-      return false
-    }
+  //     return false
+  //   }
   },
   // computed: {
   //   getTotalBilling() {
