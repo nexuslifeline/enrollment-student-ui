@@ -54,11 +54,21 @@
               View Assessment
             </b-dropdown-item>
             <b-dropdown-item
-              v-if="row.item && !row.item.isForwarded && row.item.pendingPaymentsCount === 0"
+              v-if="row.item.billingStatusId !== BillingStatus.PAID.id && !row.item.isForwarded && row.item.pendingPaymentsCount === 0"
               :to="`/payment/${row.item.id}`">
               Pay Bill
             </b-dropdown-item>
         </b-dropdown>
+      </template>
+      <template v-slot:custom-foot>
+        <b-tr class="font-weight-bold">
+          <b-td class="text-right pt-3 pb-3" colspan="8">
+            BALANCE
+          </b-td>
+          <b-td class="text-right pt-3 pb-3">
+            {{ $options.formatAccountingNumber(tables.billings.totalRemainingBalance)}}
+          </b-td>
+        </b-tr>
       </template>
       <!-- <template v-slot:row-details="data">
         <b-overlay :show="data.item.isLoading" rounded="sm">
@@ -144,6 +154,7 @@ import BillPaymentColumn from '../../components/ColumnDetails/BillPayment';
 import BillStatus from '../../components/ColumnDetails/BillStatus';
 
 export default {
+  formatAccountingNumber,
   mixins: [StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi],
   headline,
   components: {
@@ -156,6 +167,7 @@ export default {
   data() {
     return {
       BillingTypes,
+      BillingStatus,
       student: null,
       selectedTabIndex: 0,
       tabItems: [
@@ -178,6 +190,7 @@ export default {
       },
       tables: {
         billings: {
+          totalRemainingBalance: 0,
           isBusy: false,
           perPage: 10,
           totalRows: 100,
@@ -192,6 +205,12 @@ export default {
               label: "Due Date",
               tdClass: "align-middle",
               formatter: (v) => toReadableDate(v)
+            },
+            {
+              key: "systemNotes",
+              label: "Description",
+              tdClass: "align-middle",
+              thStyle: { width: "25%" }
             },
             {
               key: "status",
@@ -331,8 +350,9 @@ export default {
       billings.isBusy = true
       this.getBillingsOfStudent(studentId, params).then(({ data: { data, meta } }) => {
         billings.items = data;
-        billings.totalRows = meta.total;
+        billings.totalRows = meta?.total;
         billings.isBusy = false
+        billings.totalRemainingBalance = meta?.totalRemainingBalance || 0;
       })
     },
     onPageChange(page) {
