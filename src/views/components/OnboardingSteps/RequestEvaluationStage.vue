@@ -77,6 +77,16 @@
             </b-form-group>
           </b-col>
       </b-row>
+       <b-row>
+        <b-col md="12">
+          <b-form-group>
+            <label>Last School Address</label>
+            <b-form-input
+              v-model="forms.evaluation.fields.lastSchoolAddress"
+              debounce="500" />
+          </b-form-group>
+        </b-col>
+      </b-row>
       <b-row>
         <b-col md="12">
           <b-form-group>
@@ -228,6 +238,7 @@
     lastSchoolYearTo: null,
     lastSchoolAttended: null,
     lastSchoolLevelId: null,
+    lastSchoolAddress: null,
     notes: null,
     approvalNotes: null,
     disapprovalNotes: null,
@@ -339,6 +350,8 @@
       onSubmitEvaluationRequest() {
         this.isProcessing = true;
 
+        const { id: studentId } = this.data
+
         reset(this.forms.activeAcademicRecord);
         reset(this.forms.evaluation);
 
@@ -351,9 +364,22 @@
         const academicRecordId = this.data?.latestAcademicRecord?.id;
 
         this.postRequestEvaluation(payload, academicRecordId).then((response) => {
-          this.$emit('update:data', { ...this.data, evaluation: { ...response?.data } });
-          this.$emit('onAfterSubmit', onboardingStepId);
-          this.isProcessing = false;
+          const evaluationData = { ...response?.data }
+          const prevEducationData = {
+            education: {
+              lastLevel: evaluationData?.lastSchoolLevel?.name,
+              lastSchoolAttended: evaluationData?.lastSchoolAttended,
+              lastSchoolYearFrom: evaluationData?.lastSchoolYearFrom,
+              lastSchoolYearTo: evaluationData?.lastSchoolYearTo,
+              lastSchoolAddress: evaluationData?.lastSchoolAddress
+            }
+          }
+          //patch prev education
+          this.patchStudent(prevEducationData, studentId).then(({ data }) => {
+            this.$emit('update:data', { ...this.data, evaluation: { ...evaluationData } });
+            this.$emit('onAfterSubmit', onboardingStepId);
+            this.isProcessing = false;
+          })
         }).catch((error) => {
           const { errors } = error.response.data;
           validate(this.forms.activeAcademicRecord, errors);

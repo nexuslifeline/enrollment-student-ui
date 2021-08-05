@@ -1,7 +1,7 @@
 <template>
   <div class="application__wizard-form">
     <div class="application__wizard-form-fields">
-      <b-row>
+      <!-- <b-row>
         <b-col md="5">
           <b-form-group>
             <label>Last School Attended</label>
@@ -30,12 +30,12 @@
           <b-form-group>
             <label>Level</label>
             <b-form-input
-              v-model="forms.education.fields.lastLevel" 
+              v-model="forms.education.fields.lastLevel"
               debounce="500"/>
           </b-form-group>
         </b-col>
-      </b-row>
-      <b-row>
+      </b-row> -->
+      <!-- <b-row>
         <b-col md="12">
           <b-form-group>
             <label>Last School Address</label>
@@ -44,7 +44,7 @@
               debounce="500" />
           </b-form-group>
         </b-col>
-      </b-row>
+      </b-row> -->
       <b-row>
         <b-col md="12">
           <b-row>
