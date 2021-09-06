@@ -255,7 +255,7 @@ export default {
           {
             header: '1. I am a newly enrolled student',
             description: '(Choose this if this Academic Year 2021-2022 is your first time in STC)',
-            notes: 'Note: for  newly enrolled transferees, please proceed to No. 3.'
+            notes: 'Note: for  newly enrolled transferees, please proceed to no. 3.'
           },
           {
             header: '2. I am an old and currently enrolled student',
@@ -264,7 +264,7 @@ export default {
           },
           {
             header: '3. I am a newly enrolled transferee student',
-            description: '(Choose this if you are a student from other institution and wish to move in STC from other institution)',
+            description: '(Choose this if you are a student from other institution and wish to move in STC)',
             notes: null
           },
           {
@@ -277,7 +277,7 @@ export default {
           {
             header: '1. I am a new student ',
             description: '(Choose this if this is your first time to enroll in STC)',
-            notes: 'Note: for transferees, please proceed to No. 3.'
+            notes: 'Note: for transferees, please proceed to no. 3.'
           },
           {
             header: '2. I am a old student',
@@ -286,7 +286,7 @@ export default {
           },
           {
             header: '3. I am a  transferee student',
-            description: '(Choose this if you are a student from other institution and wish to move in STC from other institution)',
+            description: '(Choose this if you are a student from other institution and wish to move in STC)',
             notes: null
           },
           {
