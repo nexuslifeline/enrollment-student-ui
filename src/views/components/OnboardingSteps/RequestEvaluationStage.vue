@@ -326,6 +326,7 @@
         if (levelId) {
           return this.options?.levels?.items[levelId - 1]?.schoolCategoryId;
         }
+        return null;
       },
       isCourseVisible() {
         return  [

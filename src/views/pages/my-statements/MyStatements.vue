@@ -26,7 +26,12 @@
         </div>
       </template>
       <template v-slot:cell(billingNo)="row">
-        <BillColumn :data="row.item" @onClick="previewBilling(row.item.id)" />
+        <BillColumn
+          :data="row.item"
+          @onClick="() => row.item.billingTypeId !== BillingTypes.INITIAL.id
+            ? previewBilling(row.item.id)
+            : viewAssessment(row.item.academicRecordId)"
+        />
       </template>
       <template v-slot:cell(totalPaid)="row">
         <BillPaymentColumn :data="row.item" />
@@ -50,7 +55,7 @@
             </b-dropdown-item>
             <b-dropdown-item
               v-else
-              @click="onViewAssessment(row.item.academicRecordId)">
+              @click="viewAssessment(row.item.academicRecordId)">
               View Assessment
             </b-dropdown-item>
             <b-dropdown-item
@@ -65,7 +70,7 @@
           <b-td class="text-right pt-3 pb-3" colspan="8">
             BALANCE
           </b-td>
-          <b-td class="text-right pt-3 pb-3">
+          <b-td class="text-right pt-3 pb-3" colspan="2">
             {{ $options.formatAccountingNumber(tables.billings.totalRemainingBalance)}}
           </b-td>
         </b-tr>
@@ -144,8 +149,7 @@
 
 <script>
 import { StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi } from "../../../mixins/api"
-import { showNotification, formatAccountingNumber, formatNumber, toReadableDate } from "../../../helpers/forms"
-import Maintenance from '../../components/Maintenance';
+import { formatAccountingNumber, formatNumber, toReadableDate } from "../../../helpers/forms"
 import headline from './data/statement';
 import FileViewer from '../../components/FileViewer';
 import { BillingStatus, BillingTypes } from '../../../helpers/enum';
@@ -158,7 +162,6 @@ export default {
   mixins: [StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi],
   headline,
   components: {
-    Maintenance,
     FileViewer,
     BillColumn,
     BillPaymentColumn,
@@ -370,7 +373,7 @@ export default {
     //   }
     //   row.toggleDetails()
     // },
-    onViewAssessment(academicRecordId) {
+    viewAssessment(academicRecordId) {
       this.file.type = null
       this.file.src = null
       this.file.notes = null
