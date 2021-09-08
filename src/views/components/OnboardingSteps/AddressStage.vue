@@ -378,7 +378,7 @@
         const onboardingStepId = OnboardingSteps.FAMILY.id; // next step
 
         if (this.isSameAddress) {
-          alert()
+          // alert()
           address.fields.permanentHouseNoStreet = address.fields.currentHouseNoStreet
           address.fields.permanentBarangay = address.fields.currentBarangay
           address.fields.permanentCityTown = address.fields.currentCityTown
