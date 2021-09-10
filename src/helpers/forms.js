@@ -18,8 +18,8 @@ export const reset = (form) => {
 
 // format number with comma and decimal place
 export const formatNumber = (value, decimal = 2) => {
-  let val = (value / 1).toFixed(decimal)
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  let val = (value / 1).toFixed(decimal);
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export const formatAccountingNumber = (value, decimal = 2) => {

@@ -36,7 +36,10 @@
         <BillPaymentColumn :data="row.item" />
       </template>
       <template v-slot:cell(status)="row">
-        <BillStatus :data="row.item" />
+        <BillStatusColumn :data="row.item" />
+      </template>
+      <template v-slot:cell(type)="row">
+        <BillTypeColumn :data="row.item" />
       </template>
       <template v-slot:cell(action)="row">
          <b-dropdown
@@ -65,55 +68,16 @@
         </b-dropdown>
       </template>
       <template v-slot:custom-foot>
-        <b-tr class="font-weight-bold">
-          <b-td class="text-right pt-3 pb-3" colspan="8">
-            BALANCE
+        <b-tr class="font-weight-bold table-dark">
+          <b-td class="text-right pt-2 pb-2" colspan="7">
+            Total Balance (Unpaid)
           </b-td>
-          <b-td class="text-right pt-3 pb-3" colspan="2">
+          <b-td class="text-right pt-2 pb-2" colspan="2">
             {{ $options.formatAccountingNumber(tables.billings.totalRemainingBalance)}}
           </b-td>
+          <b-td />
         </b-tr>
       </template>
-      <!-- <template v-slot:row-details="data">
-        <b-overlay :show="data.item.isLoading" rounded="sm">
-          <div class="row-details-container">
-            <div v-if="data.item.termBillings && data.item.termBillings.length > 0">
-                <b-table
-                  small outlined show-empty
-                  :fields="tables.soaBillings.fields"
-                  :busy="tables.soaBillings.isBusy"
-                  :items="data.item.termBillings">
-                  <template v-slot:table-busy>
-                    <div class="text-center my-2">
-                      <v-icon
-                        name="spinner"
-                        spin
-                        class="mr-2" />
-                      <strong>Loading...</strong>
-                    </div>
-                  </template>
-                </b-table>
-            </div>
-            <div v-if="data.item.otherBillings && data.item.otherBillings.length > 0">
-              <b-table
-                  small outlined show-empty
-                  :fields="tables.otherBillings.fields"
-                  :busy="tables.otherBillings.isBusy"
-                  :items="data.item.otherBillings">
-                  <template v-slot:table-busy>
-                    <div class="text-center my-2">
-                      <v-icon
-                        name="spinner"
-                        spin
-                        class="mr-2" />
-                      <strong>Loading...</strong>
-                    </div>
-                  </template>
-                </b-table>
-            </div>
-          </div>
-        </b-overlay>
-      </template> -->
     </b-table>
     <b-pagination
       class="c-new-pagination"
@@ -123,19 +87,6 @@
       size="sm"
       align="end"
     />
-    <!-- <div class="total-container">
-      <strong>TOTAL REMAINING BALANCE :</strong>
-      <vue-autonumeric
-        :disabled="true"
-        ref="totalAmount"
-        :value="getTotalBilling"
-        class="total-billing-amount"
-        :class="'form-control'"
-        :options="[{
-          modifyValueOnWheel: false,
-          emptyInputBehavior: 0 }]">
-      </vue-autonumeric>
-    </div> -->
     <FileViewer
       :show="fileViewer.show"
       :file="file"
@@ -148,13 +99,14 @@
 
 <script>
 import { StudentApi, PaymentApi, BillingApi, SchoolYearApi, ReportApi } from "../../../mixins/api"
-import { formatAccountingNumber, formatNumber, toReadableDate } from "../../../helpers/forms"
+import { formatAccountingNumber, toReadableDate } from "../../../helpers/forms"
 import headline from './data/statement';
 import FileViewer from '../../components/FileViewer';
 import { BillingStatus, BillingTypes } from '../../../helpers/enum';
 import BillColumn from '../../components/ColumnDetails/BillColumn';
 import BillPaymentColumn from '../../components/ColumnDetails/BillPayment';
-import BillStatus from '../../components/ColumnDetails/BillStatus';
+import BillStatusColumn from '../../components/ColumnDetails/BillStatus';
+import BillTypeColumn from '../../components/ColumnDetails/BillType';
 
 export default {
   formatAccountingNumber,
@@ -164,7 +116,8 @@ export default {
     FileViewer,
     BillColumn,
     BillPaymentColumn,
-    BillStatus
+    BillStatusColumn,
+    BillTypeColumn,
   },
   data() {
     return {
@@ -217,42 +170,45 @@ export default {
             {
               key: "status",
               label: "Status",
-              tdClass: "align-middle",
+            },
+            {
+              key: "type",
+              label: "Type",
             },
             {
               key: "previousBalance",
               label: "Previous",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              formatter: formatAccountingNumber
+              formatter: (v) => formatAccountingNumber(v)
             },
             {
               key: "totalAmount",
               label: "Current",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              formatter: formatAccountingNumber
+              formatter: (v) => formatAccountingNumber(v)
             },
-            {
-              key: "totalAmountDue",
-              label: "Total",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              formatter: formatAccountingNumber
-            },
+            // {
+            //   key: "totalAmountDue",
+            //   label: "Total",
+            //   tdClass: "align-middle text-right",
+            //   thClass: "text-right",
+            //   formatter: (v) => formatAccountingNumber(v)
+            // },
             {
               key: "totalPaid",
               label: "Paid",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              formatter: formatAccountingNumber
+              formatter: (v) => formatAccountingNumber(v)
             },
             {
               key: "totalRemainingDue",
               label: "Balance",
               tdClass: "align-middle text-right",
               thClass: "text-right",
-              formatter: formatAccountingNumber,
+              formatter: (v) => formatAccountingNumber(v)
             },
             {
               key: "action",
@@ -264,73 +220,11 @@ export default {
           ],
           items: []
         },
-        soaBillings: {
-          isBusy: false,
-          fields: [
-            {
-							key: "term.name",
-							label: "Term",
-							tdClass: "align-middle",
-              thStyle: {width: "35%"},
-            },
-            {
-							key: "term.schoolYear.name",
-							label: "School Year",
-							tdClass: "align-middle",
-              thStyle: {width: "30%"},
-            },
-            {
-							key: "term.semester.name",
-							label: "Semester",
-							tdClass: "align-middle",
-              thStyle: {width: "20%"},
-            },
-            {
-							key: "amount",
-							label: "Amount",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value) => {
-                return formatNumber(value)
-              }
-            },
-          ],
-          items: []
-        },
-        otherBillings: {
-          isBusy: false,
-          fields: [
-            {
-							key: "schoolFee.name",
-							label: "Fees",
-							tdClass: "align-middle",
-              thStyle: {width: "85%"},
-            },
-            {
-							key: "amount",
-							label: "Amount",
-              tdClass: "align-middle text-right",
-              thClass: "text-right",
-              thStyle: {width: "15%"},
-              formatter: (value) => {
-                return formatNumber(value)
-              }
-            },
-          ],
-          items: []
-        }
       }
     }
   },
   created() {
-    this.student = this.$store.state?.user
-    this.loadBillings(this.student.id)
-  },
-  watch: {
-    // 'tables.billings.page': function(value) {
-    //   this.loadBillings(this.student.id, { page: value });
-    // }
+    this.student = this.$store.state?.user;
   },
   methods: {
     onTabChange({ item, index }) {
@@ -348,7 +242,9 @@ export default {
       const { billings } = this.tables
       billings.isBusy = true
       this.getBillingsOfStudent(studentId, params).then(({ data: { data, meta } }) => {
-        billings.items = data.map(v => ({ ...v, _rowVariant: v?.isForwarded ? 'secondary' : '' }));
+        billings.items = data.map(
+          v => ({ ...v, _rowVariant: v?.isForwarded || v?.billingStatusId === BillingStatus.PAID.id ? 'secondary' : '' })
+        );
         billings.totalRows = meta?.total;
         billings.isBusy = false
         billings.totalRemainingBalance = meta?.totalRemainingBalance || 0;
@@ -357,18 +253,6 @@ export default {
     onPageChange(page) {
       this.loadBillings(this.student.id, { page });
     },
-    // loadDetails(row) {
-    //   const { item } = row
-    //   this.$set(item, 'isLoading', true)
-    //   if (!row.detailsShowing) {
-    //     this.getBillingItemsOfBilling(item.id).then(({ data }) => {
-    //       this.$set(item, 'termBillings', data.filter(e => e.termId !== null))
-    //       this.$set(item, 'otherBillings', data.filter(e => e.termId === null))
-    //       this.$set(item, 'isLoading', false)
-    //     })
-    //   }
-    //   row.toggleDetails()
-    // },
     viewAssessment(academicRecordId) {
       this.file.type = null
       this.file.src = null
@@ -402,30 +286,7 @@ export default {
         this.file.isLoading = false;
       });
     },
-  //   isAllowedPayBill(billing){
-
-  //     if(billing.submittedPayments.length > 0) {
-  //       //prevent pay bill while there's a pending payment
-  //       return false
-  //     }
-
-  //     if(parseFloat(billing.totalPaid) < parseFloat(billing.totalAmount)) {
-  //       return true
-  //     }
-
-  //     return false
-  //   }
   },
-  // computed: {
-  //   getTotalBilling() {
-  //     const { billings } = this.tables
-  //     var sum = billings.items.reduce((sum, current)=>{
-  //       return sum + (parseFloat(current.totalAmount) + parseFloat(current.previousBalance) - parseFloat(current.totalPaid));
-  //     }, 0);
-
-  //     return formatNumber(sum, 2);
-  //   },
-  // }
 }
 </script>
 
