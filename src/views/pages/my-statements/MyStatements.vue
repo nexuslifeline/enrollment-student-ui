@@ -10,7 +10,6 @@
       />
     </template>
     <b-table
-      ref="billings"
       class="c-new-table mt-3"
       small outlined show-empty
       :fields="tables.billings.fields"
@@ -335,13 +334,10 @@ export default {
   },
   methods: {
     onTabChange({ item, index }) {
-      let params = { billingStatusId: item?.id };
+      const params = { billingStatusId: item?.id };
 
       if (item?.id === this.tabItems.slice(-1)?.[0]?.id) {
         params.isForwarded = 1;
-      }
-
-      if (item?.id === this.tabItems.slice(0)?.[0]?.id) {
         delete params.billingStatusId;
       }
 
@@ -352,7 +348,7 @@ export default {
       const { billings } = this.tables
       billings.isBusy = true
       this.getBillingsOfStudent(studentId, params).then(({ data: { data, meta } }) => {
-        billings.items = data;
+        billings.items = data.map(v => ({ ...v, _rowVariant: v?.isForwarded ? 'secondary' : '' }));
         billings.totalRows = meta?.total;
         billings.isBusy = false
         billings.totalRemainingBalance = meta?.totalRemainingBalance || 0;
