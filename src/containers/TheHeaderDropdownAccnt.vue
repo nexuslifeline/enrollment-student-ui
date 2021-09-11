@@ -12,8 +12,10 @@
       />
     </div>
     <div class="account__details">
-      <p v-if="!!fullName" class="account__name">{{fullName}}</p>
-      <p v-if="!!fullName" class="account__type">Student</p>
+      <p v-if="!!fullName" class="account__name">{{ fullName }}</p>
+      <p v-if="!!fullName" class="account__type">
+        {{ user.isOnboarding ? 'Provisional Account' : 'Student Account' }}
+      </p>
     </div>
     <div class="account__icon-down">
       <DownArrow />
@@ -24,22 +26,24 @@
       </div>
       <span class="triangle-top"></span>
       <ul class="account__dropdown-action-items">
-        <li class="account__dropdown-item" v-if="!showMyProfile">
-          <div class="account__dropdown-icon">
-            <MyProfile />
-          </div>
-          <span class="account__dropdown-item-label" @click="$router.push('profile')" >
-            My Profile
-          </span>
-        </li>
-        <li class="account__dropdown-item">
-          <div class="account__dropdown-icon">
-            <MyPreferences />
-          </div>
-          <span class="account__dropdown-item-label">
-            My Preferences
-          </span>
-        </li>
+        <template v-if="!user.isOnboarding">
+          <li class="account__dropdown-item">
+            <div class="account__dropdown-icon">
+              <MyProfile />
+            </div>
+            <span class="account__dropdown-item-label" @click="$router.push('profile')" >
+              My Profile
+            </span>
+          </li>
+          <li class="account__dropdown-item">
+            <div class="account__dropdown-icon">
+              <MyPreferences />
+            </div>
+            <span class="account__dropdown-item-label">
+              My Preferences
+            </span>
+          </li>
+        </template>
         <li @click="logout()" class="account__dropdown-item">
           <div class="account__dropdown-icon">
             <MyProfile />
@@ -66,7 +70,6 @@ import MyProfile from '../assets/svg/my-profile-nav.svg';
 import MyPreferences from '../assets/svg/my-preferences-nav.svg';
 import DownArrow from '../assets/svg/down-arrow.svg';
 
-
 export default {
   name: 'TheHeaderDropdownAccnt',
   components: {
@@ -75,7 +78,7 @@ export default {
     MyPreferences,
     DownArrow
   },
-  mixins: [ AuthApi ],
+  mixins: [AuthApi],
   data () {
     return {
       src: null,
@@ -93,22 +96,13 @@ export default {
     user() {
       return this.$store.state.user || {};
     },
-    hasActiveAdmission() {
-      return !!(this.$store.state.user && this.$store.state.user.activeAdmission);
-    },
-    hasActiveApplication() {
-      return !!(this.$store.state.user && this.$store.state.user.activeApplication && this.$store.state.user.activeApplication.isManual === 0);
-    },
-    showMyProfile() {
-      return this.hasActiveApplication || this.hasActiveAdmission
-    }
   },
   methods: {
     logout(){
       if(localStorage.accessToken) {
         localStorage.clear();
         this.isLoading = true;
-        this.revokeAuthentication().then(response => {
+        this.revokeAuthentication().then(() => {
           this.$store.commit('LOGOUT_USER');
           setTimeout(() => {
             this.$store.commit('SET_USER', {});

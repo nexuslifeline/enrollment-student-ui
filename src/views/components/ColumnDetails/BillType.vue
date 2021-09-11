@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-badge variant="secondary">
-      {{ BillingTypes.getEnum(data.billingTypeId).name }}
+      {{ BillingTypes.getEnum(data.billingTypeId).label }}
     </b-badge>
   </div>
 </template>

@@ -206,7 +206,7 @@ export default {
             {
               key: "totalRemainingDue",
               label: "Balance",
-              tdClass: "align-middle text-right",
+              tdClass: "align-middle text-right font-weight-bold",
               thClass: "text-right",
               formatter: (v) => formatAccountingNumber(v)
             },

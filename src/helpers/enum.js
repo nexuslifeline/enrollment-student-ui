@@ -386,9 +386,9 @@ export const ApplicationStatuses = new Enum({
 });
 
 export const BillingTypes = new Enum({
-  INITIAL: { id: 1, name: 'Initial' },
-  SOA: { id: 2, name: 'SOA' },
-  BILL: { id: 3, name: 'Billing' },
+  INITIAL: { id: 1, name: 'Initial', label: 'Registration' },
+  SOA: { id: 2, name: 'SOA', label: 'SOA' },
+  BILL: { id: 3, name: 'Billing', label: 'Other' },
 });
 
 export const PaymentStatuses = new Enum({

@@ -60,7 +60,7 @@
   .home__menu-action {
     border: 1px solid $light-gray-200;
     width: 230px;
-    min-height: 290px;
+    min-height: 265px;
     border-radius: 3px;
     padding: 20px 15px;
     margin: 10px;
