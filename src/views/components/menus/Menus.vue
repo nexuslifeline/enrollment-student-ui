@@ -67,13 +67,13 @@
             path: 'grades',
             isVisible: true
           },
-          {
-            title: 'My Profile',
-            image: '/img/svg/my-profile.svg',
-            description: "You can edit your account settings, as well as some information on your public profile.",
-            path: 'profile',
-            isVisible: true
-          },
+          // {
+          //   title: 'My Profile',
+          //   image: '/img/svg/my-profile.svg',
+          //   description: "You can edit your account settings, as well as some information on your public profile.",
+          //   path: 'profile',
+          //   isVisible: true
+          // },
           // {
           //   title: 'My Applications',
           //   image: '/img/svg/my-applications.svg',

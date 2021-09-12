@@ -1,4 +1,4 @@
 export default {
   title: 'Payments',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+  description: 'Once your Payment is submitted, the Finance will review the payment details and once it is confirm the payment will automatically reflect to your account.'
 }

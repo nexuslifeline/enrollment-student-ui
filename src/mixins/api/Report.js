@@ -7,7 +7,7 @@ export default {
         responseType: 'blob'
       });
     },
-    getRequirementListPreview(academicRecordId) {
+    getRequirementListPreview() {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/requirement-list`, {
         responseType: 'blob'
       });

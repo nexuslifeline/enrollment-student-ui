@@ -10,6 +10,7 @@ import { BootstrapVue } from 'bootstrap-vue'
 
 import MainContainer from './views/components/LayoutContainers/MainContainer';
 import Tabs from './views/components/Tabs/Tabs';
+import BillingRecap from './views/components/BillingRecap/BillingRecap';
 
 //window.moment = require('moment')
 import 'vue-awesome/icons/arrow-right'
@@ -59,7 +60,6 @@ import './assets/scss/global.scss'
 
 import {
   BIconFolderSymlink,
-  BIconFolder2Open,
   BIconAlarm,
   BIconArrowRightCircle,
   BIconArrowLeftCircle,
@@ -67,9 +67,7 @@ import {
   BIconCloudDownload,
   BIconCheckCircle,
   BIconEnvelope,
-  BIconPersonBadge,
   BIconGeoAlt,
-  BIconCalendar2Week,
   BIconCaretDownFill,
   BIconCaretUpFill,
   BProgress
@@ -91,7 +89,8 @@ Vue.component('BIconGeoAlt', BIconGeoAlt);
 // Vue.component('BIconCalendar2Week', BIconCalendar2Week);
 Vue.component('BIconCaretDownFill', BIconCaretDownFill);
 Vue.component('BIconCaretUpFill', BIconCaretUpFill);
-Vue.component('BProgress', BProgress)
+Vue.component('BProgress', BProgress);
+Vue.component('BillingRecap', BillingRecap);
 
 Vue.config.performance = true
 Vue.component('v-icon', Icon)

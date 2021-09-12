@@ -11,5 +11,10 @@ export default {
     getBillingItemsOfBilling(id) {
       return this.$authHttp.get(`${apiPrefix}/${apiVersion}/billings/${id}/billing-items`);
     },
+    previewBilling(billingId) {
+      return this.$authHttp.get(`${apiPrefix}/${apiVersion}/billings/${billingId}/preview`, {
+        responseType: 'blob'
+      });
+    },
   }
 }

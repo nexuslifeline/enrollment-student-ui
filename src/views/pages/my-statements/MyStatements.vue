@@ -27,9 +27,7 @@
       <template v-slot:cell(billingNo)="row">
         <BillColumn
           :data="row.item"
-          @onClick="() => row.item.billingTypeId !== BillingTypes.INITIAL.id
-            ? previewBilling(row.item.id)
-            : viewAssessment(row.item.academicRecordId)"
+          @onClick="() => preview(row.item.id)"
         />
       </template>
       <template v-slot:cell(totalPaid)="row">
@@ -50,21 +48,17 @@
             <template v-slot:button-content>
               <v-icon name="ellipsis-v" />
             </template>
-            <b-dropdown-item
-              v-if="row.item.billingTypeId !== BillingTypes.INITIAL.id"
-              @click="previewBilling(row.item.id)">
+            <b-dropdown-item @click="preview(row.item.id)">
+              {{ row.item.billingTypeId !== BillingTypes.INITIAL.id ? 'Preview' : 'View Assessment' }}
               Preview
             </b-dropdown-item>
-            <b-dropdown-item
-              v-else
-              @click="viewAssessment(row.item.academicRecordId)">
-              View Assessment
-            </b-dropdown-item>
-            <b-dropdown-item
-              v-if="row.item.billingStatusId !== BillingStatus.PAID.id && !row.item.isForwarded && row.item.pendingPaymentsCount === 0"
-              :to="`/payment/${row.item.id}`">
-              Pay Bill
-            </b-dropdown-item>
+            <template v-if="row.item.billingStatusId !== BillingStatus.PAID.id">
+              <b-dropdown-item
+                v-if="!row.item.isForwarded && row.item.pendingPaymentsCount === 0"
+                :to="`/payment/${row.item.id}`">
+                Pay Bill
+              </b-dropdown-item>
+            </template>
         </b-dropdown>
       </template>
       <template v-slot:custom-foot>
@@ -165,7 +159,6 @@ export default {
               key: "systemNotes",
               label: "Description",
               tdClass: "align-middle",
-              thStyle: { width: "25%" }
             },
             {
               key: "status",
@@ -189,13 +182,6 @@ export default {
               thClass: "text-right",
               formatter: (v) => formatAccountingNumber(v)
             },
-            // {
-            //   key: "totalAmountDue",
-            //   label: "Total",
-            //   tdClass: "align-middle text-right",
-            //   thClass: "text-right",
-            //   formatter: (v) => formatAccountingNumber(v)
-            // },
             {
               key: "totalPaid",
               label: "Paid",
@@ -253,31 +239,13 @@ export default {
     onPageChange(page) {
       this.loadBillings(this.student.id, { page });
     },
-    viewAssessment(academicRecordId) {
-      this.file.type = null
-      this.file.src = null
-      this.file.notes = null
-      this.file.isLoading = true
-      this.file.owner = null;
-      this.file.name = 'Assessment Form'
-      this.fileViewer.show = true;
-      this.getAssessmentFormPreview(academicRecordId)
-        .then(response => {
-          this.file.type = response.headers.contentType
-          const file = new Blob([response.data], { type: "application/pdf" } )
-          const reader = new FileReader();
-          reader.onload = e => this.file.src = e.target.result
-          reader.readAsDataURL(file);
-          this.file.isLoading = false
-      })
-    },
-    previewBilling(id) {
+    preview(id) {
       this.file.type = null;
       this.file.src = null;
       this.fileViewer.show = true;
       this.file.isLoading = true;
-      this.file.name = 'Statement of Account';
-      this.previewStatementOfAccount(id).then((response) => {
+      this.file.name = 'Preview';
+      this.previewBilling(id).then((response) => {
         this.file.type = response.headers.contentType;
         const file = new Blob([response.data], { type: 'application/pdf' });
         const reader = new FileReader();

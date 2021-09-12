@@ -47,4 +47,4 @@ export const getCurrentDateTime = () => {
   return dateTime;
 }
 
-export const toReadableDate = (date, dateFormat = 'MMMM dd, yyyy') => format(new Date(date), dateFormat);
+export const toReadableDate = (date, dateFormat = 'MMM dd, yyyy') => format(new Date(date), dateFormat);
