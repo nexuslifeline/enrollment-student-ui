@@ -72,8 +72,9 @@
         <b-row>
           <b-col md=9>
             <p>
-              Subjects for <strong>{{ levelName }}</strong>
-              <strong>{{ semesterName }}</strong>
+              Subjects for
+              <strong>{{ levelName }} / </strong>
+              <strong>{{ semesterName }} / </strong>
               <strong>{{ courseName }}</strong>.
             </p>
           </b-col>
