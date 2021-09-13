@@ -18,8 +18,8 @@ export const reset = (form) => {
 
 // format number with comma and decimal place
 export const formatNumber = (value, decimal = 2) => {
-  let val = (value / 1).toFixed(decimal)
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  let val = (value / 1).toFixed(decimal);
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export const formatAccountingNumber = (value, decimal = 2) => {
@@ -47,4 +47,4 @@ export const getCurrentDateTime = () => {
   return dateTime;
 }
 
-export const toReadableDate = (date, dateFormat = 'MMMM dd, yyyy') => format(new Date(date), dateFormat);
+export const toReadableDate = (date, dateFormat = 'MMM dd, yyyy') => format(new Date(date), dateFormat);

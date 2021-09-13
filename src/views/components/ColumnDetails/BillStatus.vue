@@ -3,10 +3,10 @@
     <b-badge v-if="data.billingStatusId === BillingStatus.PAID.id" variant="success">
       Paid
     </b-badge>
-    <b-badge v-else-if="data.billingStatusId === BillingStatus.UNPAID.id" variant="warning">
+    <b-badge v-else-if="data.billingStatusId === BillingStatus.UNPAID.id" :variant="data.isForwarded ? 'secondary' : 'warning'">
       Unpaid<span v-if="data.isForwarded"> + Forwarded</span>
     </b-badge>
-    <b-badge v-else variant="primary">
+    <b-badge v-else :variant="data.isForwarded ? 'secondary' : 'warning'">
       Partial<span v-if="data.isForwarded"> + Forwarded</span>
     </b-badge>
   </div>

@@ -2164,7 +2164,7 @@ import {
   TranscriptRecordApi,
   DocumentTypeApi,
   ApplicationApi
-} from '../../mixins/api';
+} from '../mixins/api';
 //import StageIndicator from '../components/StageIndicator';
 import SlideStageIndicator from '../components/SlideStageIndicator';
 import ApprovalIndicator from '../components/ApprovalIndicator';
@@ -2183,10 +2183,10 @@ import {
   StudentCategories,
   SchoolCategories,
   Days
-} from '../../helpers/enum';
-import { copyValue } from '../../helpers/extractor';
-import { validate, reset, formatNumber, showNotification, getCurrentDateTime } from '../../helpers/forms';
-import Tables from '../../helpers/tables'
+} from '../helpers/enum';
+import { copyValue } from '../helpers/extractor';
+import { validate, reset, formatNumber, showNotification, getCurrentDateTime } from '../helpers/forms';
+import Tables from '../helpers/tables'
 import PhotoViewer from '../components/PhotoViewer'
 import  FileUploader from '../components/FileUploader'
 import  FileItem from '../components/FileItem'
@@ -2198,7 +2198,7 @@ import {
   evaluationApprovalStages,
   paymentApprovalStages,
   paymentTooltips
-} from '../../content';
+} from '../content';
 import {
   ProfileStage,
   AddressStage,
@@ -2209,7 +2209,7 @@ import {
   SubmitApplicationStage,
   ReviewApplicationStage,
   PaymentStage
-} from '../components/OnboardingSteps'
+} from '../views/components/OnboardingSteps'
 
 // const studentFields = {
 //   id: null,

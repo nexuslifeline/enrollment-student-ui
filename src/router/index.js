@@ -20,8 +20,8 @@ const MyStatements = () => import('@/views/pages/my-statements/MyStatements')
 const MyGrades = () => import('@/views/pages/my-grades/MyGrades')
 const MyProfile = () => import('@/views/pages/my-profile/MyProfile2')
 const MyPayments = () => import('@/views/pages/my-payments/MyPayments')
-const MyApplications = () => import('@/views/pages/MyApplications')
-const MyRequirements = () => import('@/views/pages/MyRequirements')
+// const MyApplications = () => import('@/views/pages/MyApplications')
+// const MyRequirements = () => import('@/views/pages/MyRequirements')
 const MyScheduleList = () => import('@/views/pages/my-schedules/MyScheduleList')
 const MySchedule = () => import('@/views/pages/my-schedules/MySchedule')
 const MyDocuments = () => import('@/views/pages/my-documents/MyDocuments')
@@ -32,6 +32,7 @@ const Menu404 = () => import('@/views/pages/Menu404')
 const Payment = () => import('@/views/pages/my-payments/Payment')
 const RequirementList = () => import('@/views/pages/my-requirements/RequirementList')
 const MyClearance = () => import('@/views/pages/my-clearances/MyClearance')
+const PostPayment = () => import('@/views/pages/my-payments/PostPayment')
 
 const DemoComponents = () => import('@/views/pages/DemoComponents')
 
@@ -132,7 +133,7 @@ function configRoutes () {
         {
           path: '/applications',
           component: { render(c) { return c('router-view') } },
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
           children: [
             {
               path: '/',
@@ -147,7 +148,7 @@ function configRoutes () {
         {
           path: '/requirements',
           component: { render(c) { return c('router-view') } },
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
           children: [
             {
               path: '/',
@@ -158,7 +159,7 @@ function configRoutes () {
         {
           path: '/ledgers',
           component: { render(c) { return c('router-view') } },
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
           children: [
             {
               path: '/',
@@ -169,7 +170,7 @@ function configRoutes () {
         {
           path: '/schedules',
           component: { render(c) { return c('router-view') } },
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
           children: [
             {
               path: '/',
@@ -189,7 +190,7 @@ function configRoutes () {
           path: '/documents',
           name: 'MyDocuments',
           component: MyDocuments,
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
           children: [
             {
               path: '/',
@@ -209,7 +210,13 @@ function configRoutes () {
           path: '/payment/:billingId',
           name: 'Payment',
           component: Payment,
-          meta: {requiresAuth: true},
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/billings/:billingId/payments/new',
+          name: 'PostPayment',
+          component: PostPayment,
+          meta: { requiresAuth: true },
         },
         {
           path: 'menu404',
