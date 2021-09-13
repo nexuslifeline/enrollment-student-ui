@@ -57,21 +57,21 @@ export const groupStages = [
     ]
   },
   {
-    header: 'Subject Enlistment',
+    header: 'Subject Pre-enlistment',
     children: [
       {
         id: 7,
         subHeader: 'Subjects',
         image: '/img/svg/online-tutorial.svg',
-        description: 'Details about the level, course, section and the subjects you are about to take. Please include all required(*) fields.',
-        overview: 'If you are a regular student, you can choose a desired section and submit your application for the approval of the school registrar. While if you are a transferee or irregular student, you can choose a desired section and add or remove certain subjects in the subject list then submit your application for the approval of the school registrar.'
+        description: 'If you are a regular student, you can choose a desired section and submit your application for the approval of the school registrar. While if you are a transferee or irregular student, you can choose a desired section and add or remove certain subjects in the subject list then submit your application for the approval of the school registrar.',
+        overview: 'Pre-enlistment provides relevant information to departments and colleges to determine the courses or the program students intend to take in the succeeding academic year and term.'
       },
       {
         id: 8,
         subHeader: 'Enlisment Status',
         image: '/img/svg/student-webinar.svg',
         description: 'A few more steps and you\'re done. We will just need to validate your application for the current academic year.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        overview: 'You will only be enlisted in your chosen class once your request has been approved.'
       }
     ]
   },
@@ -82,15 +82,15 @@ export const groupStages = [
         id: 9,
         subHeader: 'Payments',
         image: '/img/svg/my-applications.svg',
-        description: 'You\'re just one step away to be officially enrolled. If you are already enrolled and you are just registering in the system, please click the "Attach Existing Receipt" option below.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        description: 'You\'re just one step away to be officially enrolled. For those that were already enrolled as walk in and just registering in the system, please click the "Attach Existing Receipt" option below.',
+        overview: 'You may now pay your tuition and other fees to be officially enrolled.'
       },
       {
         id: 10,
         subHeader: 'Payment Status',
         image: '/img/svg/analyst-group.svg',
         description: 'Details about the current status of your payment. We will just need to confirm if your payment has been receive.',
-        overview: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.'
+        overview: 'Once payment has been verified, your status will be Enrolled and you will be able to access all the features of the app.'
       }
     ]
   },
