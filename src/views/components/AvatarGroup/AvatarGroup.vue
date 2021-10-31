@@ -1,0 +1,111 @@
+<template>
+  <div class="avatar-group__container" :id="`avatar-group-tooltip_${uniqId}`">
+    <template v-for="(item, idx) in data.slice(0, maxVisible)">
+      <template v-if="data.length > maxVisible && idx === (maxVisible - 1)">
+        <AvatarMaker
+          :key="idx"
+          :avatarId="25"
+          :size="25"
+          :text="`+${data.length - maxVisible}`"
+          :borderSize="2"
+          :borderColor="'white'"
+          containerClass="avatar__container"
+        />
+      </template>
+      <template v-else>
+        <AvatarMaker
+          :key="idx"
+          :avatarId="item.id"
+          :size="25"
+          :text="getStudentInitial(item)"
+          :src="getStudentPhoto(item)"
+          :borderSize="2"
+          :borderColor="'white'"
+          containerClass="avatar__container"
+        />
+      </template>
+    </template>
+    <b-tooltip :target="`avatar-group-tooltip_${uniqId}`">
+      <template v-for="(item, idx) in data">
+        <div :key="idx" class="avatar-group__tooltip-item">
+          <AvatarMaker
+            :avatarId="item.id"
+            :size="22"
+            :text="getStudentInitial(item)"
+            :src="getStudentPhoto(item)"
+          />
+          <span class="avatar-group__tooltip-item-text">
+            {{ item.name }}
+          </span>
+        </div>
+      </template>
+      <!-- <p>
+      test
+      </p>I will stay open when hovered-->
+    </b-tooltip> 
+  </div>
+</template>
+<script>
+
+import { getFilePath } from '../../../helpers/utils'
+export default {
+  getFilePath,
+  props: {
+    data: {
+      type: [Array]
+    },
+    maxVisible: {
+      type: [Number],
+      default: 3
+    },
+  },
+  created() {
+    this.uniqId = Date.now();
+  },
+  methods: {
+    getStudentInitial(data) {
+      const { firstName, lastName } = data
+      return `${firstName && firstName.charAt(0) || ''}${lastName && lastName.charAt(0) || ''}`
+    },
+    getStudentPhoto(data) {
+      const { photo } = data
+      if(!photo) {
+        return ''
+      }
+
+      return this.$options.getFilePath(photo.hashName)
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+  @import "../../../assets/scss/shared.scss";
+
+  .avatar-group__container {
+    display: inline-flex;
+    // flex-direction: row;
+    // width: 100%;
+    // position: relative;
+    padding: 2px;
+    cursor: pointer;
+
+    .avatar__container:nth-child(n+2) { margin-left: -7px; }
+  }
+
+  .avatar__container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .avatar-group__tooltip-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 5px 0;
+  }
+
+  .avatar-group__tooltip-item-text {
+    color: $white;
+    margin-left: 6px;
+  }
+</style>

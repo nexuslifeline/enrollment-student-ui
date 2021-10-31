@@ -11,6 +11,10 @@ import { BootstrapVue } from 'bootstrap-vue'
 import MainContainer from './views/components/LayoutContainers/MainContainer';
 import Tabs from './views/components/Tabs/Tabs';
 import BillingRecap from './views/components/BillingRecap/BillingRecap';
+import GradeCards from './views/components/GradeCards/List';
+import AvatarMaker from './views/components/AvatarMaker';
+import BulletedContent from './views/components/BulletedContent/BulletedContent';
+import AvatarGroup from './views/components/AvatarGroup/AvatarGroup';
 
 //window.moment = require('moment')
 import 'vue-awesome/icons/arrow-right'
@@ -70,11 +74,15 @@ import {
   BIconGeoAlt,
   BIconCaretDownFill,
   BIconCaretUpFill,
-  BProgress
+  BProgress,
+  BIconLayers,
+  BIconPersonCheck
 } from 'bootstrap-vue'
 
 Vue.component('Tabs', Tabs);
 Vue.component('MainContainer', MainContainer);
+Vue.component('BIconPersonCheck', BIconPersonCheck);
+Vue.component('BIconLayers', BIconLayers);
 Vue.component('BIconFolderSymlink', BIconFolderSymlink);
 // Vue.component('BIconFolder2Open', BIconFolder2Open);
 Vue.component('BIconAlarm', BIconAlarm);
@@ -91,6 +99,10 @@ Vue.component('BIconCaretDownFill', BIconCaretDownFill);
 Vue.component('BIconCaretUpFill', BIconCaretUpFill);
 Vue.component('BProgress', BProgress);
 Vue.component('BillingRecap', BillingRecap);
+Vue.component('GradeCards', GradeCards);
+Vue.component('AvatarMaker', AvatarMaker);
+Vue.component('BulletedContent', BulletedContent);
+Vue.component('AvatarGroup', AvatarGroup);
 
 Vue.config.performance = true
 Vue.component('v-icon', Icon)
